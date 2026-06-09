@@ -31,4 +31,4 @@ A modern student management system for educational institutions.
 
 ## Author
 
-Arman John Alex
+Armanpreet Singh
