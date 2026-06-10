@@ -1,13 +1,4 @@
 
-
-// ========================================
-// MOCK DATA
-// ========================================
-
-
-// ========================================
-// PAGE NAVIGATION
-// ========================================
 function showPage(pageId) {
     document.querySelectorAll('[id$="-page"], #app').forEach(el => {
         el.classList.add('hidden');
@@ -74,7 +65,7 @@ function navigateTo(page) {
         }
     });
 
-    // Update breadcrumb
+ 
     const titles = {
         dashboard: 'Dashboard',
         students: 'Student Management',
