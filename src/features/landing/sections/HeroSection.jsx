@@ -112,10 +112,18 @@ export default function HeroSection({ theme }) {
               <Icon name="monitor" size={18} />
               Access Portal
             </button>
-            <button className="btn-secondary">
-              Explore Features
-              <Icon name="arrowRight" size={17} />
-            </button>
+            <button
+  className="btn-secondary"
+  onClick={() =>
+    document.getElementById("features")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    })
+  }
+>
+  Explore Features
+  <Icon name="arrowRight" size={17} />
+</button>
           </motion.div>
 
           {/* Stats bar */}

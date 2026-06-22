@@ -15,7 +15,7 @@ export const BRAND = {
   phone:            "+91-172-5055500",
   email:            "info@ltsu.ac.in",
   admissionsEmail:  "admissions@ltsu.ac.in",
-  ugcRecognition:   "UGC Recognized · State Private University · Punjab 2020",
+  ugcRecognition:   "UGC Recognized · State Private University · Punjab 2021",
   established:      "2021",
 };
 
