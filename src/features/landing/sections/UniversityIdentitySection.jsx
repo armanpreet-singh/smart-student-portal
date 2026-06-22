@@ -8,6 +8,8 @@ import {
   aicteLogo,
   ibmLogo,
   lntLogo,
+  aiLogo,
+  ncvetLogo
 } from "../../../assets/images/partners";
 import { identityBg } from "../../../assets/images/bg";
 import { BRAND, DEPARTMENTS } from "../../../styles/tokens";
@@ -26,7 +28,7 @@ const BADGES = [
   color: "#cec7c7",
 },
   {
-    icon: "cpu",
+    logo: aiLogo,
     title: "Tech-First",
     desc: "AI, IoT, Robotics & Emerging Tech",
     color: "#cec7c7",
@@ -224,16 +226,16 @@ export default function UniversityIdentitySection({ theme }) {
   >
     <div
       style={{
-        width: badge.logos ? "96px" : "56px",
-        height: "56px",
-        borderRadius: "14px",
+        width: badge.logos ? "140px" : "64px",
+        height: badge.logos ? "70px" : "64px",
+        borderRadius: "16px",
         background: `${badge.color}12`,
         border: `1px solid ${badge.color}25`,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: "14px",
-        padding: "6px",
+        marginBottom: "16px",
+        padding: "10px",
       }}
     >
       {badge.logos ? (
@@ -242,7 +244,7 @@ export default function UniversityIdentitySection({ theme }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "14px",
+            gap: "18px",
             width: "100%",
           }}
         >
@@ -252,8 +254,8 @@ export default function UniversityIdentitySection({ theme }) {
               src={logo}
               alt=""
               style={{
-                width: "30px",
-                height: "30px",
+                width: "42px",
+                height: "42px",
                 objectFit: "contain",
               }}
             />
@@ -264,15 +266,15 @@ export default function UniversityIdentitySection({ theme }) {
           src={badge.logo}
           alt={badge.title}
           style={{
-            width: "36px",
-            height: "36px",
+            width: "46px",
+            height: "46px",
             objectFit: "contain",
           }}
         />
       ) : (
         <Icon
           name={badge.icon}
-          size={28}
+          size={38}
           color={badge.color}
         />
       )}
