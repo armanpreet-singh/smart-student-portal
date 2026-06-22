@@ -7,7 +7,7 @@ import { identityBg } from "../../../assets/images/bg";
 import { BRAND, DEPARTMENTS }  from "../../../styles/tokens";
 
 const BADGES = [
-  { icon: "award",      title: "UGC Recognized",     desc: "State Private University · Punjab 2020",    color: "#1B3A6B" },
+  { icon: "award",      title: "UGC Recognized",     desc: "State Private University · Punjab 2021",    color: "#1B3A6B" },
   { icon: "graduation", title: "Industry-Oriented",  desc: "Skill-based curriculum for Industry 4.0",  color: "#C9A84C" },
   { icon: "cpu",        title: "Tech-First",         desc: "AI, IoT, Robotics & Emerging Tech",        color: "#10b981" },
   { icon: "shield",     title: "AICTE Approved",     desc: "All technical programs approved",          color: "#8b5cf6" },
@@ -46,7 +46,7 @@ export default function UniversityIdentitySection({ theme }) {
               at LTSU
             </h2>
             <p className="section-subheading" style={{ marginBottom: "32px" }}>
-              Lamrin Tech Skills University is Punjab's premier private university focused on technical skill development, innovation, and industry-ready education — established under Punjab State Private University Act 2020.
+              Lamrin Tech Skills University is Punjab's premier private university focused on technical skill development, innovation, and industry-ready education — established under Punjab State Private University Act 2021.
             </p>
 
             {/* LTSU Logo card */}
@@ -73,7 +73,7 @@ export default function UniversityIdentitySection({ theme }) {
       "Enlightenment to Empowerment"
     </div>
     <div style={{ display: "flex", gap: "6px", marginTop: "8px", flexWrap: "wrap" }}>
-      {["UGC", "AICTE", "Punjab 2020"].map((t) => (
+      {["UGC", "AICTE", "Punjab 2021"].map((t) => (
         <span key={t} style={{
           fontSize:     "10px",
           fontWeight:   700,
@@ -161,8 +161,8 @@ export default function UniversityIdentitySection({ theme }) {
               <div style={{ position: "absolute", right: "-10px", top: "-10px", width: "80px", height: "80px", borderRadius: "50%", background: "rgba(201,168,76,0.1)" }} />
               <div>
                 <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", marginBottom: "3px" }}>Established Under</div>
-                <div style={{ fontSize: "15px", fontWeight: 700, color: "white" }}>Punjab State Private University Act 2020</div>
-                <div style={{ fontSize: "12px", color: "#C9A84C", marginTop: "3px" }}>Gharuan, Mohali, Punjab</div>
+                <div style={{ fontSize: "15px", fontWeight: 700, color: "white" }}>Punjab State Private University Act 2021</div>
+                <div style={{ fontSize: "12px", color: "#C9A84C", marginTop: "3px" }}>Rupnagar (Ropar) District, Punjab — 144533</div>
               </div>
               <div style={{ fontSize: "30px", fontWeight: 900, color: "rgba(201,168,76,0.25)", flexShrink: 0 }}>2021</div>
             </motion.div>

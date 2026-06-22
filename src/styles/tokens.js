@@ -11,7 +11,7 @@ export const BRAND = {
   tagline:          "Enlightenment to Empowerment",
   subTagline:       "India's Premier Tech Skills University",
   website:          "https://www.ltsu.ac.in/",
-  location:         "Gharuan, Mohali, Punjab — 140413",
+  location:         "Rupnagar (Ropar) District, Punjab — 144533",
   phone:            "+91-172-5055500",
   email:            "info@ltsu.ac.in",
   admissionsEmail:  "admissions@ltsu.ac.in",
@@ -36,11 +36,11 @@ export const COLORS = {
 
 export const DEPARTMENTS = [
   "School of Engineering & Technology",
-  "School of Computer Applications",
+  "School of  Physical Education & Sports",
   "School of Management Studies",
   "School of Law",
   "School of Pharmacy",
-  "School of Agriculture",
+  "School of Polytechnic",
   "School of Education",
   "School of Nursing",
   "School of Architecture & Design",
@@ -238,7 +238,7 @@ export const TESTIMONIALS = [
   },
   {
     name:   "Prof. Rajiv Mehta",
-    role:   "HOD · School of Computer Applications",
+    role:   "HOD · School of  Physical Education & Sports",
     type:   "Faculty",
     avatar: "RM",
     color:  "#8b5cf6",
@@ -284,7 +284,7 @@ export const NAV_ITEMS = [
 export const FOOTER_LINKS = {
   "Quick Links": ["Home", "Student Portal", "Faculty Portal", "Admin Portal", "Examination", "Results"],
   "Academics":   ["Academic Calendar", "Course Catalog", "Exam Schedule", "Fee Structure", "Scholarships", "E-Library"],
-  "Schools":     ["Engineering & Technology", "Computer Applications", "Management Studies", "Law", "Pharmacy", "Agriculture"],
+  "Schools":     ["Engineering & Technology", " Physical Education & Sports", "Management Studies", "Law", "Pharmacy", "Polytechnic"],
   "Support":     ["Help Center", "Contact Support", "User Guide", "FAQs", "Report Issue", "Privacy Policy"],
 };
 

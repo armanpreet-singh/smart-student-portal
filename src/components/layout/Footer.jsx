@@ -147,7 +147,7 @@ export default function Footer({ theme }) {
           marginBottom: "28px",
         }}>
           <div style={{ display: "flex", gap: "24px", flexWrap: "wrap", justifyContent: "center" }}>
-            {["UGC Recognized", "AICTE Approved", "PCI Approved", "BCI Recognized", "Punjab Act 2020"].map((b) => (
+            {["UGC Recognized", "AICTE Approved", "PCI Approved", "BCI Recognized", "Punjab Act 2021"].map((b) => (
               <div key={b} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#C9A84C" }} />
                 <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.38)", fontWeight: 500 }}>{b}</span>
