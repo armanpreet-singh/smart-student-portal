@@ -1,15 +1,26 @@
-import { useState, useRef }                  from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useState, useRef,useEffect}                  from "react";
+import { motion, useInView } from "framer-motion";
 import Icon from "../components/Icon";
 import DashboardPreview                      from "../components/DashboardPreview";
 import SectionBackground from "../components/SectionBackground";
 import { dashboardBg } from "../../../assets/images/bg";
+import {
+  studentDashboard,
+  facultyDashboard,
+  adminDashboard,
+} from "../../../assets/images/dashboard";
 
 const TABS = [
   { label: "Student Dashboard", type: "student" },
   { label: "Faculty Dashboard", type: "faculty" },
   { label: "Admin Dashboard",   type: "admin"   },
 ];
+
+const DASHBOARD_IMAGES = {
+  student: studentDashboard,
+  faculty: facultyDashboard,
+  admin: adminDashboard,
+};
 
 export default function DashboardShowcaseSection({ theme }) {
   const [activeTab, setActiveTab] = useState(0);
@@ -60,17 +71,27 @@ export default function DashboardShowcaseSection({ theme }) {
         </div>
 
         {/* Preview */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -18 }}
-            transition={{ duration: 0.35 }}
-          >
-            <DashboardPreview type={TABS[activeTab].type} isActive={true} />
-          </motion.div>
-        </AnimatePresence>
+<div
+  style={{
+    position: "relative",
+    width: "100%",
+  }}
+>
+  {TABS.map((tab, i) => (
+    <motion.img
+      key={tab.type}
+      src={DASHBOARD_IMAGES[tab.type]}
+      alt={tab.label}
+      style={{
+        width: "100%",
+        borderRadius: "24px",
+        border: "1px solid var(--border)",
+        boxShadow: "var(--shadow-lg)",
+        display: activeTab === i ? "block" : "none",
+      }}
+    />
+  ))}
+</div>
 
         {/* Feature pills */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "18px", marginTop: "36px" }} className="grid-3-col">
