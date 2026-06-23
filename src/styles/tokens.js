@@ -1,9 +1,3 @@
-// ─────────────────────────────────────────────────────────────
-// LTSU BRAND TOKENS — Real data from ltsu.ac.in
-// Brand Colors extracted from official LTSU seal logo:
-//   Navy Blue  #1B3A6B
-//   Gold       #C9A84C
-// ─────────────────────────────────────────────────────────────
 
 export const BRAND = {
   name:             "Lamrin Tech Skills University",

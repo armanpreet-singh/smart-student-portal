@@ -56,41 +56,70 @@ export default function Navigation({ theme, toggleTheme }) {
           <LTSULogo size="small" />
 
           {/* ── Desktop Nav ── */}
-          <nav
-            className="hide-mobile"
-            aria-label="Main navigation"
-            style={{ display: "flex", gap: "4px", alignItems: "center" }}
-          >
-            {NAV_ITEMS.map((item) => (
-             <button
-  key={item.id}
-  onClick={() => scrollTo(item.id)}
-  onMouseEnter={() => setHoveredItem(item.id)}
-  onMouseLeave={() => setHoveredItem(null)}
-  className="nav-link"
+         <nav
+  className="hide-mobile"
+  aria-label="Main navigation"
   style={{
-    fontFamily: "inherit",
-    cursor: "pointer",
-    fontSize: "15px",
-    fontWeight: 500,
-    padding: "10px 18px",
-    borderRadius: "9px",
-    border: "none",
-    background:
-      hoveredItem === item.id
-        ? "rgba(255,255,255,0.08)"
-        : "transparent",
-    color:
-      hoveredItem === item.id
-        ? "var(--text-primary)"
-        : "var(--text-secondary)",
-    transition: "all 0.25s ease",
+    display: "flex",
+    gap: "4px",
+    alignItems: "center",
   }}
 >
-  {item.label}
-</button>
-            ))}
-          </nav>
+  {NAV_ITEMS.map((item) => (
+    <button
+      key={item.id}
+      onClick={() => scrollTo(item.id)}
+      onMouseEnter={() => setHoveredItem(item.id)}
+      onMouseLeave={() => setHoveredItem(null)}
+      className="nav-link"
+      style={{
+        fontFamily: "inherit",
+        cursor: "pointer",
+        fontSize: "15px",
+        fontWeight: 500,
+        padding: "10px 18px",
+        borderRadius: "9px",
+
+        background:
+          hoveredItem === item.id
+            ? theme === "dark"
+              ? "rgba(201,168,76,0.08)"
+              : "rgba(27,58,107,0.08)"
+            : "transparent",
+
+        color:
+          hoveredItem === item.id
+            ? theme === "dark"
+              ? "#C9A84C"
+              : "#1B3A6B"
+            : "var(--text-secondary)",
+
+        border:
+          hoveredItem === item.id
+            ? theme === "dark"
+              ? "1px solid rgba(201,168,76,0.15)"
+              : "1px solid transparent"
+            : "1px solid transparent",
+
+        boxShadow:
+          hoveredItem === item.id
+            ? theme === "dark"
+              ? "0 4px 14px rgba(201,168,76,0.12)"
+              : "none"
+            : "none",
+
+        transform:
+          hoveredItem === item.id
+            ? "translateY(-1px)"
+            : "translateY(0)",
+
+        transition: "all 0.25s ease",
+      }}
+    >
+      {item.label}
+    </button>
+  ))}
+</nav>
 
           {/* ── Right side actions ── */}
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
