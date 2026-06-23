@@ -49,19 +49,26 @@ export default function FinalCTASection({ theme }) {
   transition={{ delay: 0.15 }}
   style={{ display: "flex", justifyContent: "center", marginBottom: "22px" }}
 >
+  <div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "24px",
+  }}
+>
   <img
     src={ltsuLogo}
-    alt="Lamrin Tech Skills University"
+    alt="LTSU"
     style={{
-      width:     "80px",
-      height:    "80px",
+      width: "120px",
+      height: "120px",
       objectFit: "contain",
-      display:   "block",
-      // Drop shadow makes it pop on dark bg
-      filter:    "drop-shadow(0 4px 16px rgba(0,0,0,0.4))",
+      display: "block",
+      filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.25))",
     }}
     draggable={false}
   />
+</div>
 </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}

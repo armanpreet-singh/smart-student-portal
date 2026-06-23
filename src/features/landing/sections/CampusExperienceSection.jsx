@@ -90,16 +90,22 @@ export default function CampusExperienceSection({ theme }) {
           </div>
 
           {/* LTSU Logo in banner */}
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+         <div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "24px",
+  }}
+>
   <img
     src={ltsuLogo}
     alt="LTSU"
     style={{
-      width:     "72px",
-      height:    "72px",
+      width: "120px",
+      height: "120px",
       objectFit: "contain",
-      display:   "block",
-      // Logo looks fine on dark bg since it has navy + gold colors
+      display: "block",
+      filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.25))",
     }}
     draggable={false}
   />
