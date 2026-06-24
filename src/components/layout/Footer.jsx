@@ -36,6 +36,8 @@ export default function Footer({ theme }) {
   <img
     src={ltsuLogo}
     alt="LTSU"
+     
+   decoding="async"
     style={{
       width:      "52px",
       height:     "52px",

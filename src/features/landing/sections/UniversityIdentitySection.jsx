@@ -106,6 +106,8 @@ overflow: "hidden",
               <img
                 src={ltsuLogo}
                 alt="LTSU Official Seal"
+                loading="lazy"
+decoding="async"
                 style={{
                   width: "80px",
                   height: "80px",
@@ -258,6 +260,8 @@ overflow: "hidden",
               key={index}
               src={logo}
               alt=""
+              loading="lazy"
+decoding="async"
               style={{
                 width: "42px",
                 height: "42px",
@@ -270,6 +274,8 @@ overflow: "hidden",
         <img
           src={badge.logo}
           alt={badge.title}
+          loading="lazy"
+decoding="async"
           style={{
             width: "46px",
             height: "46px",
