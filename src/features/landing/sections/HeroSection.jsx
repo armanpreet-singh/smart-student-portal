@@ -195,9 +195,9 @@ background: "transparent",
         <div style={{ fontSize: "10px", color: "var(--text-muted)", letterSpacing: "0.8px", textTransform: "uppercase", fontWeight: 600 }}>
           Scroll to explore
         </div>
-        <motion.div animate={{ y: [0, 7, 0] }} transition={{ repeat: Infinity, duration: 1.6 }}>
-          <Icon name="chevronDown" size={18} color="var(--text-muted)" />
-        </motion.div>
+        <div className="float-animation">
+  <Icon name="chevronDown" size={18} color="var(--text-muted)" />
+</div>
       </motion.div>
     </SectionBackground>
   );

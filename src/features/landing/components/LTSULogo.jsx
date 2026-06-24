@@ -13,6 +13,8 @@ export default function LTSULogo({ size = "normal", showText = true }) {
       <img
         src={ltsuLogo}
         alt="Lamrin Tech Skills University Official Seal"
+         width="72"
+  height="72"
         
         style={{
           width:      imgSize,

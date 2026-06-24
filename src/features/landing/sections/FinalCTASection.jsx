@@ -64,6 +64,8 @@ overflow: "hidden",
   <img
     src={ltsuLogo}
     alt="LTSU"
+    width= "120px"
+      height = "120px"
     loading="lazy"
 decoding="async"
     style={{

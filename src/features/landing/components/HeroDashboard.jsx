@@ -143,7 +143,8 @@ export default function HeroDashboard() {
           <img
             src={dashboardPreview}
             alt="LTSU University Portal — Real Dashboard Preview"
-           
+           width = "100%"
+              height ="100%"
             style={{
               width: "100%",
               height: "100%",
