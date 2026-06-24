@@ -117,7 +117,7 @@ export default function TestimonialsSection({ theme }) {
                 textAlign:    "left",
                 fontFamily:   "inherit",
                 transition:   "all 0.25s ease",
-                backdropFilter: "blur(12px)",
+                backdropFilter: "blur(6px)",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>

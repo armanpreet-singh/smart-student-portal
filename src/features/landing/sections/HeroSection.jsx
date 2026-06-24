@@ -60,7 +60,7 @@ background: "transparent",
               fontWeight:     700,
               letterSpacing:  "0.5px",
               marginBottom:   "24px",
-              backdropFilter: "blur(12px)",
+              backdropFilter: "blur(6px)",
             }}>
               <div style={{
                 width: "6px", height: "6px", borderRadius: "50%",

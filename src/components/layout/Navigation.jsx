@@ -35,8 +35,8 @@ export default function Navigation({ theme, toggleTheme }) {
           // ── Taller navbar to accommodate bigger logo ──
           padding:              scrolled ? "8px 0" : "12px 0",
           background:           scrolled ? "var(--nav-bg)" : "transparent",
-          backdropFilter:       scrolled ? "blur(20px)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+          backdropFilter:       scrolled ? "blur(10px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(10px)" : "none",
           borderBottom:         scrolled ? "1px solid var(--border)" : "none",
           transition:           "all 0.4s ease",
         }}
@@ -219,7 +219,7 @@ export default function Navigation({ theme, toggleTheme }) {
               borderRadius:   "18px",
               padding:        "14px",
               boxShadow:      "var(--shadow-xl)",
-              backdropFilter: "blur(20px)",
+              backdropFilter: "blur(10px)",
             }}
           >
             {NAV_ITEMS.map((item) => (

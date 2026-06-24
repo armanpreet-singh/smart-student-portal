@@ -145,7 +145,7 @@ overflow: "hidden",
                       background:     "rgba(255,255,255,0.1)",
                       borderRadius:   "9px",
                       marginBottom:   "7px",
-                      backdropFilter: "blur(8px)",
+                      backdropFilter: "blur(4px)",
                     }}
                   >
                     <Icon name={f.icon} size={13} color="rgba(255,255,255,0.85)" />

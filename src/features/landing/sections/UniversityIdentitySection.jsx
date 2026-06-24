@@ -192,7 +192,7 @@ decoding="async"
                     borderRadius: "8px",
                     padding: "5px 12px",
                     fontWeight: 500,
-                    backdropFilter: "blur(8px)",
+                    backdropFilter: "blur(4px)",
                   }}
                 >
                   {dept.replace("School of ", "")}
