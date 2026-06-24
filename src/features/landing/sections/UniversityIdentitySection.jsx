@@ -47,14 +47,19 @@ export default function UniversityIdentitySection({ theme }) {
 
   return (
     <SectionBackground
-      id="about-ltsu"
-      image={identityBg}
-      overlayLight="rgba(248,250,255,0.90)"
-      overlayDark="rgba(4,8,20,0.92)"
-      theme={theme}
-      position="center center"
-      style={{ padding: "100px 28px", overflow: "hidden" }}
-    >
+id="about-ltsu"
+image={identityBg}
+overlayLight="rgba(248,250,255,0.75)"
+overlayDark="rgba(4,8,20,0.80)"
+theme={theme}
+position="center center"
+style={{
+padding: "100px 28px",
+overflow: "hidden",
+}}
+
+>
+
       <div style={{ maxWidth: "1280px", margin: "0 auto" }} ref={ref}>
         <div
           style={{

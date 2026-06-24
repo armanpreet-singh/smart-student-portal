@@ -19,16 +19,21 @@ export default function FeaturesSection({ theme }) {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <SectionBackground
-      id="features"
-      image={featuresBg}
-      overlayLight="rgba(248,250,255,0.88)"
-      overlayDark="rgba(3,6,16,0.92)"
-      theme={theme}
-      position="center center"
-      size="cover"
-      style={{ padding: "100px 28px", overflow: "hidden" }}
-    >
+   <SectionBackground
+id="features"
+image={featuresBg}
+overlayLight="rgba(248,250,255,0.72)"
+overlayDark="rgba(3,6,16,0.80)"
+theme={theme}
+position="center center"
+size="cover"
+style={{
+padding: "100px 28px",
+overflow: "hidden",
+}}
+
+>
+
       <div style={{ maxWidth: "1280px", margin: "0 auto" }} ref={ref}>
 
         <motion.div

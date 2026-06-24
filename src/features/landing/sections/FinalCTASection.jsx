@@ -11,14 +11,19 @@ export default function FinalCTASection({ theme }) {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <SectionBackground
-      image={ctaBg}
-      overlayLight="rgba(240,244,252,0.88)"
-      overlayDark="rgba(2,5,14,0.92)"
-      theme={theme}
-      position="center center"
-      style={{ padding: "80px 28px 100px", overflow: "hidden" }}
-    >
+   <SectionBackground
+image={ctaBg}
+overlayLight="rgba(240, 244, 252, 0.34)"
+overlayDark="rgba(2,5,14,0.76)"
+theme={theme}
+position="center center"
+style={{
+padding: "80px 28px 100px",
+overflow: "hidden",
+}}
+
+>
+
       <div style={{ maxWidth: "920px", margin: "0 auto" }} ref={ref}>
         <motion.div
           initial={{ opacity: 0, y: 36 }}

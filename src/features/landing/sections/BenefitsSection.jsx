@@ -18,15 +18,20 @@ export default function BenefitsSection({ theme }) {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <SectionBackground
-      id="about"
-      image={benefitsBg}
-      overlayLight="rgba(240,244,250,0.90)"
-      overlayDark="rgba(4,8,18,0.92)"
-      theme={theme}
-      position="center top"
-      style={{ padding: "100px 28px", overflow: "hidden" }}
-    >
+  <SectionBackground
+id="about"
+image={benefitsBg}
+overlayLight="rgba(240,244,250,0.74)"
+overlayDark="rgba(4,8,18,0.80)"
+theme={theme}
+position="center top"
+style={{
+padding: "100px 28px",
+overflow: "hidden",
+}}
+
+>
+
       <div style={{ maxWidth: "1280px", margin: "0 auto" }} ref={ref}>
 
         <motion.div

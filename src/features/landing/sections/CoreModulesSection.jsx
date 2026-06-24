@@ -12,15 +12,20 @@ export default function CoreModulesSection({ theme }) {
   const mod      = MODULE_CONFIGS[active];
 
   return (
-    <SectionBackground
-      id="modules"
-      image={modulesBg}
-      overlayLight="rgba(240,244,250,0.92)"
-      overlayDark="rgba(2,5,14,0.94)"
-      theme={theme}
-      position="center center"
-      style={{ padding: "100px 28px", overflow: "hidden" }}
-    >
+   <SectionBackground
+id="modules"
+image={modulesBg}
+overlayLight="rgba(240,244,250,0.76)"
+overlayDark="rgba(2,5,14,0.82)"
+theme={theme}
+position="center center"
+style={{
+padding: "100px 28px",
+overflow: "hidden",
+}}
+
+>
+
       <div style={{ maxWidth: "1280px", margin: "0 auto" }} ref={ref}>
 
         {/* Header */}

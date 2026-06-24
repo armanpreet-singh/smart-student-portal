@@ -13,14 +13,19 @@ export default function CampusExperienceSection({ theme }) {
 
   return (
     <SectionBackground
-      id="campus"
-      image={campusBg}
-      overlayLight="rgba(240,244,250,0.88)"
-      overlayDark="rgba(2,5,12,0.92)"
-      theme={theme}
-      position="center center"
-      style={{ padding: "100px 28px", overflow: "hidden" }}
-    >
+id="campus"
+image={campusBg}
+overlayLight="rgba(240,244,250,0.70)"
+overlayDark="rgba(2,5,12,0.78)"
+theme={theme}
+position="center center"
+style={{
+padding: "100px 28px",
+overflow: "hidden",
+}}
+
+>
+
       <div style={{ maxWidth: "1280px", margin: "0 auto" }} ref={ref}>
 
         <motion.div

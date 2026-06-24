@@ -8,23 +8,25 @@ import { BRAND }         from "../../../styles/tokens";
 export default function HeroSection({ theme }) {
   return (
     <SectionBackground
-      id="home"
-      image={heroBg}
-      overlayLight="rgba(240,244,250,0.86)"
-      overlayDark="rgba(4,8,18,0.90)"
-      theme={theme}
-      position="center center"
-     style={{
-  minHeight:   "100vh",
-  display:     "flex",
-  alignItems:  "center",
-  position:    "relative",
-  overflow:    "hidden",
-  paddingTop:  "120px",    // ← was 100px
-  paddingBottom: "80px",
-  background:  "transparent",
+id="home"
+image={heroBg}
+overlayLight="rgba(240,244,250,0.72)"
+overlayDark="rgba(4,8,18,0.78)"
+theme={theme}
+position="center center"
+style={{
+minHeight: "100vh",
+display: "flex",
+alignItems: "center",
+position: "relative",
+overflow: "hidden",
+paddingTop: "120px",
+paddingBottom: "80px",
+background: "transparent",
 }}
-    >
+
+>
+
       {/* Radial accents */}
       <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 0 }}>
         <div style={{ position: "absolute", top: "8%", left: "-5%", width: "550px", height: "550px", background: "radial-gradient(circle, rgba(27,58,107,0.08) 0%, transparent 70%)", borderRadius: "50%" }} />
