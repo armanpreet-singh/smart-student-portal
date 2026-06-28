@@ -1,7 +1,27 @@
 import { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+
 import { injectGlobalStyles } from "./styles/GlobalStyles";
 
 import LandingPage from "./features/landing/LandingPage";
+import LoginPage from "./features/auth/pages/LoginPage";
+
+// Temporary Dashboard Page
+function Dashboard() {
+  return (
+    <div
+      style={{
+        display: "grid",
+        placeItems: "center",
+        height: "100vh",
+        fontSize: "2rem",
+        fontWeight: "600",
+      }}
+    >
+      Dashboard Coming Soon 🚀
+    </div>
+  );
+}
 
 export default function App() {
   const [theme, setTheme] = useState("light");
@@ -9,7 +29,7 @@ export default function App() {
   useEffect(() => {
     injectGlobalStyles();
   }, []);
-  
+
   useEffect(() => {
     const saved = localStorage.getItem("ltsu-theme");
 
@@ -23,26 +43,43 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    document.documentElement.setAttribute(
-      "data-theme",
-      theme
-    );
+    document.documentElement.setAttribute("data-theme", theme);
 
-    localStorage.setItem(
-      "ltsu-theme",
-      theme
-    );
+    localStorage.setItem("ltsu-theme", theme);
   }, [theme]);
 
   const toggleTheme = () =>
-    setTheme((t) =>
-      t === "light" ? "dark" : "light"
-    );
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
 
   return (
-    <LandingPage
-      theme={theme}
-      toggleTheme={toggleTheme}
-    />
+    <Routes>
+      {/* Landing Page */}
+      <Route
+        path="/"
+        element={
+          <LandingPage
+            theme={theme}
+            toggleTheme={toggleTheme}
+          />
+        }
+      />
+
+      {/* Login Page */}
+      <Route
+        path="/login"
+        element={
+          <LoginPage
+            theme={theme}
+            toggleTheme={toggleTheme}
+          />
+        }
+      />
+
+      {/* Dashboard */}
+      <Route
+        path="/dashboard"
+        element={<Dashboard />}
+      />
+    </Routes>
   );
 }

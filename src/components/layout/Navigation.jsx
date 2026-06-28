@@ -1,4 +1,5 @@
 import { useState, useEffect }    from "react";
+import { Link } from "react-router-dom";
 import LTSULogo from "../../features/landing/components/LTSULogo";
 import { motion, AnimatePresence } from "framer-motion";
 import { ltsuLogo } from "../../assets/images/logo";
@@ -169,15 +170,20 @@ export default function Navigation({ theme, toggleTheme }) {
             </button>
 
             {/* Login CTA */}
-            <button
-              className="btn-primary hide-mobile"
-              style={{
-                padding:  "12px 26px",
-                fontSize: "14px",
-              }}
-            >
-              Login to Portal
-            </button>
+           <Link
+  to="/login"
+  className="btn-primary hide-mobile"
+  style={{
+    padding: "12px 26px",
+    fontSize: "14px",
+    textDecoration: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+>
+  Login to Portal
+</Link>
 
             {/* Mobile hamburger */}
             <button
@@ -253,12 +259,21 @@ export default function Navigation({ theme, toggleTheme }) {
               marginTop:   "10px",
               paddingTop:  "12px",
             }}>
-              <button
-                className="btn-primary"
-                style={{ width: "100%", fontSize: "15px", justifyContent: "center" }}
-              >
-                Login to Portal
-              </button>
+              <Link
+  to="/login"
+  className="btn-primary"
+  style={{
+    width: "100%",
+    fontSize: "15px",
+    justifyContent: "center",
+    textDecoration: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+>
+  Login to Portal
+</Link>
             </div>
           </motion.div>
         )}
