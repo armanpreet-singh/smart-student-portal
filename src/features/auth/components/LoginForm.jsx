@@ -88,15 +88,15 @@ const handleSubmit = useCallback(
       {/* ── Form ── */}
       <form onSubmit={handleSubmit} noValidate>
         {/* Email / ID */}
-        <div className="field-group">
+        <div className="login-field-group">
           <label className="field-label" htmlFor="emailInput">
             Email / University ID
           </label>
-          <div className="field-wrap">
-            <span className="field-icon" aria-hidden="true">✉</span>
+          <div className="login-field-wrap">
+            <span className="login-field-icon" aria-hidden="true">✉</span>
             <input
               id="emailInput"
-              className="field-input has-icon"
+              className="login-field-input has-icon"
               type="email"
               placeholder={PLACEHOLDERS[role]}
               value={email}
@@ -108,15 +108,15 @@ const handleSubmit = useCallback(
         </div>
 
         {/* Password */}
-        <div className="field-group">
+        <div className="login-field-group">
           <label className="field-label" htmlFor="passwordInput">
             Password
           </label>
-          <div className="field-wrap">
-            <span className="field-icon" aria-hidden="true">🔒</span>
+          <div className="login-field-wrap">
+            <span className="login-field-icon" aria-hidden="true">🔒</span>
             <input
               id="passwordInput"
-              className="field-input has-icon"
+              className="login-field-input has-icon"
               type={showPw ? 'text' : 'password'}
               placeholder="Enter your password"
               value={password}
@@ -136,8 +136,8 @@ const handleSubmit = useCallback(
         </div>
 
         {/* Remember + Forgot */}
-        <div className="form-row">
-          <label className="checkbox-wrap">
+        <div className="login-form-row">
+          <label className="login-checkbox-wrap">
             <input
               type="checkbox"
               id="rememberMe"
@@ -146,7 +146,7 @@ const handleSubmit = useCallback(
             />
             <span>Remember me</span>
           </label>
-          <a href="#reset" className="forgot-link" aria-label="Reset your password">
+          <a href="#reset" className="login-forgot-link" aria-label="Reset your password">
             Forgot password?
           </a>
         </div>
@@ -154,7 +154,7 @@ const handleSubmit = useCallback(
         {/* Primary CTA */}
         <button
           type="submit"
-          className="btn-primary"
+          className="login-btn-primary"
           disabled={loading}
           aria-busy={loading}
         >
@@ -166,16 +166,16 @@ const handleSubmit = useCallback(
       </form>
 
       {/* Divider */}
-      <div className="auth-divider">
-        <div className="auth-divider-line" />
+      <div className="login-divider">
+        <div className="login-divider-line" />
         <span>or</span>
-        <div className="auth-divider-line" />
+        <div className="login-divider-line" />
       </div>
 
       {/* Secondary CTA */}
       <button
         type="button"
-        className="btn-secondary"
+        className="login-btn-secondary"
       onClick={() => navigate("/")}
         aria-label="Return to LTSU home page"
       >

@@ -2,11 +2,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+
 
 :root {
   --navy:        #1B3A6B;
@@ -30,11 +26,7 @@
   --shadow-lg:   0 20px 60px rgba(27,58,107,0.16), 0 8px 24px rgba(27,58,107,0.1);
 }
 
-html, body, #root {
-  height: 100%;
-  font-family: 'Inter', sans-serif;
-  background: var(--gray-50);
-}
+  
 
 /* ── LAYOUT ─────────────────────────────────────────────── */
 
@@ -376,7 +368,7 @@ html, body, #root {
 
 /* ── FORM FIELDS ─────────────────────────────────────────── */
 
-.field-group {
+.login-field-group {
   margin-bottom: 18px;
 }
 
@@ -390,11 +382,11 @@ label.field-label {
   margin-bottom: 7px;
 }
 
-.field-wrap {
+.login-field-wrap {
   position: relative;
 }
 
-.field-input {
+.login-field-input {
   width: 100%;
   height: 46px;
   padding: 0 44px 0 16px;
@@ -407,18 +399,18 @@ label.field-label {
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.field-input::placeholder {
+.login-field-input::placeholder {
   color: var(--gray-400);
 }
-.field-input:focus {
+.login-field-input:focus {
   border-color: var(--navy);
   box-shadow: 0 0 0 3px rgba(27,58,107,0.1);
 }
-.field-input.has-icon {
+.login-field-input.has-icon {
   padding-left: 44px;
 }
 
-.field-icon {
+.login-field-icon {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -448,32 +440,32 @@ label.field-label {
 
 /* ── FORM ROW ────────────────────────────────────────────── */
 
-.form-row {
+.login-form-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 24px;
 }
 
-.checkbox-wrap {
+.login-checkbox-wrap {
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
   user-select: none;
 }
-.checkbox-wrap input[type="checkbox"] {
+.login-checkbox-wrap input[type="checkbox"] {
   width: 16px; height: 16px;
   accent-color: var(--navy);
   cursor: pointer;
 }
-.checkbox-wrap span {
+.login-checkbox-wrap span {
   font-size: 13px;
   color: var(--gray-600);
   font-weight: 500;
 }
 
-.forgot-link {
+.login-forgot-link {
   font-size: 13px;
   color: var(--navy);
   font-weight: 600;
@@ -481,13 +473,13 @@ label.field-label {
   opacity: 0.8;
   transition: opacity 0.18s;
 }
-.forgot-link:hover {
+.login-forgot-link:hover {
   opacity: 1;
 }
 
 /* ── BUTTONS ─────────────────────────────────────────────── */
 
-.btn-primary {
+.login-btn-primary {
   width: 100%;
   height: 50px;
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
@@ -509,18 +501,18 @@ label.field-label {
   position: relative;
   overflow: hidden;
 }
-.btn-primary::before {
+.login-btn-primary::before {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
   pointer-events: none;
 }
-.btn-primary:hover {
+.login-btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 28px rgba(27,58,107,0.38);
 }
-.btn-primary:active {
+.login-btn-primary:active {
   transform: translateY(0);
   box-shadow: 0 4px 12px rgba(27,58,107,0.22);
 }
@@ -528,11 +520,11 @@ label.field-label {
   font-size: 16px;
   transition: transform 0.22s ease;
 }
-.btn-primary:hover .btn-arrow {
+.login-btn-primary:hover .btn-arrow {
   transform: translateX(3px);
 }
 
-.btn-secondary {
+.login-btn-secondary {
   width: 100%;
   height: 44px;
   background: transparent;
@@ -549,29 +541,29 @@ label.field-label {
   justify-content: center;
   gap: 7px;
 }
-.btn-secondary:hover {
+.login-btn-secondary:hover {
   background: var(--gray-50);
   border-color: var(--navy);
   transform: translateY(-1px);
 }
-.btn-secondary:active {
+.login-btn-secondary:active {
   transform: translateY(0);
 }
 
 /* ── DIVIDER ─────────────────────────────────────────────── */
 
-.auth-divider {
+.login-divider {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 16px;
 }
-.auth-divider-line {
+.login-divider-line {
   flex: 1;
   height: 1px;
   background: var(--gray-100);
 }
-.auth-divider span {
+.login-divider span {
   font-size: 11px;
   color: var(--gray-400);
   font-weight: 500;
