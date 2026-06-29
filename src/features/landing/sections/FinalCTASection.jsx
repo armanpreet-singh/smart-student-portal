@@ -1,4 +1,5 @@
 import { useRef }            from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import Icon from "../components/Icon";
 import SectionBackground from "../components/SectionBackground";
@@ -9,7 +10,7 @@ import { BRAND }             from "../../../styles/tokens";
 export default function FinalCTASection({ theme }) {
   const ref      = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
-
+const navigate = useNavigate();
   return (
    <SectionBackground
 image={ctaBg}
@@ -129,10 +130,14 @@ decoding="async"
               transition={{ delay: 0.46 }}
               style={{ display: "flex", justifyContent: "center", gap: "14px", flexWrap: "wrap" }}
             >
-              <button className="btn-accent" style={{ padding: "16px 40px", fontSize: "16px" }}>
-                <Icon name="monitor" size={20} />
-                Login to Portal
-              </button>
+              <button
+  className="btn-accent"
+  style={{ padding: "16px 40px", fontSize: "16px" }}
+  onClick={() => navigate("/login")}
+>
+  <Icon name="monitor" size={20} />
+  Login to Portal
+</button>
               <a href={BRAND.website} target="_blank" rel="noreferrer" className="btn-outline-white" style={{ padding: "14px 32px", fontSize: "14px" }}>
                 Visit LTSU Website
                 <Icon name="externalLink" size={16} />

@@ -4,9 +4,12 @@ import HeroDashboard from "../components/HeroDashboard";
 import SectionBackground from "../components/SectionBackground";
 import { heroBg } from "../../../assets/images/bg";
 import { BRAND }         from "../../../styles/tokens";
+import { useNavigate } from "react-router-dom";
 
 export default function HeroSection({ theme }) {
+  const navigate = useNavigate();
   return (
+    
     <SectionBackground
 id="home"
 image={heroBg}
@@ -110,10 +113,14 @@ background: "transparent",
             transition={{ duration: 0.65, delay: 0.26 }}
             style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}
           >
-            <button className="btn-primary">
-              <Icon name="monitor" size={18} />
-              Access Portal
-            </button>
+            
+           <button
+  className="btn-primary"
+  onClick={() => navigate("/login")}
+>
+  <Icon name="monitor" size={18} />
+  Access Portal
+</button>
             <button
   className="btn-secondary"
   onClick={() =>
