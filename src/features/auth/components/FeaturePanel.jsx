@@ -1,35 +1,45 @@
-  import React, { memo } from 'react';
+import React, { memo } from "react";
+import {
+  GraduationCap,
+  ClipboardCheck,
+  BookOpen,
+  CheckCircle2,
+} from "lucide-react";
 
 const FEATURES = [
   {
-    icon: '📊',
-    title: 'Student Dashboard',
-    desc: 'Grades, timetables & announcements',
+    icon: "📊",
+    title: "Attendance Management",
+    desc: "Track attendance, leave requests & class records",
   },
   {
-    icon: '🖥️',
-    title: 'Faculty Workspace',
-    desc: 'Course management & collaboration',
+    icon: "🖥️",
+    title: "Assignments & Results",
+    desc: "Submit coursework and view grades instantly.",
   },
   {
-    icon: '🎓',
-    title: 'Academic Records',
-    desc: 'Transcripts, awards & credentials',
+    icon: "🎓",
+    title: "Student Services",
+    desc: "Notices, timetables & announcements",
   },
 ];
 
 const FeatureCard = memo(({ icon, title, desc }) => (
   <div className="feat-card" role="listitem">
-    <div className="feat-icon" aria-hidden="true">{icon}</div>
+    <div className="feat-icon" aria-hidden="true">
+      {icon}
+    </div>
     <div className="feat-text">
       <strong>{title}</strong>
       <span>{desc}</span>
     </div>
-    <div className="feat-check" aria-hidden="true">✓</div>
+    <div className="feat-check" aria-hidden="true">
+      ✓
+    </div>
   </div>
 ));
 
-FeatureCard.displayName = 'FeatureCard';
+FeatureCard.displayName = "FeatureCard";
 
 const FeaturePanel = () => (
   <div className="panel-left" aria-label="LTSU campus welcome panel">
@@ -55,12 +65,13 @@ const FeaturePanel = () => (
       {/* Heading */}
       <h1 className="left-heading">
         Welcome <em>Back</em>
-        <br />to Campus
+        <br />
+        to <em>LTSU</em> Smart Portal.
       </h1>
 
       <p className="left-sub">
-        Continue your academic journey with secure, unified access to every
-        resource the university offers.
+        Access your attendance, assignments, results, announcements, academic
+        records, and university services from one secure portal.
       </p>
 
       {/* Feature cards */}

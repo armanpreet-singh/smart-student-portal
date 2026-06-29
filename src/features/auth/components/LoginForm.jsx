@@ -3,8 +3,8 @@ import RoleSelector from './RoleSelector';
 import { Link, useNavigate } from "react-router-dom";   
 
 const PLACEHOLDERS = {
-  student: 'student@ltsu.edu or S12345678',
-  faculty: 'faculty@ltsu.edu or F12345',
+  student: 'Last Four Digits Of Your Roll No.',
+  faculty: 'Faculty ID',
   admin:   'admin@ltsu.edu',
 };
 
@@ -69,18 +69,13 @@ const handleSubmit = useCallback(
       <div className="logo-area">
         <LogoMark />
         <div className="logo-text">
-          <strong>LTSU</strong>
-          <span>Lakeside Technical &amp; Science University</span>
-        </div>
-        <div className="logo-seal" aria-hidden="true">
-          Est.
-          <br />
-          1978
+          <strong>LTSU Portal</strong>
+          <span>Lamrin Tech&amp; Skill University</span>
         </div>
       </div>
 
       <h2 className="auth-heading">Welcome back</h2>
-      <p className="auth-sub">Sign in to access your personalised portal.</p>
+      <p className="auth-sub">Sign in to access your academic dashboard and university services.</p>
 
       {/* ── Role selector ── */}
       <RoleSelector activeRole={role} onChange={setRole} />
@@ -90,7 +85,7 @@ const handleSubmit = useCallback(
         {/* Email / ID */}
         <div className="login-field-group">
           <label className="field-label" htmlFor="emailInput">
-            Email / University ID
+            University ID
           </label>
           <div className="login-field-wrap">
             <span className="login-field-icon" aria-hidden="true">✉</span>
@@ -158,7 +153,7 @@ const handleSubmit = useCallback(
           disabled={loading}
           aria-busy={loading}
         >
-          <span>{loading ? 'Signing in…' : 'Login to Portal'}</span>
+          <span>{loading ? 'Signing in…' : 'Access Your Portal'}</span>
           {!loading && (
             <span className="btn-arrow" aria-hidden="true">→</span>
           )}
