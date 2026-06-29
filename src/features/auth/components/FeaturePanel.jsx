@@ -8,19 +8,19 @@ import {
 
 const FEATURES = [
   {
-    icon: "📊",
+    icon: <ClipboardCheck size={22} strokeWidth={2.2} color="#C9A84C" />,
     title: "Attendance Management",
-    desc: "Track attendance, leave requests & class records",
+    desc: "Track attendance, leave requests & class records.",
   },
   {
-    icon: "🖥️",
+    icon: <BookOpen size={22} strokeWidth={2.2} color="#C9A84C" />,
     title: "Assignments & Results",
     desc: "Submit coursework and view grades instantly.",
   },
   {
-    icon: "🎓",
+    icon: <GraduationCap size={22} strokeWidth={2.2} color="#C9A84C" />,
     title: "Student Services",
-    desc: "Notices, timetables & announcements",
+    desc: "Access notices, documents & campus resources.",
   },
 ];
 
@@ -34,7 +34,7 @@ const FeatureCard = memo(({ icon, title, desc }) => (
       <span>{desc}</span>
     </div>
     <div className="feat-check" aria-hidden="true">
-      ✓
+      <CheckCircle2 size={18} strokeWidth={2.5} />
     </div>
   </div>
 ));
