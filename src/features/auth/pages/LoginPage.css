@@ -117,7 +117,7 @@
   border: 1px solid rgba(201,168,76,0.35);
   border-radius: 40px;
   padding: 6px 16px;
-  margin-bottom: 28px;
+  margin-bottom: 22px;
 }
 .portal-badge span {
   font-size: 12px;
@@ -239,80 +239,82 @@
 
 .auth-card {
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   background: #fff;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  padding: 40px 40px 36px;
-  position: relative;
-  z-index: 2;
+  padding: 28px 32px;     /* was 40px 40px 36px */
+}
+.auth-card:hover{
+    transform:translateY(-3px);
 }
 
-/* Logo area */
+/* ───────── Logo Area ───────── */
+
 .logo-area {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 28px;
+  gap: 10px;              
+  margin-bottom: 18px;    
 }
+
 .logo-mark {
-  width: 46px; height: 46px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  width: 90px;        /* was 64px */
+  height: 90px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(27,58,107,0.28);
+
   flex-shrink: 0;
 }
-.logo-mark svg {
-  width: 26px; height: 26px;
+.logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
+
 .logo-text {
-  flex: 1;
-}
-.logo-text strong {
-  display: block;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--navy);
-  letter-spacing: -0.01em;
-}
-.logo-text span {
-  font-size: 11px;
-  color: var(--gray-400);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-.logo-seal {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 2px solid var(--gray-100);
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  font-size: 9px;
-  font-weight: 700;
-  color: var(--gold);
-  letter-spacing: 0.05em;
-  line-height: 1.2;
-  text-align: center;
-  flex-shrink: 0;
+  gap: 2px;
 }
+
+.logo-text strong {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  color: var(--navy);
+}
+
+.logo-text span {
+  font-size: 10px;
+  font-weight: 500;
+
+  color: var(--gray-400);
+
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ───────── Heading ───────── */
 
 .auth-heading {
   font-family: 'Playfair Display', serif;
-  font-size: 1.7rem;
+  font-size: 1.85rem;
   font-weight: 700;
   color: var(--navy);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  line-height: 1.1;
 }
+
 .auth-sub {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--gray-400);
-  margin-bottom: 28px;
-  line-height: 1.5;
+  line-height: 1.45;
+  margin-bottom: 20px;    /* was 28px */
 }
 
 /* ── ROLE SELECTOR ───────────────────────────────────────── */
@@ -322,7 +324,7 @@
   background: var(--gray-100);
   padding: 5px;
   border-radius: 14px;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .role-btn {
@@ -390,7 +392,7 @@
 /* ── FORM FIELDS ─────────────────────────────────────────── */
 
 .login-field-group {
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 label.field-label {
@@ -495,10 +497,8 @@ label.field-label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  margin: 22px 0 26px;
+  margin-bottom: 18px;    /* was 24px */
 }
-
 .login-checkbox-wrap {
   display: flex;
   align-items: center;
@@ -542,7 +542,7 @@ label.field-label {
 .login-btn-primary {
   width: 100%;
   height: 56px;
-
+margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -551,11 +551,11 @@ label.field-label {
   border: none;
   border-radius: 14px;
 
-  background: linear-gradient(
-    135deg,
-    var(--navy) 0%,
-    var(--navy-light) 100%
-  );
+ background:linear-gradient(
+135deg,
+#1d4f91,
+#17396e
+);  
 
   color: #fff;
 
@@ -670,7 +670,7 @@ label.field-label {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 16px;
+  margin-bottom: 12px 0; 
 }
 .login-divider-line {
   flex: 1;

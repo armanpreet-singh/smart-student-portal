@@ -1,5 +1,6 @@
 import React, { useState, useCallback, memo } from 'react';
 import RoleSelector from './RoleSelector';
+import { ltsuLogo } from "../../../assets/images/logo";
 import { Link, useNavigate } from "react-router-dom";   
 import {
   Mail,
@@ -20,22 +21,15 @@ const PLACEHOLDERS = {
 /* ── Logo SVG (memoised, renders once) ── */
 const LogoMark = memo(() => (
   <div className="logo-mark" aria-hidden="true">
-    <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M13 2L22 7V19L13 24L4 19V7L13 2Z"
-        stroke="rgba(255,255,255,0.6)"
-        strokeWidth="1.5"
-        fill="none"
-      />
-      <path
-        d="M13 6L19 9.5V16.5L13 20L7 16.5V9.5L13 6Z"
-        fill="rgba(201,168,76,0.7)"
-      />
-      <circle cx="13" cy="13" r="2.5" fill="white" />
-    </svg>
+    <img
+      src={ltsuLogo}
+      alt="LTSU Logo"
+      className="logo-image"
+    />
   </div>
 ));
-LogoMark.displayName = 'LogoMark';
+
+LogoMark.displayName = "LogoMark";
 
 /* ── Main form ── */
 const LoginForm = () => {
@@ -170,7 +164,7 @@ const handleSubmit = useCallback(
           disabled={loading}
           aria-busy={loading}
         >
-          <span>{loading ? 'Signing in…' : 'Access Your Portal'}</span>
+          <span>{loading ? 'Signing in…' : 'Access Portal'}</span>
           {!loading && (
             <span className="btn-arrow" aria-hidden="true">
   <ArrowRight size={18} strokeWidth={2.5} />
