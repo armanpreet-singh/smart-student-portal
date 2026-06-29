@@ -1,6 +1,15 @@
 import React, { useState, useCallback, memo } from 'react';
 import RoleSelector from './RoleSelector';
 import { Link, useNavigate } from "react-router-dom";   
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowLeft,
+  ArrowRight,
+} from "lucide-react";
+
 
 const PLACEHOLDERS = {
   student: 'Last Four Digits Of Your Roll No.',
@@ -70,7 +79,7 @@ const handleSubmit = useCallback(
         <LogoMark />
         <div className="logo-text">
           <strong>LTSU Portal</strong>
-          <span>Lamrin Tech&amp; Skill University</span>
+          <span>Lamrin Tech Skills University</span>
         </div>
       </div>
 
@@ -88,7 +97,9 @@ const handleSubmit = useCallback(
             University ID
           </label>
           <div className="login-field-wrap">
-            <span className="login-field-icon" aria-hidden="true">✉</span>
+            <span className="login-field-icon" aria-hidden="true">
+  <Mail size={18} strokeWidth={2} />
+</span>
             <input
               id="emailInput"
               className="login-field-input has-icon"
@@ -108,7 +119,9 @@ const handleSubmit = useCallback(
             Password
           </label>
           <div className="login-field-wrap">
-            <span className="login-field-icon" aria-hidden="true">🔒</span>
+            <span className="login-field-icon" aria-hidden="true">
+  <Lock size={18} strokeWidth={2} />
+</span>
             <input
               id="passwordInput"
               className="login-field-input has-icon"
@@ -125,7 +138,11 @@ const handleSubmit = useCallback(
               aria-label={showPw ? 'Hide password' : 'Show password'}
               onClick={togglePw}
             >
-              {showPw ? '🙈' : '👁'}
+              {showPw ? (
+  <EyeOff size={18} strokeWidth={2} />
+) : (
+  <Eye size={18} strokeWidth={2} />
+)}
             </button>
           </div>
         </div>
@@ -155,7 +172,9 @@ const handleSubmit = useCallback(
         >
           <span>{loading ? 'Signing in…' : 'Access Your Portal'}</span>
           {!loading && (
-            <span className="btn-arrow" aria-hidden="true">→</span>
+            <span className="btn-arrow" aria-hidden="true">
+  <ArrowRight size={18} strokeWidth={2.5} />
+</span>
           )}
         </button>
       </form>
@@ -174,7 +193,7 @@ const handleSubmit = useCallback(
       onClick={() => navigate("/")}
         aria-label="Return to LTSU home page"
       >
-        <span aria-hidden="true">←</span>
+       <ArrowLeft size={18} strokeWidth={2.5} />
         <span>Back to Home</span>
       </button>
     </div>

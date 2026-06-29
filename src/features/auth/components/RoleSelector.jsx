@@ -1,9 +1,27 @@
 import React, { memo, useCallback } from 'react';
+import {
+  GraduationCap,
+  UserRoundCog,
+  ShieldCheck,
+} from "lucide-react";
+
 
 const ROLES = [
-  { id: 'student',   label: 'Student',       icon: '🎓' },
-  { id: 'faculty',   label: 'Faculty',       icon: '👨‍🏫' },
-  { id: 'admin',     label: 'Administrator', icon: '🛡️' },
+  {
+    id: "student",
+    label: "Student",
+    icon: GraduationCap,
+  },
+  {
+    id: "faculty",
+    label: "Faculty",
+    icon: UserRoundCog,
+  },
+  {
+    id: "admin",
+    label: "Administrator",
+    icon: ShieldCheck,
+  },
 ];
 
 const RoleSelector = ({ activeRole, onChange }) => {
@@ -36,7 +54,13 @@ const RoleSelector = ({ activeRole, onChange }) => {
           onClick={() => onChange(role.id)}
           onKeyDown={(e) => handleKeyDown(e, i)}
         >
-          <span className="r-icon" aria-hidden="true">{role.icon}</span>
+        <span className="r-icon" aria-hidden="true">
+  <role.icon
+    size={20}
+    strokeWidth={2.2}
+    color={activeRole === role.id ? "#C9A84C" : "#64748B"}
+  />
+</span>
           <span className="r-label">{role.label}</span>
         </button>
       ))}
