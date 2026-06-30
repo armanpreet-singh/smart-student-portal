@@ -7,6 +7,7 @@ import campusBg      from "./campus.jpg";
 import testimonialsBg from "./testimonials.jpg";
 import ctaBg         from "./cta.jpg";
 import featuresBg    from "./features.jpg";
+import loginBg       from "./login.webp"
 
 export {
   heroBg,
@@ -18,4 +19,5 @@ export {
   testimonialsBg,
   ctaBg,
   featuresBg,
+  loginBg
 };

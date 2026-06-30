@@ -62,10 +62,19 @@
 .bg-image {
   position: absolute;
   inset: 0;
+
   background:
-    linear-gradient(160deg, rgba(18,42,80,0.85) 0%, rgba(27,58,107,0.7) 40%, rgba(15,30,60,0.92) 100%),
-    url('https://images.unsplash.com/photo-1562774053-701939374585?w=1400&q=80&fit=crop')
-    center / cover no-repeat;
+    linear-gradient(
+      160deg,
+      rgba(18, 42, 80, 0.82) 0%,
+      rgba(27, 58, 107, 0.68) 40%,
+      rgba(15, 30, 60, 0.88) 100%
+    ),
+    url("../../assets/images/bg/campus.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* Floating blurred blobs */
@@ -156,65 +165,123 @@
 
 /* ── FEATURE CARDS ───────────────────────────────────────── */
 
+
 .feature-cards {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  margin-top: 12px;
 }
 
 .feat-card {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
+
   padding: 16px 20px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: var(--radius-sm);
-  transition: transform 0.25s ease, background 0.25s ease;
+
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 18px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 8px 24px rgba(0,0,0,.12);
+
+  transition: all .28s ease;
   cursor: default;
 }
-.feat-card:hover {
-  transform: translateX(6px);
-  background: rgba(255,255,255,0.13);
+
+.feat-card:hover{
+  transform: translateY(-3px);
+  background: rgba(255,255,255,.14);
+  border-color: rgba(255,255,255,.22);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 14px 34px rgba(0,0,0,.18);
 }
 
-.feat-icon {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  background: rgba(201,168,76,0.2);
-  border: 1px solid rgba(201,168,76,0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  flex-shrink: 0;
+/* ===========================
+   ICON
+=========================== */
+
+.feat-icon{
+  width:48px;
+  height:48px;
+
+  border-radius:14px;
+
+  background:rgba(201,168,76,.14);
+  border:1px solid rgba(201,168,76,.35);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color:var(--gold);
+
+  flex-shrink:0;
 }
 
-.feat-text strong {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 2px;
-}
-.feat-text span {
-  font-size: 12px;
-  color: rgba(255,255,255,0.55);
+/* ===========================
+   TEXT
+=========================== */
+
+.feat-text{
+  flex:1;
 }
 
-.feat-check {
-  margin-left: auto;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: rgba(201,168,76,0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: var(--gold-light);
-  flex-shrink: 0;
+.feat-text strong{
+  display:block;
+
+  font-size:17px;
+  font-weight:700;
+
+  color:#fff;
+
+  margin-bottom:5px;
+}
+
+.feat-text span{
+  display:block;
+
+  font-size:13px;
+  line-height:1.5;
+
+  color:rgba(255,255,255,.72);
+}
+
+/* ===========================
+   CHECK ICON
+=========================== */
+
+.feat-check{
+  width:32px;
+  height:32px;
+
+  border-radius:50%;
+
+  background:rgba(201,168,76,.18);
+  border:1px solid rgba(201,168,76,.28);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color:var(--gold);
+
+  flex-shrink:0;
+
+  transition:.25s;
+}
+
+.feat-card:hover .feat-check{
+  background:rgba(201,168,76,.28);
+  transform:scale(1.08);
 }
 
 /* ── RIGHT PANEL BACKGROUND ──────────────────────────────── */
@@ -239,11 +306,11 @@
 
 .auth-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 410px;
   background: #fff;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  padding: 28px 32px;     /* was 40px 40px 36px */
+  padding: 28px 30px;     /* was 40px 40px 36px */
 }
 .auth-card:hover{
     transform:translateY(-3px);
@@ -254,13 +321,13 @@
 .logo-area {
   display: flex;
   align-items: center;
-  gap: 10px;              
-  margin-bottom: 18px;    
+  gap: 8px;              
+  margin-bottom: 16px;    
 }
 
 .logo-mark {
-  width: 90px;        /* was 64px */
-  height: 90px;
+  width: 72px;        /* was 64px */
+  height: 72px;
 
   display: flex;
   align-items: center;
@@ -290,12 +357,12 @@
 }
 
 .logo-text span {
-  font-size: 10px;
+  font-size: 12.5px;
   font-weight: 500;
 
   color: var(--gray-400);
 
-  text-transform: uppercase;
+  
   letter-spacing: 0.08em;
 }
 
@@ -303,18 +370,18 @@
 
 .auth-heading {
   font-family: 'Playfair Display', serif;
-  font-size: 1.85rem;
+  font-size: 1.65rem;
   font-weight: 700;
   color: var(--navy);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   line-height: 1.1;
 }
 
 .auth-sub {
   font-size: 13px;
   color: var(--gray-400);
-  line-height: 1.45;
-  margin-bottom: 20px;    /* was 28px */
+  line-height: 1.4;
+  margin-bottom: 18px;    /* was 28px */
 }
 
 /* ── ROLE SELECTOR ───────────────────────────────────────── */
@@ -324,7 +391,7 @@
   background: var(--gray-100);
   padding: 5px;
   border-radius: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .role-btn {
@@ -334,7 +401,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 10px;
+  padding: 8px 6px;
   border: none;
   border-radius: 10px;
   background: transparent;
@@ -392,12 +459,12 @@
 /* ── FORM FIELDS ─────────────────────────────────────────── */
 
 .login-field-group {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 label.field-label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 
   font-size: 12px;
   font-weight: 600;
@@ -497,7 +564,7 @@ label.field-label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 18px;    /* was 24px */
+  margin: 16px 0 18px;
 }
 .login-checkbox-wrap {
   display: flex;

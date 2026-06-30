@@ -5,6 +5,7 @@ import {
   BookOpen,
   CheckCircle2,
 } from "lucide-react";
+import loginBg from "../../../assets/images/bg/login.webp";
 
 const FEATURES = [
   {
@@ -44,11 +45,22 @@ FeatureCard.displayName = "FeatureCard";
 const FeaturePanel = () => (
   <div className="panel-left" aria-label="LTSU campus welcome panel">
     {/* Background image + gradient overlay */}
-    <div
-      className="bg-image"
-      role="img"
-      aria-label="Aerial view of the university campus"
-    />
+   <div
+  className="bg-image"
+  role="img"
+  aria-label="LTSU Campus"
+  style={{
+    backgroundImage: `
+      linear-gradient(
+        160deg,
+        rgba(18,42,80,0.82) 0%,
+        rgba(27,58,107,0.68) 40%,
+        rgba(15,30,60,0.88) 100%
+      ),
+      url(${loginBg})
+    `,
+  }}
+/>
 
     {/* Floating ambient blobs */}
     <div className="blob blob-1" aria-hidden="true" />
