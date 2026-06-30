@@ -76,14 +76,13 @@ const FeaturePanel = () => (
 
       {/* Heading */}
       <h1 className="left-heading">
-        Welcome <em>Back</em>
+        Welcome To
         <br />
-        to <em>LTSU</em> Smart Portal.
+        Your <em>LTSU</em> Portal.
       </h1>
 
       <p className="left-sub">
-        Access your attendance, assignments, results, announcements, academic
-        records, and university services from one secure portal.
+       Access attendance, assignments, results, announcements, academic records, and campus services from one secure portal.
       </p>
 
       {/* Feature cards */}

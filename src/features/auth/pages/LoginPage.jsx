@@ -6,7 +6,7 @@ import LoginForm from "../components/LoginForm";
 
 import "./LoginPage.css";
 
-export default function LoginPage() {
+export default function LoginPage({theme}) {
   const navigate = useNavigate();
 
   const handleBackHome = useCallback(() => {
@@ -14,7 +14,7 @@ export default function LoginPage() {
   }, [navigate]);
 
   return (
-    <main className="login-root">
+   <main className={`login-root ${theme}`}> 
       {/* Left Panel */}
       <FeaturePanel />
 
