@@ -770,26 +770,58 @@ margin-bottom: 10px;
 /* ── RESPONSIVE ──────────────────────────────────────────── */
 
 @media (max-width: 900px) {
-  .login-root { flex-direction: column; }
+
   .panel-left {
-    flex: 0 0 auto;
-    min-height: 280px;
-    padding: 32px 28px;
-    justify-content: center;
+    display: none;
   }
-  .left-heading { font-size: 1.8rem; }
-  .feature-cards { display: none; }
-  .left-sub { margin-bottom: 0; }
+
+  .login-root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .panel-right {
     flex: 1;
-    padding: 28px 20px;
+    width: 100%;
+    padding: 32px 20px;
+    justify-content: center;
   }
-  .auth-card { padding: 28px 24px 24px; }
+
+  .auth-card {
+    max-width: 460px;
+    width: 100%;
+    padding: 28px 24px;
+    margin: 0 auto;
+  }
 }
 
 @media (max-width: 480px) {
-  .panel-left { min-height: 220px; padding: 24px 20px; }
-  .portal-badge { margin-bottom: 18px; }
-  .auth-card { border-radius: var(--radius-md); }
-  .role-btn .r-label { font-size: 10px; }
+
+  .panel-right {
+    padding: 18px;
+  }
+
+  .auth-card {
+    padding: 22px 18px;
+    border-radius: 18px;
+    box-shadow: none;
+  }
+
+  .logo-mark {
+    width: 54px;
+    height: 54px;
+  }
+
+  .logo-text strong {
+    font-size: 18px;
+  }
+
+  .logo-text span {
+    font-size: 10px;
+  }
+
+  .role-btn .r-label {
+    font-size: 10px;
+  }
 }
