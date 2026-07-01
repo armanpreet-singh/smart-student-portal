@@ -1,83 +1,68 @@
-import {
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  Info,
-} from "lucide-react";
+import "./Toast.css";
+import { X, CheckCircle2, XCircle, AlertTriangle, Info } from "lucide-react";
+import { ltsuLogo } from "../../assets/images/logo";
 
 const ICONS = {
-  success: <CheckCircle2 size={22} />,
-  error: <XCircle size={22} />,
-  warning: <AlertTriangle size={22} />,
-  info: <Info size={22} />,
+  success: <CheckCircle2 size={20} />,
+  error: <XCircle size={20} />,
+  warning: <AlertTriangle size={20} />,
+  info: <Info size={20} />,
 };
 
 const COLORS = {
-  success: "#16a34a",
-  error: "#dc2626",
-  warning: "#d97706",
-  info: "#2563eb",
+  success: "#16A34A",
+  error: "#DC2626",
+  warning: "#D97706",
+  info: "#2563EB",
 };
 
 export default function Toast({
   type = "success",
   title,
   message,
+  onClose,
 }) {
   return (
     <div
+      className="ltsu-toast"
       style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "14px",
-
-        minWidth: "340px",
-        maxWidth: "420px",
-
-        padding: "16px 18px",
-
-        background: "#fff",
-        borderRadius: "16px",
-
-        borderLeft: `5px solid ${COLORS[type]}`,
-
-        boxShadow: "0 16px 40px rgba(0,0,0,.14)",
-
-        fontFamily: "Inter, sans-serif",
+        "--accent": COLORS[type],
       }}
     >
-      <div
-        style={{
-          color: COLORS[type],
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {ICONS[type]}
+      {/* Header */}
+      <div className="toast-header">
+        <div className="toast-brand">
+          <img
+            src={ltsuLogo}
+            alt="LTSU"
+            className="toast-logo"
+          />
+          <span>LTSU Portal</span>
+        </div>
+
+        <button
+          className="toast-close"
+          onClick={onClose}
+        >
+          <X size={16} />
+        </button>
       </div>
 
-      <div style={{ flex: 1 }}>
-        <div
-          style={{
-            fontSize: "15px",
-            fontWeight: 700,
-            color: "#1B3A6B",
-            marginBottom: "3px",
-          }}
-        >
-          {title}
+      {/* Body */}
+      <div className="toast-body">
+        <div className="toast-icon">
+          {ICONS[type]}
         </div>
 
-        <div
-          style={{
-            fontSize: "13px",
-            color: "#64748B",
-            lineHeight: 1.5,
-          }}
-        >
-          {message}
+        <div className="toast-content">
+          <h4>{title}</h4>
+          <p>{message}</p>
         </div>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="toast-progress">
+        <div className="toast-progress-fill" />
       </div>
     </div>
   );

@@ -89,33 +89,9 @@ export default function App() {
   position="top-right"
   reverseOrder={false}
   gutter={12}
-  toastOptions={{
-    duration: 3000,
-
-    style: {
-      background: "#ffffff",
-      color: "#1B3A6B",
-      border: "1px solid #E5E7EB",
-      borderRadius: "14px",
-      padding: "14px 18px",
-      fontSize: "14px",
-      fontWeight: 500,
-      boxShadow: "0 12px 30px rgba(0,0,0,0.12)",
-    },
-
-    success: {
-      iconTheme: {
-        primary: "#16a34a",
-        secondary: "#ffffff",
-      },
-    },
-
-    error: {
-      iconTheme: {
-        primary: "#dc2626",
-        secondary: "#ffffff",
-      },
-    },
+  containerStyle={{
+    top: 24,
+    right: 24,
   }}
 />
   </>
