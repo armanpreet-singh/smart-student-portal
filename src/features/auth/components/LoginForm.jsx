@@ -1,6 +1,10 @@
 import React, { useState, useCallback, memo } from "react";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
+
+import {
+  showSuccessToast,
+  showErrorToast,
+} from "../../../components/ui/toastUtils";
 import RoleSelector from "./RoleSelector";
 import { ltsuLogo } from "../../../assets/images/logo";
 import { Link, useNavigate } from "react-router-dom";
@@ -51,7 +55,10 @@ const onSubmit = (data) => {
   setTimeout(() => {
     setLoading(false);
 
-    toast.success("Login Successful!");
+showErrorToast(
+  "Login Failed",
+  "Incorrect University ID or Password."
+);
 
     navigate("/dashboard");
   }, 1000);
