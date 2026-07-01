@@ -109,38 +109,46 @@ const LoginForm = () => {
         </div>
 
         {/* Password */}
-        <div className="login-field-group">
-          <label className="field-label" htmlFor="passwordInput">
-            Password
-          </label>
-          <div className="login-field-wrap">
-            <span className="login-field-icon" aria-hidden="true">
-              <Lock size={18} strokeWidth={2} />
-            </span>
-            <input
-              id="passwordInput"
-              className="login-field-input has-icon"
-              type={showPw ? "text" : "password"}
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              aria-required="true"
-            />
-            <button
-              type="button"
-              className="pw-toggle"
-              aria-label={showPw ? "Hide password" : "Show password"}
-              onClick={togglePw}
-            >
-              {showPw ? (
-                <EyeOff size={18} strokeWidth={2} />
-              ) : (
-                <Eye size={18} strokeWidth={2} />
-              )}
-            </button>
-          </div>
-        </div>
+       <div className="login-field-group">
+  <label className="field-label" htmlFor="passwordInput">
+    Password
+  </label>
+
+  <div className="login-field-wrap">
+    <span className="login-field-icon">
+      <Lock size={18} />
+    </span>
+
+    <input
+      id="passwordInput"
+      className="login-field-input has-icon"
+      type={showPw ? "text" : "password"}
+      placeholder="Enter your password"
+      autoComplete="current-password"
+      {...register("password", {
+        required: "Password is required",
+        minLength: {
+          value: 6,
+          message: "Password must be at least 6 characters",
+        },
+      })}
+    />
+
+    <button
+      type="button"
+      className="pw-toggle"
+      onClick={togglePw}
+    >
+      {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
+    </button>
+  </div>
+
+  {errors.password && (
+    <p className="login-error">
+      {errors.password.message}
+    </p>
+  )}
+</div>
 
         {/* Remember + Forgot */}
         <div className="login-form-row">
