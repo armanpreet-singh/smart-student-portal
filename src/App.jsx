@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import { injectGlobalStyles } from "./styles/GlobalStyles";
 
@@ -52,6 +53,7 @@ export default function App() {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
 
   return (
+  <>
     <Routes>
       {/* Landing Page */}
       <Route
@@ -81,5 +83,13 @@ export default function App() {
         element={<Dashboard />}
       />
     </Routes>
-  );
+
+    {/* Global Toast Notifications */}
+    <Toaster
+      position="top-right"
+      reverseOrder={false}
+      gutter={12}
+    />
+  </>
+);
 }
