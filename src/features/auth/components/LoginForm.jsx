@@ -41,18 +41,21 @@ const LoginForm = () => {
     },
   });
   const navigate = useNavigate();
-  const onSubmit = (data) => {
-    if (loading) return;
+const onSubmit = (data) => {
+  if (loading) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    console.log(data); // replace this with API call later
+  console.log(data);
 
-    setTimeout(() => {
-      setLoading(false);
-      navigate("/dashboard");
-    }, 1000);
-  };
+  setTimeout(() => {
+    setLoading(false);
+
+    toast.success("Login Successful!");
+
+    navigate("/dashboard");
+  }, 1000);
+};
 
   const togglePw = useCallback(() => setShowPw((v) => !v), []);
 
