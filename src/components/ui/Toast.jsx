@@ -1,4 +1,5 @@
 import "./Toast.css";
+import toast from "react-hot-toast";
 import { X, CheckCircle2, XCircle, AlertTriangle, Info } from "lucide-react";
 import { ltsuLogo } from "../../assets/images/logo";
 
@@ -17,10 +18,10 @@ const COLORS = {
 };
 
 export default function Toast({
-  type = "success",
+  type,
   title,
   message,
-  onClose,
+  toastId,
 }) {
   return (
     <div
@@ -30,23 +31,16 @@ export default function Toast({
       }}
     >
       {/* Header */}
-      <div className="toast-header">
-        <div className="toast-brand">
-          <img
-            src={ltsuLogo}
-            alt="LTSU"
-            className="toast-logo"
-          />
-          <span>LTSU Portal</span>
-        </div>
+     <div className="toast-brand">
+  <div className="toast-logo">
+    <img src={ltsuLogo} alt="LTSU" />
+  </div>
 
-        <button
-          className="toast-close"
-          onClick={onClose}
-        >
-          <X size={16} />
-        </button>
-      </div>
+  <div className="toast-brand-text">
+    <strong>LTSU Portal</strong>
+    <span>Lamrin Tech Skills University</span>
+  </div>
+</div>
 
       {/* Body */}
       <div className="toast-body">

@@ -46,7 +46,7 @@ export const showInfoToast = (title, message) => {
       type="info"
       title={title}
       message={message}
-      onClose={() => toast.dismiss(t.id)}
+  toastId={t.id}
     />
   ),{
      duration: 4000,  

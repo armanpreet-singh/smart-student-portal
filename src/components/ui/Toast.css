@@ -3,6 +3,7 @@
   background: #ffffff;
   border-radius: 18px;
   overflow: hidden;
+  transition:.25s;
 
   border-left: 3px solid var(--accent);
 
@@ -13,6 +14,15 @@
   font-family: "Inter", sans-serif;
 
   animation: toastPop .28s ease;
+}
+
+.ltsu-toast:hover{
+
+transform:translateY(-3px);
+
+box-shadow:
+0 22px 48px rgba(0,0,0,.18);
+
 }
 
 /* ---------- Header ---------- */
@@ -32,15 +42,29 @@
   align-items: center;
   gap: 10px;
 
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
 
   color: #1b3a6b;
 }
 
 .toast-logo{
-    width:32px;
-    height:32px;
+    width:38px;
+    height:38px;
+
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.toast-logo img{
+
+    width:165%;
+    height:165%;
+
+    object-fit:contain;
 }
 /* ---------- Close Button ---------- */
 
@@ -71,7 +95,7 @@ margin-right:-4px;
 
 .toast-close:hover {
   background: #f4f6fb;
-  color: #1b3a6b;
+  transform:rotate(90deg);
 }
 
 /* ---------- Body ---------- */
@@ -80,12 +104,12 @@ margin-right:-4px;
   display: flex;
   gap: 16px;
 
-  padding: 20px;
+ padding:16px 18px;
 }
 
 .toast-icon {
-  width: 46px;
-  height: 46px;
+  width: 42px;
+  height: 42px;
 
   border-radius: 50%;
 
@@ -116,8 +140,8 @@ margin-right:-4px;
 .toast-content p {
   margin: 0;
 
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: 15px;
+  line-height: 1.45;
 
   color: #64748b;
 }
@@ -125,6 +149,7 @@ margin-right:-4px;
 /* ---------- Progress ---------- */
 
 .toast-progress {
+    width: 100%;
   height: 4px;
   background: #edf2f7;
 }
