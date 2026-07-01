@@ -1,31 +1,20 @@
-import React, { useState, useCallback, memo } from 'react';
-import RoleSelector from './RoleSelector';
+import React, { useState, useCallback, memo } from "react";
+import { useForm } from "react-hook-form";
+import RoleSelector from "./RoleSelector";
 import { ltsuLogo } from "../../../assets/images/logo";
-import { Link, useNavigate } from "react-router-dom";   
-import {
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  ArrowLeft,
-  ArrowRight,
-} from "lucide-react";
-
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, ArrowRight } from "lucide-react";
 
 const PLACEHOLDERS = {
-  student: 'Last Four Digits Of Your Roll No.',
-  faculty: 'Faculty ID',
-  admin:   'admin@ltsu.edu',
+  student: "Last Four Digits Of Your Roll No.",
+  faculty: "Faculty ID",
+  admin: "admin@ltsu.edu",
 };
 
 /* ── Logo SVG (memoised, renders once) ── */
 const LogoMark = memo(() => (
   <div className="logo-mark" aria-hidden="true">
-    <img
-      src={ltsuLogo}
-      alt="LTSU Logo"
-      className="logo-image"
-    />
+    <img src={ltsuLogo} alt="LTSU Logo" className="logo-image" />
   </div>
 ));
 
@@ -33,32 +22,36 @@ LogoMark.displayName = "LogoMark";
 
 /* ── Main form ── */
 const LoginForm = () => {
-  const [role, setRole]         = useState('student');
-  const [email, setEmail]       = useState('');
-  const [password, setPassword] = useState('');
-  const [showPw, setShowPw]     = useState(false);
+  const [role, setRole] = useState("student");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
   const [remember, setRemember] = useState(false);
-  const [loading, setLoading]   = useState(false);
-const navigate = useNavigate();
-const handleSubmit = useCallback(
-  (e) => {
-    e.preventDefault();
-
-    if (!email.trim() || !password.trim()) return;
-
+  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+      remember: false,
+    },
+  });
+  const navigate = useNavigate();
+  const onSubmit = (data) => {
     if (loading) return;
 
     setLoading(true);
 
-    // Temporary login
+    console.log(data); // replace this with API call later
+
     setTimeout(() => {
       setLoading(false);
-
       navigate("/dashboard");
     }, 1000);
-  },
-  [email, password, loading, navigate]
-);
+  };
 
   const togglePw = useCallback(() => setShowPw((v) => !v), []);
 
@@ -78,13 +71,15 @@ const handleSubmit = useCallback(
       </div>
 
       <h2 className="auth-heading">Welcome back</h2>
-      <p className="auth-sub">Sign in to access your academic dashboard and university services.</p>
+      <p className="auth-sub">
+        Sign in to access your academic dashboard and university services.
+      </p>
 
       {/* ── Role selector ── */}
       <RoleSelector activeRole={role} onChange={setRole} />
 
       {/* ── Form ── */}
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         {/* Email / ID */}
         <div className="login-field-group">
           <label className="field-label" htmlFor="emailInput">
@@ -92,19 +87,25 @@ const handleSubmit = useCallback(
           </label>
           <div className="login-field-wrap">
             <span className="login-field-icon" aria-hidden="true">
-  <Mail size={18} strokeWidth={2} />
-</span>
+              <Mail size={18} strokeWidth={2} />
+            </span>
             <input
               id="emailInput"
               className="login-field-input has-icon"
-              type="email"
+              type="text"
               placeholder={PLACEHOLDERS[role]}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
+              autoComplete="username"
               aria-required="true"
+              {...register("email", {
+                required: "University ID is required",
+              })}
             />
           </div>
+          {errors.email && (
+  <p className="login-error">
+    {errors.email.message}
+  </p>
+)}
         </div>
 
         {/* Password */}
@@ -114,12 +115,12 @@ const handleSubmit = useCallback(
           </label>
           <div className="login-field-wrap">
             <span className="login-field-icon" aria-hidden="true">
-  <Lock size={18} strokeWidth={2} />
-</span>
+              <Lock size={18} strokeWidth={2} />
+            </span>
             <input
               id="passwordInput"
               className="login-field-input has-icon"
-              type={showPw ? 'text' : 'password'}
+              type={showPw ? "text" : "password"}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -129,14 +130,14 @@ const handleSubmit = useCallback(
             <button
               type="button"
               className="pw-toggle"
-              aria-label={showPw ? 'Hide password' : 'Show password'}
+              aria-label={showPw ? "Hide password" : "Show password"}
               onClick={togglePw}
             >
               {showPw ? (
-  <EyeOff size={18} strokeWidth={2} />
-) : (
-  <Eye size={18} strokeWidth={2} />
-)}
+                <EyeOff size={18} strokeWidth={2} />
+              ) : (
+                <Eye size={18} strokeWidth={2} />
+              )}
             </button>
           </div>
         </div>
@@ -152,7 +153,11 @@ const handleSubmit = useCallback(
             />
             <span>Remember me</span>
           </label>
-          <a href="#reset" className="login-forgot-link" aria-label="Reset your password">
+          <a
+            href="#reset"
+            className="login-forgot-link"
+            aria-label="Reset your password"
+          >
             Forgot password?
           </a>
         </div>
@@ -164,11 +169,11 @@ const handleSubmit = useCallback(
           disabled={loading}
           aria-busy={loading}
         >
-          <span>{loading ? 'Signing in…' : 'Access Portal'}</span>
+          <span>{loading ? "Signing in…" : "Access Portal"}</span>
           {!loading && (
             <span className="btn-arrow" aria-hidden="true">
-  <ArrowRight size={18} strokeWidth={2.5} />
-</span>
+              <ArrowRight size={18} strokeWidth={2.5} />
+            </span>
           )}
         </button>
       </form>
@@ -184,10 +189,10 @@ const handleSubmit = useCallback(
       <button
         type="button"
         className="login-btn-secondary"
-      onClick={() => navigate("/")}
+        onClick={() => navigate("/")}
         aria-label="Return to LTSU home page"
       >
-       <ArrowLeft size={18} strokeWidth={2.5} />
+        <ArrowLeft size={18} strokeWidth={2.5} />
         <span>Back to Home</span>
       </button>
     </div>
