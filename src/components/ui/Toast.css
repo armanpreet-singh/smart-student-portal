@@ -201,14 +201,108 @@ transform:translateY(-3px);
   }
 
 }
-/* ---------- Mobile ---------- */
+/* ==========================================
+   Responsive Toast
+========================================== */
 
-@media (max-width:480px){
+@media (max-width: 768px) {
 
-  .ltsu-toast{
+  .ltsu-toast {
+    width: calc(100vw - 32px);
+    max-width: 360px;
+    min-width: unset;
 
-    width:calc(100vw - 30px);
-
+    border-radius: 16px;
   }
 
+  .toast-body {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .toast-logo {
+    width: 44px;
+    height: 44px;
+  }
+
+  .toast-logo img {
+    transform: scale(1.35);
+  }
+
+  .toast-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .toast-content h4 {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+
+  .toast-content p {
+    font-size: 14px;
+    line-height: 1.4;
+
+    word-break: break-word;
+  }
+
+  .toast-close {
+    width: 28px;
+    height: 28px;
+
+    top: 10px;
+    right: 10px;
+  }
+
+  .toast-progress {
+    height: 3px;
+  }
+}
+
+/* ==========================================
+   Small Phones
+========================================== */
+
+@media (max-width: 480px) {
+
+  .ltsu-toast {
+    width: calc(100vw - 20px);
+    max-width: none;
+
+    border-radius: 14px;
+  }
+
+  .toast-body {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .toast-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .toast-logo img {
+    transform: scale(1.25);
+  }
+
+  .toast-content h4 {
+    font-size: 16px;
+  }
+
+  .toast-content p {
+    font-size: 13px;
+  }
+
+  .toast-close {
+    width: 26px;
+    height: 26px;
+
+    top: 8px;
+    right: 8px;
+  }
+
+  .toast-progress {
+    height: 2px;
+  }
 }

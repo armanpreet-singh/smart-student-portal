@@ -3,12 +3,12 @@ import Toast from "./Toast";
 
 export const showSuccessToast = (title, message) => {
   toast.custom((t) => (
-    <Toast
-      type="success"
-      title={title}
-      message={message}
-      onClose={() => toast.dismiss(t.id)}
-    />
+<Toast
+  type="success"
+  title={title}
+  message={message}
+  toastId={t.id}
+/>
   ),{
      duration: 4000,
   });
@@ -16,12 +16,12 @@ export const showSuccessToast = (title, message) => {
 
 export const showErrorToast = (title, message) => {
   toast.custom((t) => (
-    <Toast
-      type="error"
-      title={title}
-      message={message}
-      onClose={() => toast.dismiss(t.id)}
-    />
+<Toast
+  type="error"
+  title={title}
+  message={message}
+  toastId={t.id}
+/>
   ),{
      duration: 4000,
   });
@@ -29,12 +29,12 @@ export const showErrorToast = (title, message) => {
 
 export const showWarningToast = (title, message) => {
   toast.custom((t) => (
-    <Toast
-      type="warning"
-      title={title}
-      message={message}
-      onClose={() => toast.dismiss(t.id)}
-    />
+<Toast
+  type="warning"
+  title={title}
+  message={message}
+  toastId={t.id}
+/>
   ),{
      duration: 4000,
   });
