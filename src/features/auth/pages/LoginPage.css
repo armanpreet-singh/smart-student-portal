@@ -69,44 +69,58 @@
   position: absolute;
   inset: 0;
 
-  background:
-    linear-gradient(
-      160deg,
-      rgba(18, 42, 80, 0.82) 0%,
-      rgba(27, 58, 107, 0.68) 40%,
-      rgba(15, 30, 60, 0.88) 100%
-    ),
-    url("../../assets/images/bg/campus.jpg");
-
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
+  z-index: 0;
 }
 
 /* Floating blurred blobs */
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(72px);
-  opacity: 0.22;
   pointer-events: none;
+  opacity: 0.18;
+
+  background: radial-gradient(
+    circle,
+    currentColor 0%,
+    transparent 70%
+  );
+
+  filter: none;
 }
 .blob-1 {
-  width: 420px; height: 420px;
-  background: var(--gold);
-  top: -80px; left: -120px;
+  width: 420px;
+  height: 420px;
+  color: var(--gold);
+
+  top: -80px;
+  left: -120px;
+
   animation: floatA 9s ease-in-out infinite;
 }
+
 .blob-2 {
-  width: 360px; height: 360px;
-  background: #2A5298;
-  bottom: 80px; right: -80px;
+  width: 360px;
+  height: 360px;
+  color: #2A5298;
+
+  bottom: 80px;
+  right: -80px;
+
   animation: floatB 12s ease-in-out infinite;
 }
+
 .blob-3 {
-  width: 280px; height: 280px;
-  background: var(--gold);
-  top: 40%; left: 30%;
+  width: 280px;
+  height: 280px;
+  color: var(--gold);
+
+  top: 40%;
+  left: 30%;
+
   animation: floatA 15s ease-in-out infinite 3s;
 }
 
@@ -177,6 +191,8 @@
   flex-direction: column;
   gap: 14px;
   margin-top: 12px;
+    position: relative;
+  z-index: 3;
 }
 
 .feat-card {
@@ -327,8 +343,9 @@
 .logo-area {
   display: flex;
   align-items: center;
-  gap: 8px;              
-  margin-bottom: 16px;    
+  gap: 3px;
+ margin-left: -16px;
+  margin-bottom: 28px;
 }
 
 .logo-mark {
@@ -340,6 +357,7 @@
   justify-content: center;
 
   flex-shrink: 0;
+  margin: 0;
 }
 .logo-image {
   width: 100%;
@@ -777,9 +795,9 @@ margin-bottom: 10px;
 
 @media (max-width: 900px) {
 
-  .panel-left {
-    display: none;
-  }
+.panel-left {
+    isolation: isolate;
+}
 
   .login-root {
     display: flex;
