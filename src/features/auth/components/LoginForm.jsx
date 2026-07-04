@@ -27,40 +27,49 @@ LogoMark.displayName = "LogoMark";
 
 /* ── Main form ── */
 const LoginForm = () => {
-  const [role, setRole] = useState("student");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPw, setShowPw] = useState(false);
-  const [remember, setRemember] = useState(false);
-  const [loading, setLoading] = useState(false);
+const [role, setRole] = useState("student");
+const [showPw, setShowPw] = useState(false);
+const [loading, setLoading] = useState(false);
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      email: "",
-      password: "",
-      remember: false,
-    },
-  });
+  register,
+  handleSubmit,
+  reset,
+  formState: {
+    errors,
+    isSubmitting,
+  },
+} = useForm({
+  mode: "onBlur",
+  reValidateMode: "onChange",
+  defaultValues: {
+    email: "",
+    password: "",
+    remember: false,
+  },
+});
   const navigate = useNavigate();
 const onSubmit = (data) => {
   if (loading) return;
 
+  const loginData = {
+    ...data,
+    role,
+  };
+
   setLoading(true);
 
-  console.log(data);
+  console.log(loginData);
 
   setTimeout(() => {
     setLoading(false);
 
-showErrorToast(
-  "Login Failed",
-  "Incorrect University ID or Password."
-);
+    showErrorToast(
+      "Login Failed",
+      "Incorrect University ID or Password."
+    );
 
-    navigate("/dashboard");
+   
+
   }, 1000);
 };
 
@@ -164,12 +173,11 @@ showErrorToast(
         {/* Remember + Forgot */}
         <div className="login-form-row">
           <label className="login-checkbox-wrap">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              checked={remember}
-              onChange={(e) => setRemember(e.target.checked)}
-            />
+       <input
+  type="checkbox"
+  id="rememberMe"
+  {...register("remember")}
+/>
             <span>Remember me</span>
           </label>
           <a
@@ -185,7 +193,7 @@ showErrorToast(
         <button
           type="submit"
           className="login-btn-primary"
-          disabled={loading}
+         disabled={loading || isSubmitting}
           aria-busy={loading}
         >
           <span>{loading ? "Signing in…" : "Access Portal"}</span>
