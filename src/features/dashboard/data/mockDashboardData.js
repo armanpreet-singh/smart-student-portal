@@ -126,3 +126,10 @@ export const attendanceInsightsData = [
   { id: 4, icon: "target", text: "Attend the next 3 DBMS lectures to reach 90%.", type: "info" },
 ];
 
+export const resultsData = [
+  { semester: "1st", sgpa: 8.2, credits: 22 },
+  { semester: "2nd", sgpa: 8.5, credits: 24 },
+  { semester: "3rd", sgpa: 9.1, credits: 26 },
+  { semester: "4th", sgpa: 8.8, credits: 24 },
+  { semester: "5th", sgpa: null, credits: 0 }
+];
