@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import { injectGlobalStyles } from "./styles/GlobalStyles";
-
+import DashboardRoutes from "./features/dashboard/routes/DashboardRoutes";
 import LandingPage from "./features/landing/LandingPage";
 import LoginPage from "./features/auth/pages/LoginPage";
 
@@ -78,10 +78,10 @@ export default function App() {
       />
 
       {/* Dashboard */}
-      <Route
-        path="/dashboard"
-        element={<Dashboard />}
-      />
+   <Route
+  path="/dashboard/*"
+  element={<DashboardRoutes />}
+/>
     </Routes>
 
     {/* Global Toast Notifications */}
