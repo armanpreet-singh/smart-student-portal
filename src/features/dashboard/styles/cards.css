@@ -490,3 +490,32 @@
   flex-direction: column;
   gap: 12px;
 }
+/* =========================================
+   QUICK ACTION BUTTONS
+   ========================================= */
+
+.d-quick-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: var(--d-bg);
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  color: var(--d-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--d-transition);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.d-quick-action:hover {
+  border-color: var(--d-primary);
+  box-shadow: var(--d-shadow);
+}
+
+.d-quick-action span {
+  line-height: 1;
+}
