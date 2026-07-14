@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 
 import { injectGlobalStyles } from "./styles/GlobalStyles";
 import DashboardRoutes from "./features/dashboard/routes/DashboardRoutes";
+import TeacherRoutes from "./features/teacher/routes/TeacherRoutes"; // <-- Added Import
 import LandingPage from "./features/landing/LandingPage";
 import LoginPage from "./features/auth/pages/LoginPage";
 
@@ -15,7 +16,7 @@ function Dashboard() {
         display: "grid",
         placeItems: "center",
         height: "100vh",
-        fontSize: "2rem",
+        fontSize: "2rem", 
         fontWeight: "600",
       }}
     >
@@ -77,11 +78,17 @@ export default function App() {
         }
       />
 
-      {/* Dashboard */}
-   <Route
-  path="/dashboard/*"
-  element={<DashboardRoutes />}
-/>
+      {/* Student Dashboard */}
+      <Route
+        path="/dashboard/*"
+        element={<DashboardRoutes />}
+      />
+
+      {/* Teacher Dashboard */}
+      <Route
+        path="/teacher/*"
+        element={<TeacherRoutes />}
+      />
     </Routes>
 
     {/* Global Toast Notifications */}
@@ -95,5 +102,5 @@ export default function App() {
   }}
 />
   </>
-);
+  );
 }
