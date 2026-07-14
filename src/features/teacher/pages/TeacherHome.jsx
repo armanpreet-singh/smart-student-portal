@@ -52,7 +52,7 @@ const TeacherHome = () => {
     <div className="d-page-container">
       <CustomHero />
 
-      <div className="d-grid-4">
+      <div className="d-grid-3">
         {teacherStatsData.map((stat) => (
           <StatCard key={stat.id} {...stat} />
         ))}
