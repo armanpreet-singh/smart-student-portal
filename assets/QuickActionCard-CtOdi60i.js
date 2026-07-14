@@ -1,0 +1,1 @@
+import{r as i,j as s,m as c}from"./index-Q22fkcTD.js";const t=i.memo(({icon:a,label:e,color:o})=>s.jsxs(c.button,{className:"d-quick-action",whileHover:{scale:1.05,backgroundColor:`${o}15`},whileTap:{scale:.95},children:[s.jsx(a,{size:20,color:o}),s.jsx("span",{children:e})]}));export{t as Q};
