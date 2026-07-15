@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import ltsuLogo from "../../../../assets/images/logo/ltsu-logo.webp";
 import { NavLink } from 'react-router-dom';
 import { X, LayoutDashboard, BookOpen, UserCheck, FileText, Users, Megaphone, Clock, FolderOpen, CalendarDays, QrCode, Bot, Sparkles } from 'lucide-react';
 
@@ -24,7 +25,13 @@ const TeacherSidebar = memo(({ isOpen, onClose }) => {
     <aside className={`d-sidebar ${isOpen ? 'open' : ''}`}>
       <div className="d-sidebar-header">
         <div className="d-logo">
-          <div className="d-logo-icon"><Sparkles size={24} color="#D4AF37" /></div>
+          <div className="d-logo-icon">
+            <img
+              src={ltsuLogo}
+              alt="LTSU Logo"
+              className="d-logo-image"
+            />
+          </div>
           <div>
             <h2>LTSU</h2>
             <p>Faculty Portal</p>
