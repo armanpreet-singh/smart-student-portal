@@ -154,7 +154,7 @@ decoding="async"
                 { icon: "shield",  text: "Secure & Encrypted" },
                 { icon: "clock",   text: "24/7 Accessible"    },
                 { icon: "zap",     text: "Real-Time Updates"  },
-                { icon: "mapPin",  text: "Gharuan, Mohali"    },
+                { icon: "mapPin",  text: "Rupnagar, Punjab"    },
               ].map((item, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: "7px" }}>
                   <Icon name={item.icon} size={13} color="rgba(201,168,76,0.5)" />

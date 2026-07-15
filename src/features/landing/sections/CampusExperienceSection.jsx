@@ -122,7 +122,7 @@ overflow: "hidden",
 
           <div style={{ position: "relative", zIndex: 1 }}>
             <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1.2px", marginBottom: "10px" }}>
-              Lamrin Tech Skills University · Gharuan, Mohali
+              Lamrin Tech Skills University · Rupnagar, Punjab
             </div>
             <h3 style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 800, color: "white", marginBottom: "14px" }}>
               Where Innovation Meets{" "}
