@@ -3,8 +3,10 @@ import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import { injectGlobalStyles } from "./styles/GlobalStyles";
+import { AccessibilityProvider } from "./context/AccessibilityContext"; // <-- Added Import
 import DashboardRoutes from "./features/dashboard/routes/DashboardRoutes";
-import TeacherRoutes from "./features/teacher/routes/TeacherRoutes"; // <-- Added Import
+import TeacherRoutes from "./features/teacher/routes/TeacherRoutes"; 
+import AdminRoutes from "./features/admin/routes/AdminRoutes"; 
 import LandingPage from "./features/landing/LandingPage";
 import LoginPage from "./features/auth/pages/LoginPage";
 
@@ -54,53 +56,60 @@ export default function App() {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
 
   return (
-  <>
-    <Routes>
-      {/* Landing Page */}
-      <Route
-        path="/"
-        element={
-          <LandingPage
-            theme={theme}
-            toggleTheme={toggleTheme}
-          />
-        }
-      />
+    // <-- Wrapped in Accessibility Provider
+    <AccessibilityProvider>
+      <Routes>
+        {/* Landing Page */}
+        <Route
+          path="/"
+          element={
+            <LandingPage
+              theme={theme}
+              toggleTheme={toggleTheme}
+            />
+          }
+        />
 
-      {/* Login Page */}
-      <Route
-        path="/login"
-        element={
-          <LoginPage
-            theme={theme}
-            toggleTheme={toggleTheme}
-          />
-        }
-      />
+        {/* Login Page */}
+        <Route
+          path="/login"
+          element={
+            <LoginPage
+              theme={theme}
+              toggleTheme={toggleTheme}
+            />
+          }
+        />
 
-      {/* Student Dashboard */}
-      <Route
-        path="/dashboard/*"
-        element={<DashboardRoutes />}
-      />
+        {/* Student Dashboard */}
+        <Route
+          path="/dashboard/*"
+          element={<DashboardRoutes />}
+        />
 
-      {/* Teacher Dashboard */}
-      <Route
-        path="/teacher/*"
-        element={<TeacherRoutes />}
-      />
-    </Routes>
+        {/* Teacher Dashboard */}
+        <Route
+          path="/teacher/*"
+          element={<TeacherRoutes />}
+        />
 
-    {/* Global Toast Notifications */}
-<Toaster
-  position="top-right"
-  reverseOrder={false}
-  gutter={12}
-  containerStyle={{
-    top: 24,
-    right: 24,
-  }}
-/>
-  </>
+        {/* Admin Dashboard */}
+        <Route
+          path="/admin/*"
+          element={<AdminRoutes />}
+        />
+      </Routes>
+
+      {/* Global Toast Notifications */}
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        gutter={12}
+        containerStyle={{
+          top: 24,
+          right: 24,
+        }}
+      />
+    </AccessibilityProvider>
   );
 }
