@@ -4,11 +4,14 @@ import Icon from "../components/Icon";
 import DashboardPreview                      from "../components/DashboardPreview";
 import SectionBackground from "../components/SectionBackground";
 import { dashboardBg } from "../../../assets/images/bg";
-import {
-  studentDashboard,
-  facultyDashboard,
-  adminDashboard,
-} from "../../../assets/images/dashboard";
+  // import {
+  //   studentDashboard,
+  //   facultyDashboard,
+  //   adminDashboard,
+  // } from "../../../assets/images/dashboard";
+const facultyDashboard = "https://res.cloudinary.com/aveqwdxd/image/upload/v1784308082/FACULTY-DASHBOARD_umz0c1.png";
+const studentDashboard = "https://res.cloudinary.com/aveqwdxd/image/upload/v1784308081/STUDENT-DASHBOARD_m6h88v.png";
+const adminDashboard = "https://res.cloudinary.com/aveqwdxd/image/upload/v1784308081/ADMIN-DASHBOARD_thesum.png";
 
 const TABS = [
   { label: "Student Dashboard", type: "student" },
