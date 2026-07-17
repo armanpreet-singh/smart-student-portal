@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboardTheme } from "../../../../features/dashboard/hooks/useDashboardTheme";
+import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySubmenu';
 import { adminData } from "../../data/mockAdminData";
 
 const AdminTopbar = memo(({ onMenuClick }) => {
@@ -156,18 +157,7 @@ const AdminTopbar = memo(({ onMenuClick }) => {
                   <span>Account Settings</span>
                   <ChevronRight size={14} className="d-dropdown-arrow" />
                 </Link>
-                <button
-                  className="d-dropdown-item"
-                  role="menuitem"
-                  onClick={() => {
-                    toggleTheme();
-                    setIsDropdownOpen(false);
-                  }}
-                >
-                  {isDark ? <Sun size={16} /> : <Moon size={16} />}
-                  <span>Appearance</span>
-                  <ChevronRight size={14} className="d-dropdown-arrow" />
-                </button>
+                <AccessibilitySubmenu />
                 <button
                   className="d-dropdown-item"
                   role="menuitem"

@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboardTheme } from "../../../../features/dashboard/hooks/useDashboardTheme";
+import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySubmenu';
 import { teacherData } from "../../data/mockTeacherData";
 
 const TeacherTopbar = memo(({ onMenuClick }) => {
@@ -74,11 +75,6 @@ const TeacherTopbar = memo(({ onMenuClick }) => {
     console.log("Logout");
     navigate("/");
   }, [navigate]);
-  const handleAppearanceClick = useCallback(() => {
-    toggleTheme();
-    setIsDropdownOpen(false);
-  }, [toggleTheme]);
-
   return (
     <header className="d-topbar">
       <div className="d-topbar-left">
@@ -175,15 +171,7 @@ const TeacherTopbar = memo(({ onMenuClick }) => {
                   <span>Account Settings</span>
                   <ChevronRight size={14} className="d-dropdown-arrow" />
                 </Link>
-                <button
-                  className="d-dropdown-item"
-                  role="menuitem"
-                  onClick={handleAppearanceClick}
-                >
-                  {isDark ? <Sun size={16} /> : <Moon size={16} />}
-                  <span>Appearance</span>
-                  <ChevronRight size={14} className="d-dropdown-arrow" />
-                </button>
+                <AccessibilitySubmenu />
                 <button
                   className="d-dropdown-item"
                   role="menuitem"
