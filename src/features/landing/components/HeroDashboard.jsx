@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { dashboardPreview } from "../../../assets/images/misc";
-
+// import { dashboardPreview } from "../../../assets/images/misc";
+const heroBg = "https://res.cloudinary.com/aveqwdxd/image/upload/v1784308463/HERO_ii1ake.png";
 export default function HeroDashboard() {
   return (
     <div
@@ -141,7 +141,7 @@ export default function HeroDashboard() {
           }}
         >
           <img
-            src={dashboardPreview}
+            src={heroBg}
             alt="LTSU University Portal — Real Dashboard Preview"
            width = "100%"
               height ="100%"
