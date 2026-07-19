@@ -1,192 +1,274 @@
-# 🎓 Smart Student Portal
+# LTSU Smart Portal
 
-A modern and responsive Student Management Portal designed for **Lamrin Tech Skills University (LTSU)**. This project showcases a professional university portal experience with interactive dashboards, academic modules, campus information, performance analytics, and a visually engaging user interface.
+A modern, role-based university management portal designed to streamline the academic experience for students, faculty, and administrators through a unified digital platform.
 
-## 🌐 Live Demo
-
-🔗 [Live Demo](https://armanpreet-singh.github.io/smart-student-portal/)
+The project focuses on scalability, modular architecture, reusable components, accessibility, and a production-oriented frontend built with React.
 
 ---
 
-## ✨ Features
+## Preview
 
-### 🏫 University Portal Experience
-- Modern university-themed landing page
-- Fully responsive design
-- Light & Dark Mode support
-- Smooth scrolling navigation
-- Professional UI/UX design
+### Landing Page
 
-### 📚 Academic Modules
-- Student Dashboard
-- Attendance Management
-- Assignment Tracking
-- Academic Performance Insights
-- Campus Experience Showcase
-- Student Testimonials
+<p align="center">
+  <img src="./preview/landing-page.png" alt="Landing Page" width="90%">
+</p>
 
-### 📊 Dashboard Previews
-- Student Dashboard
-- Faculty Dashboard
-- Analytics Dashboard
-- Academic Reports Overview
+### Student Dashboard
 
-### ⚡ Performance Optimizations
-- Lazy Loading Implementation
-- WebP Image Optimization
-- Reduced Bundle Size
-- Improved Lighthouse Performance
-- Responsive Image Handling
+<p align="center">
+  <img src="./preview/student-dashboard.png" alt="Student Dashboard" width="90%">
+</p>
+
+### Teacher Dashboard
+
+<p align="center">
+  <img src="./preview/teacher-dashboard.png" alt="Teacher Dashboard" width="90%">
+</p>
+
+### Admin Dashboard
+
+<p align="center">
+  <img src="./preview/admin-dashboard.png" alt="Admin Dashboard" width="90%">
+</p>
 
 ---
 
-## 🛠️ Tech Stack
+# Overview
 
-### Frontend
-- React 18
-- Vite
-- JavaScript (ES6+)
-- CSS3
-- Framer Motion
+LTSU Smart Portal is a feature-based React application that simulates a modern university management system with dedicated interfaces for different user roles.
 
-### Deployment
-- GitHub Pages
+The application emphasizes clean architecture, maintainability, responsive design, reusable UI components, and an enterprise-style dashboard experience.
+
+Current implementation includes fully functional frontend modules with mock data and is designed for seamless backend integration.
 
 ---
 
-## 📂 Project Structure
+# Core Features
+
+### Landing Experience
+
+- Responsive marketing website
+- Dynamic theme support
+- Smooth animations
+- Feature showcase
+- University branding
+
+### Authentication
+
+- React Hook Form
+- Client-side validation
+- Mock authentication
+- Role selection
+- Toast notifications
+
+### Student Portal
+
+- Academic dashboard
+- Attendance analytics
+- Timetable
+- Course overview
+- Assignment tracking
+- Learning resources
+- Announcements
+- Academic calendar
+- AI Insights (Coming Soon)
+- QR Attendance (Coming Soon)
+
+### Teacher Portal
+
+- Faculty dashboard
+- Class overview
+- Attendance management
+- Student management
+- Assignment workflow
+- Resource sharing
+- Announcements
+- Academic calendar
+
+### Administrator Portal
+
+- University overview
+- Student management
+- Faculty management
+- Course administration
+- Department management
+- Attendance monitoring
+- Reports & analytics
+- Announcement management
+- Academic calendar
+- AI Analytics (Coming Soon)
+- QR Campus Access (Coming Soon)
+
+---
+
+# Technical Highlights
+
+- Feature-based architecture
+- Reusable component system
+- Role-based routing
+- Responsive layouts
+- Theme management
+- Accessibility support
+- Modern dashboard design
+- Animated user experience
+- Mock API-ready structure
+
+---
+
+# Technology Stack
+
+| Category | Technology |
+|-----------|------------|
+| Framework | React 19 |
+| Build Tool | Vite |
+| Routing | React Router DOM |
+| Forms | React Hook Form |
+| Animations | Framer Motion |
+| Charts | Recharts |
+| Icons | Lucide React |
+| Notifications | React Hot Toast |
+| Styling | CSS3 (Custom Design System) |
+
+---
+
+# Project Architecture
 
 ```text
-src/
+src
 │
-├── assets/
-│   ├── images/
-│   ├── logos/
-│   └── icons/
+├── assets
+├── components
+├── features
+│   ├── landing
+│   ├── auth
+│   ├── dashboard
+│   ├── teacher
+│   └── admin
 │
-├── components/
-│   ├── common/
-│   ├── layout/
-│   └── ui/
-│
-├── pages/
-│   └── landing/
-│       ├── LandingPage.jsx
-│       └── sections/
+├── hooks
+├── styles
+├── utils
 │
 ├── App.jsx
-├── main.jsx
-└── index.css
+└── main.jsx
 ```
+
+The project follows a modular, feature-driven architecture that promotes scalability and separation of concerns.
+
+Each feature maintains its own:
+
+- Components
+- Pages
+- Layouts
+- Styles
+- Routes
+- Mock Data
+- Hooks
+- Utilities
+
+This structure allows independent development and easier migration to backend APIs.
 
 ---
 
-## 🚀 Getting Started
+# Design Principles
 
-### Clone Repository
+- Mobile-first responsive design
+- Component reusability
+- Consistent spacing system
+- Accessible user interface
+- Performance-oriented rendering
+- Scalable folder structure
+- Minimal dependencies
+- Production-ready code organization
 
-```bash
-git clone https://github.com/armanpreet-singh/smart-student-portal.git
-```
+---
 
-### Navigate to Project
+# Accessibility
 
-```bash
-cd smart-student-portal
-```
+The application includes accessibility-focused improvements including:
 
-### Install Dependencies
+- Keyboard navigation
+- Focus management
+- Accessible forms
+- Semantic HTML
+- Theme support
+- Accessibility preferences
+- Responsive typography
+
+---
+
+# Backend Status
+
+The current repository contains the frontend implementation.
+
+Backend development is planned as a separate service using:
+
+- Node.js
+- Express.js
+- MongoDB
+- JWT Authentication
+- REST APIs
+- Role-based Authorization
+
+The frontend has been structured to support API integration with minimal changes.
+
+---
+
+# Roadmap
+
+- Backend Integration
+- JWT Authentication
+- MongoDB Database
+- Real-time Notifications
+- QR Attendance
+- AI Academic Assistant
+- File Uploads
+- Email Notifications
+- Analytics Dashboard
+
+---
+
+# Development
 
 ```bash
 npm install
-```
 
-### Start Development Server
-
-```bash
 npm run dev
 ```
 
----
-
-## 📦 Build for Production
+Production build
 
 ```bash
 npm run build
 ```
 
-### Preview Production Build
+---
 
-```bash
-npm run preview
+# Repository
+
+```text
+Frontend
+│
+└── LTSU Smart Portal (React + Vite)
+
+Backend (In Progress)
+│
+└── Node.js + Express + MongoDB
 ```
 
 ---
 
-## 🚀 Deploy to GitHub Pages
-
-```bash
-npm run deploy
-```
-
----
-
-## 📱 Responsive Design
-
-The portal is optimized for:
-
-- 💻 Desktop
-- 🖥️ Laptop
-- 📱 Mobile
-- 📟 Tablet
-
----
-
-## 🎯 Future Enhancements
-
-- Authentication System
-- Faculty Dashboard
-- Student Login Portal
-- Attendance Analytics
-- Assignment Submission Workflow
-- QR-Based Attendance
-- Real-Time Notifications
-- AI-Powered Academic Insights
-
----
-
-## 📈 Performance Improvements
-
-Recent optimizations include:
-
-- Lazy Loading of sections
-- WebP image conversion
-- Reduced blur effects
-- Optimized animations
-- Explicit image dimensions
-- Improved Lighthouse score
-- Better asset delivery
-
----
-
-
-
----
-
-## 👨‍💻 Author
+# Author
 
 **Armanpreet Singh**
+
+Full Stack Developer
 
 GitHub: https://github.com/armanpreet-singh
 
 ---
 
-## ⭐ Support
+## License
 
-If you found this project useful, please consider giving it a star ⭐ on GitHub.
-
----
-
-## 📄 License
-
-This project is developed for educational, portfolio, and demonstration purposes.
+This project is intended for educational, research, and portfolio purposes.
