@@ -1,192 +1,196 @@
-# 🎓 Smart Student Portal
+<div align="center">
 
-A modern and responsive Student Management Portal designed for **Lamrin Tech Skills University (LTSU)**. This project showcases a professional university portal experience with interactive dashboards, academic modules, campus information, performance analytics, and a visually engaging user interface.
+# 🎓 LTSU Smart Portal
 
-## 🌐 Live Demo
+### A Modern Role-Based University Management System
 
-🔗 [Live Demo](https://armanpreet-singh.github.io/smart-student-portal/)
+Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer Motion**, and **Recharts**
+
+![Status](https://img.shields.io/badge/Status-Frontend%20Completed-success)
+![React](https://img.shields.io/badge/React-19-61DAFB)
+![Vite](https://img.shields.io/badge/Vite-Frontend-646CFF)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
+</div>
+<div align="center">
+
+<a href="#-about">📖 About</a> •
+<a href="#-preview">🖼️ Preview</a> •
+<a href="#-project-ecosystem">🌐 Ecosystem</a> •
+<a href="#-project-purpose">🎯 Purpose</a> •
+<a href="#-features">✨ Features</a> •
+<a href="#-tech-stack">🛠 Tech Stack</a> •
+<a href="#-architecture">🏗️ Architecture</a> 
+
+</div>
 
 ---
 
-## ✨ Features
+# 📖 About
 
-### 🏫 University Portal Experience
-- Modern university-themed landing page
-- Fully responsive design
-- Light & Dark Mode support
-- Smooth scrolling navigation
-- Professional UI/UX design
+**LTSU Smart Portal** is a modern role-based university management system developed as an educational and portfolio project to demonstrate practical frontend engineering skills.
 
-### 📚 Academic Modules
+> **Disclaimer**
+>
+> This project is **not an official university portal** and is **not affiliated with or endorsed by any educational institution**. It exists solely for learning, portfolio presentation, and implementing real-world software engineering concepts.
+
+The application simulates a modern academic platform with dedicated dashboards for Students, Teachers, and Administrators while following scalable frontend architecture and backend-ready design.
+
+---
+
+# 🖼️ Preview
+
+Replace the images below with your screenshots.
+
+## 🌐 Landing Page
+
+```html
+<img src="./preview/landing-page.png" width="900">
+```
+
+## 👨‍🎓 Student Dashboard
+
+```html
+<img src="./preview/student-dashboard.png" width="900">
+```
+
+## 👨‍🏫 Teacher Dashboard
+
+```html
+<img src="./preview/teacher-dashboard.png" width="900">
+```
+
+## 👨‍💼 Admin Dashboard
+
+```html
+<img src="./preview/admin-dashboard.png" width="900">
+```
+
+---
+
+# 🌐 Project Ecosystem
+
+| Repository | Description |
+|------------|-------------|
+| 🎨 Frontend | React + Vite application |
+| ⚙️ Backend | Node.js + Express + MongoDB (In Development) |
+
+---
+
+# 🎯 Project Purpose
+
+- Feature-based architecture
+- Reusable components
+- Responsive dashboards
+- Accessibility
+- Data visualization
+- Backend-ready frontend
+- REST API integration
+
+---
+
+# ✨ Features
+
+- Responsive Landing Page
 - Student Dashboard
-- Attendance Management
-- Assignment Tracking
-- Academic Performance Insights
-- Campus Experience Showcase
-- Student Testimonials
+- Teacher Dashboard
+- Admin Dashboard
+- Mock Authentication
+- Attendance Analytics
+- Timetable
+- Assignments
+- Learning Resources
+- Academic Calendar
+- Reports & Analytics
+- Accessibility Settings
+- Dark / Light Theme
+- AI & QR Modules (Coming Soon)
 
-### 📊 Dashboard Previews
-- Student Dashboard
-- Faculty Dashboard
-- Analytics Dashboard
-- Academic Reports Overview
+---
+# 🛠 Tech Stack
 
-### ⚡ Performance Optimizations
-- Lazy Loading Implementation
-- WebP Image Optimization
-- Reduced Bundle Size
-- Improved Lighthouse Performance
-- Responsive Image Handling
+| Category | Technology | Purpose |
+|----------|------------|---------|
+| **Frontend Framework** | React 19 | Builds the user interface using a component-based architecture. |
+| **Build Tool** | Vite | Provides a fast development server and optimized production builds. |
+| **Programming Language** | JavaScript (ES6+) | Implements application logic and modern JavaScript features. |
+| **Routing** | React Router DOM | Handles client-side routing and role-based navigation. |
+| **Form Management** | React Hook Form | Simplifies form state management and validation. |
+| **Animations** | Framer Motion | Creates smooth page transitions and interactive UI animations. |
+| **Charts & Analytics** | Recharts | Visualizes dashboard statistics through interactive charts. |
+| **Icons** | Lucide React | Provides modern, customizable SVG icons. |
+| **Notifications** | React Hot Toast | Displays user-friendly toast notifications and alerts. |
+| **Styling** | CSS3 | Implements a custom responsive design system using CSS variables and Flexbox/Grid. |
+| **Image Management** | Cloudinary *(Planned)* | Cloud-based image storage, optimization, and delivery for user uploads. |
+| **Version Control** | Git | Tracks source code changes and enables collaborative development. |
+| **Code Hosting** | GitHub | Hosts the source code, version history, and project documentation. |
+| **Package Manager** | npm | Manages project dependencies and development scripts. |
 
 ---
 
-## 🛠️ Tech Stack
-
-### Frontend
-- React 18
-- Vite
-- JavaScript (ES6+)
-- CSS3
-- Framer Motion
-
-### Deployment
-- GitHub Pages
-
----
-
-## 📂 Project Structure
+# 🏗️ Architecture
 
 ```text
 src/
-│
 ├── assets/
-│   ├── images/
-│   ├── logos/
-│   └── icons/
-│
 ├── components/
-│   ├── common/
-│   ├── layout/
-│   └── ui/
-│
-├── pages/
-│   └── landing/
-│       ├── LandingPage.jsx
-│       └── sections/
-│
+├── features/
+│   ├── landing/
+│   ├── auth/
+│   ├── dashboard/
+│   ├── teacher/
+│   └── admin/
+├── hooks/
+├── styles/
+├── utils/
 ├── App.jsx
-├── main.jsx
-└── index.css
+└── main.jsx
 ```
 
 ---
 
-## 🚀 Getting Started
-
-### Clone Repository
-
-```bash
-git clone https://github.com/armanpreet-singh/smart-student-portal.git
-```
-
-### Navigate to Project
-
-```bash
-cd smart-student-portal
-```
-
-### Install Dependencies
+# 🚀 Getting Started
 
 ```bash
 npm install
-```
-
-### Start Development Server
-
-```bash
 npm run dev
 ```
 
 ---
 
-## 📦 Build for Production
+# 🚧 Roadmap
 
-```bash
-npm run build
-```
-
-### Preview Production Build
-
-```bash
-npm run preview
-```
-
----
-
-## 🚀 Deploy to GitHub Pages
-
-```bash
-npm run deploy
-```
+- Backend Integration
+- JWT Authentication
+- MongoDB
+- Protected Routes
+- QR Attendance
+- AI Academic Assistant
+- Email Notifications
+- Deployment
 
 ---
 
-## 📱 Responsive Design
+# 🤝 Contributing
 
-The portal is optimized for:
-
-- 💻 Desktop
-- 🖥️ Laptop
-- 📱 Mobile
-- 📟 Tablet
+Contributions are welcome through pull requests.
 
 ---
 
-## 🎯 Future Enhancements
+# 📜 License
 
-- Authentication System
-- Faculty Dashboard
-- Student Login Portal
-- Attendance Analytics
-- Assignment Submission Workflow
-- QR-Based Attendance
-- Real-Time Notifications
-- AI-Powered Academic Insights
+MIT License
 
 ---
 
-## 📈 Performance Improvements
+# 📌 Disclaimer
 
-Recent optimizations include:
-
-- Lazy Loading of sections
-- WebP image conversion
-- Reduced blur effects
-- Optimized animations
-- Explicit image dimensions
-- Improved Lighthouse score
-- Better asset delivery
+This repository is intended for educational and portfolio purposes only and does not represent any official university software.
 
 ---
 
-
-
----
-
-## 👨‍💻 Author
+# 👨‍💻 Author
 
 **Armanpreet Singh**
 
-GitHub: https://github.com/armanpreet-singh
-
----
-
-## ⭐ Support
-
-If you found this project useful, please consider giving it a star ⭐ on GitHub.
-
----
-
-## 📄 License
-
-This project is developed for educational, portfolio, and demonstration purposes.
+GitHub: https://github.com/<your-username>
