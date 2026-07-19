@@ -107,19 +107,24 @@ Replace the images below with your screenshots.
 - AI & QR Modules (Coming Soon)
 
 ---
-
 # 🛠 Tech Stack
 
-- React
-- Vite
-- React Router DOM
-- React Hook Form
-- Framer Motion
-- Recharts
-- Lucide React
-- React Hot Toast
-- CSS3
-- JavaScript (ES6+)
+| Category | Technology | Purpose |
+|----------|------------|---------|
+| **Frontend Framework** | React 19 | Builds the user interface using a component-based architecture. |
+| **Build Tool** | Vite | Provides a fast development server and optimized production builds. |
+| **Programming Language** | JavaScript (ES6+) | Implements application logic and modern JavaScript features. |
+| **Routing** | React Router DOM | Handles client-side routing and role-based navigation. |
+| **Form Management** | React Hook Form | Simplifies form state management and validation. |
+| **Animations** | Framer Motion | Creates smooth page transitions and interactive UI animations. |
+| **Charts & Analytics** | Recharts | Visualizes dashboard statistics through interactive charts. |
+| **Icons** | Lucide React | Provides modern, customizable SVG icons. |
+| **Notifications** | React Hot Toast | Displays user-friendly toast notifications and alerts. |
+| **Styling** | CSS3 | Implements a custom responsive design system using CSS variables and Flexbox/Grid. |
+| **Image Management** | Cloudinary *(Planned)* | Cloud-based image storage, optimization, and delivery for user uploads. |
+| **Version Control** | Git | Tracks source code changes and enables collaborative development. |
+| **Code Hosting** | GitHub | Hosts the source code, version history, and project documentation. |
+| **Package Manager** | npm | Manages project dependencies and development scripts. |
 
 ---
 
