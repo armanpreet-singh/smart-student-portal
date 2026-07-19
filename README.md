@@ -1,243 +1,285 @@
-# LTSU Smart Portal
+<div align="center">
 
-A modern, role-based university management portal designed to streamline the academic experience for students, faculty, and administrators through a unified digital platform.
+# 🎓 LTSU Smart Portal
 
-The project focuses on scalability, modular architecture, reusable components, accessibility, and a production-oriented frontend built with React.
+### A Modern Role-Based University Management System
+
+Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer Motion**, and **Recharts**
+
+![Status](https://img.shields.io/badge/Status-Frontend%20Completed-success)
+![React](https://img.shields.io/badge/React-19-61DAFB)
+![Vite](https://img.shields.io/badge/Vite-Frontend-646CFF)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
+</div>
 
 ---
 
-## Preview
+# 📖 About
 
-### Landing Page
+**LTSU Smart Portal** is a modern, role-based university management system developed as a **personal educational and portfolio project** to demonstrate practical frontend development skills and modern software engineering practices.
+
+> **Disclaimer**
+>
+> This project is **not an official university portal** and is **not affiliated with or endorsed by any educational institution**. It has been created solely for learning purposes, portfolio presentation, and to implement real-world software engineering concepts in a university management scenario.
+
+The application simulates a modern academic platform by providing dedicated dashboards for **Students**, **Teachers**, and **Administrators**. The project emphasizes scalable architecture, reusable components, responsive design, accessibility, dashboard development, and backend-ready frontend engineering.
+
+---
+
+# 🖼️ Preview
+
+## 🌐 Landing Page
 
 <p align="center">
-  <img src="./preview/landing-page.png" alt="Landing Page" width="90%">
+  <img src="./preview/landing-page.png" alt="Landing Page" width="900">
 </p>
 
-### Student Dashboard
+---
+
+## 👨‍🎓 Student Dashboard
 
 <p align="center">
-  <img src="./preview/student-dashboard.png" alt="Student Dashboard" width="90%">
+  <img src="./preview/student-dashboard.png" alt="Student Dashboard" width="900">
 </p>
 
-### Teacher Dashboard
+---
+
+## 👨‍🏫 Teacher Dashboard
 
 <p align="center">
-  <img src="./preview/teacher-dashboard.png" alt="Teacher Dashboard" width="90%">
+  <img src="./preview/teacher-dashboard.png" alt="Teacher Dashboard" width="900">
 </p>
 
-### Admin Dashboard
+---
+
+## 👨‍💼 Admin Dashboard
 
 <p align="center">
-  <img src="./preview/admin-dashboard.png" alt="Admin Dashboard" width="90%">
+  <img src="./preview/admin-dashboard.png" alt="Admin Dashboard" width="900">
 </p>
 
 ---
 
-# Overview
+# 🌐 Project Ecosystem
 
-LTSU Smart Portal is a feature-based React application that simulates a modern university management system with dedicated interfaces for different user roles.
+The project is organized into two independent repositories.
 
-The application emphasizes clean architecture, maintainability, responsive design, reusable UI components, and an enterprise-style dashboard experience.
+| Repository | Description |
+|------------|-------------|
+| 🎨 **LTSU Smart Portal** | Frontend application built with React and Vite |
+| ⚙️ **LTSU Smart Portal Backend** | REST API built with Node.js, Express.js, MongoDB, and JWT Authentication *(In Development)* |
 
-Current implementation includes fully functional frontend modules with mock data and is designed for seamless backend integration.
+## Repositories
 
----
-
-# Core Features
-
-### Landing Experience
-
-- Responsive marketing website
-- Dynamic theme support
-- Smooth animations
-- Feature showcase
-- University branding
-
-### Authentication
-
-- React Hook Form
-- Client-side validation
-- Mock authentication
-- Role selection
-- Toast notifications
-
-### Student Portal
-
-- Academic dashboard
-- Attendance analytics
-- Timetable
-- Course overview
-- Assignment tracking
-- Learning resources
-- Announcements
-- Academic calendar
-- AI Insights (Coming Soon)
-- QR Attendance (Coming Soon)
-
-### Teacher Portal
-
-- Faculty dashboard
-- Class overview
-- Attendance management
-- Student management
-- Assignment workflow
-- Resource sharing
-- Announcements
-- Academic calendar
-
-### Administrator Portal
-
-- University overview
-- Student management
-- Faculty management
-- Course administration
-- Department management
-- Attendance monitoring
-- Reports & analytics
-- Announcement management
-- Academic calendar
-- AI Analytics (Coming Soon)
-- QR Campus Access (Coming Soon)
-
----
-
-# Technical Highlights
-
-- Feature-based architecture
-- Reusable component system
-- Role-based routing
-- Responsive layouts
-- Theme management
-- Accessibility support
-- Modern dashboard design
-- Animated user experience
-- Mock API-ready structure
-
----
-
-# Technology Stack
-
-| Category | Technology |
-|-----------|------------|
-| Framework | React 19 |
-| Build Tool | Vite |
-| Routing | React Router DOM |
-| Forms | React Hook Form |
-| Animations | Framer Motion |
-| Charts | Recharts |
-| Icons | Lucide React |
-| Notifications | React Hot Toast |
-| Styling | CSS3 (Custom Design System) |
-
----
-
-# Project Architecture
+### 🎨 Frontend
 
 ```text
-src
+https://github.com/<your-username>/ltsu-smart-portal
+```
+
+### ⚙️ Backend
+
+```text
+https://github.com/<your-username>/ltsu-smart-portal-backend
+```
+
+---
+
+# 🎯 Project Purpose
+
+This project was built to apply and strengthen practical software engineering skills through the development of a realistic university management system.
+
+The objective is to implement real-world frontend architecture while preparing the application for backend integration.
+
+The project focuses on:
+
+- Building scalable React applications
+- Feature-based architecture
+- Component reusability
+- Responsive UI development
+- Dashboard design
+- Role-based application architecture
+- Form validation
+- Accessibility
+- State management
+- Data visualization
+- REST API integration
+- Full-stack application architecture
+
+---
+
+# ✨ Features
+
+## 🌐 Landing Website
+
+- Responsive Landing Page
+- Modern University UI
+- Dark / Light Theme
+- Smooth Animations
+- Mobile Responsive Layout
+
+---
+
+## 🔐 Authentication
+
+- Login Interface
+- Role-Based Login
+- React Hook Form
+- Client-side Validation
+- Toast Notifications
+- Mock Authentication
+
+---
+
+## 👨‍🎓 Student Portal
+
+- Dashboard Overview
+- Attendance Analytics
+- Timetable
+- Courses
+- Assignment Tracking
+- Learning Resources
+- Announcements
+- Academic Calendar
+- Accessibility Settings
+- AI Insights *(Coming Soon)*
+- QR Attendance *(Coming Soon)*
+
+---
+
+## 👨‍🏫 Teacher Portal
+
+- Faculty Dashboard
+- Class Management
+- Student Management
+- Attendance Management
+- Assignment Workflow
+- Resource Management
+- Announcements
+- Academic Calendar
+
+---
+
+## 👨‍💼 Administrator Portal
+
+- University Overview
+- Student Management
+- Teacher Management
+- Course Management
+- Department Management
+- Attendance Monitoring
+- Reports & Analytics
+- Announcement Management
+- Academic Calendar
+- AI Analytics *(Coming Soon)*
+- QR Campus Access *(Coming Soon)*
+
+---
+
+# 🛠 Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| **React** | Component-based frontend development |
+| **Vite** | Fast development server and production build |
+| **React Router DOM** | Client-side routing |
+| **React Hook Form** | Form state management and validation |
+| **Framer Motion** | UI animations and transitions |
+| **Recharts** | Dashboard data visualization |
+| **Lucide React** | SVG icon library |
+| **React Hot Toast** | Toast notifications |
+| **CSS3** | Custom styling and design system |
+| **JavaScript (ES6+)** | Application logic |
+| **Git & GitHub** | Version control |
+
+---
+
+# 🏗️ Architecture
+
+The application follows a **feature-based architecture** to improve scalability, maintainability, and separation of concerns.
+
+```text
+src/
+├── assets/
+├── components/
+├── features/
+│   ├── landing/
+│   ├── auth/
+│   ├── dashboard/
+│   ├── teacher/
+│   └── admin/
 │
-├── assets
-├── components
-├── features
-│   ├── landing
-│   ├── auth
-│   ├── dashboard
-│   ├── teacher
-│   └── admin
-│
-├── hooks
-├── styles
-├── utils
+├── hooks/
+├── styles/
+├── utils/
 │
 ├── App.jsx
 └── main.jsx
 ```
 
-The project follows a modular, feature-driven architecture that promotes scalability and separation of concerns.
-
-Each feature maintains its own:
-
-- Components
-- Pages
-- Layouts
-- Styles
-- Routes
-- Mock Data
-- Hooks
-- Utilities
-
-This structure allows independent development and easier migration to backend APIs.
+Each feature is organized independently with its own pages, components, layouts, routes, hooks, styles, utilities, and mock data.
 
 ---
 
-# Design Principles
+# 🎨 Design Principles
 
-- Mobile-first responsive design
-- Component reusability
-- Consistent spacing system
-- Accessible user interface
-- Performance-oriented rendering
-- Scalable folder structure
-- Minimal dependencies
-- Production-ready code organization
+The project follows modern frontend development principles including:
+
+- Modular Architecture
+- Reusable Components
+- Responsive Design
+- Accessibility Support
+- Clean UI Design
+- Consistent Design System
+- Scalable Folder Structure
+- Backend-Ready Codebase
 
 ---
 
-# Accessibility
+# ♿ Accessibility
 
-The application includes accessibility-focused improvements including:
+Accessibility has been considered throughout the application by including:
 
-- Keyboard navigation
-- Focus management
-- Accessible forms
+- Keyboard-friendly navigation
 - Semantic HTML
-- Theme support
-- Accessibility preferences
-- Responsive typography
+- Accessible Forms
+- Dark / Light Theme
+- High Contrast Mode
+- Large Text Mode
+- Reduced Motion Support
+
+Accessibility preferences are stored locally and persist across sessions.
 
 ---
 
-# Backend Status
+# 🚀 Getting Started
 
-The current repository contains the frontend implementation.
+Clone the repository
 
-Backend development is planned as a separate service using:
+```bash
+git clone https://github.com/<your-username>/ltsu-smart-portal.git
+```
 
-- Node.js
-- Express.js
-- MongoDB
-- JWT Authentication
-- REST APIs
-- Role-based Authorization
+Navigate to the project
 
-The frontend has been structured to support API integration with minimal changes.
+```bash
+cd ltsu-smart-portal
+```
 
----
-
-# Roadmap
-
-- Backend Integration
-- JWT Authentication
-- MongoDB Database
-- Real-time Notifications
-- QR Attendance
-- AI Academic Assistant
-- File Uploads
-- Email Notifications
-- Analytics Dashboard
-
----
-
-# Development
+Install dependencies
 
 ```bash
 npm install
+```
 
+Start the development server
+
+```bash
 npm run dev
 ```
 
-Production build
+Build for production
 
 ```bash
 npm run build
@@ -245,30 +287,78 @@ npm run build
 
 ---
 
-# Repository
+# 🚧 Roadmap
 
-```text
-Frontend
-│
-└── LTSU Smart Portal (React + Vite)
+The frontend implementation is complete.
 
-Backend (In Progress)
-│
-└── Node.js + Express + MongoDB
+Future development will focus on backend integration and production-ready functionality.
+
+### Planned Features
+
+- [ ] Node.js Backend
+- [ ] Express.js REST APIs
+- [ ] MongoDB Integration
+- [ ] JWT Authentication
+- [ ] Role-Based Authorization
+- [ ] Protected Routes
+- [ ] File Uploads
+- [ ] Email Notifications
+- [ ] AI Academic Assistant
+- [ ] QR Attendance
+- [ ] Real-Time Notifications
+- [ ] Performance Optimization
+- [ ] Production Deployment
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+1. Fork the repository.
+
+2. Create a feature branch.
+
+```bash
+git checkout -b feature/your-feature
 ```
 
+3. Commit your changes.
+
+```bash
+git commit -m "Add your feature"
+```
+
+4. Push the branch.
+
+```bash
+git push origin feature/your-feature
+```
+
+5. Open a Pull Request.
+
 ---
 
-# Author
+# 📜 License
 
-**Armanpreet Singh**
-
-Full Stack Developer
-
-GitHub: https://github.com/armanpreet-singh
+This project is licensed under the **MIT License**.
 
 ---
 
-## License
+# 📌 Disclaimer
 
-This project is intended for educational, research, and portfolio purposes.
+This repository is intended **solely for educational, learning, and portfolio purposes**.
+
+It is **not an official university management system**, and it is **not affiliated with or endorsed by any educational institution**.
+
+All branding, academic workflows, dashboards, and data are used only to demonstrate practical frontend development skills, software architecture, and modern web application design.
+
+---
+
+<div align="center">
+
+### ⭐ If you found this project interesting, consider giving it a star!
+
+**Built to apply practical software engineering concepts through the development of a scalable, modern university management system.**
+
+</div>
