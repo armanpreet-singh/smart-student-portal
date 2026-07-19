@@ -40,31 +40,37 @@ The application simulates a modern academic platform with dedicated dashboards f
 
 # 🖼️ Preview
 
-Replace the images below with your screenshots.
+
 
 ## 🌐 Landing Page
-
-```html
-<img src="./preview/landing-page.png" width="900">
-```
+<div align="center">
+<img src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784483750/HERO_r8lp4v.png"
+     alt="Home Page"
+     width="900">
+  </div>
 
 ## 👨‍🎓 Student Dashboard
 
-```html
-<img src="./preview/student-dashboard.png" width="900">
-```
+<div align="center">
+<img src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784308463/HERO_ii1ake.png"
+     alt="Home Page"
+     width="900">
+  </div>
 
 ## 👨‍🏫 Teacher Dashboard
 
-```html
-<img src="./preview/teacher-dashboard.png" width="900">
-```
+<div align="center">
+<img src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784308082/FACULTY-DASHBOARD_umz0c1.png"
+     alt="Home Page"
+     width="900">
+  </div>
 
 ## 👨‍💼 Admin Dashboard
-
-```html
-<img src="./preview/admin-dashboard.png" width="900">
-```
+<div align="center">
+<img src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784308081/ADMIN-DASHBOARD_thesum.png"
+     alt="Home Page"
+     width="900">
+  </div>
 
 ---
 
