@@ -36,18 +36,17 @@ Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer 
 
 <div align="center">
 
-<a href="#-about">📖 About</a> •
-<a href="#-preview">🖼️ Preview</a> •
-<a href="#-features">✨ Features</a> •
-<a href="#-tech-stack">🛠 Tech Stack</a> •
-<a href="#-architecture">🏗️ Architecture</a>
+<a href="#about">📖 About</a> •
+<a href="#preview">🖼️ Preview</a> •
+<a href="#features">✨ Features</a> •
+<a href="#tech-stack">🛠 Tech Stack</a> •
+<a href="#architecture">🏗️ Architecture</a>
 
 </div>
-
 ---
 
 ---
-
+<a id="about"></a>
 # 📖 About
 
 **LTSU Smart Portal** is a modern role-based university management system developed as an educational and portfolio project to demonstrate practical frontend engineering skills.
@@ -59,7 +58,7 @@ Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer 
 The application simulates a modern academic platform with dedicated dashboards for Students, Teachers, and Administrators while following scalable frontend architecture and backend-ready design.
 
 ---
-
+<a id="preview"></a>
 # 🖼️ Preview
 
 
@@ -116,7 +115,7 @@ The application simulates a modern academic platform with dedicated dashboards f
 - REST API integration
 
 ---
-
+<a id="features"></a>
 # ✨ Features
 
 - Responsive Landing Page
@@ -135,6 +134,7 @@ The application simulates a modern academic platform with dedicated dashboards f
 - AI & QR Modules (Coming Soon)
 
 ---
+<a id="tech-stack"></a>
 # 🛠 Tech Stack
 
 | Category | Technology | Purpose |
@@ -155,7 +155,7 @@ The application simulates a modern academic platform with dedicated dashboards f
 | **Package Manager** | npm | Manages project dependencies and development scripts. |
 
 ---
-
+<a id="architecture"></a>
 # 🏗️ Architecture
 
 ```text
