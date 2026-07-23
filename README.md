@@ -9,7 +9,7 @@
      width="900"/>
   <div align="center">
 
-<a href="https://smart-student-portal.pages.dev" target="_blank">
+<a href="https://card-forge-studio.pages.dev/">
   <img
     src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784794610/cloudflare_live_wlcizi.png"
     alt="Live at Cloudflare"
