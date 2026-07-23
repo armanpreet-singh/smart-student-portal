@@ -11,9 +11,9 @@
 
 <a href="https://smart-student-portal.pages.dev" target="_blank">
   <img
-    src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784793831/ChatGPT_Image_Jul_23_2026_02_34_03_PM_dnjxwo.png"
+    src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784794610/cloudflare_live_wlcizi.png"
     alt="Live at Cloudflare"
-    width="250"
+    width="220"
   />
 </a>
 
