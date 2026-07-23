@@ -13,9 +13,11 @@
   <img
     src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784793831/ChatGPT_Image_Jul_23_2026_02_34_03_PM_dnjxwo.png"
     alt="Live at Cloudflare"
-    width="320"
+    width="250"
   />
 </a>
+
+<sub><strong>👆 Click the badge to open the live demo</strong></sub>
 
 </div>
 
@@ -40,8 +42,7 @@ Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer 
 <a href="#-project-purpose">🎯 Purpose</a> •
 <a href="#-features">✨ Features</a> •
 <a href="#-tech-stack">🛠 Tech Stack</a> •
-<a href="#-architecture">🏗️ Architecture</a> •
-<a href="#-getting-started">🚀 Getting Started</a>
+<a href="#-architecture">🏗️ Architecture</a>
 
 </div>
 
