@@ -43,7 +43,7 @@ Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer 
 <a href="#architecture">🏗️ Architecture</a>
 
 </div>
----
+
 
 ---
 <a id="about"></a>
@@ -151,7 +151,7 @@ The application simulates a modern academic platform with dedicated dashboards f
 | **Styling** | CSS3 | Implements a custom responsive design system using CSS variables and Flexbox/Grid. |
 | **Image Management** | Cloudinary *(Planned)* | Cloud-based image storage, optimization, and delivery for user uploads. |
 | **Version Control** | Git | Tracks source code changes and enables collaborative development. |
-| **Code Hosting** | GitHub | Hosts the source code, version history, and project documentation. |
+| **Code Hosting** | Cloudflare | Hosts the source code, version history, and project documentation. |
 | **Package Manager** | npm | Manages project dependencies and development scripts. |
 
 ---
