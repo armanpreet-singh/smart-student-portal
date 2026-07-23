@@ -3,6 +3,9 @@
 # 🎓 LTSU Smart Portal
 
 ### A Modern Role-Based University Management System
+<img src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784792767/intro_y5lvwe.png"
+     alt="LTSU Smart Portal Banner"
+     width="900"/>
 
 Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer Motion**, and **Recharts**
 
@@ -199,4 +202,4 @@ This repository is intended for educational and portfolio purposes only and does
 
 **Armanpreet Singh**
 
-GitHub: https://github.com/<your-username>
+GitHub: https://github.com/armanpreet-singh
