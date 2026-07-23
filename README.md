@@ -3,11 +3,24 @@
 # 🎓 LTSU Smart Portal
 
 ### A Modern Role-Based University Management System
+
 <img src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784792767/intro_y5lvwe.png"
      alt="LTSU Smart Portal Banner"
      width="900"/>
 
-Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer Motion**, and **Recharts**
+<a href="https://smart-student-portal.pages.dev" target="_blank">
+  <img
+    src="https://cdn.simpleicons.org/cloudflare/F38020"
+    alt="Cloudflare Pages"
+    width="50"
+  />
+</a>
+
+<br>
+
+Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer Motion**, **Recharts**, and **CSS3**
+
+<br>
 
 ![Status](https://img.shields.io/badge/Status-Frontend%20Completed-success)
 ![React](https://img.shields.io/badge/React-19-61DAFB)
@@ -15,6 +28,7 @@ Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer 
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
 </div>
+
 <div align="center">
 
 <a href="#-about">📖 About</a> •
@@ -23,9 +37,12 @@ Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer 
 <a href="#-project-purpose">🎯 Purpose</a> •
 <a href="#-features">✨ Features</a> •
 <a href="#-tech-stack">🛠 Tech Stack</a> •
-<a href="#-architecture">🏗️ Architecture</a> 
+<a href="#-architecture">🏗️ Architecture</a> •
+<a href="#-getting-started">🚀 Getting Started</a>
 
 </div>
+
+---
 
 ---
 
