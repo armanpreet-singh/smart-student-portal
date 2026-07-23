@@ -38,8 +38,6 @@ Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer 
 
 <a href="#-about">📖 About</a> •
 <a href="#-preview">🖼️ Preview</a> •
-<a href="#-project-ecosystem">🌐 Ecosystem</a> •
-<a href="#-project-purpose">🎯 Purpose</a> •
 <a href="#-features">✨ Features</a> •
 <a href="#-tech-stack">🛠 Tech Stack</a> •
 <a href="#-architecture">🏗️ Architecture</a>
