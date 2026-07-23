@@ -7,14 +7,17 @@
 <img src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784792767/intro_y5lvwe.png"
      alt="LTSU Smart Portal Banner"
      width="900"/>
+  <div align="center">
 
 <a href="https://smart-student-portal.pages.dev" target="_blank">
   <img
-    src="https://cdn.simpleicons.org/cloudflare/F38020"
-    alt="Cloudflare Pages"
-    width="50"
+    src="https://res.cloudinary.com/aveqwdxd/image/upload/v1784793831/ChatGPT_Image_Jul_23_2026_02_34_03_PM_dnjxwo.png"
+    alt="Live at Cloudflare"
+    width="320"
   />
 </a>
+
+</div>
 
 <br>
 
