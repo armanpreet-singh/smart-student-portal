@@ -4,7 +4,7 @@ Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/student-attendance-api` (branched from current main)
-Current pull request: Phase II, Chunk 1 — PR #7 (to be opened against `main`)
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/7 (open; targets `main`; not merged)
 Previous frontend PR #4 (session provider) merged into main: `132b49e3269c99577f515121a60b0c99a7185f0f`
 Previous frontend PR #5 (role route protection) merged into main: `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`
 Previous frontend PRs #2 (Teacher Attendance) and #3 (backend login) are also merged into main.
@@ -347,7 +347,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/student-attendance-api`, based on `main` at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57` (PR #6 merge).
-- PR #7 will target `main`; do not merge it without an explicit request.
+- PR #7: https://github.com/armanpreet-singh/smart-student-portal/pull/7 — open against `main`; do not merge it without an explicit request.
 - GitHub Actions build run `43441634414` completed successfully on implementation head `c818fae279b174a585e0c17b258b270d5a6a9b23` (`npm ci` and `npm run build`). Cloudflare Pages preview was pending at the first implementation snapshot; final head status will be rechecked after documentation updates.
 - No lint or unit-test scripts are configured. Live Student-account end-to-end testing remains outstanding.
 
