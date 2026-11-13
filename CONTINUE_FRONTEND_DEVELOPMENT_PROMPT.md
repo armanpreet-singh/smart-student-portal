@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current intended development branch: `ui/teacher-attendance-workflow`; base branch: `main`.
+3. Current intended development branch: `ui/teacher-attendance-workflow`; base branch: `main`. Frontend PR #2 is open (not merged): https://github.com/armanpreet-singh/smart-student-portal/pull/2.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
