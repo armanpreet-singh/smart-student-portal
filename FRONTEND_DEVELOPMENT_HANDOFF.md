@@ -3,12 +3,13 @@
 Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/auth-forced-password-change` (branched from current main)
-Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/6 (open; mergeable; not merged)
+Development branch: `feat/admin-attendance-api` (independent branch from `main` after PR #6)
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/8 (open; targets `main`; not merged)
+Preceding Phase II, Chunk 1 PR #7 (Student Attendance) remains open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/7
 Previous frontend PR #4 (session provider) merged into main: `132b49e3269c99577f515121a60b0c99a7185f0f`
 Previous frontend PR #5 (role route protection) merged into main: `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`
 Previous frontend PRs #2 (Teacher Attendance) and #3 (backend login) are also merged into main.
-Base commit for this chunk: `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`
+Base commit for this chunk: `4c8f5b5a9ed75f739f79cb7a14ec931570834a57`
 
 ## Working scope and rules
 
@@ -54,7 +55,7 @@ Classification definitions:
 - **Needs improvement:** A page exists, but remains mock-backed, has inert actions, mismatched data semantics, or incomplete API/error/permission integration.
 - **Missing:** A necessary workflow/page is not present in the frontend.
 
-No existing role page met the full Ready standard at audit time. The page shells and navigation exist, but the current screens are overwhelmingly demonstration UI. Teacher Attendance has been improved in this branch, but remains Needs improvement until authentication is connected and the remaining contract gaps are resolved.
+No existing role page met the full Ready standard at audit time. The page shells and navigation exist, but many screens remain demonstration UI. Teacher Attendance and Student Attendance have live backend integrations, but still require validation with real university accounts and data.
 
 | Role | Screen | Existing condition | Backend integration readiness | Missing work |
 |---|---|---|---|---|
@@ -62,7 +63,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Auth | Route access / session | `AuthProvider` verifies `/api/auth/me`; `ProtectedRoute` restricts Student, Teacher and Admin trees by verified role and redirects temporary-password accounts to `/change-password`. | **Needs improvement** — frontend flow is implemented; verify with real provisioned accounts before marking Ready. | Live Student/Teacher/Admin account checks, including a first-login temporary password and expired session. |
 | Student | Dashboard Home | Uses mock stats, classes, courses, assignments, announcements, resources and activity. | **Needs improvement** — no composed dashboard endpoint is exposed by backend main. | Replace mock data only as each supported endpoint exists; show empty/loading/error states; avoid fabricating metrics. |
 | Student | Courses | Static mock course cards with faculty/progress fields. | **Needs improvement** — backend main has Class and Subject models, but no student course-list endpoint. | Define the student-facing Subject/Class read contract and map IDs/relationships rather than mock faculty/progress values. |
-| Student | Attendance | Rich charts, summary cards, subject table and current-day panel are all mock data. | **Needs improvement** — `GET /api/student/attendance` exists on backend main, but UI does not call it. | Connect authenticated self-only API; use backend totals/status history, date filters, proper null/zero denominator, and request states. |
+| Student | Attendance | Uses the shared Bearer-token session to call `GET /api/student/attendance`; subject summaries, status breakdown, recent records and charts are derived from the response, with optional date filters. | **Needs improvement** — integration is implemented; verify with a provisioned Student account and seeded attendance data. | Validate empty/no-class, date-range and mixed-status cases against live data; preserve backend's null percentage and EXCUSED denominator rules. |
 | Student | Timetable | Repeats mock schedule data across weekdays. | **Needs improvement** — no timetable model/API exists on backend main or inspected draft. | Backend contract/model required before live integration. |
 | Student | Assignments | Static assignment cards and local status labels. | **Needs improvement** — no assignment endpoint/model exists on backend main or inspected draft. | Backend assignment contract, upload/submission workflow and status lifecycle required. |
 | Student | Results | Static semester SGPA/credit rows. | **Needs improvement** — no results/grade endpoint or model exists on backend main or inspected draft. | Backend marks/results contract and authorized read API required. |
@@ -73,7 +74,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Student | Settings | Display name/email/phone save to browser localStorage only. | **Needs improvement** — backend supports password change, not profile/settings mutation. | Connect password-change flow; keep local preferences separate from authoritative account data. |
 | Teacher | Dashboard Home | Mock faculty identity, metrics, timetable, insights and announcements. | **Needs improvement** — assigned-subject API exists but dashboard composition does not. | Use authenticated assigned-subject data and only add statistics supported by actual endpoints. |
 | Teacher | My Classes | Mock classes and attendance percentages. | **Needs improvement** — `GET /api/teacher/subjects` exists on backend main but is not used here. | Fetch assigned active subjects; reflect subject/class IDs, active state and assignment restrictions. |
-| Teacher | Attendance | Previously static/inert; this chunk adds subject discovery, roster, status selection, bulk actions, submit, demo persistence and loading/error/empty states. | **Needs improvement** — page calls current backend main teacher attendance APIs, but login currently cannot provide its token; no rollNumber or class time in backend roster. | Complete auth integration; later integrate draft duty-review/correction endpoints only after merged/deployed; add Copy Absentees/Copy Presentees only after a real rollNumber contract and class-time source exist. |
+| Teacher | Attendance | Uses the shared session token with current backend-main subject discovery, roster and bulk-attendance APIs; supports demo fixtures separately. | **Needs improvement** — live integration exists; no rollNumber or class time is exposed by backend main. | Validate with a real Teacher account; do not add roll-number clipboard or draft-only duty-review/correction behavior until the backend contract is live. |
 | Teacher | Assignments | Mock submissions and filters; Create Assignment action is inert. | **Needs improvement** — no assignment API/model exists on backend main or inspected draft. | Backend assignment/submission API and permission contract required. |
 | Teacher | Students | Mock roll numbers, attendance and CGPA; name-only filtering. | **Needs improvement** — per-subject roster exists but returns id, fullName and username only. | Connect roster scoped to assigned subject; do not present username as roll number; CGPA and global teacher directory are unsupported. |
 | Teacher | Announcements | Static list; New Announcement button has no action. | **Needs improvement** — no announcement API/model exists. | Backend announcement publishing/targeting contract required. |
@@ -87,7 +88,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Admin | Faculty Directory | Static faculty and subject labels; Add Faculty inert. | **Needs improvement** — admin user directory and provisioning APIs exist for TEACHER. | Connect role=TEACHER listing/creation/status/reset and assignment relationships. |
 | Admin | Course Catalog | Static “courses” contain credits/faculty/department/semester fields unlike backend Class/Subject. | **Needs improvement** — admin Class and Subject CRUD APIs exist. | Map this section to Class + Subject models or provide separate management screens; remove unsupported credits/faculty/department assumptions. |
 | Admin | Departments | Mock department/HOD/student/faculty counts. | **Needs improvement** — no Department model/API exists. | Backend department structure and authorized management/read API required. |
-| Admin | Attendance Overview | Static department-wise percent chart. | **Needs improvement** — `GET /api/admin/attendance` exists on main and returns overall/per-subject aggregates with date/class/subject filters. | Connect report endpoint and replace unsupported department grouping with class/subject filters. |
+| Admin | Attendance Overview | Calls backend-main `GET /api/admin/attendance`; overall metrics, status counts, subject chart and class/subject table are derived from report aggregates. Date, class and subject filters use backend-supported query fields and directory data. | **Needs improvement** — integration is implemented; verify with a provisioned Admin account and real class/subject/attendance records. | Validate report filters and empty/zero-denominator cases with live university data; no department-level aggregation exists. |
 | Admin | Announcements | Static sample rows; New Announcement button inert. | **Needs improvement** — no announcement API/model exists. | Backend announcement targeting and publication contract required. |
 | Admin | Academic Calendar | Static fixed events. | **Needs improvement** — no calendar/event API/model exists. | Backend event/calendar contract required. |
 | Admin | Reports & Analytics | Mock student growth, department, enrollment and attendance charts. | **Needs improvement** — only the subject-level attendance aggregate report is currently exposed. | Connect only supported attendance report first; other metrics require backend APIs and source definitions. |
@@ -96,7 +97,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 
 ### Missing frontend workflows
 
-- Shared authenticated session, role guard and forced-password-change workflow are not implemented.
+- Shared login/session restoration, role guards and forced-password-change workflow are implemented in Phase I. Live account validation and deployed CORS verification remain outstanding.
 - Dedicated Admin teacher-to-subject assignment screen is not present, although the assignment API exists on backend main.
 - Student duty-proof submission/retrieval UI is not present; matching backend support exists only on the unmerged backend draft branch.
 - No authoritative rollNumber UI/data path exists. This blocks the requested roll-number-only attendance clipboard.
@@ -140,7 +141,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 - In demo mode, uses separate API-shaped fixtures in `src/features/teacher/data/mockTeacherAttendance.js` and stores demo results in browser localStorage. It does not silently replace an API error with mock data.
 - Adds responsive layout rules using the existing `--d-*` theme variables in `src/features/teacher/styles/teacherAttendance.css`.
 - Explicitly explains why roll-number clipboard actions remain unavailable; it does not copy usernames or database IDs as roll numbers.
-- The component now reads the access token from the shared auth provider. Login, `/api/auth/me` restoration, logout, role route protection and forced password change are integrated through the same session context.
+- Teacher Attendance and Student Attendance use the token from the shared auth provider. Login, `/api/auth/me` restoration, logout, role route protection and forced password change are integrated through the same session context.
 - Current main API does not return attendance records for a selected date before marking. The UI can track submission state in its active session, but a revisit/refresh cannot reconstruct existing marks from main's current teacher API. Duplicate attendance returns a backend conflict (HTTP 409).
 - Component uses main's current four statuses. Do not change it to ON_DUTY_REVIEW until the backend draft is approved/merged/deployed.
 
@@ -310,10 +311,84 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/auth-forced-password-change`, based on `main` at `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`.
-- PR #6: https://github.com/armanpreet-singh/smart-student-portal/pull/6 — open, mergeable, not merged.
+- PR #6: https://github.com/armanpreet-singh/smart-student-portal/pull/6 was merged into main at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57`.
 - Implementation commit `4ebd35f2fc0e1bb58cd59d219f2f03e634a443a3` passed GitHub Actions build run `43439637720` and Cloudflare Pages.
 - Both `npm ci` and `npm run build` passed on that exact implementation commit. A documentation-only update will trigger another final build.
 - No real university credentials were used. The frontend package has no lint or unit-test script.
+
+## Completed frontend chunk — Phase II, Chunk 1: Student Attendance API integration
+
+### Backend contract verified
+
+- Backend `main` mounts Student routes at `/api/student`; `GET /api/student/attendance` is protected by authentication, `STUDENT` role authorization and the completed-password-change guard.
+- Optional query parameters are `fromDate` and `toDate`, both valid calendar dates in `YYYY-MM-DD` format. When both are present, `fromDate` must be on or before `toDate`.
+- Response is `{ status: "ok", data: { period, subjects } }`. Each subject includes `subject` (`id`, `code`, `name`, `isActive`, `class`), `summary`, and `records` (`id`, `date`, `status`, `remarks`, `recordedAt`).
+- Summary includes counts for `PRESENT`, `ABSENT`, `LATE`, `EXCUSED`, `totalRecords`, `eligibleSessions`, `attendedSessions`, and nullable `attendancePercentage`.
+- Backend calculation: eligible sessions are PRESENT + ABSENT + LATE; attended sessions are PRESENT + LATE. EXCUSED is excluded from the percentage denominator. A subject with no eligible sessions has a null percentage.
+
+### Implementation
+
+- Replaced the Student Attendance page's mock totals, mock weekly/monthly values, mock faculty names, current-day/upcoming-class data and mock insights with live API data.
+- Added `src/features/dashboard/api/studentAttendanceApi.js`, which sends the shared Bearer token, optional date filters, request timeout and response validation; it surfaces backend errors rather than falling back to demo data.
+- The existing summary cards now derive overall attendance, attended sessions, missed sessions and excused records from backend summaries.
+- The weekly chart is derived from last-seven-day PRESENT/LATE/ABSENT records; the monthly chart is calculated from returned records and excludes EXCUSED from the denominator.
+- Subject detail rows use the backend subject/class data and the backend-provided per-subject attendance summary. Recent records and status breakdown use the returned record list.
+- Added start/end date filters, date-order validation, loading, API error/retry, no-subject and no-record states. No mock attendance fixtures are imported by the live screen.
+- The page retains the existing dashboard layout, shared cards, theme variables, dark-mode compatibility and responsive styles.
+- No backend, database, Render configuration, or deployment changes were made. No real Student credentials were used.
+
+### Files changed
+
+1. `src/features/dashboard/api/studentAttendanceApi.js` — authenticated read API client and response contract checks.
+2. `src/features/dashboard/pages/AttendancePage.jsx` — live response mapping, charts, date filters and request states.
+3. `src/features/dashboard/pages/AttendancePage.css` — responsive filter, state, status and record styling.
+4. `.github/workflows/frontend-build.yml` — CI build trigger for this feature branch.
+5. Both frontend handoff documents.
+
+### Branch, PR and verification
+
+- Branch: `feat/student-attendance-api`, based on `main` at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57` (PR #6 merge).
+- PR #7: https://github.com/armanpreet-singh/smart-student-portal/pull/7 — open against `main`; do not merge it without an explicit request.
+- GitHub Actions build run `43441634414` completed successfully on implementation head `c818fae279b174a585e0c17b258b270d5a6a9b23` (`npm ci` and `npm run build`). Cloudflare Pages preview was pending at the first implementation snapshot; final head status will be rechecked after documentation updates.
+- No lint or unit-test scripts are configured. Live Student-account end-to-end testing remains outstanding.
+
+## Completed frontend chunk — Phase II, Chunk 2: Admin Attendance Overview API integration
+
+### Backend contract verified
+
+- Backend `main` mounts Admin routes at `/api/admin`; `GET /api/admin/attendance` is protected by authentication, `ADMIN` role authorization and the completed-password-change guard.
+- Supported optional query parameters are `fromDate`, `toDate`, `classId` and `subjectId`. Date values must be valid calendar dates in `YYYY-MM-DD` format; fromDate must be on or before toDate.
+- Report response is `{ status: "ok", data: { period, filters, summary, subjects } }`. Overall and per-subject summaries contain PRESENT, ABSENT, LATE, EXCUSED, totalRecords, eligibleSessions, attendedSessions and nullable attendancePercentage.
+- Per-subject entries contain subject identity (`id`, `code`, `name`, `class`) and a backend-calculated summary. There is no department model/report grouping in backend main.
+- `GET /api/admin/classes` and `GET /api/admin/subjects` provide paginated class/subject directory data. Query schemas support `page` and `pageSize`; subjects return `classId` and related class identity fields.
+- Backend percentage rules: eligible sessions are PRESENT + ABSENT + LATE; attended sessions are PRESENT + LATE; EXCUSED is excluded from the denominator. Percentage is null if there are no eligible sessions.
+
+### Implementation
+
+- Replaced the Admin Attendance page's fabricated university percentage, highest/lowest department figures and department-wise chart with the real overall and per-subject aggregate report.
+- Added `src/features/admin/api/adminAttendanceApi.js` to call `GET /api/admin/attendance` with the shared Bearer token, supported query filters, request timeout, backend error handling and response validation.
+- The same API client loads paginated class and subject directories through existing Admin endpoints to populate real filter choices. It does not create new backend contracts.
+- Added date, class and subject filters. Changing class narrows the available subject options; selecting filters submits the exact supported query parameters.
+- Overall metric cards, status counts, subject chart and class/subject detail table all derive from the returned aggregate summaries. No fake departments, top/lowest ranks or mock metrics remain on this screen.
+- Added loading, API error/retry, filter-directory retry, date-order validation, empty-subject and no-record states. Live API failures are not hidden by mock fallbacks.
+- Preserved the existing Admin dashboard layout and shared card/header components, plus dashboard CSS variables and responsive/dark-mode behavior.
+- No backend, database, Render configuration, secret or deployment changes were made. No real Admin credentials were used.
+
+### Files changed
+
+1. `src/features/admin/api/adminAttendanceApi.js` — authenticated report and paginated class/subject filter clients.
+2. `src/features/admin/pages/AttendancePage.jsx` — report metrics, filters, chart, breakdown and request states.
+3. `src/features/admin/pages/AttendancePage.css` — responsive Admin report styling.
+4. `.github/workflows/frontend-build.yml` — CI build trigger for this feature branch.
+5. Both frontend handoff documents.
+
+### Branch, PR and verification
+
+- Branch: `feat/admin-attendance-api`, based on `main` at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57` (PR #6 merge).
+- PR #8: https://github.com/armanpreet-singh/smart-student-portal/pull/8 — open against `main`; do not merge it without an explicit request.
+- The independent Student Attendance PR #7 remains open and is not included in this branch.
+- GitHub Actions build run `43448089188` and Cloudflare Pages both passed on implementation head `69aae5c9284d12a2c58b88015f8fbb3a5e3e9dd5`. Final checks on the documentation-updated head will be verified after the handoff refresh.
+- No lint or unit-test scripts are configured. Live Admin-account end-to-end testing remains outstanding.
 
 ## Known issues and integration gaps
 
@@ -328,15 +403,15 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Most non-attendance pages remain mock-backed or have inert controls; see audit above.
 - No lint/test scripts currently exist in the frontend package. No real account credentials have been used for live end-to-end testing.
 
-## Exact next frontend task — Phase II, Chunk 1
+## Exact next frontend task — Phase II, Chunk 3
 
-Implement the **Student Attendance API integration** only:
-1. Inspect the current Student Attendance page and its mock data before changing the screen.
-2. Use backend-main `GET /api/student/attendance` with the shared Bearer token. Optional query parameters are `fromDate` and `toDate`, both `YYYY-MM-DD`; if both are supplied, `fromDate` must be on or before `toDate`.
-3. The backend response contains `period` and `subjects`; each subject has a subject/class object, `summary`, and `records` with date/status/remarks/recordedAt. Current statuses are PRESENT, ABSENT, LATE and EXCUSED.
-4. Preserve the existing Student Attendance visual design; add date filters and loading/error/empty/retry states, and derive charts/totals only from backend data (avoid mock metrics in live mode).
-5. Do not add or assume endpoints that are not on backend main. Keep demo fixtures separate and never silently replace a live API error with mock data.
-6. Verify the endpoint/response contract, implement this screen only, build, update/read both handoff files and stop. Do not merge/deploy unless requested.
-
+Implement the **Admin Class and Subject Catalogue API integration** only:
+1. Inspect the existing Admin Courses/Catalogue page and its mock `coursesListData` before changing it.
+2. Use backend-main `GET /api/admin/classes` and `GET /api/admin/subjects` with the shared Bearer token. Both are ADMIN-only and require `mustChangePassword=false`.
+3. Preserve the actual Class and Subject relationship: classes expose `id`, `code`, `name`, `academicYear`, `isActive` and counts; subjects expose `id`, `classId`, `code`, `name`, `description`, `isActive` and related class identity.
+4. Pagination uses `page` (1-based) and `pageSize` (1–100); optional filters include `search` and `isActive`. Subject listing also supports `classId`.
+5. Do not display unsupported credits, faculty, department or semester fields. Map the existing catalogue UI to backend Class/Subject concepts or separate the views cleanly.
+6. Add loading/error/empty/retry states and real search/active/class filters. Do not silently fall back to mock data on live API errors.
+7. Build, verify, update/read both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 
 After this chunk, continue one UI integration slice at a time using only verified backend-main contracts. Do not assume backend draft PR #1 is live.
