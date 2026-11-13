@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current route-guard branch: `feat/auth-role-route-guards`, stacked on `feat/auth-session-provider`. Parent PR #4 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/4. PR #2 and PR #3 have both been merged to main in dependency order.
+3. Current route-guard branch: `feat/auth-role-route-guards`, stacked on `feat/auth-session-provider`. Route-guard PR #5 is open and mergeable, not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/5. Parent session-provider PR #4 is also open and not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/4. After PR #4 merges, retarget PR #5 to main. PR #2 and PR #3 have both been merged to main in dependency order.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -70,7 +70,7 @@ Implement the forced password-change workflow only:
 - Session restoration displays a loading state; anonymous/expired sessions redirect to login; wrong-role navigation redirects to the verified user's role dashboard.
 - If server verification is temporarily unavailable, protected dashboard components do not mount; a recovery state is shown with retry banner and sign-out control.
 - Forced password-change UI is intentionally left for this next chunk.
-- The final feature branch build and PR status will be recorded in the frontend handoff after verification.
+- Route guard PR #5: https://github.com/armanpreet-singh/smart-student-portal/pull/5 (open; mergeable; stacked on PR #4). GitHub Actions run `43437899529` passed on head `13087a195042aa02a4fcd2994b3f7ee8ee1c5495`; `npm ci` and `npm run build` passed.
 
 ## Completed Phase I, Chunk 1 — backend-connected login
 
