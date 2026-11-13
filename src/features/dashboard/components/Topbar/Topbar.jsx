@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import {
   Menu,
   Search,
@@ -23,11 +23,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySubmenu';
 import { useDashboardTheme } from "../../hooks/useDashboardTheme";
 import { studentData } from "../../data/mockDashboardData";
+import { useAuth } from "../../../auth/context/AuthContext";
 
 const Topbar = memo(({ onMenuClick }) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { isDark, toggleTheme } = useDashboardTheme();
+  const { logout } = useAuth();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -79,9 +80,9 @@ const Topbar = memo(({ onMenuClick }) => {
   }, []);
 
   const handleLogout = useCallback(() => {
-    console.log("Logout triggered");
-    navigate("/");
-  }, [navigate]);
+    setIsDropdownOpen(false);
+    logout();
+  }, [logout]);
 
 
 
