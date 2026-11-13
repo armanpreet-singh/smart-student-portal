@@ -3,28 +3,38 @@ import "./SessionRecoveryNotice.css";
 
 export default function SessionRecoveryNotice() {
   const { sessionStatus, sessionError, retrySession, logout } = useAuth();
+  const isUnavailable = sessionStatus === "unavailable";
+  const isExpired = sessionStatus === "expired";
 
-  if (sessionStatus !== "unavailable") return null;
+  if (!isUnavailable && !isExpired) return null;
 
   return (
     <aside
-      className="session-recovery-notice"
+      className={`session-recovery-notice ${isExpired ? "expired" : ""}`}
       role="alert"
       aria-live="assertive"
     >
       <div className="session-recovery-copy">
-        <strong>We couldn't verify your sign-in.</strong>
+        <strong>
+          {isExpired
+            ? "Your previous sign-in has expired."
+            : "We couldn't verify your sign-in."}
+        </strong>
         <span>
-          {sessionError} Your account is not treated as signed in until the
-          server confirms the session.
+          {sessionError}{" "}
+          {isUnavailable
+            ? "Your account is not treated as signed in until the server confirms the session."
+            : "Please sign in again to continue."}
         </span>
       </div>
       <div className="session-recovery-actions">
-        <button type="button" onClick={retrySession}>
-          Retry
-        </button>
+        {isUnavailable && (
+          <button type="button" onClick={retrySession}>
+            Retry
+          </button>
+        )}
         <button type="button" className="secondary" onClick={logout}>
-          Sign out
+          {isExpired ? "Continue to sign in" : "Sign out"}
         </button>
       </div>
     </aside>
