@@ -170,7 +170,6 @@ export default function PasswordChangePage({ theme = "light" }) {
   };
 
   const currentPassword = watch("currentPassword", "");
-  const newPassword = watch("newPassword", "");
 
   return (
     <main className={`login-root ${theme} password-change-root`}>
