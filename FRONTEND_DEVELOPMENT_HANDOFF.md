@@ -35,13 +35,14 @@ Base commit at branch creation: `51f4b51e8a3a8e89e06bbef38bdfb574bb849020`
 - The frontend GitHub connection has repository push/admin permissions.
 - No deployment was performed.
 
-## Final branch, PR and build verification
+## Verification snapshot before final handoff metadata refresh
 
-- Final verified development branch head: `4cd0587b42b85e56ba98049b6017e21bf4dc37ed`.
-- Branch comparison with `main`: 9 commits ahead, 0 behind; six intended files changed. `main` remains at the original base commit.
+- Verified source branch snapshot: `ui/teacher-attendance-workflow` at `386a37cc5c45e796bfc3ffc5d4b1832ff4576e98`. The implementation files were unchanged after their verified build; subsequent work in this snapshot was limited to handoff/PR metadata.
+- At this snapshot, branch comparison with `main` was 11 commits ahead, 0 behind, and six intended files changed. `main` was not modified.
 - Frontend pull request #2: https://github.com/armanpreet-singh/smart-student-portal/pull/2 — open, mergeable, not merged.
-- Final-head GitHub Actions build: run `43429782257`, conclusion `success` on the exact final head. Checkout, Node.js 22, `npm ci`, and `npm run build` all passed.
+- GitHub Actions run `43429998901` completed with conclusion `success` on the exact snapshot commit. Checkout, Node.js 22 setup, `npm ci`, and `npm run build` all passed. Run `43429991685` also passed on the same commit.
 - No deployment was performed.
+- Always re-check the live ref, PR and latest CI after this snapshot; documentation-only commits can advance the branch head without changing implementation code.
 
 ## UI audit — role and screen inventory
 
