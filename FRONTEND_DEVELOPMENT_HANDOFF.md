@@ -4,7 +4,7 @@ Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/auth-role-route-guards` (stacked on `feat/auth-session-provider`)
-Current pull request: pending creation after final build verification
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/5 (open; mergeable; not merged; stacked on PR #4)
 Parent session-provider PR #4: https://github.com/armanpreet-singh/smart-student-portal/pull/4 (open; mergeable; not merged)
 Previous frontend PR #2 (Teacher Attendance) merged into main: `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`
 Previous frontend PR #3 (backend login) merged into main: `84607ce7c81512b5529788964672b9b0ca4c92c9`
@@ -272,9 +272,11 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/auth-role-route-guards`, stacked on `feat/auth-session-provider` so PR #4 remains independently reviewable.
-- Parent PR #4 contains the session provider required by this chunk and remains open/unmerged.
+- Parent PR #4 contains the session provider required by this chunk and remains open/unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/4.
 - Branch base: `9b1f35e4c99633741c039d219f2f03e634a443a3`.
-- The final PR and CI snapshot will be added after the current branch build completes.
+- Final branch head: `13087a195042aa02a4fcd2994b3f7ee8ee1c5495`.
+- PR #5: https://github.com/armanpreet-singh/smart-student-portal/pull/5 — open, mergeable, not merged; base is `feat/auth-session-provider`. Retarget to `main` after PR #4 merges.
+- GitHub Actions run `43437899529` completed successfully on the exact branch head; checkout, Node.js 22 setup, `npm ci` and `npm run build` passed.
 - The frontend has no configured lint or unit-test scripts. No live account credentials were used.
 - No backend, database, Render environment or deployment changes were made.
 ## Known issues and integration gaps
