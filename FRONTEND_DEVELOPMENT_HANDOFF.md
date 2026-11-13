@@ -3,8 +3,9 @@
 Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/student-attendance-api` (branched from current main)
-Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/7 (open; targets `main`; not merged)
+Development branch: `feat/admin-attendance-api` (independent branch from `main` after PR #6)
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/8 (open; targets `main`; not merged)
+Preceding Phase II, Chunk 1 PR #7 (Student Attendance) has been merged into `main` at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`: https://github.com/armanpreet-singh/smart-student-portal/pull/7
 Previous frontend PR #4 (session provider) merged into main: `132b49e3269c99577f515121a60b0c99a7185f0f`
 Previous frontend PR #5 (role route protection) merged into main: `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`
 Previous frontend PRs #2 (Teacher Attendance) and #3 (backend login) are also merged into main.
@@ -87,7 +88,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Admin | Faculty Directory | Static faculty and subject labels; Add Faculty inert. | **Needs improvement** — admin user directory and provisioning APIs exist for TEACHER. | Connect role=TEACHER listing/creation/status/reset and assignment relationships. |
 | Admin | Course Catalog | Static “courses” contain credits/faculty/department/semester fields unlike backend Class/Subject. | **Needs improvement** — admin Class and Subject CRUD APIs exist. | Map this section to Class + Subject models or provide separate management screens; remove unsupported credits/faculty/department assumptions. |
 | Admin | Departments | Mock department/HOD/student/faculty counts. | **Needs improvement** — no Department model/API exists. | Backend department structure and authorized management/read API required. |
-| Admin | Attendance Overview | Static department-wise percent chart. | **Needs improvement** — `GET /api/admin/attendance` exists on main and returns overall/per-subject aggregates with date/class/subject filters. | Connect report endpoint and replace unsupported department grouping with class/subject filters. |
+| Admin | Attendance Overview | Calls backend-main `GET /api/admin/attendance`; overall metrics, status counts, subject chart and class/subject table are derived from report aggregates. Date, class and subject filters use backend-supported query fields and directory data. | **Needs improvement** — integration is implemented; verify with a provisioned Admin account and real class/subject/attendance records. | Validate report filters and empty/zero-denominator cases with live university data; no department-level aggregation exists. |
 | Admin | Announcements | Static sample rows; New Announcement button inert. | **Needs improvement** — no announcement API/model exists. | Backend announcement targeting and publication contract required. |
 | Admin | Academic Calendar | Static fixed events. | **Needs improvement** — no calendar/event API/model exists. | Backend event/calendar contract required. |
 | Admin | Reports & Analytics | Mock student growth, department, enrollment and attendance charts. | **Needs improvement** — only the subject-level attendance aggregate report is currently exposed. | Connect only supported attendance report first; other metrics require backend APIs and source definitions. |
@@ -347,9 +348,47 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/student-attendance-api`, based on `main` at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57` (PR #6 merge).
-- PR #7: https://github.com/armanpreet-singh/smart-student-portal/pull/7 — open against `main`; do not merge it without an explicit request.
-- GitHub Actions build run `43441634414` completed successfully on implementation head `c818fae279b174a585e0c17b258b270d5a6a9b23` (`npm ci` and `npm run build`). Cloudflare Pages preview was pending at the first implementation snapshot; final head status will be rechecked after documentation updates.
+- PR #7: https://github.com/armanpreet-singh/smart-student-portal/pull/7 merged into `main` at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`.
+- Final Student Attendance PR #7 head `f5da8688302a87fbf3eb2e9da54a753991a2a763` passed GitHub Actions builds `43442444854` and `43442432240`, plus Cloudflare Pages.
 - No lint or unit-test scripts are configured. Live Student-account end-to-end testing remains outstanding.
+
+## Completed frontend chunk — Phase II, Chunk 2: Admin Attendance Overview API integration
+
+### Backend contract verified
+
+- Backend `main` mounts Admin routes at `/api/admin`; `GET /api/admin/attendance` is protected by authentication, `ADMIN` role authorization and the completed-password-change guard.
+- Supported optional query parameters are `fromDate`, `toDate`, `classId` and `subjectId`. Date values must be valid calendar dates in `YYYY-MM-DD` format; fromDate must be on or before toDate.
+- Report response is `{ status: "ok", data: { period, filters, summary, subjects } }`. Overall and per-subject summaries contain PRESENT, ABSENT, LATE, EXCUSED, totalRecords, eligibleSessions, attendedSessions and nullable attendancePercentage.
+- Per-subject entries contain subject identity (`id`, `code`, `name`, `class`) and a backend-calculated summary. There is no department model/report grouping in backend main.
+- `GET /api/admin/classes` and `GET /api/admin/subjects` provide paginated class/subject directory data. Query schemas support `page` and `pageSize`; subjects return `classId` and related class identity fields.
+- Backend percentage rules: eligible sessions are PRESENT + ABSENT + LATE; attended sessions are PRESENT + LATE; EXCUSED is excluded from the denominator. Percentage is null if there are no eligible sessions.
+
+### Implementation
+
+- Replaced the Admin Attendance page's fabricated university percentage, highest/lowest department figures and department-wise chart with the real overall and per-subject aggregate report.
+- Added `src/features/admin/api/adminAttendanceApi.js` to call `GET /api/admin/attendance` with the shared Bearer token, supported query filters, request timeout, backend error handling and response validation.
+- The same API client loads paginated class and subject directories through existing Admin endpoints to populate real filter choices. It does not create new backend contracts.
+- Added date, class and subject filters. Changing class narrows the available subject options; selecting filters submits the exact supported query parameters.
+- Overall metric cards, status counts, subject chart and class/subject detail table all derive from the returned aggregate summaries. No fake departments, top/lowest ranks or mock metrics remain on this screen.
+- Added loading, API error/retry, filter-directory retry, date-order validation, empty-subject and no-record states. Live API failures are not hidden by mock fallbacks.
+- Preserved the existing Admin dashboard layout and shared card/header components, plus dashboard CSS variables and responsive/dark-mode behavior.
+- No backend, database, Render configuration, secret or deployment changes were made. No real Admin credentials were used.
+
+### Files changed
+
+1. `src/features/admin/api/adminAttendanceApi.js` — authenticated report and paginated class/subject filter clients.
+2. `src/features/admin/pages/AttendancePage.jsx` — report metrics, filters, chart, breakdown and request states.
+3. `src/features/admin/pages/AttendancePage.css` — responsive Admin report styling.
+4. `.github/workflows/frontend-build.yml` — CI build trigger for this feature branch.
+5. Both frontend handoff documents.
+
+### Branch, PR and verification
+
+- Branch: `feat/admin-attendance-api`, based on `main` at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57` (PR #6 merge).
+- PR #8: https://github.com/armanpreet-singh/smart-student-portal/pull/8 — open against `main`; do not merge it without an explicit request.
+- Student Attendance PR #7 was merged into `main` before Admin Attendance PR #8; the final merge will retain both implementations.
+- GitHub Actions build run `43448089188` and Cloudflare Pages both passed on implementation head `69aae5c9284d12a2c58b88015f8fbb3a5e3e9dd5`. Final checks on the documentation-updated head will be verified after the handoff refresh.
+- No lint or unit-test scripts are configured. Live Admin-account end-to-end testing remains outstanding.
 
 ## Known issues and integration gaps
 
@@ -364,15 +403,15 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Most non-attendance pages remain mock-backed or have inert controls; see audit above.
 - No lint/test scripts currently exist in the frontend package. No real account credentials have been used for live end-to-end testing.
 
-## Exact next frontend task — Phase II, Chunk 2
+## Exact next frontend task — Phase II, Chunk 3
 
-Implement the **Admin Attendance Overview API integration** only:
-1. Inspect the existing Admin Attendance page and `deptAttendanceData` mock before changing it.
-2. Use backend-main `GET /api/admin/attendance` with the shared Bearer token. It is ADMIN-only and also requires `mustChangePassword=false`.
-3. Supported optional query parameters are `fromDate`, `toDate`, `classId`, and `subjectId`. Dates use `YYYY-MM-DD`; when both are provided, fromDate must be on or before toDate.
-4. Response data is `{ period, filters, summary, subjects }`. Overall and per-subject summaries contain PRESENT, ABSENT, LATE, EXCUSED counts, totalRecords, eligibleSessions, attendedSessions and nullable attendancePercentage; each row includes subject and class identity fields.
-5. Preserve the LTSU Admin layout, but remove unsupported department-wise figures/grouping. Present only overall and class/subject-level aggregates returned by backend. Use existing admin class/subject directory endpoints only where needed to populate real filters.
-6. Add loading/error/empty/retry states and derive all totals/charts from API data. Do not use mock values as a live fallback.
+Implement the **Admin Class and Subject Catalogue API integration** only:
+1. Inspect the existing Admin Courses/Catalogue page and its mock `coursesListData` before changing it.
+2. Use backend-main `GET /api/admin/classes` and `GET /api/admin/subjects` with the shared Bearer token. Both are ADMIN-only and require `mustChangePassword=false`.
+3. Preserve the actual Class and Subject relationship: classes expose `id`, `code`, `name`, `academicYear`, `isActive` and counts; subjects expose `id`, `classId`, `code`, `name`, `description`, `isActive` and related class identity.
+4. Pagination uses `page` (1-based) and `pageSize` (1–100); optional filters include `search` and `isActive`. Subject listing also supports `classId`.
+5. Do not display unsupported credits, faculty, department or semester fields. Map the existing catalogue UI to backend Class/Subject concepts or separate the views cleanly.
+6. Add loading/error/empty/retry states and real search/active/class filters. Do not silently fall back to mock data on live API errors.
 7. Build, verify, update/read both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 
 After this chunk, continue one UI integration slice at a time using only verified backend-main contracts. Do not assume backend draft PR #1 is live.
