@@ -12,6 +12,7 @@ on:
       - "feat/student-attendance-api"
       - "feat/admin-attendance-api"
       - "feat/admin-class-subject-catalogue"
+      - "feat/admin-student-directory"
   pull_request:
     branches:
       - main
