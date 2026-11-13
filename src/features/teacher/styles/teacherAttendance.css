@@ -1,0 +1,331 @@
+.teacher-attendance-controls {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.4fr) minmax(170px, 0.8fr) minmax(210px, 1fr);
+  gap: 16px;
+  align-items: end;
+}
+
+.teacher-attendance-controls .d-form-group {
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.teacher-attendance-controls select,
+.teacher-attendance-controls input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-bg);
+  color: var(--d-text);
+  font: inherit;
+}
+
+.teacher-attendance-controls select:focus,
+.teacher-attendance-controls input:focus {
+  outline: 2px solid color-mix(in srgb, var(--d-primary) 25%, transparent);
+  border-color: var(--d-primary);
+}
+
+.teacher-attendance-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.teacher-attendance-summary > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--d-bg);
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+}
+
+.teacher-attendance-summary span {
+  color: var(--d-text-secondary);
+  font-size: 13px;
+}
+
+.teacher-attendance-summary strong {
+  color: var(--d-text);
+  font-size: 18px;
+}
+
+.teacher-attendance-alert,
+.teacher-attendance-integration-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--d-warning) 38%, var(--d-border));
+  border-radius: var(--d-radius-sm);
+  background: color-mix(in srgb, var(--d-warning) 8%, var(--d-surface));
+  color: var(--d-text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.teacher-attendance-alert svg,
+.teacher-attendance-integration-note svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: var(--d-warning);
+}
+
+.teacher-attendance-api-retry {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.teacher-attendance-api-retry .d-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+}
+
+.teacher-attendance-api-retry span,
+.teacher-attendance-demo-note {
+  color: var(--d-text-secondary);
+  font-size: 12px;
+}
+
+.teacher-attendance-roster-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px;
+  border-bottom: 1px solid var(--d-border);
+}
+
+.teacher-attendance-roster-heading h4 {
+  margin: 0 0 5px;
+  color: var(--d-text);
+  font-size: 16px;
+}
+
+.teacher-attendance-roster-heading p {
+  margin: 0;
+  color: var(--d-text-secondary);
+  font-size: 13px;
+}
+
+.teacher-attendance-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.teacher-attendance-actions button,
+.teacher-attendance-status {
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-surface);
+  color: var(--d-text-secondary);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 11px;
+  transition: var(--d-transition);
+}
+
+.teacher-attendance-actions button:hover:not(:disabled),
+.teacher-attendance-status:hover:not(:disabled) {
+  border-color: var(--d-primary);
+  color: var(--d-primary);
+}
+
+.teacher-attendance-actions button:disabled,
+.teacher-attendance-status:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.teacher-attendance-roster {
+  padding: 0 20px;
+}
+
+.teacher-attendance-student {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--d-border);
+}
+
+.teacher-attendance-student:last-child {
+  border-bottom: 0;
+}
+
+.teacher-attendance-student-info {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 12px;
+}
+
+.teacher-attendance-student-index {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--d-bg);
+  color: var(--d-text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.teacher-attendance-student-info > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 3px;
+}
+
+.teacher-attendance-student-info strong {
+  overflow: hidden;
+  color: var(--d-text);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.teacher-attendance-student-info span:last-child {
+  color: var(--d-text-secondary);
+  font-size: 12px;
+}
+
+.teacher-attendance-status-group {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.teacher-attendance-status.active {
+  border-color: var(--d-primary);
+  background: color-mix(in srgb, var(--d-primary) 9%, var(--d-surface));
+  color: var(--d-primary);
+}
+
+.teacher-attendance-state {
+  display: flex;
+  min-height: 150px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  color: var(--d-text-secondary);
+  text-align: center;
+  font-size: 13px;
+}
+
+.teacher-attendance-state strong {
+  color: var(--d-text);
+}
+
+.teacher-attendance-submit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border-top: 1px solid var(--d-border);
+}
+
+.teacher-attendance-submit > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.teacher-attendance-submit strong {
+  color: var(--d-text);
+  font-size: 14px;
+}
+
+.teacher-attendance-submit span {
+  color: var(--d-text-secondary);
+  font-size: 12px;
+}
+
+.teacher-attendance-submit button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  white-space: nowrap;
+}
+
+.teacher-attendance-demo-note {
+  margin: -12px 0 0;
+}
+
+.teacher-attendance-spinner {
+  animation: teacher-attendance-spin 1s linear infinite;
+}
+
+@keyframes teacher-attendance-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+  .teacher-attendance-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .teacher-attendance-controls .d-form-group:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .teacher-attendance-controls,
+  .teacher-attendance-summary {
+    grid-template-columns: 1fr;
+  }
+  .teacher-attendance-controls .d-form-group:last-child {
+    grid-column: auto;
+  }
+  .teacher-attendance-roster-heading,
+  .teacher-attendance-submit {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .teacher-attendance-actions {
+    width: 100%;
+  }
+  .teacher-attendance-actions button {
+    flex: 1;
+  }
+  .teacher-attendance-student {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .teacher-attendance-status-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .teacher-attendance-status {
+    min-height: 38px;
+  }
+  .teacher-attendance-submit button {
+    width: 100%;
+  }
+}
