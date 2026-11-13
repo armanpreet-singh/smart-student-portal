@@ -11,6 +11,7 @@ on:
       - "feat/auth-forced-password-change"
       - "feat/student-attendance-api"
       - "feat/admin-attendance-api"
+      - "feat/admin-class-subject-catalogue"
   pull_request:
     branches:
       - main

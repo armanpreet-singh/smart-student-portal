@@ -265,7 +265,6 @@ export default function Navigation({ theme, toggleTheme }) {
   style={{
     width: "100%",
     fontSize: "15px",
-    justifyContent: "center",
     textDecoration: "none",
     display: "flex",
     alignItems: "center",

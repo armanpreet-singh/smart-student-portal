@@ -3,13 +3,12 @@
 Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/admin-attendance-api` (independent branch from `main` after PR #6)
-Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/8 (open; targets `main`; not merged)
-Preceding Phase II, Chunk 1 PR #7 (Student Attendance) has been merged into `main` at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`: https://github.com/armanpreet-singh/smart-student-portal/pull/7
-Previous frontend PR #4 (session provider) merged into main: `132b49e3269c99577f515121a60b0c99a7185f0f`
-Previous frontend PR #5 (role route protection) merged into main: `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`
-Previous frontend PRs #2 (Teacher Attendance) and #3 (backend login) are also merged into main.
-Base commit for this chunk: `4c8f5b5a9ed75f739f79cb7a14ec931570834a57`
+Development branch: `feat/admin-class-subject-catalogue` (branched from current `main` after PR #8)
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/9 (open; targets `main`; not merged)
+Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
+Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
+Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
+Base commit for this chunk: `db07903ce1003073f2e9b3902c295321c3427f3c`
 
 ## Working scope and rules
 
@@ -86,7 +85,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Admin | Dashboard Home | Static institutional totals/insights and quick-action cards. | **Needs improvement** — no aggregate dashboard endpoint exists. | Use current admin endpoints for actual counts and avoid unverified institutional metrics. |
 | Admin | Student Directory | Static users; Add Student inert; search filters only mock name. | **Needs improvement** — backend main has paginated/searchable `GET /api/admin/users`, `POST /api/admin/users` and account status/reset endpoints. | Connect role=STUDENT directory, page/pageSize/search/active filters, create form, status and password-reset flows; do not infer roll number. |
 | Admin | Faculty Directory | Static faculty and subject labels; Add Faculty inert. | **Needs improvement** — admin user directory and provisioning APIs exist for TEACHER. | Connect role=TEACHER listing/creation/status/reset and assignment relationships. |
-| Admin | Course Catalog | Static “courses” contain credits/faculty/department/semester fields unlike backend Class/Subject. | **Needs improvement** — admin Class and Subject CRUD APIs exist. | Map this section to Class + Subject models or provide separate management screens; remove unsupported credits/faculty/department assumptions. |
+| Admin | Class & Subject Catalogue | Separate Classes and Subjects views call backend-main GET `/api/admin/classes` and `/api/admin/subjects`; pagination, search, active filters and class-scoped subject filter use API data. | **Needs improvement** — read integration is implemented; verify with a provisioned Admin account and actual catalogue data. | Validate real data, pagination and class/subject relationships; create/update actions are outside this read-only chunk. |
 | Admin | Departments | Mock department/HOD/student/faculty counts. | **Needs improvement** — no Department model/API exists. | Backend department structure and authorized management/read API required. |
 | Admin | Attendance Overview | Calls backend-main `GET /api/admin/attendance`; overall metrics, status counts, subject chart and class/subject table are derived from report aggregates. Date, class and subject filters use backend-supported query fields and directory data. | **Needs improvement** — integration is implemented; verify with a provisioned Admin account and real class/subject/attendance records. | Validate report filters and empty/zero-denominator cases with live university data; no department-level aggregation exists. |
 | Admin | Announcements | Static sample rows; New Announcement button inert. | **Needs improvement** — no announcement API/model exists. | Backend announcement targeting and publication contract required. |
@@ -390,6 +389,46 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - GitHub Actions build run `43448089188` and Cloudflare Pages both passed on implementation head `69aae5c9284d12a2c58b88015f8fbb3a5e3e9dd5`. Final checks on the documentation-updated head will be verified after the handoff refresh.
 - No lint or unit-test scripts are configured. Live Admin-account end-to-end testing remains outstanding.
 
+## Completed frontend chunk — Phase II, Chunk 3: Admin Class and Subject Catalogue API integration
+
+### Backend contract verified
+
+- Backend `main` mounts Admin routes at `/api/admin`; both `GET /api/admin/classes` and `GET /api/admin/subjects` require an authenticated `ADMIN` account with `mustChangePassword=false`.
+- Both directory endpoints support 1-based `page` and `pageSize` (1–100), optional `search` (maximum 80 characters) and optional `isActive=true|false`.
+- Class listing also supports optional `academicYear`; the page displays class `id`, `code`, `name`, `academicYear`, `isActive` and `_count.students` / `_count.subjects`.
+- Subject listing also supports optional `classId`; subjects include `id`, `classId`, `code`, `name`, nullable `description`, `isActive` and related class identity (`id`, `code`, `name`, `academicYear`, `isActive`).
+- Responses use `{ status: "ok", data: { classes|subjects, pagination: { page, pageSize, total, totalPages } } }`.
+- Search behavior in backend main is case-insensitive: classes search code/name/academicYear; subjects search code/name/description.
+
+### Implementation
+
+- Replaced the mock Course Catalog and inert Create Course button with a read-only Class & Subject Catalogue. The screen no longer presents unsupported credits, faculty, department or semester fields.
+- Added `src/features/admin/api/adminCatalogueApi.js` for authenticated, timeout-protected GET requests, pagination validation, class/subject response validation and API error handling.
+- Added separate Classes and Subjects views. Class rows show class code/name, academic year, student count, subject count and active state. Subject rows show subject code/name, related class, academic year, description and active state.
+- Added server-side search, active/inactive filtering, page-size selection, previous/next pagination and a class filter for subjects.
+- The subject class filter is populated from paginated class-directory data (up to 10,000 class records) rather than from mock options. If those choices cannot be loaded, the subject list remains viewable without the class filter and exposes a retry.
+- Added loading, API error/retry and empty/no-match states. Live failures do not fall back to mock catalogue rows.
+- Preserved the Admin dashboard layout, shared SectionHeader/DashboardCard, existing CSS tokens, dark-mode compatibility and responsive behavior.
+- This is a read-only integration using only existing GET endpoints. No create/update actions, backend, database, Render, secret or deployment changes were made. No real Admin credentials were used.
+
+### Files changed
+
+1. `src/features/admin/api/adminCatalogueApi.js` — authenticated Class/Subject list clients, pagination and response validation.
+2. `src/features/admin/pages/CoursesPage.jsx` — live Classes/Subjects views, filters, pagination and request states.
+3. `src/features/admin/pages/CoursesPage.css` — responsive catalogue styling.
+4. `.github/workflows/frontend-build.yml` — CI trigger for this feature branch.
+5. Both frontend handoff documents.
+
+### Branch, PR and verification
+
+- Branch: `feat/admin-class-subject-catalogue`, based on `main` at `db07903ce1003073f2e9b3902c295321c3427f3c` (PR #8 merge).
+- PR #9: https://github.com/armanpreet-singh/smart-student-portal/pull/9 — open against `main`; do not merge it without an explicit request.
+- PR #7 (Student Attendance) and PR #8 (Admin Attendance) were merged into `main` in dependency order before this chunk.
+- Follow-up cleanup: removed the duplicate `justifyContent` key in the existing mobile Login CTA in `src/components/layout/Navigation.jsx`, while preserving horizontal centering for both desktop and mobile Login CTAs.
+- On latest code head `2a457bd1125a5d03aa939b3024b8f59f54e72bc0`, GitHub Actions builds `43453090461` and `43453102554` both passed (`npm ci` and `npm run build`).
+- Cloudflare Pages preview is still the deployment blocker. The supplied full log shows the Vite build completed, all 89 static assets were uploaded/published, then Cloudflare failed at `Failed to publish your Function` with `Unknown internal error occurred`. The repo has no `functions/` directory, `_worker.js`, Wrangler config or Worker bindings. This points to Cloudflare's Function/Worker publication layer rather than the app build; exact cause is unconfirmed and requires Cloudflare-side log/settings inspection or a successful retry.
+- No lint or unit-test scripts are configured. Live Admin-account end-to-end testing remains outstanding.
+
 ## Known issues and integration gaps
 
 - Login, shared session restoration/logout, role-based route guards and forced password-change UI are implemented in merged or reviewable frontend changes. Phase I is complete at the code level; live university-account validation remains outstanding.
@@ -403,15 +442,15 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Most non-attendance pages remain mock-backed or have inert controls; see audit above.
 - No lint/test scripts currently exist in the frontend package. No real account credentials have been used for live end-to-end testing.
 
-## Exact next frontend task — Phase II, Chunk 3
+## Exact next frontend task — Phase II, Chunk 4
 
-Implement the **Admin Class and Subject Catalogue API integration** only:
-1. Inspect the existing Admin Courses/Catalogue page and its mock `coursesListData` before changing it.
-2. Use backend-main `GET /api/admin/classes` and `GET /api/admin/subjects` with the shared Bearer token. Both are ADMIN-only and require `mustChangePassword=false`.
-3. Preserve the actual Class and Subject relationship: classes expose `id`, `code`, `name`, `academicYear`, `isActive` and counts; subjects expose `id`, `classId`, `code`, `name`, `description`, `isActive` and related class identity.
-4. Pagination uses `page` (1-based) and `pageSize` (1–100); optional filters include `search` and `isActive`. Subject listing also supports `classId`.
-5. Do not display unsupported credits, faculty, department or semester fields. Map the existing catalogue UI to backend Class/Subject concepts or separate the views cleanly.
-6. Add loading/error/empty/retry states and real search/active/class filters. Do not silently fall back to mock data on live API errors.
+Implement the **Admin Student Directory read integration** only:
+1. Inspect `src/features/admin/pages/StudentsPage.jsx` and the `studentsListData` mock.
+2. Use backend-main `GET /api/admin/users` with the shared Bearer token and `role=STUDENT`. The endpoint is ADMIN-only and requires `mustChangePassword=false`.
+3. Supported query parameters are `role` (STUDENT or TEACHER), optional `search` (max 80 characters), `isActive=true|false`, 1-based `page` and `pageSize` (1–100).
+4. Response uses `{ users, pagination }`. User rows include `id`, `fullName`, `username`, nullable `email`, `role`, nullable `classId`, `mustChangePassword`, `isActive`, timestamps and nullable class `{ id, code, name }`.
+5. Do not invent or display a roll number. The backend User model has no `rollNumber` field. Keep account role/class/status identity faithful to the response.
+6. Add search, active filter, pagination and loading/error/empty/retry states. Keep create, password reset and status mutation workflows outside this read-only chunk; do not silently fall back to mock data.
 7. Build, verify, update/read both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 
 After this chunk, continue one UI integration slice at a time using only verified backend-main contracts. Do not assume backend draft PR #1 is live.
