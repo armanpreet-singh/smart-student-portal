@@ -49,7 +49,7 @@ Teacher Attendance has been rebuilt on `ui/teacher-attendance-workflow` with:
 
 The component expects a Bearer token at localStorage key `ltsu-access-token`. Existing LoginForm does not yet populate it; the live attendance calls cannot be used until the authentication chunk is completed.
 
-Previously verified build: GitHub Actions run `43428639030` succeeded on commit `6caeb59f7bec8b509c87f659faf344b1d94ef204` (npm ci + npm run build). Re-check the live branch head and latest CI before relying on these values.
+Previously verified build: GitHub Actions run `43428639030` succeeded on implementation commit `6caeb59f7bec8b509c87f659faf344b1d94ef204`. Final branch head at the latest handoff refresh is `4cd0587b42b85e56ba98049b6017e21bf4dc37ed`; CI run `43429782257` passed checkout, Node.js 22, `npm ci` and `npm run build` on that exact commit. Frontend PR #2 is open, mergeable and unmerged. Always re-check live branch/PR/CI state before continuing.
 
 ## Exact next task — do not skip
 
