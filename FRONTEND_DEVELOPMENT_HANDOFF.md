@@ -424,8 +424,8 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Branch: `feat/admin-class-subject-catalogue`, based on `main` at `db07903ce1003073f2e9b3902c295321c3427f3c` (PR #8 merge).
 - PR #9: https://github.com/armanpreet-singh/smart-student-portal/pull/9 — open against `main`; do not merge it without an explicit request.
 - PR #7 (Student Attendance) and PR #8 (Admin Attendance) were merged into `main` in dependency order before this chunk.
-- GitHub Actions build run `43451711713` passed on implementation/documentation head `a9d073d744c943139680f356b32f3b021735f3ae` (`npm ci` and `npm run build`).
-- Cloudflare Pages push check failed on that head; the available check output only reports Deploy failed and exposes no detailed annotations. PR-specific Cloudflare preview remains under verification.
+- Latest documentation-updated branch head `0d28a50629be950d9dd8b111ac4a4fa1df34d8ff` passed GitHub Actions builds `43452109108` and `43452120023` (`npm ci` and `npm run build`).
+- Cloudflare Pages preview failed on that same head with only a generic `Deploy failed` message and no detailed annotations in the GitHub check output. The reason is unconfirmed; treat the Cloudflare preview as not verified.
 - No lint or unit-test scripts are configured. Live Admin-account end-to-end testing remains outstanding.
 
 ## Known issues and integration gaps
