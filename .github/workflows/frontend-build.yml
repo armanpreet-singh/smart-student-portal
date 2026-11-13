@@ -7,6 +7,7 @@ on:
       - "ui/teacher-attendance-workflow"
       - "feat/auth-login-api"
       - "feat/auth-session-provider"
+      - "feat/auth-role-route-guards"
   pull_request:
     branches:
       - main
