@@ -310,7 +310,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/auth-forced-password-change`, based on `main` at `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`.
-- PR #6: https://github.com/armanpreet-singh/smart-student-portal/pull/6 — open, mergeable, not merged.
+- PR #6: https://github.com/armanpreet-singh/smart-student-portal/pull/6 was merged into main at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57`.
 - Implementation commit `4ebd35f2fc0e1bb58cd59d219f2f03e634a443a3` passed GitHub Actions build run `43439637720` and Cloudflare Pages.
 - Both `npm ci` and `npm run build` passed on that exact implementation commit. A documentation-only update will trigger another final build.
 - No real university credentials were used. The frontend package has no lint or unit-test script.
