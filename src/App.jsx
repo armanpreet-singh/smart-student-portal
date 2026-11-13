@@ -10,6 +10,7 @@ import AdminRoutes from "./features/admin/routes/AdminRoutes";
 import LandingPage from "./features/landing/LandingPage";
 import LoginPage from "./features/auth/pages/LoginPage";
 import SessionRecoveryNotice from "./features/auth/components/SessionRecoveryNotice";
+import ProtectedRoute from "./features/auth/components/ProtectedRoute";
 
 // Temporary Dashboard Page
 function Dashboard() {
@@ -86,19 +87,31 @@ export default function App() {
         {/* Student Dashboard */}
         <Route
           path="/dashboard/*"
-          element={<DashboardRoutes />}
+          element={
+            <ProtectedRoute allowedRole="STUDENT">
+              <DashboardRoutes />
+            </ProtectedRoute>
+          }
         />
 
         {/* Teacher Dashboard */}
         <Route
           path="/teacher/*"
-          element={<TeacherRoutes />}
+          element={
+            <ProtectedRoute allowedRole="TEACHER">
+              <TeacherRoutes />
+            </ProtectedRoute>
+          }
         />
 
         {/* Admin Dashboard */}
         <Route
           path="/admin/*"
-          element={<AdminRoutes />}
+          element={
+            <ProtectedRoute allowedRole="ADMIN">
+              <AdminRoutes />
+            </ProtectedRoute>
+          }
         />
       </Routes>
 
