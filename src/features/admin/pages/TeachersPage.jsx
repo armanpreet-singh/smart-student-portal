@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Mail, RotateCw, Search, UserRound } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, Mail, RotateCw, Search, UserRound, UserPlus, X } from "lucide-react";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import { fetchAdminTeachers } from "../api/adminTeachersApi";
+import { createAdminTeacher } from "../api/adminTeacherProvisioningApi";
 
 import "./TeachersPage.css";
 
@@ -101,6 +102,18 @@ const TeachersPage = () => {
   const [requestError, setRequestError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
   const [filterError, setFilterError] = useState("");
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createStatus, setCreateStatus] = useState("idle");
+  const [createError, setCreateError] = useState("");
+  const [createFieldErrors, setCreateFieldErrors] = useState({});
+  const [createSuccessMessage, setCreateSuccessMessage] = useState("");
+  const [createForm, setCreateForm] = useState({
+    fullName: "",
+    username: "",
+    email: "",
+    temporaryPassword: "",
+    confirmPassword: "",
+  });
 
   useEffect(() => {
     let active = true;
@@ -152,6 +165,115 @@ const TeachersPage = () => {
     refreshCurrentUser,
   ]);
 
+  useEffect(() => {
+    if (!createOpen) return undefined;
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape" && createStatus !== "submitting") {
+        closeCreateDialog();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [createOpen, createStatus]);
+
+  const updateCreateField = (field, value) => {
+    setCreateForm((current) => ({ ...current, [field]: value }));
+    setCreateFieldErrors((current) => ({ ...current, [field]: "" }));
+    setCreateError("");
+  };
+
+  const closeCreateDialog = () => {
+    if (createStatus === "submitting") return;
+    setCreateOpen(false);
+    setCreateForm({
+      fullName: "",
+      username: "",
+      email: "",
+      temporaryPassword: "",
+      confirmPassword: "",
+    });
+    setCreateError("");
+    setCreateFieldErrors({});
+  };
+
+  const handleCreateTeacher = async (event) => {
+    event.preventDefault();
+    setCreateError("");
+
+    const errors = {};
+    const fullName = createForm.fullName.trim();
+    const username = createForm.username.trim();
+    const email = createForm.email.trim();
+    const passwordBytes = new TextEncoder().encode(
+      createForm.temporaryPassword,
+    ).length;
+
+    if (fullName.length < 2 || fullName.length > 120) {
+      errors.fullName = "Full name must be between 2 and 120 characters.";
+    }
+    if (
+      username.length < 3 ||
+      username.length > 40 ||
+      !/^[a-zA-Z0-9._-]+$/.test(username)
+    ) {
+      errors.username =
+        "Use 3–40 characters: letters, numbers, dots, underscores or hyphens.";
+    }
+    if (
+      email &&
+      (email.length > 254 ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    ) {
+      errors.email = "Enter a valid email address (254 characters or fewer).";
+    }
+    if (createForm.temporaryPassword.length < 12) {
+      errors.temporaryPassword =
+        "Temporary password must be at least 12 characters.";
+    } else if (passwordBytes > 72) {
+      errors.temporaryPassword =
+        "Temporary password must be no more than 72 UTF-8 bytes.";
+    }
+    if (createForm.temporaryPassword !== createForm.confirmPassword) {
+      errors.confirmPassword = "The passwords do not match.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setCreateFieldErrors(errors);
+      return;
+    }
+
+    setCreateFieldErrors({});
+    setCreateStatus("submitting");
+
+    try {
+      const created = await createAdminTeacher(accessToken, createForm);
+      setCreateSuccessMessage(
+        `Teacher account created for ${created.fullName} (${created.username}). It is active and must change its temporary password at first sign-in.`,
+      );
+      setCreateOpen(false);
+      setCreateForm({
+        fullName: "",
+        username: "",
+        email: "",
+        temporaryPassword: "",
+        confirmPassword: "",
+      });
+      setRetryCount((value) => value + 1);
+    } catch (error) {
+      if (error?.status === 401) {
+        await refreshCurrentUser();
+      }
+      setCreateFieldErrors(error?.fieldErrors || {});
+      setCreateError(
+        error?.message || "Unable to create the teacher account.",
+      );
+    } finally {
+      setCreateStatus("idle");
+    }
+  };
+
   const hasFilters = Boolean(
     filters.search || filters.isActive !== "all",
   );
@@ -194,7 +316,29 @@ const TeachersPage = () => {
       <SectionHeader
         title="Teacher Directory"
         subtitle="Teacher accounts returned by the university administration service"
+        action={
+          <button
+            type="button"
+            className="d-btn-primary a-teachers-add-button"
+            onClick={() => {
+              setCreateSuccessMessage("");
+              setCreateError("");
+              setCreateFieldErrors({});
+              setCreateOpen(true);
+            }}
+          >
+            <UserPlus size={16} />
+            Add Teacher
+          </button>
+        }
       />
+
+      {createSuccessMessage && (
+        <div className="a-teachers-create-success" role="status">
+          <CheckCircle size={18} aria-hidden="true" />
+          <p>{createSuccessMessage}</p>
+        </div>
+      )}
 
       <DashboardCard className="a-teachers-filters">
         <form onSubmit={applyFilters}>
@@ -389,8 +533,175 @@ const TeachersPage = () => {
           </div>
         )}
       </DashboardCard>
+
+      {createOpen && (
+        <div
+          className="a-teacher-create-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (
+              event.target === event.currentTarget &&
+              createStatus !== "submitting"
+            ) {
+              closeCreateDialog();
+            }
+          }}
+        >
+          <section
+            className="a-teacher-create-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="a-teacher-create-title"
+          >
+            <div className="a-teacher-create-heading">
+              <div>
+                <h2 id="a-teacher-create-title">Create Teacher Account</h2>
+                <p>
+                  New accounts are active and must change the temporary
+                  password at first sign-in.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="a-teacher-create-close"
+                aria-label="Close create teacher form"
+                onClick={closeCreateDialog}
+                disabled={createStatus === "submitting"}
+              >
+                <X size={19} />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateTeacher} noValidate>
+              <div className="a-teacher-create-fields">
+                <label className="a-teacher-create-field">
+                  <span>Full name</span>
+                  <input
+                    type="text"
+                    autoComplete="name"
+                    autoFocus
+                    minLength={2}
+                    maxLength={120}
+                    value={createForm.fullName}
+                    onChange={(event) =>
+                      updateCreateField("fullName", event.target.value)
+                    }
+                    aria-invalid={Boolean(createFieldErrors.fullName)}
+                    required
+                  />
+                  {createFieldErrors.fullName && (
+                    <small role="alert">{createFieldErrors.fullName}</small>
+                  )}
+                </label>
+
+                <label className="a-teacher-create-field">
+                  <span>Username</span>
+                  <input
+                    type="text"
+                    autoComplete="off"
+                    minLength={3}
+                    maxLength={40}
+                    value={createForm.username}
+                    onChange={(event) =>
+                      updateCreateField("username", event.target.value)
+                    }
+                    aria-invalid={Boolean(createFieldErrors.username)}
+                    required
+                  />
+                  <small>3–40 characters: letters, numbers, . _ -</small>
+                  {createFieldErrors.username && (
+                    <small role="alert">{createFieldErrors.username}</small>
+                  )}
+                </label>
+
+                <label className="a-teacher-create-field">
+                  <span>Email <em>Optional</em></span>
+                  <input
+                    type="email"
+                    autoComplete="email"
+                    maxLength={254}
+                    value={createForm.email}
+                    onChange={(event) =>
+                      updateCreateField("email", event.target.value)
+                    }
+                    aria-invalid={Boolean(createFieldErrors.email)}
+                  />
+                  {createFieldErrors.email && (
+                    <small role="alert">{createFieldErrors.email}</small>
+                  )}
+                </label>
+
+                <label className="a-teacher-create-field">
+                  <span>Temporary password</span>
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    value={createForm.temporaryPassword}
+                    onChange={(event) =>
+                      updateCreateField("temporaryPassword", event.target.value)
+                    }
+                    aria-invalid={Boolean(createFieldErrors.temporaryPassword)}
+                    required
+                  />
+                  <small>At least 12 characters and no more than 72 UTF-8 bytes.</small>
+                  {createFieldErrors.temporaryPassword && (
+                    <small role="alert">
+                      {createFieldErrors.temporaryPassword}
+                    </small>
+                  )}
+                </label>
+
+                <label className="a-teacher-create-field">
+                  <span>Confirm temporary password</span>
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    value={createForm.confirmPassword}
+                    onChange={(event) =>
+                      updateCreateField("confirmPassword", event.target.value)
+                    }
+                    aria-invalid={Boolean(createFieldErrors.confirmPassword)}
+                    required
+                  />
+                  {createFieldErrors.confirmPassword && (
+                    <small role="alert">{createFieldErrors.confirmPassword}</small>
+                  )}
+                </label>
+              </div>
+
+              <p className="a-teacher-create-note">
+                Teacher accounts are not linked to a class during creation.
+                Assign subjects separately through the approved assignment workflow.
+              </p>
+
+              {createError && (
+                <p className="a-teacher-create-error" role="alert">
+                  {createError}
+                </p>
+              )}
+
+              <div className="a-teacher-create-actions">
+                <button
+                  type="button"
+                  className="a-teachers-clear"
+                  onClick={closeCreateDialog}
+                  disabled={createStatus === "submitting"}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="d-btn-primary"
+                  disabled={createStatus === "submitting"}
+                >
+                  {createStatus === "submitting" ? "Creating account…" : "Create Teacher"}
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
     </div>
   );
-};
 
 export default TeachersPage;
