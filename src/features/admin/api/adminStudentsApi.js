@@ -154,6 +154,7 @@ export async function fetchAdminStudents(accessToken, filters = {}) {
     pagination.page < 1 ||
     !Number.isInteger(pagination.pageSize) ||
     pagination.pageSize < 1 ||
+    pagination.pageSize > 100 ||
     !Number.isInteger(pagination.total) ||
     pagination.total < 0 ||
     !Number.isInteger(pagination.totalPages) ||
