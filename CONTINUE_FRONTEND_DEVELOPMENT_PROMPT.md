@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current authentication branch: `feat/auth-login-api`, stacked on `ui/teacher-attendance-workflow`. Auth PR #3 is open and mergeable, not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/3. Parent attendance PR #2 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/2. Retarget PR #3 to main after PR #2 merges.
+3. Current branch: `feat/auth-session-provider`, based on main. Current PR #4 is open and mergeable, not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/4. Previous frontend PR #2 and PR #3 have both been merged to main in dependency order.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -51,29 +51,38 @@ The component expects a Bearer token at localStorage key `ltsu-access-token`. Ex
 
 Verified implementation/CI snapshot: branch head `386a37cc5c45e796bfc3ffc5d4b1832ff4576e98`; GitHub Actions run `43429998901` passed checkout, Node.js 22, `npm ci` and `npm run build` on that exact commit (run `43429991685` also passed on the same head). Frontend PR #2 is open, mergeable and unmerged. Subsequent handoff-only commits may advance the branch; always re-check live ref/PR/CI state before continuing.
 
-## Exact next task — Phase I, Chunk 2
+## Exact next task — Phase I, Chunk 3
 
-Implement the shared authentication session provider and session restoration:
-1. Read `ltsu-access-token` on app startup and call GET /api/auth/me with Bearer authorization.
-2. Keep the current backend user in shared auth context; never trust stale cached role data.
-3. Add loading, invalid/expired/inactive account and network handling.
-4. Implement logout to clear token and user data and return to login.
-5. Refactor Teacher Attendance to consume the shared token/session interface or one shared token utility.
-6. Leave route guards and forced password-change UI for subsequent Phase I chunks.
-7. Preserve the existing design, run the build, update both handoff documents, read them back and stop.
+Implement role-based route protection only:
+1. Add reusable protected-route logic using `useAuth()`.
+2. Keep `/` and `/login` public. Restrict `/dashboard/*` to STUDENT, `/teacher/*` to TEACHER and `/admin/*` to ADMIN.
+3. Wait while `sessionStatus` is restoring; never trust cached roles.
+4. Redirect anonymous/expired sessions to login. Fail closed when server verification is unavailable and keep the recovery notice visible rather than mounting protected dashboards.
+5. Redirect a verified user who opens the wrong role route to their backend-role dashboard.
+6. Leave forced password-change UI for Phase I, Chunk 4.
+7. Preserve existing dashboards and route trees, build and verify, update/read both handoff documents and stop.
 
 ## Completed Phase I, Chunk 1 — backend-connected login
 
-- Branch: `feat/auth-login-api`, stacked on `ui/teacher-attendance-workflow`; pull request #3 is open and mergeable: https://github.com/armanpreet-singh/smart-student-portal/pull/3.
-- Login calls backend-main POST /api/auth/login with exactly `{ username, password }`. The portal selector is not sent.
-- Backend-returned roles route to /dashboard, /teacher and /admin; a UI preference mismatch does not override the account role.
-- Bearer token stored at localStorage key `ltsu-access-token` for Teacher Attendance compatibility; safe user snapshot stored at `ltsu-auth-user`.
-- Includes backend-aligned username and password validation, submit state, timeout, 401/429/5xx/network/CORS feedback, and Remember username.
-- VITE_API_BASE_URL is configurable; the documented Render URL is the default. .env.example documents local port 5000 and production override.
-- Ensure backend Render CORS_ORIGIN includes the deployed frontend origin. Runtime CORS configuration was not inspected or changed.
-- No real account credentials were used. GitHub Actions build run 43433208070 passed on branch head c07aa2a2cfd27715b738ab920bf6a0d2b6f9ad04. There are no frontend lint/unit-test scripts.
-- No backend, database, Render environment or deployment changes were made.
+- PR #3 is merged into main at merge commit `84607ce7c81512b5529788964672b9b0ca4c92c9`; parent Teacher Attendance PR #2 was merged first at `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`.
+- Login calls backend-main `POST /api/auth/login` with exactly `{ username, password }`; the portal selector is not sent.
+- The backend-returned role determines `/dashboard`, `/teacher` or `/admin`.
+- Bearer token is stored at localStorage key `ltsu-access-token`; the safe user snapshot is stored as `ltsu-auth-user`.
+- Includes backend-aligned validation, timeout, 401/429/5xx/network/CORS feedback and Remember username.
+- API URL uses `VITE_API_BASE_URL` with the documented Render service as default.
+- No real account credentials were used. Original login build run `43433208070` passed.
+- No backend, database or Render environment changes were made.
 
+## Completed Phase I, Chunk 2 — shared authentication session management
+
+- PR #4 contains this chunk: https://github.com/armanpreet-singh/smart-student-portal/pull/4 (open; not merged).
+- `AuthProvider` wraps App inside BrowserRouter. It exposes accessToken, backend-verified user, session status, session restoration/retry, establishSession and logout.
+- On startup it verifies stored tokens with backend-main `GET /api/auth/me`. Cached user snapshots are not read to authorize a session.
+- 401 invalid/expired sessions clear stored auth and return to login. Network/service errors clear the in-memory user, preserve the token for retry, and show a retry/sign-out notice.
+- Login writes session state through the provider; Student, Teacher and Admin logout menus clear the shared session.
+- Teacher Attendance consumes the provider's token and waits for verified authentication before fetching live subjects.
+- GitHub Actions run `43436197757` and PR build run `43436411634` passed on code head `92be2959eb63161718d8b2669e889460a9677ffd`; Cloudflare Pages also passed.
+- There are no frontend lint/unit-test scripts. No real account credentials or backend/database/Render changes were used.
 ## Audit and future work
 
 Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Broad categories still mock-backed include timetable, assignments, results, resources, announcements, academic calendar, departments and dashboard analytics. Admin also needs a dedicated teacher-subject assignment UI; Student duty-proof UI is dependent on backend draft PR #1 being approved/merged/deployed. Most existing pages need API loading/error/empty states and correct data/permission mapping before they can be marked Ready.
