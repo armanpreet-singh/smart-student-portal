@@ -5,7 +5,7 @@ Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/admin-attendance-api` (independent branch from `main` after PR #6)
 Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/8 (open; targets `main`; not merged)
-Preceding Phase II, Chunk 1 PR #7 (Student Attendance) remains open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/7
+Preceding Phase II, Chunk 1 PR #7 (Student Attendance) has been merged into `main` at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`: https://github.com/armanpreet-singh/smart-student-portal/pull/7
 Previous frontend PR #4 (session provider) merged into main: `132b49e3269c99577f515121a60b0c99a7185f0f`
 Previous frontend PR #5 (role route protection) merged into main: `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`
 Previous frontend PRs #2 (Teacher Attendance) and #3 (backend login) are also merged into main.
@@ -348,7 +348,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/student-attendance-api`, based on `main` at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57` (PR #6 merge).
-- PR #7: https://github.com/armanpreet-singh/smart-student-portal/pull/7 — open against `main`; do not merge it without an explicit request.
+- PR #7: https://github.com/armanpreet-singh/smart-student-portal/pull/7 merged into `main` at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`.
 - Final Student Attendance PR #7 head `f5da8688302a87fbf3eb2e9da54a753991a2a763` passed GitHub Actions builds `43442444854` and `43442432240`, plus Cloudflare Pages.
 - No lint or unit-test scripts are configured. Live Student-account end-to-end testing remains outstanding.
 
@@ -386,7 +386,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 
 - Branch: `feat/admin-attendance-api`, based on `main` at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57` (PR #6 merge).
 - PR #8: https://github.com/armanpreet-singh/smart-student-portal/pull/8 — open against `main`; do not merge it without an explicit request.
-- The independent Student Attendance PR #7 remains open and is not included in this branch.
+- Student Attendance PR #7 was merged into `main` before Admin Attendance PR #8; the final merge will retain both implementations.
 - GitHub Actions build run `43448089188` and Cloudflare Pages both passed on implementation head `69aae5c9284d12a2c58b88015f8fbb3a5e3e9dd5`. Final checks on the documentation-updated head will be verified after the handoff refresh.
 - No lint or unit-test scripts are configured. Live Admin-account end-to-end testing remains outstanding.
 
