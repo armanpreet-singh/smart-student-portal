@@ -72,7 +72,7 @@ Implement Admin Student Directory read integration only:
 - Added loading/error/retry/empty states; no mock fallback remains. Unsupported credits, faculty, department and semester fields have been removed from this screen.
 - Read-only scope: no create/update actions and no backend/database/Render/deployment changes. No live Admin credentials were used.
 - PR #9: https://github.com/armanpreet-singh/smart-student-portal/pull/9 (open; targets main; not merged).
-- GitHub Actions build run `43451711713` passed on head `a9d073d744c943139680f356b32f3b021735f3ae`. The Cloudflare Pages push check failed on that head with only a generic Deploy failed message; PR-specific preview status is being checked separately.
+- Latest handoff-updated head `0d28a50629be950d9dd8b111ac4a4fa1df34d8ff` passed GitHub Actions builds `43452109108` and `43452120023` (`npm ci` and `npm run build`). Cloudflare Pages failed on the same head with only a generic Deploy failed message and no detailed GitHub annotations; the cause is unconfirmed.
 
 ## Completed Phase I, Chunk 4 — forced password-change workflow
 
