@@ -4,12 +4,6 @@ import { getPortalPath } from "../api/authApi";
 import { useAuth } from "../context/AuthContext";
 import "./ProtectedRoute.css";
 
-const ROLE_LABELS = {
-  STUDENT: "Student",
-  TEACHER: "Teacher",
-  ADMIN: "Administrator",
-};
-
 function SessionLoadingState() {
   return (
     <main className="protected-route-state" role="status" aria-live="polite">
@@ -78,6 +72,3 @@ export default function ProtectedRoute({ allowedRole, children }) {
   return children;
 }
 
-export function getRoleLabel(role) {
-  return ROLE_LABELS[role] || "LTSU";
-}
