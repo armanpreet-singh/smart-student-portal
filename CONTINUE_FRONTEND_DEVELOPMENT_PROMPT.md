@@ -72,7 +72,7 @@ Implement Admin Teacher Directory read integration only:
 - Added loading/error/retry/empty states with the existing Admin dashboard design and responsive styling.
 - PR #10: https://github.com/armanpreet-singh/smart-student-portal/pull/10 is open against `feat/admin-class-subject-catalogue` (PR #9); merge PR #9 first, then retarget PR #10 to `main` before merging.
 - GitHub Actions build run `43455879552` passed on implementation head `c6f22ed013b7523f33bc739042c66cf82576cd81` (`npm ci` and `npm run build`). Documentation-updated head verification will be recorded after CI completes.
-- No real Admin credentials were used; live account checks remain outstanding.
+- The post-documentation-update head `bb33d5cd71ab5412f93eeb67d2cb582c81035ea9` passed GitHub Actions build run `43456291503` (`npm ci` and `npm run build`). No live Admin credentials were used; live account checks remain outstanding.
 ## Completed Phase II, Chunk 3 — Admin Class and Subject Catalogue API integration
 
 - Branch `feat/admin-class-subject-catalogue`, based on main at PR #8 merge commit `db07903ce1003073f2e9b3902c295321c3427f3c`.

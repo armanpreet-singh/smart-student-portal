@@ -464,7 +464,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Branch: `feat/admin-student-directory`, stacked on PR #9 branch `feat/admin-class-subject-catalogue` at `768c41c113f93cde8c3bfd8bb4dea6d2b5974f59`.
 - PR #10 will target `feat/admin-class-subject-catalogue`, not `main`, to keep the Student Directory diff separate while preserving PR #9 as its dependency. After PR #9 merges, the base can be moved to `main`.
 - PR #9 remains open; its Cloudflare Pages Function-publication failure is documented in the preceding chunk. No successful Pages deployment is claimed here.
-- Final build checks on the documentation-updated PR #10 head will be recorded after CI completes.
+- Documentation-updated branch head `bb33d5cd71ab5412f93eeb67d2cb582c81035ea9` passed GitHub Actions build run `43456291503` (`npm ci` and `npm run build`).
 - No lint or unit-test scripts are configured. Live Admin/Student-account end-to-end testing remains outstanding.
 ## Known issues and integration gaps
 
