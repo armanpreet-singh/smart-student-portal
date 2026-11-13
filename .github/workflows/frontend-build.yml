@@ -15,6 +15,7 @@ on:
       - "feat/admin-student-directory"
       - "feat/admin-teacher-directory"
       - "feat/admin-student-provisioning"
+      - "feat/admin-teacher-provisioning"
   pull_request:
     branches:
       - main
