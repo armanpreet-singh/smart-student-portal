@@ -9,6 +9,7 @@ import TeacherRoutes from "./features/teacher/routes/TeacherRoutes";
 import AdminRoutes from "./features/admin/routes/AdminRoutes"; 
 import LandingPage from "./features/landing/LandingPage";
 import LoginPage from "./features/auth/pages/LoginPage";
+import SessionRecoveryNotice from "./features/auth/components/SessionRecoveryNotice";
 
 // Temporary Dashboard Page
 function Dashboard() {
@@ -58,6 +59,7 @@ export default function App() {
   return (
     // <-- Wrapped in Accessibility Provider
     <AccessibilityProvider>
+      <SessionRecoveryNotice />
       <Routes>
         {/* Landing Page */}
         <Route
