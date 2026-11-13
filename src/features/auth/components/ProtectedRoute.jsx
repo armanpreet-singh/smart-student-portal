@@ -38,7 +38,11 @@ function SessionUnavailableState() {
   );
 }
 
-export default function ProtectedRoute({ allowedRole, requirePasswordChange = false, children }) {
+export default function ProtectedRoute({
+  allowedRole,
+  requirePasswordChange = false,
+  children,
+}) {
   const location = useLocation();
   const { user, sessionStatus } = useAuth();
 
