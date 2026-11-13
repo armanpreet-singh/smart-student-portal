@@ -273,7 +273,7 @@ const StudentsPage = () => {
     if (
       email &&
       (email.length > 254 ||
-        !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email))
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     ) {
       errors.email = "Enter a valid email address (254 characters or fewer).";
     }
