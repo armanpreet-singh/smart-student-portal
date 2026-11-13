@@ -3,9 +3,10 @@
 Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `ui/teacher-attendance-workflow`
-Pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/2 (open; not merged)
-Base commit at branch creation: `51f4b51e8a3a8e89e06bbef38bdfb574bb849020`
+Development branch: `feat/auth-login-api` (stacked on `ui/teacher-attendance-workflow`)
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/3 (open; mergeable; stacked on the parent branch)
+Parent attendance pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/2 (open; not merged)
+Base commit for this chunk: `51374c348dd0eb12b76badf2793613aad6bb9180`
 
 ## Working scope and rules
 
@@ -55,7 +56,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 
 | Role | Screen | Existing condition | Backend integration readiness | Missing work |
 |---|---|---|---|---|
-| Auth | Login / role selection | Existing form selects student/faculty/admin, but submit uses a simulated timeout and always reports failure; it logs submitted data. | **Needs improvement** — backend login exists but form field/role contract does not match. | Submit `{username,password}` to `POST /api/auth/login`; map backend roles exactly; store access token; call `/api/auth/me`; handle forced password change and expiry. |
+| Auth | Login / role selection | The form now posts the backend's `{username,password}` contract, stores the returned Bearer token and routes by the returned account role. | **Needs improvement** — login is connected; session restoration, route guards and forced password-change flow remain separate chunks. | Add shared `/me` session restoration, expiry/logout handling, role guards and forced password-change UI in subsequent chunks. |
 | Auth | Route access / session | Student, Teacher, and Admin route trees exist, but `App.jsx` mounts them without authentication/role guards. | **Needs improvement** — backend enforces role/ownership, frontend does not reflect session state. | Auth provider, role-aware route guards, signed-out redirects, password-change gate, logout and expired-session handling. |
 | Student | Dashboard Home | Uses mock stats, classes, courses, assignments, announcements, resources and activity. | **Needs improvement** — no composed dashboard endpoint is exposed by backend main. | Replace mock data only as each supported endpoint exists; show empty/loading/error states; avoid fabricating metrics. |
 | Student | Courses | Static mock course cards with faculty/progress fields. | **Needs improvement** — backend main has Class and Subject models, but no student course-list endpoint. | Define the student-facing Subject/Class read contract and map IDs/relationships rather than mock faculty/progress values. |
@@ -137,7 +138,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 - In demo mode, uses separate API-shaped fixtures in `src/features/teacher/data/mockTeacherAttendance.js` and stores demo results in browser localStorage. It does not silently replace an API error with mock data.
 - Adds responsive layout rules using the existing `--d-*` theme variables in `src/features/teacher/styles/teacherAttendance.css`.
 - Explicitly explains why roll-number clipboard actions remain unavailable; it does not copy usernames or database IDs as roll numbers.
-- The component currently reads a short-lived access token from localStorage key `ltsu-access-token`. Existing LoginForm is still simulated and does not populate this key; authenticated API mode therefore requires the next auth/session chunk.
+- The component reads a short-lived access token from localStorage key `ltsu-access-token`. Phase I, Chunk 1 now writes this key after successful backend login. Session restoration via `/api/auth/me`, proactive expiry handling, logout and role route guards are still not implemented.
 - Current main API does not return attendance records for a selected date before marking. The UI can track submission state in its active session, but a revisit/refresh cannot reconstruct existing marks from main's current teacher API. Duplicate attendance returns a backend conflict (HTTP 409).
 - Component uses main's current four statuses. Do not change it to ON_DUTY_REVIEW until the backend draft is approved/merged/deployed.
 
@@ -166,10 +167,54 @@ No existing role page met the full Ready standard at audit time. The page shells
 - No deployment was performed.
 - Frontend PR #2 is open and not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/2. The PR head at creation was `15b170bdecd77d9ada544e61dfb0251186c6ef7c`; later handoff refreshes advance the head. Do not merge without normal review.
 
+## Completed frontend chunk — Phase I, Chunk 1: Backend-connected login
+
+### Final branch, PR and CI snapshot
+
+- Auth branch head verified at the latest code-and-handoff snapshot: `c07aa2a2cfd27715b738ab920bf6a0d2b6f9ad04`.
+- Chunk comparison is against parent branch `ui/teacher-attendance-workflow`, not `main`; PR #3 is deliberately stacked on PR #2 to keep each chunk isolated.
+- PR #3: https://github.com/armanpreet-singh/smart-student-portal/pull/3 — open, mergeable, not merged. After parent PR #2 is merged, retarget PR #3 to `main`.
+- GitHub Actions run `43433208070` completed with conclusion `success` on the exact auth branch head `c07aa2a2cfd27715b738ab920bf6a0d2b6f9ad04`. Checkout, Node.js 22 setup, `npm ci` and `npm run build` all passed.
+- No live account sign-in was attempted. No deployment or backend/Render/Neon changes were made.
+
+### Backend contract verified
+
+Backend `main` exposes `POST /api/auth/login` with Zod validation for exactly `{ username, password }`. Username is trimmed, 3–40 characters, restricted to letters/numbers/dot/underscore/hyphen and normalized to lowercase by the backend. Password must be non-empty and no more than 72 UTF-8 bytes.
+
+Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "Bearer", expiresIn, user } }`. The safe user includes `id`, `fullName`, `username`, `email`, `role`, `classId`, `mustChangePassword`, and timestamps. Supported roles are exactly `STUDENT`, `TEACHER`, and `ADMIN`.
+
+### Implementation
+
+- Login now calls `POST /api/auth/login` using only `username` and `password`; the UI role selector is a portal preference and is never sent as an authorization claim.
+- The server-returned role controls navigation: STUDENT → `/dashboard`, TEACHER → `/teacher`, ADMIN → `/admin`. A role preference mismatch produces an informational notice but does not override the backend role.
+- Stores the short-lived Bearer token under `ltsu-access-token` (the key expected by Teacher Attendance) and the safe user object under `ltsu-auth-user` for the upcoming session-provider chunk.
+- Implements username format/length validation and the backend's 72 UTF-8-byte password maximum, pending/submitting state, a 12-second request timeout, useful 401/429/5xx/network/CORS messages, inline errors and toast feedback.
+- “Remember username” stores only the username, not a password. The password-reset hint now explains that reset is managed by a university administrator; no unsupported public reset API is fabricated.
+- When `mustChangePassword=true`, the login flow warns the user. The dedicated password-change page and route gate remain a later Phase I chunk.
+- API URL is configurable with `VITE_API_BASE_URL`; the code defaults to the documented Render service URL. `.env.example` documents the backend's local port (5000) and production override.
+- Backend `CORS_ORIGIN` must include the real frontend origin (currently documented site: `https://smart-student-portal.pages.dev`) and local development origin as appropriate. Render's current runtime value was not inspected or changed in this UI-only chunk.
+
+### Files changed for this chunk
+
+1. `src/features/auth/api/authApi.js` — typed-by-contract login request/response handling and role routing map.
+2. `src/features/auth/components/LoginForm.jsx` — backend login, validation, storage, role-based navigation and user feedback.
+3. `src/features/auth/components/RoleSelector.jsx` — accessibility label clarifies this is a portal preference.
+4. `src/features/auth/pages/LoginPage.css` — small styling additions for API errors and role hint; existing design retained.
+5. `.env.example` — public Vite API URL configuration examples; no secrets.
+6. `.github/workflows/frontend-build.yml` — includes `feat/auth-login-api` push builds.
+7. This handoff and `CONTINUE_FRONTEND_DEVELOPMENT_PROMPT.md`.
+
+### Verification and limitations
+
+- This chunk has not yet been tested with a real account; no credentials were requested or used. Build verification is the available automated check.
+- No authentication/session integration tests are configured in the frontend package; no `test` or `lint` script exists.
+- The token is stored in localStorage to remain compatible with the existing Teacher Attendance page. The next auth chunk must implement `GET /api/auth/me`, account/session restoration, expiration and logout. Route guards and forced password change are separate upcoming chunks.
+- No backend changes, database changes, Render environment changes or deployment were performed.
+
 ## Known issues and integration gaps
 
-- Login remains mock-only. It needs the backend login/me/password-change flow and protected role routes before any live attendance API call can be authenticated.
-- The new attendance page expects the future UI auth layer to expose a token under localStorage key `ltsu-access-token`, or refactor the page to consume a shared auth provider.
+- Login now authenticates against backend main and stores the returned token. Shared session restoration (`GET /api/auth/me`), logout, role route guards and forced password-change UI remain outstanding; until those chunks are complete, a page refresh or expired token is not centrally recovered.
+- The attendance page and login now share localStorage key `ltsu-access-token`. The planned auth provider can later replace direct reads without changing the backend contract.
 - Backend-main attendance status set differs from the confirmed product policy. Backend draft PR #1 is not merged/deployed and its database migration is not on primary.
 - User model and roster response do not include rollNumber; the requested copy output must remain disabled until a dedicated backend field and matching API response are introduced.
 - No attendance session/class-time data exists. Current uniqueness is one student/subject/date record, not multiple class sessions in one day.
@@ -179,16 +224,16 @@ No existing role page met the full Ready standard at audit time. The page shells
 - Most non-attendance pages remain mock-backed or have inert controls; see audit above.
 - No lint/test scripts currently exist in the frontend package.
 
-## Exact next frontend task
+## Exact next frontend task — Phase I, Chunk 2
 
-Implement the **shared authentication and role-guard workflow** only:
-1. Connect LoginForm to `POST /api/auth/login` with the backend's exact `{ username, password }` payload; do not send a client-selected role as an authorization claim.
-2. Map returned backend roles exactly: STUDENT → `/dashboard`, TEACHER → `/teacher`, ADMIN → `/admin`.
-3. Establish a shared auth/session layer that stores the short-lived token consistently with Teacher Attendance (currently expects `ltsu-access-token`), calls `GET /api/auth/me`, and handles loading, invalid/expired token and logout.
-4. Enforce role-specific route guards. Never treat a frontend role selector as authorization.
-5. Implement the forced password-change screen/flow for `mustChangePassword=true` using `POST /api/auth/change-password`; do not mount protected feature pages until the user completes it.
-6. Preserve existing login/dashboard theme and role-specific navigation; do not redesign dashboards or implement other screens in this chunk.
-7. Configure API base URL through `VITE_API_BASE_URL`; document backend CORS dependency without hardcoding production secrets/URLs.
-8. Add the smallest useful auth utility/tests if feasible; run build and verify behavior as available, update both handoff files, read them back, commit, and stop.
+Implement the **shared authentication session provider and session restoration** only:
+1. Add a shared auth context/provider that reads the existing `ltsu-access-token` token key and safe cached user.
+2. On app startup, call `GET /api/auth/me` with the Bearer token and replace cached user data with the current backend user.
+3. Handle loading, invalid/expired token, inactive account and network-unavailable states without trusting stale cached roles.
+4. Provide a logout action that clears the auth token and cached user and returns to the login screen.
+5. Refactor Teacher Attendance to consume the shared token/session interface (or preserve compatibility through a single auth utility) so it does not implement a second session mechanism.
+6. Do not add route guards or forced password-change UI yet; those are Phase I, Chunks 3 and 4.
+7. Preserve the existing role dashboards and login design. Run the frontend build, update both handoff files, read them back, verify CI and stop.
+
 
 After this auth chunk, return to the integration gaps in the audit. Do not merge/deploy or assume backend draft PR #1 is live.

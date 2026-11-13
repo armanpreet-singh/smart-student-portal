@@ -2,21 +2,47 @@ import React, { useState, useCallback, memo } from "react";
 import { useForm } from "react-hook-form";
 
 import {
-  showSuccessToast,
   showErrorToast,
+  showInfoToast,
+  showSuccessToast,
+  showWarningToast,
 } from "../../../components/ui/toastUtils";
+import { loginWithUsername, getPortalPath } from "../api/authApi";
 import RoleSelector from "./RoleSelector";
 import { ltsuLogo } from "../../../assets/images/logo";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, ArrowLeft, ArrowRight } from "lucide-react";
 
 const PLACEHOLDERS = {
-  student: "Last Four Digits Of Your Roll No.",
-  faculty: "Faculty ID",
-  admin: "admin@ltsu.edu",
+  student: "Student username",
+  faculty: "Faculty username",
+  admin: "Administrator username",
 };
 
-/* ── Logo SVG (memoised, renders once) ── */
+const EXPECTED_ROLES = {
+  student: "STUDENT",
+  faculty: "TEACHER",
+  admin: "ADMIN",
+};
+
+const ROLE_LABELS = {
+  STUDENT: "Student",
+  TEACHER: "Faculty",
+  ADMIN: "Administrator",
+};
+
+const REMEMBERED_USERNAME_KEY = "ltsu-remembered-username";
+const ACCESS_TOKEN_KEY = "ltsu-access-token";
+const AUTH_USER_KEY = "ltsu-auth-user";
+
+function getRememberedUsername() {
+  try {
+    return window.localStorage.getItem(REMEMBERED_USERNAME_KEY) || "";
+  } catch {
+    return "";
+  }
+}
+
 const LogoMark = memo(() => (
   <div className="logo-mark" aria-hidden="true">
     <img src={ltsuLogo} alt="LTSU Logo" className="logo-image" />
@@ -25,55 +51,102 @@ const LogoMark = memo(() => (
 
 LogoMark.displayName = "LogoMark";
 
-/* ── Main form ── */
 const LoginForm = () => {
-const [role, setRole] = useState("student");
-const [showPw, setShowPw] = useState(false);
-const [loading, setLoading] = useState(false);
-  const {
-  register,
-  handleSubmit,
-  reset,
-  formState: {
-    errors,
-    isSubmitting,
-  },
-} = useForm({
-  mode: "onBlur",
-  reValidateMode: "onChange",
-  defaultValues: {
-    email: "",
-    password: "",
-    remember: false,
-  },
-});
+  const [role, setRole] = useState("student");
+  const [showPw, setShowPw] = useState(false);
   const navigate = useNavigate();
-const onSubmit = (data) => {
-  if (loading) return;
+  const [rememberedUsername] = useState(getRememberedUsername);
 
-  const loginData = {
-    ...data,
-    role,
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    mode: "onBlur",
+    reValidateMode: "onChange",
+    defaultValues: {
+      username: rememberedUsername,
+      password: "",
+      rememberUsername: Boolean(rememberedUsername),
+    },
+  });
+
+  const onSubmit = async (data) => {
+    clearErrors("root.server");
+
+    try {
+      const result = await loginWithUsername({
+        username: data.username,
+        password: data.password,
+      });
+
+      const destination = getPortalPath(result.user.role);
+      if (!destination) {
+        throw new Error(
+          "This account does not have a supported LTSU portal role.",
+        );
+      }
+
+      try {
+        window.localStorage.setItem(ACCESS_TOKEN_KEY, result.accessToken);
+        window.localStorage.setItem(
+          AUTH_USER_KEY,
+          JSON.stringify(result.user),
+        );
+      } catch {
+        try {
+          window.localStorage.removeItem(ACCESS_TOKEN_KEY);
+          window.localStorage.removeItem(AUTH_USER_KEY);
+        } catch {
+          // Keep the user-facing storage error even if browser cleanup is blocked.
+        }
+        throw new Error(
+          "Your browser blocked session storage. Enable site storage and try again.",
+        );
+      }
+
+      try {
+        if (data.rememberUsername) {
+          window.localStorage.setItem(
+            REMEMBERED_USERNAME_KEY,
+            data.username.trim(),
+          );
+        } else {
+          window.localStorage.removeItem(REMEMBERED_USERNAME_KEY);
+        }
+      } catch {
+        // Remembering the username is optional; a successful sign-in should continue.
+      }
+
+      if (result.user.mustChangePassword) {
+        showWarningToast(
+          "Password update required",
+          "Your account needs a password change before protected portal services can be used.",
+        );
+      } else if (EXPECTED_ROLES[role] !== result.user.role) {
+        showInfoToast(
+          "Opening your assigned portal",
+          `This account is registered as ${ROLE_LABELS[result.user.role]}. Opening that portal.`,
+        );
+      } else {
+        showSuccessToast(
+          "Sign in successful",
+          `Welcome to the LTSU ${ROLE_LABELS[result.user.role]} Portal.`,
+        );
+      }
+
+      navigate(destination, { replace: true });
+    } catch (error) {
+      const message =
+        error?.message || "Unable to sign in. Please try again.";
+      setError("root.server", { type: "server", message });
+      showErrorToast("Sign in failed", message);
+    }
   };
 
-  setLoading(true);
-
-  console.log(loginData);
-
-  setTimeout(() => {
-    setLoading(false);
-
-    showErrorToast(
-      "Login Failed",
-      "Incorrect University ID or Password."
-    );
-
-   
-
-  }, 1000);
-};
-
-  const togglePw = useCallback(() => setShowPw((v) => !v), []);
+  const togglePw = useCallback(() => setShowPw((value) => !value), []);
 
   return (
     <div
@@ -81,7 +154,6 @@ const onSubmit = (data) => {
       role="region"
       aria-label="Sign in form"
     >
-      {/* ── Logo ── */}
       <div className="logo-area">
         <LogoMark />
         <div className="logo-text">
@@ -92,112 +164,140 @@ const onSubmit = (data) => {
 
       <h2 className="auth-heading">Welcome back</h2>
       <p className="auth-sub">
-        Sign in to access your academic dashboard and university services.
+        Choose your portal and sign in with your university username.
       </p>
 
-      {/* ── Role selector ── */}
       <RoleSelector activeRole={role} onChange={setRole} />
+      <p className="login-role-note">
+        Your assigned portal is verified by the university server.
+      </p>
 
-      {/* ── Form ── */}
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        {/* Email / ID */}
         <div className="login-field-group">
-          <label className="field-label" htmlFor="emailInput">
-            University ID
+          <label className="field-label" htmlFor="usernameInput">
+            University Username
           </label>
           <div className="login-field-wrap">
             <span className="login-field-icon" aria-hidden="true">
               <Mail size={18} strokeWidth={2} />
             </span>
             <input
-              id="emailInput"
+              id="usernameInput"
               className="login-field-input has-icon"
               type="text"
               placeholder={PLACEHOLDERS[role]}
               autoComplete="username"
+              autoCapitalize="none"
+              spellCheck="false"
               aria-required="true"
-              {...register("email", {
-                required: "University ID is required",
+              aria-invalid={Boolean(errors.username)}
+              {...register("username", {
+                required: "University username is required.",
+                minLength: {
+                  value: 3,
+                  message: "Username must contain at least 3 characters.",
+                },
+                maxLength: {
+                  value: 40,
+                  message: "Username must be 40 characters or fewer.",
+                },
+                pattern: {
+                  value: /^[a-zA-Z0-9._-]+$/,
+                  message:
+                    "Use only letters, numbers, dots, underscores and hyphens.",
+                },
               })}
             />
           </div>
-          {errors.email && (
-  <p className="login-error">
-    {errors.email.message}
-  </p>
-)}
+          {errors.username && (
+            <p className="login-error" role="alert">
+              {errors.username.message}
+            </p>
+          )}
         </div>
 
-        {/* Password */}
-       <div className="login-field-group">
-  <label className="field-label" htmlFor="passwordInput">
-    Password
-  </label>
+        <div className="login-field-group">
+          <label className="field-label" htmlFor="passwordInput">
+            Password
+          </label>
 
-  <div className="login-field-wrap">
-    <span className="login-field-icon">
-      <Lock size={18} />
-    </span>
+          <div className="login-field-wrap">
+            <span className="login-field-icon" aria-hidden="true">
+              <Lock size={18} />
+            </span>
 
-    <input
-      id="passwordInput"
-      className="login-field-input has-icon"
-      type={showPw ? "text" : "password"}
-      placeholder="Enter your password"
-      autoComplete="current-password"
-      {...register("password", {
-        required: "Password is required",
-        minLength: {
-          value: 6,
-          message: "Password must be at least 6 characters",
-        },
-      })}
-    />
+            <input
+              id="passwordInput"
+              className="login-field-input has-icon"
+              type={showPw ? "text" : "password"}
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              aria-required="true"
+              aria-invalid={Boolean(errors.password)}
+              {...register("password", {
+                required: "Password is required.",
+                validate: (value) =>
+                  new TextEncoder().encode(value).length <= 72 ||
+                  "Password must not exceed 72 UTF-8 bytes.",
+              })}
+            />
 
-    <button
-      type="button"
-      className="pw-toggle"
-      onClick={togglePw}
-    >
-      {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
-    </button>
-  </div>
+            <button
+              type="button"
+              className="pw-toggle"
+              onClick={togglePw}
+              aria-label={showPw ? "Hide password" : "Show password"}
+              aria-pressed={showPw}
+            >
+              {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
 
-  {errors.password && (
-    <p className="login-error">
-      {errors.password.message}
-    </p>
-  )}
-</div>
+          {errors.password && (
+            <p className="login-error" role="alert">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
 
-        {/* Remember + Forgot */}
         <div className="login-form-row">
           <label className="login-checkbox-wrap">
-       <input
-  type="checkbox"
-  id="rememberMe"
-  {...register("remember")}
-/>
-            <span>Remember me</span>
+            <input
+              type="checkbox"
+              id="rememberUsername"
+              {...register("rememberUsername")}
+            />
+            <span>Remember username</span>
           </label>
-          <a
-            href="#reset"
-            className="login-forgot-link"
-            aria-label="Reset your password"
+
+          <button
+            type="button"
+            className="login-forgot-link login-forgot-link-button"
+            onClick={() =>
+              showInfoToast(
+                "Password reset",
+                "Password resets are managed by your university administrator.",
+              )
+            }
           >
             Forgot password?
-          </a>
+          </button>
         </div>
 
-        {/* Primary CTA */}
+        {errors.root?.server && (
+          <p className="login-error login-server-error" role="alert">
+            {errors.root.server.message}
+          </p>
+        )}
+
         <button
           type="submit"
           className="login-btn-primary"
-         disabled={loading || isSubmitting}
-          aria-busy={loading}
+          disabled={isSubmitting}
+          aria-busy={isSubmitting}
         >
-          <span>{loading ? "Signing in…" : "Access Portal"}</span>
-          {!loading && (
+          <span>{isSubmitting ? "Signing in…" : "Access Portal"}</span>
+          {!isSubmitting && (
             <span className="btn-arrow" aria-hidden="true">
               <ArrowRight size={18} strokeWidth={2.5} />
             </span>
@@ -205,14 +305,12 @@ const onSubmit = (data) => {
         </button>
       </form>
 
-      {/* Divider */}
       <div className="login-divider">
         <div className="login-divider-line" />
         <span>or</span>
         <div className="login-divider-line" />
       </div>
 
-      {/* Secondary CTA */}
       <button
         type="button"
         className="login-btn-secondary"

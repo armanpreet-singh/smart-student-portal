@@ -627,6 +627,25 @@ label.field-label {
   opacity: .8;
 }
 
+.login-forgot-link-button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.login-role-note {
+  margin: -9px 0 16px;
+  color: var(--gray-400);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.login-server-error {
+  margin: 0 0 12px;
+}
+
 /* ── BUTTONS ─────────────────────────────────────────────── */
 /* ───────── PRIMARY BUTTON ───────── */
 
