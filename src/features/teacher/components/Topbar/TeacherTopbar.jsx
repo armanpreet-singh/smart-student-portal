@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import {
   Menu,
   Search,
@@ -23,11 +23,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useDashboardTheme } from "../../../../features/dashboard/hooks/useDashboardTheme";
 import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySubmenu';
 import { teacherData } from "../../data/mockTeacherData";
+import { useAuth } from "../../../auth/context/AuthContext";
 
 const TeacherTopbar = memo(({ onMenuClick }) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { isDark, toggleTheme } = useDashboardTheme();
+  const { logout } = useAuth();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -72,9 +73,9 @@ const TeacherTopbar = memo(({ onMenuClick }) => {
     [],
   );
   const handleLogout = useCallback(() => {
-    console.log("Logout");
-    navigate("/");
-  }, [navigate]);
+    setIsDropdownOpen(false);
+    logout();
+  }, [logout]);
   return (
     <header className="d-topbar">
       <div className="d-topbar-left">
