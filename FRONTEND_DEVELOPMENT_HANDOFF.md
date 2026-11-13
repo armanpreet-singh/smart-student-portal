@@ -41,7 +41,7 @@ Base commit for this chunk: `84607ce7c81512b5529788964672b9b0ca4c92c9`
 
 - Verified source branch snapshot: `ui/teacher-attendance-workflow` at `386a37cc5c45e796bfc3ffc5d4b1832ff4576e98`. The implementation files were unchanged after their verified build; subsequent work in this snapshot was limited to handoff/PR metadata.
 - At this snapshot, branch comparison with `main` was 11 commits ahead, 0 behind, and six intended files changed. `main` was not modified.
-- Frontend pull request #2: https://github.com/armanpreet-singh/smart-student-portal/pull/2 — open, mergeable, not merged.
+- At this historical snapshot, frontend PR #2 was open; it was subsequently merged into main at `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`.
 - GitHub Actions run `43429998901` completed with conclusion `success` on the exact snapshot commit. Checkout, Node.js 22 setup, `npm ci`, and `npm run build` all passed. Run `43429991685` also passed on the same commit.
 - No deployment was performed.
 - Always re-check the live ref, PR and latest CI after this snapshot; documentation-only commits can advance the branch head without changing implementation code.
@@ -166,7 +166,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 - Desktop/mobile were checked through responsive CSS review and breakpoints; no browser-driven viewport test was available in the GitHub connector.
 - This verifies a successful frontend production build, not a live authenticated API session or browser clipboard behavior.
 - No deployment was performed.
-- Frontend PR #2 is open and not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/2. The PR head at creation was `15b170bdecd77d9ada544e61dfb0251186c6ef7c`; later handoff refreshes advance the head. Do not merge without normal review.
+- This implementation PR (#2) was subsequently merged into main at `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`. The following backend-login PR (#3) was then merged at `84607ce7c81512b5529788964672b9b0ca4c92c9`.
 
 ## Completed frontend chunk — Phase I, Chunk 1: Backend-connected login
 
