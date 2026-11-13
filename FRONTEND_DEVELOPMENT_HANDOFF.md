@@ -4,7 +4,7 @@ Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch for PR #9: `main`
 Development branch: `feat/admin-student-directory` (stacked on `feat/admin-class-subject-catalogue` / PR #9)
-Current pull request: Phase II, Chunk 4 — PR #10 will target `feat/admin-class-subject-catalogue` so it remains dependent on PR #9.
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/10 (open; targets `feat/admin-class-subject-catalogue`; stacked on PR #9).
 Phase II, Chunk 3 Catalogue PR #9 remains open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/9
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
