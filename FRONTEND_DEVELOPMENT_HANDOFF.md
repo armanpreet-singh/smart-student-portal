@@ -171,10 +171,10 @@ No existing role page met the full Ready standard at audit time. The page shells
 
 ### Final branch, PR and CI snapshot
 
-- Auth branch head verified: `320379bcb7fdeb43034f2723ce61b184db18af2c`.
+- Auth branch head verified at the latest code-and-handoff snapshot: `c07aa2a2cfd27715b738ab920bf6a0d2b6f9ad04`.
 - Chunk comparison is against parent branch `ui/teacher-attendance-workflow`, not `main`; PR #3 is deliberately stacked on PR #2 to keep each chunk isolated.
 - PR #3: https://github.com/armanpreet-singh/smart-student-portal/pull/3 — open, mergeable, not merged. After parent PR #2 is merged, retarget PR #3 to `main`.
-- GitHub Actions run `43432964417` completed with conclusion `success` on the exact auth branch head. Checkout, Node.js 22 setup, `npm ci` and `npm run build` all passed.
+- GitHub Actions run `43433208070` completed with conclusion `success` on the exact auth branch head `c07aa2a2cfd27715b738ab920bf6a0d2b6f9ad04`. Checkout, Node.js 22 setup, `npm ci` and `npm run build` all passed.
 - No live account sign-in was attempted. No deployment or backend/Render/Neon changes were made.
 
 ### Backend contract verified
