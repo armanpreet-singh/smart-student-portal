@@ -7,9 +7,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { fetchCurrentUser } from "../api/authApi";
+import { fetchCurrentUser, getPortalPath } from "../api/authApi";
 import {
   clearStoredSession,
   getStoredAccessToken,
@@ -21,12 +21,13 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const requestSequence = useRef(0);
-  const initialToken = useRef(getStoredAccessToken());
-  const [accessToken, setAccessToken] = useState(initialToken.current);
+  const [initialToken] = useState(getStoredAccessToken);
+  const [accessToken, setAccessToken] = useState(initialToken);
   const [user, setUser] = useState(null);
   const [sessionStatus, setSessionStatus] = useState(
-    initialToken.current ? "restoring" : "anonymous",
+    initialToken ? "restoring" : "anonymous",
   );
   const [sessionError, setSessionError] = useState("");
 
@@ -55,6 +56,10 @@ export function AuthProvider({ children }) {
         setSessionStatus("authenticated");
         setSessionError("");
         saveUserSnapshot(currentUser);
+        if (location.pathname === "/login") {
+          const destination = getPortalPath(currentUser.role);
+          if (destination) navigate(destination, { replace: true });
+        }
         return currentUser;
       } catch (error) {
         if (requestId !== requestSequence.current) return null;
@@ -78,7 +83,7 @@ export function AuthProvider({ children }) {
         return null;
       }
     },
-    [accessToken, navigate],
+    [accessToken, location.pathname, navigate],
   );
 
   const establishSession = useCallback((token, nextUser) => {
@@ -113,8 +118,8 @@ export function AuthProvider({ children }) {
     if (didRestoreOnMount.current) return;
     didRestoreOnMount.current = true;
 
-    if (initialToken.current) {
-      restoreSession(initialToken.current);
+    if (initialToken) {
+      restoreSession(initialToken);
     }
   }, [restoreSession]);
 
