@@ -43,7 +43,7 @@ const RoleSelector = ({ activeRole, onChange }) => {
     <div
       className="role-selector"
       role="group"
-      aria-label="Select your role"
+      aria-label="Choose a portal preference"
     >
       {ROLES.map((role, i) => (
         <button
