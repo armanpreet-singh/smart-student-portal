@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `feat/admin-teacher-directory`, based on `main` at PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`. Phase II, Chunk 3 PR #9 merged into main at `d00fc61b54456b0fb313294c72aecedd62c9bd65`; Phase II, Chunk 4 PR #10 merged into main at `a32bfa04d132f2866938b7364eccb426bfb1e519`. Phase II PRs #7/#8 and frontend PRs #2–#6 are also merged. Phase II, Chunk 5 PR #11 will target main.
+3. Current branch: `feat/admin-teacher-directory`, based on `main` at PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`. Phase II, Chunk 3 PR #9 merged into main at `d00fc61b54456b0fb313294c72aecedd62c9bd65`; Phase II, Chunk 4 PR #10 merged into main at `a32bfa04d132f2866938b7364eccb426bfb1e519`. Phase II PRs #7/#8 and frontend PRs #2–#6 are also merged. Phase II, Chunk 5 PR #11 is open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/11.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -70,7 +70,8 @@ Implement Admin Student Account Provisioning (create-only) using backend-main PO
 - Teacher rows display full name, username, nullable email, nullable linked class, active/inactive account status, mustChangePassword state and account creation date.
 - Removed unsupported faculty ID, department and subject fields; the directory endpoint has no employee ID, specialization, experience or teacher-subject assignment data.
 - Added loading/error/retry/empty/no-match states with the existing Admin dashboard design and responsive styling. No mock fallback or create/status/reset/assignment mutations are included.
-- PR #11 will target `main`; no Admin credentials were used for live account testing.
+- PR #11: https://github.com/armanpreet-singh/smart-student-portal/pull/11 is open against `main`; no Admin credentials were used for live account testing.
+- GitHub Actions build `43459874479` passed on final implementation/handoff head `25de2967f8d25628b1c12c4186a8eda8f34a6cfa`. Cloudflare Pages preview was still building when PR #11 was opened.
 ## Completed Phase II, Chunk 4 — Admin Student Directory API integration
 
 - Branch `feat/admin-student-directory`, stacked on `feat/admin-class-subject-catalogue` / PR #9 at `768c41c113f93cde8c3bfd8bb4dea6d2b5974f59`.

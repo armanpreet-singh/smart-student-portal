@@ -4,7 +4,7 @@ Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/admin-teacher-directory` (branched from `main` after PR #10)
-Current pull request: Phase II, Chunk 5 — PR #11 will target `main`.
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/11 (open; targets `main`).
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
@@ -499,9 +499,9 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/admin-teacher-directory`, based on `main` after PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`.
-- PR #11 will target `main`; this is an independent change after PRs #9 and #10 have both merged.
-- Main's PR #10 merge commit has GitHub Actions build run `43458018423` passing. The Cloudflare Pages check was still building when this handoff was written; do not claim a successful Pages deployment until its result is confirmed.
-- Chunk 5 build and PR verification will be recorded on the final branch head after CI completes.
+- PR #11: https://github.com/armanpreet-singh/smart-student-portal/pull/11 — open against `main`; this is independent of PRs #9 and #10, both of which are merged.
+- GitHub Actions build run `43459874479` passed on final handoff-updated head `25de2967f8d25628b1c12c4186a8eda8f34a6cfa` (`npm ci` and `npm run build`).
+- Cloudflare Pages preview check was still building when PR #11 was opened; no successful Pages deployment is claimed until the result is confirmed.
 - No lint or unit-test scripts are configured. Live Admin/Teacher-account testing remains outstanding.
 ## Known issues and integration gaps
 
