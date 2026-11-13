@@ -3,16 +3,17 @@
 Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/admin-teacher-provisioning` (branched from `main` after PR #12)
-Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/13 (open; targets `main`).
+Development branch: `main`
+Current pull request: none — Phase II, Chunk 7 PR #13 has merged.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
 Phase II, Chunk 6 Admin Student Account Provisioning PR #12 merged into `main`: `2ad3c38118c5b5f250d94f824508c895bd938c9a`.
+Phase II, Chunk 7 Admin Teacher Account Provisioning PR #13 merged into `main`: `78a6936ff89bc477f5e0228c56d7d8151c74478d`.
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Base commit for this chunk: `2ad3c38118c5b5f250d94f824508c895bd938c9a`
+Latest main commit: `78a6936ff89bc477f5e0228c56d7d8151c74478d`
 
 ## Working scope and rules
 
@@ -574,8 +575,9 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/admin-teacher-provisioning`, based on `main` after PR #12 merge commit `2ad3c38118c5b5f250d94f824508c895bd938c9a`.
-- PR #13: https://github.com/armanpreet-singh/smart-student-portal/pull/13 — open against `main`; PRs #11 and #12 are already merged.
-- GitHub Actions build run `43468117173` passed on implementation head `04a9f5c223e40f34beb02ba8282681157f621fea` (`npm ci` and `npm run build`). A fresh check is expected after this PR-metadata documentation update.
+- PR #13: https://github.com/armanpreet-singh/smart-student-portal/pull/13 merged into `main` at `78a6936ff89bc477f5e0228c56d7d8151c74478d`.
+- GitHub Actions builds `43469120271` and `43469130003` both passed on final documentation-updated head `7888f80ce29f7412abe632fea08813a146e2bacc` (`npm ci` and `npm run build`).
+- Cloudflare Pages preview was still in progress at last check; deployment is not confirmed.
 - No lint or unit-test scripts are configured. Live Admin/Teacher account creation testing remains outstanding.
 ## Known issues and integration gaps
 
