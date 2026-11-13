@@ -120,7 +120,10 @@ const LoginForm = () => {
         );
       }
 
-      navigate(destination, { replace: true });
+      navigate(
+        result.user.mustChangePassword ? "/change-password" : destination,
+        { replace: true },
+      );
     } catch (error) {
       const message =
         error?.message || "Unable to sign in. Please try again.";

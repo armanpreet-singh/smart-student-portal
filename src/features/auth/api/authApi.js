@@ -17,9 +17,10 @@ export function getApiBaseUrl() {
   ).replace(/\/+$/, "");
 }
 
-function createApiError(message, status = 0) {
+function createApiError(message, status = 0, details = []) {
   const error = new Error(message);
   error.status = status;
+  error.details = Array.isArray(details) ? details : [];
   return error;
 }
 
@@ -176,6 +177,86 @@ export async function fetchCurrentUser(accessToken) {
   }
 
   return user;
+}
+
+export async function changeCurrentPassword(
+  accessToken,
+  { currentPassword, newPassword },
+) {
+  if (!accessToken) {
+    throw createApiError("Your session has expired. Please sign in again.", 401);
+  }
+
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(
+    () => controller.abort(),
+    REQUEST_TIMEOUT_MS,
+  );
+
+  let response;
+
+  try {
+    response = await fetch(
+      `${getApiBaseUrl()}/api/auth/change-password`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+        signal: controller.signal,
+      },
+    );
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw createApiError(
+        "The password change request timed out. Please try again.",
+      );
+    }
+
+    if (error instanceof TypeError) {
+      throw createApiError(
+        "Unable to reach the password service. Check your connection and backend CORS settings.",
+      );
+    }
+
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+
+  const payload = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const message =
+      response.status === 401
+        ? "Your sign-in has expired or your account is unavailable. Please sign in again."
+        : response.status >= 500
+          ? "The password service is temporarily unavailable. Please try again."
+          : payload?.message || "Unable to change your password.";
+
+    throw createApiError(message, response.status, payload?.details);
+  }
+
+  const updatedUser = payload?.data?.user;
+  if (
+    payload?.status !== "ok" ||
+    !updatedUser ||
+    typeof updatedUser.id !== "string" ||
+    updatedUser.mustChangePassword !== false
+  ) {
+    throw createApiError(
+      "The password service did not confirm that the required password change was completed.",
+      502,
+    );
+  }
+
+  return updatedUser;
 }
 
 export function getPortalPath(role) {

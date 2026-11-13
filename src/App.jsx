@@ -11,6 +11,7 @@ import LandingPage from "./features/landing/LandingPage";
 import LoginPage from "./features/auth/pages/LoginPage";
 import SessionRecoveryNotice from "./features/auth/components/SessionRecoveryNotice";
 import ProtectedRoute from "./features/auth/components/ProtectedRoute";
+import PasswordChangePage from "./features/auth/pages/PasswordChangePage";
 
 // Temporary Dashboard Page
 function Dashboard() {
@@ -83,6 +84,17 @@ export default function App() {
             />
           }
         />
+
+        {/* Required password update for provisioned accounts */}
+        <Route
+          path="/change-password"
+          element={
+            <ProtectedRoute requirePasswordChange>
+              <PasswordChangePage theme={theme} />
+            </ProtectedRoute>
+          }
+        />
+
 
         {/* Student Dashboard */}
         <Route

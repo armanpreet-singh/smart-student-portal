@@ -8,6 +8,7 @@ on:
       - "feat/auth-login-api"
       - "feat/auth-session-provider"
       - "feat/auth-role-route-guards"
+      - "feat/auth-forced-password-change"
   pull_request:
     branches:
       - main

@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current route-guard branch: `feat/auth-role-route-guards`, stacked on `feat/auth-session-provider`. Route-guard PR #5 is open and mergeable, not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/5. Parent session-provider PR #4 is also open and not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/4. After PR #4 merges, retarget PR #5 to main. PR #2 and PR #3 have both been merged to main in dependency order.
+3. Current branch: `feat/auth-forced-password-change`, based on main. PR #6 is open and mergeable, not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/6. Previous frontend PRs #2, #3, #4 and #5 have all been merged into main; PR #4 was merged before PR #5.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -51,42 +51,47 @@ The component expects a Bearer token at localStorage key `ltsu-access-token`. Ex
 
 Verified implementation/CI snapshot: branch head `386a37cc5c45e796bfc3ffc5d4b1832ff4576e98`; GitHub Actions run `43429998901` passed checkout, Node.js 22, `npm ci` and `npm run build` on that exact commit (run `43429991685` also passed on the same head). Frontend PR #2 is open, mergeable and unmerged. Subsequent handoff-only commits may advance the branch; always re-check live ref/PR/CI state before continuing.
 
-## Exact next task — Phase I, Chunk 4
+## Exact next task — Phase II, Chunk 1
 
-Implement the forced password-change workflow only:
-1. Use the backend-verified user's `mustChangePassword` value after login/session restoration.
-2. Add a dedicated password-change route/page using backend-main POST /api/auth/change-password and the backend's exact request schema.
-3. A verified account with mustChangePassword=true may access the password-change route, but must not mount the role dashboard until the change succeeds.
-4. Send current/new password fields only; do not send a client user ID or role. Use the Bearer token from `useAuth()`.
-5. Validate confirmation client-side, show backend errors and submit/success/loading states.
-6. After change success, refresh the user through GET /api/auth/me, then navigate to the dashboard derived from the verified backend role.
-7. Preserve existing LTSU design and auth route architecture. Build, verify, update/read both handoff documents and stop.
+Implement Student Attendance API integration only:
+1. Inspect the current Student Attendance page and mock data.
+2. Use backend-main GET `/api/student/attendance` with the shared Bearer token. Optional `fromDate` and `toDate` query values use YYYY-MM-DD; fromDate must be on or before toDate.
+3. Map `period` and `subjects`; each subject includes the subject/class object, `summary`, and `records` with date, status, remarks and recordedAt. Current statuses: PRESENT, ABSENT, LATE, EXCUSED.
+4. Preserve existing UI; add date filters and loading/error/empty/retry states, and derive totals/charts from real response data.
+5. Keep mock data isolated in demo mode; do not silently switch to demo on a live API failure or invent endpoints.
+6. Build, verify, update/read both handoff docs and stop. Do not merge/deploy unless requested.
+
+## Completed Phase I, Chunk 4 — forced password-change workflow
+
+- PR #6: https://github.com/armanpreet-singh/smart-student-portal/pull/6 (open; mergeable; not merged). Branch `feat/auth-forced-password-change`.
+- Backend main `POST /api/auth/change-password` accepts exactly `{ currentPassword, newPassword }`; no role, ID or confirmation field is sent.
+- Password rules mirror backend Zod: current password non-empty and <=72 UTF-8 bytes; new password >=12 characters, <=72 UTF-8 bytes and different from current. Confirmation remains client-side.
+- Accounts with `mustChangePassword=true` go to `/change-password`; ProtectedRoute blocks the three role dashboards until the backend clears the flag. Normal users cannot open the password-change route.
+- After the endpoint returns success, the shared auth provider calls GET `/api/auth/me` again. Navigation to the verified user's role dashboard happens only after the refreshed user confirms `mustChangePassword=false`.
+- Build run `43439637720` and Cloudflare Pages passed on implementation commit `4ebd35f2fc0e1bb58cd59d219f2f03e634a443a3`.
+- No real university credentials were used; no backend/database/Render/deployment changes were made.
 
 ## Completed Phase I, Chunk 3 — role-based route protection
 
-- Route-guard branch: `feat/auth-role-route-guards`, stacked on session-provider branch `feat/auth-session-provider`.
-- Reusable `ProtectedRoute` consumes `useAuth()` and wraps the three role route trees in App: STUDENT `/dashboard/*`, TEACHER `/teacher/*`, ADMIN `/admin/*`.
-- Landing `/` and login `/login` remain public.
-- Session restoration displays a loading state; anonymous/expired sessions redirect to login; wrong-role navigation redirects to the verified user's role dashboard.
-- If server verification is temporarily unavailable, protected dashboard components do not mount; a recovery state is shown with retry banner and sign-out control.
-- Forced password-change UI is intentionally left for this next chunk.
-- Route guard PR #5: https://github.com/armanpreet-singh/smart-student-portal/pull/5 (open; mergeable; stacked on PR #4). GitHub Actions run `43437899529` passed on head `13087a195042aa02a4fcd2994b3f7ee8ee1c5495`; `npm ci` and `npm run build` passed.
-
-## Completed Phase I, Chunk 1 — backend-connected login
-
-- PR #3 is merged into main at merge commit `84607ce7c81512b5529788964672b9b0ca4c92c9`; parent Teacher Attendance PR #2 was merged first at `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`.
-- Login calls backend-main `POST /api/auth/login` with exactly `{ username, password }`; the portal selector is not sent.
-- Backend-returned role determines `/dashboard`, `/teacher` or `/admin`; token is stored at localStorage key `ltsu-access-token`.
-- Login includes backend-aligned validation, timeout, error feedback and Remember username.
-- No live account credentials were used. Build run `43433208070` passed.
+- PR #5 merged into main at `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`; parent PR #4 (session provider) merged first at `132b49e3269c99577f515121a60b0c99a7185f0f`.
+- ProtectedRoute wraps Student `/dashboard/*`, Teacher `/teacher/*` and Admin `/admin/*` based on backend-verified role. Landing and login remain public.
+- Anonymous/expired sessions redirect to login; wrong-role routes redirect to the correct verified dashboard; protected pages fail closed while restoring or when verification is unavailable.
+- Build run `43437899529` and Cloudflare Pages passed on route-guard implementation head.
 
 ## Completed Phase I, Chunk 2 — shared authentication session management
 
-- Parent PR #4 contains the session provider and is open/unmerged at time of this handoff: https://github.com/armanpreet-singh/smart-student-portal/pull/4.
-- AuthProvider restores existing token through backend-main GET /api/auth/me. The server-returned user is the only trusted role state; cached user snapshots are not authorization data.
-- Invalid/expired sessions clear token/user and go to login. Temporary network/service failures clear in-memory user, preserve token for retry and show recovery controls.
-- Login, Student/Teacher/Admin logout menus and Teacher Attendance use shared auth context.
-- Build run `43436197757` and PR build `43436411634` passed on the provider code head; Cloudflare Pages passed.
+- PR #4 merged into main at `132b49e3269c99577f515121a60b0c99a7185f0f`.
+- AuthProvider verifies restored tokens through GET `/api/auth/me`; stale cached roles are not trusted. Invalid sessions clear token/user; temporary network errors preserve the token for retry.
+- Student, Teacher and Admin logout controls clear the shared session. Teacher Attendance consumes the provider token.
+- Build run `43436994527` passed on the implementation snapshot; Cloudflare Pages passed.
+
+## Completed Phase I, Chunk 1 — backend-connected login
+
+- PR #3 merged into main at `84607ce7c81512b5529788964672b9b0ca4c92c9`; Teacher Attendance PR #2 merged first at `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`.
+- Login calls backend-main POST `/api/auth/login` with exactly `{ username, password }`. Backend role routes to the correct portal; access token is stored at `ltsu-access-token`.
+- Includes backend-aligned validation, timeout, error feedback and Remember username. API URL is configurable through VITE_API_BASE_URL.
+- No live account credentials were used. Original login build run `43433208070` passed.
+
 ## Audit and future work
 
 Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Broad categories still mock-backed include timetable, assignments, results, resources, announcements, academic calendar, departments and dashboard analytics. Admin also needs a dedicated teacher-subject assignment UI; Student duty-proof UI is dependent on backend draft PR #1 being approved/merged/deployed. Most existing pages need API loading/error/empty states and correct data/permission mapping before they can be marked Ready.

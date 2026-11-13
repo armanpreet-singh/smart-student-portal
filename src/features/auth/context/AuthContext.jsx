@@ -108,6 +108,43 @@ export function AuthProvider({ children }) {
     navigate("/login", { replace: true });
   }, [navigate]);
 
+  const refreshCurrentUser = useCallback(async () => {
+    if (!accessToken) return null;
+
+    const requestId = ++requestSequence.current;
+
+    try {
+      const currentUser = await fetchCurrentUser(accessToken);
+      if (requestId !== requestSequence.current) return null;
+
+      setUser(currentUser);
+      setSessionStatus("authenticated");
+      setSessionError("");
+      saveUserSnapshot(currentUser);
+      return currentUser;
+    } catch (error) {
+      if (requestId !== requestSequence.current) return null;
+
+      setUser(null);
+
+      if (error?.status === 401) {
+        clearStoredSession();
+        setAccessToken("");
+        setSessionStatus("expired");
+        setSessionError("Your LTSU session has expired. Please sign in again.");
+        navigate("/login", { replace: true });
+        return null;
+      }
+
+      setSessionStatus("unavailable");
+      setSessionError(
+        error?.message ||
+          "Unable to refresh your account. Check your connection and retry.",
+      );
+      return null;
+    }
+  }, [accessToken, navigate]);
+
   const retrySession = useCallback(
     () => restoreSession(accessToken),
     [accessToken, restoreSession],
@@ -133,6 +170,7 @@ export function AuthProvider({ children }) {
       isRestoring: sessionStatus === "restoring",
       establishSession,
       restoreSession,
+      refreshCurrentUser,
       retrySession,
       logout,
     }),
@@ -143,6 +181,7 @@ export function AuthProvider({ children }) {
       sessionError,
       establishSession,
       restoreSession,
+      refreshCurrentUser,
       retrySession,
       logout,
     ],
