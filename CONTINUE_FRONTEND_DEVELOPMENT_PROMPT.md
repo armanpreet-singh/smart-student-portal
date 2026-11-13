@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current authentication branch: `feat/auth-login-api`, stacked on `ui/teacher-attendance-workflow`. Parent attendance PR #2 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/2. Keep the chunks separately reviewable.
+3. Current authentication branch: `feat/auth-login-api`, stacked on `ui/teacher-attendance-workflow`. Auth PR #3 is open and mergeable, not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/3. Parent attendance PR #2 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/2. Retarget PR #3 to main after PR #2 merges.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -61,6 +61,18 @@ Implement the shared authentication session provider and session restoration:
 5. Refactor Teacher Attendance to consume the shared token/session interface or one shared token utility.
 6. Leave route guards and forced password-change UI for subsequent Phase I chunks.
 7. Preserve the existing design, run the build, update both handoff documents, read them back and stop.
+
+## Completed Phase I, Chunk 1 — backend-connected login
+
+- Branch: `feat/auth-login-api`, stacked on `ui/teacher-attendance-workflow`; pull request #3 is open and mergeable: https://github.com/armanpreet-singh/smart-student-portal/pull/3.
+- Login calls backend-main POST /api/auth/login with exactly `{ username, password }`. The portal selector is not sent.
+- Backend-returned roles route to /dashboard, /teacher and /admin; a UI preference mismatch does not override the account role.
+- Bearer token stored at localStorage key `ltsu-access-token` for Teacher Attendance compatibility; safe user snapshot stored at `ltsu-auth-user`.
+- Includes backend-aligned username and password validation, submit state, timeout, 401/429/5xx/network/CORS feedback, and Remember username.
+- VITE_API_BASE_URL is configurable; the documented Render URL is the default. .env.example documents local port 5000 and production override.
+- Ensure backend Render CORS_ORIGIN includes the deployed frontend origin. Runtime CORS configuration was not inspected or changed.
+- No real account credentials were used. GitHub Actions build run 43433208070 passed on branch head c07aa2a2cfd27715b738ab920bf6a0d2b6f9ad04. There are no frontend lint/unit-test scripts.
+- No backend, database, Render environment or deployment changes were made.
 
 ## Audit and future work
 
