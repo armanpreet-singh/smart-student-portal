@@ -2,13 +2,14 @@
 
 Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
-Base branch: `main`
-Development branch: `feat/admin-class-subject-catalogue` (branched from current `main` after PR #8)
-Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/9 (open; targets `main`; not merged)
+Base branch for PR #9: `main`
+Development branch: `feat/admin-student-directory` (stacked on `feat/admin-class-subject-catalogue` / PR #9)
+Current pull request: Phase II, Chunk 4 — PR #10 will target `feat/admin-class-subject-catalogue` so it remains dependent on PR #9.
+Phase II, Chunk 3 Catalogue PR #9 remains open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/9
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Base commit for this chunk: `db07903ce1003073f2e9b3902c295321c3427f3c`
+Base commit for this chunk: PR #9 head `768c41c113f93cde8c3bfd8bb4dea6d2b5974f59`
 
 ## Working scope and rules
 
@@ -83,7 +84,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Teacher | Profile | Hardcoded employee ID, contact details, experience and specialization. | **Needs improvement** — `/api/auth/me` supplies only basic account identity/role/class fields. | Bind known account fields and specify any additional staff profile model/contract before displaying values as authoritative. |
 | Teacher | Settings | Form submits to console.log. | **Needs improvement** — backend password-change route exists; profile/system settings mutations do not. | Implement password change using API; separate unsupported preferences from account data. |
 | Admin | Dashboard Home | Static institutional totals/insights and quick-action cards. | **Needs improvement** — no aggregate dashboard endpoint exists. | Use current admin endpoints for actual counts and avoid unverified institutional metrics. |
-| Admin | Student Directory | Static users; Add Student inert; search filters only mock name. | **Needs improvement** — backend main has paginated/searchable `GET /api/admin/users`, `POST /api/admin/users` and account status/reset endpoints. | Connect role=STUDENT directory, page/pageSize/search/active filters, create form, status and password-reset flows; do not infer roll number. |
+| Admin | Student Directory | Uses backend-main paginated `GET /api/admin/users?role=STUDENT`; displays full name, username, nullable email/class, account status and password-change-required state. Search, active filter and pagination are server-side. | **Needs improvement** — read integration is implemented; validate with a provisioned Admin account and real Student accounts. | Verify real account/class data, empty email and unassigned class cases. Create, status and password-reset mutations remain separate workflows; backend exposes no rollNumber. |
 | Admin | Faculty Directory | Static faculty and subject labels; Add Faculty inert. | **Needs improvement** — admin user directory and provisioning APIs exist for TEACHER. | Connect role=TEACHER listing/creation/status/reset and assignment relationships. |
 | Admin | Class & Subject Catalogue | Separate Classes and Subjects views call backend-main GET `/api/admin/classes` and `/api/admin/subjects`; pagination, search, active filters and class-scoped subject filter use API data. | **Needs improvement** — read integration is implemented; verify with a provisioned Admin account and actual catalogue data. | Validate real data, pagination and class/subject relationships; create/update actions are outside this read-only chunk. |
 | Admin | Departments | Mock department/HOD/student/faculty counts. | **Needs improvement** — no Department model/API exists. | Backend department structure and authorized management/read API required. |
@@ -429,6 +430,42 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Cloudflare Pages preview is still the deployment blocker. The supplied full log shows the Vite build completed, all 89 static assets were uploaded/published, then Cloudflare failed at `Failed to publish your Function` with `Unknown internal error occurred`. The repo has no `functions/` directory, `_worker.js`, Wrangler config or Worker bindings. This points to Cloudflare's Function/Worker publication layer rather than the app build; exact cause is unconfirmed and requires Cloudflare-side log/settings inspection or a successful retry.
 - No lint or unit-test scripts are configured. Live Admin-account end-to-end testing remains outstanding.
 
+## Completed frontend chunk — Phase II, Chunk 4: Admin Student Directory API integration
+
+### Backend contract verified
+
+- Backend `main` mounts Admin routes at `/api/admin`; `GET /api/admin/users` requires an authenticated `ADMIN` account with `mustChangePassword=false`.
+- Directory query accepts optional `role` (`STUDENT` or `TEACHER`), optional `search` (maximum 80 characters), optional `isActive=true|false`, 1-based `page` and `pageSize` (1–100).
+- This screen always sends `role=STUDENT`; search is performed by backend against `fullName`, `username` and `email`.
+- Response is `{ status: "ok", data: { users, pagination } }`. User rows provide `id`, `fullName`, `username`, nullable `email`, `role`, nullable `classId`, `mustChangePassword`, `isActive`, `createdAt`, `updatedAt` and nullable class `{ id, code, name }`.
+- Backend User data has no `rollNumber`, department or semester fields. The UI must not infer these values from username or class code.
+
+### Implementation
+
+- Replaced the mock Student Directory and inert Add Student button with a read-only authenticated directory view.
+- Added `src/features/admin/api/adminStudentsApi.js` for `GET /api/admin/users`, shared Bearer-token authentication, a 12-second timeout, query validation, response-shape validation and backend error handling.
+- Added server-side search by full name/username/email, Active/Inactive filtering, selectable page size, previous/next pagination and result counts.
+- Student rows display name and username, nullable email, linked class code/name or Not assigned, active account status, whether a password change is required, and account creation date.
+- Added loading, error/retry, empty and no-match states. Live API failures do not fall back to mock students.
+- Preserved shared `SectionHeader`/`DashboardCard`, Admin layout, LTSU color tokens, dark-mode support and responsive table behavior.
+- Removed unsupported roll number, department and semester presentation and the inert Add Student action. This slice does not create accounts, reset passwords or mutate account status.
+- No backend, database, Render, secret or deployment changes were made. No real Admin credentials were used for live testing.
+
+### Files changed
+
+1. `src/features/admin/api/adminStudentsApi.js` — authenticated Student directory request and validation.
+2. `src/features/admin/pages/StudentsPage.jsx` — live Student Directory, server filters, pagination and request states.
+3. `src/features/admin/pages/StudentsPage.css` — responsive styling and states.
+4. `.github/workflows/frontend-build.yml` — CI trigger for this feature branch.
+5. Both frontend handoff documents.
+
+### Branch, PR and verification
+
+- Branch: `feat/admin-student-directory`, stacked on PR #9 branch `feat/admin-class-subject-catalogue` at `768c41c113f93cde8c3bfd8bb4dea6d2b5974f59`.
+- PR #10 will target `feat/admin-class-subject-catalogue`, not `main`, to keep the Student Directory diff separate while preserving PR #9 as its dependency. After PR #9 merges, the base can be moved to `main`.
+- PR #9 remains open; its Cloudflare Pages Function-publication failure is documented in the preceding chunk. No successful Pages deployment is claimed here.
+- Final build checks on the documentation-updated PR #10 head will be recorded after CI completes.
+- No lint or unit-test scripts are configured. Live Admin/Student-account end-to-end testing remains outstanding.
 ## Known issues and integration gaps
 
 - Login, shared session restoration/logout, role-based route guards and forced password-change UI are implemented in merged or reviewable frontend changes. Phase I is complete at the code level; live university-account validation remains outstanding.
@@ -442,15 +479,15 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Most non-attendance pages remain mock-backed or have inert controls; see audit above.
 - No lint/test scripts currently exist in the frontend package. No real account credentials have been used for live end-to-end testing.
 
-## Exact next frontend task — Phase II, Chunk 4
+## Exact next frontend task — Phase II, Chunk 5
 
-Implement the **Admin Student Directory read integration** only:
-1. Inspect `src/features/admin/pages/StudentsPage.jsx` and the `studentsListData` mock.
-2. Use backend-main `GET /api/admin/users` with the shared Bearer token and `role=STUDENT`. The endpoint is ADMIN-only and requires `mustChangePassword=false`.
-3. Supported query parameters are `role` (STUDENT or TEACHER), optional `search` (max 80 characters), `isActive=true|false`, 1-based `page` and `pageSize` (1–100).
-4. Response uses `{ users, pagination }`. User rows include `id`, `fullName`, `username`, nullable `email`, `role`, nullable `classId`, `mustChangePassword`, `isActive`, timestamps and nullable class `{ id, code, name }`.
-5. Do not invent or display a roll number. The backend User model has no `rollNumber` field. Keep account role/class/status identity faithful to the response.
-6. Add search, active filter, pagination and loading/error/empty/retry states. Keep create, password reset and status mutation workflows outside this read-only chunk; do not silently fall back to mock data.
-7. Build, verify, update/read both handoff documents and stop. Do not merge/deploy unless explicitly requested.
+Implement the **Admin Teacher Directory read integration** only:
+1. Inspect `src/features/admin/pages/TeachersPage.jsx` and the `facultyListData` mock.
+2. Use backend-main `GET /api/admin/users` with the shared Bearer token and `role=TEACHER`. The endpoint is ADMIN-only and requires `mustChangePassword=false`.
+3. Supported query fields are `role=TEACHER`, optional `search` (max 80 characters), `isActive=true|false`, 1-based `page` and `pageSize` (1–100).
+4. Map only returned user data: `id`, `fullName`, `username`, nullable `email`, role, nullable `classId`, `mustChangePassword`, `isActive`, timestamps and nullable class `{ id, code, name }`.
+5. Do not invent employee IDs, departments, faculty specializations, experience or assigned subjects. The directory endpoint does not return teacher-subject assignments.
+6. Add server-side search, active filter, pagination and loading/error/empty/retry states. Keep teacher creation, password reset, status changes and subject assignments outside this read-only chunk.
+7. Build, verify, update/read both handoff docs and stop. Do not merge/deploy unless explicitly requested.
 
 After this chunk, continue one UI integration slice at a time using only verified backend-main contracts. Do not assume backend draft PR #1 is live.
