@@ -4,7 +4,7 @@ Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/auth-login-api` (stacked on `ui/teacher-attendance-workflow`)
-Current pull request: pending creation after build verification
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/3 (open; mergeable; stacked on the parent branch)
 Parent attendance pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/2 (open; not merged)
 Base commit for this chunk: `51374c348dd0eb12b76badf2793613aad6bb9180`
 
@@ -168,6 +168,14 @@ No existing role page met the full Ready standard at audit time. The page shells
 - Frontend PR #2 is open and not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/2. The PR head at creation was `15b170bdecd77d9ada544e61dfb0251186c6ef7c`; later handoff refreshes advance the head. Do not merge without normal review.
 
 ## Completed frontend chunk — Phase I, Chunk 1: Backend-connected login
+
+### Final branch, PR and CI snapshot
+
+- Auth branch head verified: `320379bcb7fdeb43034f2723ce61b184db18af2c`.
+- Chunk comparison is against parent branch `ui/teacher-attendance-workflow`, not `main`; PR #3 is deliberately stacked on PR #2 to keep each chunk isolated.
+- PR #3: https://github.com/armanpreet-singh/smart-student-portal/pull/3 — open, mergeable, not merged. After parent PR #2 is merged, retarget PR #3 to `main`.
+- GitHub Actions run `43432964417` completed with conclusion `success` on the exact auth branch head. Checkout, Node.js 22 setup, `npm ci` and `npm run build` all passed.
+- No live account sign-in was attempted. No deployment or backend/Render/Neon changes were made.
 
 ### Backend contract verified
 
