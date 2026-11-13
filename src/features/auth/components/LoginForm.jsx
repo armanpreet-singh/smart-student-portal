@@ -8,6 +8,7 @@ import {
   showWarningToast,
 } from "../../../components/ui/toastUtils";
 import { loginWithUsername, getPortalPath } from "../api/authApi";
+import { useAuth } from "../context/AuthContext";
 import RoleSelector from "./RoleSelector";
 import { ltsuLogo } from "../../../assets/images/logo";
 import { useNavigate } from "react-router-dom";
@@ -32,9 +33,6 @@ const ROLE_LABELS = {
 };
 
 const REMEMBERED_USERNAME_KEY = "ltsu-remembered-username";
-const ACCESS_TOKEN_KEY = "ltsu-access-token";
-const AUTH_USER_KEY = "ltsu-auth-user";
-
 function getRememberedUsername() {
   try {
     return window.localStorage.getItem(REMEMBERED_USERNAME_KEY) || "";
@@ -55,6 +53,7 @@ const LoginForm = () => {
   const [role, setRole] = useState("student");
   const [showPw, setShowPw] = useState(false);
   const navigate = useNavigate();
+  const { establishSession } = useAuth();
   const [rememberedUsername] = useState(getRememberedUsername);
 
   const {
@@ -89,23 +88,7 @@ const LoginForm = () => {
         );
       }
 
-      try {
-        window.localStorage.setItem(ACCESS_TOKEN_KEY, result.accessToken);
-        window.localStorage.setItem(
-          AUTH_USER_KEY,
-          JSON.stringify(result.user),
-        );
-      } catch {
-        try {
-          window.localStorage.removeItem(ACCESS_TOKEN_KEY);
-          window.localStorage.removeItem(AUTH_USER_KEY);
-        } catch {
-          // Keep the user-facing storage error even if browser cleanup is blocked.
-        }
-        throw new Error(
-          "Your browser blocked session storage. Enable site storage and try again.",
-        );
-      }
+      establishSession(result.accessToken, result.user);
 
       try {
         if (data.rememberUsername) {
