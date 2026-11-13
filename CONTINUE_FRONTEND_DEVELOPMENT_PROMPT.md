@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `feat/admin-teacher-provisioning`, based on `main` at PR #12 merge commit `2ad3c38118c5b5f250d94f824508c895bd938c9a`. Phase II PR #9 merged into main at `d00fc61b54456b0fb313294c72aecedd62c9bd65`; PR #10 at `a32bfa04d132f2866938b7364eccb426bfb1e519`; PR #11 at `e2bbf343fffd11b714a7ad692e400174c20ee65b`; PR #12 at `2ad3c38118c5b5f250d94f824508c895bd938c9a`. Phase II PRs #7/#8 and frontend PRs #2–#6 are also merged. Phase II, Chunk 7 PR #13 will target `main`.
+3. Current branch: `feat/admin-teacher-provisioning`, based on `main` at PR #12 merge commit `2ad3c38118c5b5f250d94f824508c895bd938c9a`. Phase II PR #9 merged into main at `d00fc61b54456b0fb313294c72aecedd62c9bd65`; PR #10 at `a32bfa04d132f2866938b7364eccb426bfb1e519`; PR #11 at `e2bbf343fffd11b714a7ad692e400174c20ee65b`; PR #12 at `2ad3c38118c5b5f250d94f824508c895bd938c9a`. Phase II PRs #7/#8 and frontend PRs #2–#6 are also merged. Phase II, Chunk 7 PR #13 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/13.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -68,7 +68,8 @@ Implement Admin Managed Account Status Controls using backend-main PATCH `/api/a
 - Request sends `role=TEACHER`, normalized username and optional email. It deliberately omits `classId` because backend strict schema rejects teacher class assignment.
 - Handles validation and duplicate-account 409 errors. Success confirms account is active and must change its temporary password, clears password fields and refreshes the directory.
 - Temporary password is sent only in the POST body, never browser storage or logs. Teacher status/reset and subject assignment are outside scope.
-- PR #13 will target main; no Admin credentials used for live account test.
+- PR #13: https://github.com/armanpreet-singh/smart-student-portal/pull/13 is open against `main`; no Admin credentials used for live account test.
+- GitHub Actions build run `43468117173` passed on implementation head `04a9f5c223e40f34beb02ba8282681157f621fea`; a fresh check is expected after this handoff update.
 ## Completed Phase II, Chunk 6 — Admin Student Account Provisioning (create-only)
 
 - Branch `feat/admin-student-provisioning`, based on main after PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`.
