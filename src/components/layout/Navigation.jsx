@@ -179,7 +179,6 @@ export default function Navigation({ theme, toggleTheme }) {
     textDecoration: "none",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
   }}
 >
   Login to Portal
