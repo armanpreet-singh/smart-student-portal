@@ -38,7 +38,7 @@ function SessionUnavailableState() {
   );
 }
 
-export default function ProtectedRoute({ allowedRole, children }) {
+export default function ProtectedRoute({ allowedRole, requirePasswordChange = false, children }) {
   const location = useLocation();
   const { user, sessionStatus } = useAuth();
 
@@ -64,7 +64,16 @@ export default function ProtectedRoute({ allowedRole, children }) {
     return <Navigate to="/login" replace />;
   }
 
-  if (user.role !== allowedRole) {
+  if (user.mustChangePassword && !requirePasswordChange) {
+    return <Navigate to="/change-password" replace />;
+  }
+
+  if (requirePasswordChange && !user.mustChangePassword) {
+    const correctPortal = getPortalPath(user.role);
+    return <Navigate to={correctPortal || "/login"} replace />;
+  }
+
+  if (allowedRole && user.role !== allowedRole) {
     const correctPortal = getPortalPath(user.role);
     return <Navigate to={correctPortal || "/login"} replace />;
   }
