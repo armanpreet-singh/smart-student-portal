@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `feat/admin-class-subject-catalogue`, based on main after PR #8 was merged. Phase II, Chunk 1 PR #7 merged at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`; Phase II, Chunk 2 PR #8 merged at `db07903ce1003073f2e9b3902c295321c3427f3c`. Phase II, Chunk 3 PR #9 will target main. Previous frontend PRs #2–#8 are merged into main.
+3. Current branch: `feat/admin-class-subject-catalogue`, based on main after PR #8 was merged. Phase II, Chunk 1 PR #7 merged at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`; Phase II, Chunk 2 PR #8 merged at `db07903ce1003073f2e9b3902c295321c3427f3c`. Phase II, Chunk 3 PR #9 is open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/9. Previous frontend PRs #2–#8 are merged into main.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -64,15 +64,15 @@ Implement Admin Student Directory read integration only:
 
 ## Completed Phase II, Chunk 3 — Admin Class and Subject Catalogue API integration
 
-- Current branch: `feat/admin-class-subject-catalogue`, based on main at PR #8 merge commit `db07903ce1003073f2e9b3902c295321c3427f3c`.
+- Branch `feat/admin-class-subject-catalogue`, based on main at PR #8 merge commit `db07903ce1003073f2e9b3902c295321c3427f3c`.
 - Replaced the mock Course Catalog and inert Create Course button with a read-only Class & Subject Catalogue.
-- Added `src/features/admin/api/adminCatalogueApi.js` for backend-main GET `/api/admin/classes` and GET `/api/admin/subjects` using the shared Bearer token, request timeout, response validation and pagination.
-- Classes view shows class code/name, academic year, backend student/subject counts and active status. Subjects view shows subject code/name, related class, academic year, nullable description and active status.
-- Added server-side search, active/inactive filter, page-size selection, previous/next pagination and a class filter for subjects. Class choices are loaded from paginated class API pages.
-- Added loading/error/retry/empty states; live failures do not fall back to sample course data.
-- Existing unsupported credits, faculty, department and semester fields are removed. No create/update actions or backend/database/Render/deployment changes.
-- PR #7 (Student Attendance) merged into main at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`; PR #8 (Admin Attendance) merged at `db07903ce1003073f2e9b3902c295321c3427f3c`.
-- PR #9 will target main. Final build and Cloudflare results will be recorded on the docs-updated head. Live Admin-account testing remains outstanding.
+- Added `src/features/admin/api/adminCatalogueApi.js` for backend-main GET `/api/admin/classes` and GET `/api/admin/subjects` using the shared Bearer token, timeout handling, pagination and response validation.
+- Classes view includes class code/name, academic year, backend student/subject counts and active status. Subjects view includes subject code/name, related class, academic year, nullable description and active status.
+- Added server-side search, active/inactive filters, page-size selection, previous/next pagination and class filtering for subjects. Class options are loaded through the paginated class directory endpoint.
+- Added loading/error/retry/empty states; no mock fallback remains. Unsupported credits, faculty, department and semester fields have been removed from this screen.
+- Read-only scope: no create/update actions and no backend/database/Render/deployment changes. No live Admin credentials were used.
+- PR #9: https://github.com/armanpreet-singh/smart-student-portal/pull/9 (open; targets main; not merged).
+- GitHub Actions build run `43451711713` passed on head `a9d073d744c943139680f356b32f3b021735f3ae`. The Cloudflare Pages push check failed on that head with only a generic Deploy failed message; PR-specific preview status is being checked separately.
 
 ## Completed Phase I, Chunk 4 — forced password-change workflow
 
