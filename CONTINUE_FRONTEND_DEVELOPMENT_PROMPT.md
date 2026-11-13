@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `feat/admin-student-directory`, stacked on `feat/admin-class-subject-catalogue` (PR #9). PR #9 remains open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/9. Phase II, Chunk 4 PR #10 will target the PR #9 branch so the directory work stays a separate dependent change. Phase II PRs #7 and #8 and frontend PRs #2–#6 are merged into main.
+3. Current branch: `feat/admin-student-directory`, stacked on `feat/admin-class-subject-catalogue` (PR #9). PR #9 remains open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/9. Phase II, Chunk 4 PR #10 is open against the PR #9 branch: https://github.com/armanpreet-singh/smart-student-portal/pull/10. Phase II PRs #7 and #8 and frontend PRs #2–#6 are merged into main.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -70,7 +70,8 @@ Implement Admin Teacher Directory read integration only:
 - Student rows display full name, username, nullable email, nullable class identity, active/inactive account state, mustChangePassword state and created date.
 - No roll number, department or semester is fabricated; backend User has no rollNumber field. No mock fallback, account creation, password reset or account status mutation is included.
 - Added loading/error/retry/empty states with the existing Admin dashboard design and responsive styling.
-- PR #10 will target `feat/admin-class-subject-catalogue` so it remains stacked on PR #9; do not merge independently before its base PR.
+- PR #10: https://github.com/armanpreet-singh/smart-student-portal/pull/10 is open against `feat/admin-class-subject-catalogue` (PR #9); merge PR #9 first, then retarget PR #10 to `main` before merging.
+- GitHub Actions build run `43455879552` passed on implementation head `c6f22ed013b7523f33bc739042c66cf82576cd81` (`npm ci` and `npm run build`). Documentation-updated head verification will be recorded after CI completes.
 - No real Admin credentials were used; live account checks remain outstanding.
 ## Completed Phase II, Chunk 3 — Admin Class and Subject Catalogue API integration
 
