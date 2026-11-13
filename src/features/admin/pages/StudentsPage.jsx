@@ -77,7 +77,7 @@ function AccountStatus({ isActive }) {
 function PasswordStatus({ mustChangePassword }) {
   return (
     <span className={`a-students-badge ${mustChangePassword ? "pending" : "complete"}`}>
-      {mustChangePassword ? "Change required" : "Set up"}
+      {mustChangePassword ? "Change required" : "Complete"}
     </span>
   );
 }
