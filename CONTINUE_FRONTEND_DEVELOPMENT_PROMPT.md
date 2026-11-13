@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `feat/student-attendance-api`, based on main after PR #6 was merged. Phase II, Chunk 1 PR #7 will target main. Previous frontend PRs #2, #3, #4, #5 and #6 are all merged into main.
+3. Current branch: `feat/student-attendance-api`, based on main after PR #6 was merged. Phase II, Chunk 1 PR #7 is open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/7. Previous frontend PRs #2, #3, #4, #5 and #6 are all merged into main.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
