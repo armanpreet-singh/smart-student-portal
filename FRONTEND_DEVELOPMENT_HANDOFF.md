@@ -3,14 +3,15 @@
 Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/admin-teacher-directory` (branched from `main` after PR #10)
-Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/11 (open; targets `main`).
+Development branch: `feat/admin-student-provisioning` (branched from `main` after PR #10)
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/12 (open; targets `main`).
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
+Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Base commit for this chunk: `a32bfa04d132f2866938b7364eccb426bfb1e519`
+Original branch base commit: `a32bfa04d132f2866938b7364eccb426bfb1e519`; synchronized with main after PR #11 merge `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
 
 ## Working scope and rules
 
@@ -85,7 +86,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Teacher | Profile | Hardcoded employee ID, contact details, experience and specialization. | **Needs improvement** — `/api/auth/me` supplies only basic account identity/role/class fields. | Bind known account fields and specify any additional staff profile model/contract before displaying values as authoritative. |
 | Teacher | Settings | Form submits to console.log. | **Needs improvement** — backend password-change route exists; profile/system settings mutations do not. | Implement password change using API; separate unsupported preferences from account data. |
 | Admin | Dashboard Home | Static institutional totals/insights and quick-action cards. | **Needs improvement** — no aggregate dashboard endpoint exists. | Use current admin endpoints for actual counts and avoid unverified institutional metrics. |
-| Admin | Student Directory | Uses backend-main paginated `GET /api/admin/users?role=STUDENT`; displays full name, username, nullable email/class, account status and password-change-required state. Search, active filter and pagination are server-side. | **Needs improvement** — read integration is implemented; validate with a provisioned Admin account and real Student accounts. | Verify real account/class data, empty email and unassigned class cases. Create, status and password-reset mutations remain separate workflows; backend exposes no rollNumber. |
+| Admin | Student Directory | Uses backend-main paginated `GET /api/admin/users?role=STUDENT`; supports server-side search/status filters/pagination and displays supported identity, class and account fields. Includes create-only provisioning through `POST /api/admin/users` with live active-class choices and backend-aligned validation. | **Needs improvement** — read/create UI integration is implemented; validate with a provisioned Admin account and real Student accounts. | Verify live account creation, duplicate handling and class assignment. Status and password-reset mutations remain separate workflows; backend exposes no rollNumber. |
 | Admin | Teacher Directory | Uses backend-main paginated `GET /api/admin/users?role=TEACHER`; displays full name, username, nullable email/class, account status and password-change-required state. Search, active filter and pagination are server-side. | **Needs improvement** — read integration is implemented; validate with a provisioned Admin account and Teacher accounts. | Verify actual teacher/account data. Employee IDs, departments, specializations, experience and teacher-subject assignments are not provided by this endpoint; create/status/reset and assignment workflows remain separate. |
 | Admin | Class & Subject Catalogue | Separate Classes and Subjects views call backend-main GET `/api/admin/classes` and `/api/admin/subjects`; pagination, search, active filters and class-scoped subject filter use API data. | **Needs improvement** — read integration is implemented; verify with a provisioned Admin account and actual catalogue data. | Validate real data, pagination and class/subject relationships; create/update actions are outside this read-only chunk. |
 | Admin | Departments | Mock department/HOD/student/faculty counts. | **Needs improvement** — no Department model/API exists. | Backend department structure and authorized management/read API required. |
@@ -499,10 +500,47 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/admin-teacher-directory`, based on `main` after PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`.
-- PR #11: https://github.com/armanpreet-singh/smart-student-portal/pull/11 — open against `main`; this is independent of PRs #9 and #10, both of which are merged.
+- PR #11: https://github.com/armanpreet-singh/smart-student-portal/pull/11 merged into `main` at `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
 - GitHub Actions build run `43459874479` passed on final handoff-updated head `25de2967f8d25628b1c12c4186a8eda8f34a6cfa` (`npm ci` and `npm run build`).
 - Cloudflare Pages preview check was still building when PR #11 was opened; no successful Pages deployment is claimed until the result is confirmed.
 - No lint or unit-test scripts are configured. Live Admin/Teacher-account testing remains outstanding.
+## Completed frontend chunk — Phase II, Chunk 6: Admin Student Account Provisioning (create-only)
+
+### Backend contract verified
+
+- Backend `main` mounts Admin routes at `/api/admin`; `POST /api/admin/users` requires an authenticated `ADMIN` account with `mustChangePassword=false`.
+- The strict request schema accepts `fullName` (2–120 characters), `username` (3–40 characters; letters/numbers/dot/underscore/hyphen; normalized lowercase), optional email, `role=STUDENT`, `temporaryPassword` (minimum 12 characters and maximum 72 UTF-8 bytes), and optional `classId`.
+- If `classId` is supplied, the service verifies that class exists and is active. Class assignment is optional; no class is fabricated or required by the UI.
+- Successful creation responds with HTTP 201 and `{ status: "ok", data: { user } }`. Backend creates the account active with `mustChangePassword=true`.
+- Backend duplicate/unique conflicts are returned as HTTP 409. Teacher creation, status updates and password reset are separate operations and remain outside this chunk.
+
+### Implementation
+
+- Added `src/features/admin/api/adminStudentProvisioningApi.js` with shared Bearer-token POST authentication, 12-second timeout, request validation, response validation and duplicate/conflict-aware errors.
+- Added active class option loading by reusing the live `GET /api/admin/classes` endpoint with `isActive=true`; all pages are loaded with page size 100 and a 10,000-class safety ceiling.
+- Restored an explicit **Add Student** action in the Admin Student Directory and connected it to an accessible responsive create-account dialog.
+- Form fields: full name, username, optional email, optional active class, temporary password and client-side password confirmation.
+- Client validation mirrors backend constraints, including UTF-8 password byte length. Server remains authoritative and validates a selected class again.
+- Sends only the backend-supported create payload: fullName, normalized username, role=STUDENT, temporaryPassword, and optional email/classId. Confirmation is client-side only.
+- Displays API validation and duplicate-account conflicts. On success, displays confirmation, clears sensitive password state and refreshes the directory. No password is logged or persisted in browser storage.
+- Account status is not editable in this slice; success communicates that the new account is active and must change its temporary password at first sign-in.
+- If active class options cannot load, the form explains that class is optional and allows creation without a class or a retry.
+- No backend, database, Render, secret or deployment changes were made. No real Admin credentials were used for live end-to-end testing.
+
+### Files changed
+
+1. `src/features/admin/api/adminStudentProvisioningApi.js` — create request, validation and active class options.
+2. `src/features/admin/pages/StudentsPage.jsx` — Add Student action and create dialog.
+3. `src/features/admin/pages/StudentsPage.css` — modal, form and success styles.
+4. `.github/workflows/frontend-build.yml` — CI trigger for this branch.
+5. Both frontend handoff documents.
+
+### Branch, PR and verification
+
+- Branch: `feat/admin-student-provisioning`, based on `main` after PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`.
+- PR #12: https://github.com/armanpreet-singh/smart-student-portal/pull/12 remains open against `main`; PR #11 has already merged.
+- GitHub Actions build run `43464024426` passed on final PR head `6523d6972c7a64ce0ebeee1a68d698e9f4a1fa0a` (`npm ci` and `npm run build`).
+- No lint or unit-test scripts are configured. Live Admin-account creation testing remains outstanding.
 ## Known issues and integration gaps
 
 - Login, shared session restoration/logout, role-based route guards and forced password-change UI are implemented in merged or reviewable frontend changes. Phase I is complete at the code level; live university-account validation remains outstanding.
@@ -516,14 +554,14 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Most non-attendance pages remain mock-backed or have inert controls; see audit above.
 - No lint/test scripts currently exist in the frontend package. No real account credentials have been used for live end-to-end testing.
 
-## Exact next frontend task — Phase II, Chunk 6
+## Exact next frontend task — Phase II, Chunk 7
 
-Implement **Admin Student Account Provisioning (create-only)** using backend-main `POST /api/admin/users`:
-1. Follow the existing Admin Student Directory patterns and use the shared Bearer token.
-2. Backend `createManagedUserSchema` accepts `fullName` (2–120 chars), `username` (3–40 chars, letters/numbers/dot/underscore/hyphen; normalized lowercase), optional email, `role=STUDENT`, `temporaryPassword` (at least 12 characters and at most 72 UTF-8 bytes), and optional `classId`.
-3. If a class is selected, the backend requires it to exist and be active. Use live class-directory data, not mock class choices. Do not require a class unless product rules are separately confirmed.
-4. Successful creation returns `201` and `data.user`; the created account is active and must change its temporary password at first login.
-5. Handle field validation and duplicate-account `409` responses. Never log or persist the temporary password in browser storage or diagnostics.
-6. Keep Teacher creation, account status changes, password resets and teacher-subject assignments outside this chunk.
-7. Build, verify, update/read both frontend handoff documents and stop. Do not merge/deploy unless explicitly requested.
+Implement **Admin Teacher Account Provisioning (create-only)** using backend-main `POST /api/admin/users`:
+1. Use shared Bearer-token authentication and the existing Teacher Directory patterns.
+2. Backend accepts `fullName` (2–120 chars), `username` (3–40 chars, letters/numbers/dot/underscore/hyphen; normalized lowercase), optional email, `role=TEACHER`, and `temporaryPassword` (at least 12 chars and at most 72 UTF-8 bytes).
+3. Do not send `classId` for Teachers; the backend schema rejects teacher class assignment. Teacher-subject assignments are a separate workflow and are not part of account creation.
+4. A successful response is HTTP 201 with `data.user`; the created account is active and must change the temporary password at first login.
+5. Handle backend field validation and duplicate-account `409` responses. Never log or persist temporary passwords.
+6. Keep status updates, password reset and teacher-subject assignment outside this create-only chunk.
+7. Build, verify, update/read both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 After this chunk, continue one UI integration slice at a time using only verified backend-main contracts. Do not assume backend draft PR #1 is live.
