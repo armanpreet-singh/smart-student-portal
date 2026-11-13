@@ -4,7 +4,7 @@ Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/admin-class-subject-catalogue` (branched from current `main` after PR #8)
-Current pull request: Phase II, Chunk 3 — PR #9 (to be opened against `main`)
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/9 (open; targets `main`; not merged)
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
@@ -422,9 +422,10 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/admin-class-subject-catalogue`, based on `main` at `db07903ce1003073f2e9b3902c295321c3427f3c` (PR #8 merge).
-- PR #9 will target `main`; do not merge it without an explicit request.
+- PR #9: https://github.com/armanpreet-singh/smart-student-portal/pull/9 — open against `main`; do not merge it without an explicit request.
 - PR #7 (Student Attendance) and PR #8 (Admin Attendance) were merged into `main` in dependency order before this chunk.
-- Final frontend build and Cloudflare Pages results on the docs-updated head will be recorded after CI completes.
+- GitHub Actions build run `43451711713` passed on implementation/documentation head `a9d073d744c943139680f356b32f3b021735f3ae` (`npm ci` and `npm run build`).
+- Cloudflare Pages push check failed on that head; the available check output only reports Deploy failed and exposes no detailed annotations. PR-specific Cloudflare preview remains under verification.
 - No lint or unit-test scripts are configured. Live Admin-account end-to-end testing remains outstanding.
 
 ## Known issues and integration gaps
