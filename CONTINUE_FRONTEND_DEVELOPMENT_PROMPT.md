@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `feat/admin-teacher-provisioning`, based on `main` at PR #12 merge commit `2ad3c38118c5b5f250d94f824508c895bd938c9a`. Phase II PR #9 merged into main at `d00fc61b54456b0fb313294c72aecedd62c9bd65`; PR #10 at `a32bfa04d132f2866938b7364eccb426bfb1e519`; PR #11 at `e2bbf343fffd11b714a7ad692e400174c20ee65b`; PR #12 at `2ad3c38118c5b5f250d94f824508c895bd938c9a`. Phase II PRs #7/#8 and frontend PRs #2–#6 are also merged. Phase II, Chunk 7 PR #13 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/13.
+3. Current branch: `main`, at PR #13 merge commit `78a6936ff89bc477f5e0228c56d7d8151c74478d`. Phase II PR #9 merged at `d00fc61b54456b0fb313294c72aecedd62c9bd65`; PR #10 at `a32bfa04d132f2866938b7364eccb426bfb1e519`; PR #11 at `e2bbf343fffd11b714a7ad692e400174c20ee65b`; PR #12 at `2ad3c38118c5b5f250d94f824508c895bd938c9a`; PR #13 at `78a6936ff89bc477f5e0228c56d7d8151c74478d`. Phase II PRs #7/#8 and frontend PRs #2–#6 are also merged. No Phase II frontend PR is currently open.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -68,8 +68,8 @@ Implement Admin Managed Account Status Controls using backend-main PATCH `/api/a
 - Request sends `role=TEACHER`, normalized username and optional email. It deliberately omits `classId` because backend strict schema rejects teacher class assignment.
 - Handles validation and duplicate-account 409 errors. Success confirms account is active and must change its temporary password, clears password fields and refreshes the directory.
 - Temporary password is sent only in the POST body, never browser storage or logs. Teacher status/reset and subject assignment are outside scope.
-- PR #13: https://github.com/armanpreet-singh/smart-student-portal/pull/13 is open against `main`; no Admin credentials used for live account test.
-- GitHub Actions build run `43468117173` passed on implementation head `04a9f5c223e40f34beb02ba8282681157f621fea`; a fresh check is expected after this handoff update.
+- PR #13: https://github.com/armanpreet-singh/smart-student-portal/pull/13 merged into `main` at `78a6936ff89bc477f5e0228c56d7d8151c74478d`; no Admin credentials used for live account test.
+- GitHub Actions builds `43469120271` and `43469130003` passed on final PR head `7888f80ce29f7412abe632fea08813a146e2bacc` (`npm ci` and `npm run build`).
 ## Completed Phase II, Chunk 6 — Admin Student Account Provisioning (create-only)
 
 - Branch `feat/admin-student-provisioning`, based on main after PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`.
@@ -79,7 +79,7 @@ Implement Admin Managed Account Status Controls using backend-main PATCH `/api/a
 - Client validation mirrors backend name/username/email/password requirements, including the 72 UTF-8 password byte limit. The server remains authoritative.
 - Successful create response is validated; the UI confirms account creation, reports active/forced password-change state, clears password fields and refreshes the directory.
 - Temporary password is sent only in the POST body, is not persisted in browser storage and is not logged. Status/reset mutations, Teacher creation and backend changes are outside scope.
-- PR #12: https://github.com/armanpreet-singh/smart-student-portal/pull/12 remains open against `main`; PR #11 has already merged.
+- PR #12: https://github.com/armanpreet-singh/smart-student-portal/pull/12 merged into `main` at `2ad3c38118c5b5f250d94f824508c895bd938c9a`.
 - GitHub Actions build run `43464024426` passed on final PR #12 head `6523d6972c7a64ce0ebeee1a68d698e9f4a1fa0a` (`npm ci` and `npm run build`).
 ## Completed Phase II, Chunk 5 — Admin Teacher Directory API integration
 
