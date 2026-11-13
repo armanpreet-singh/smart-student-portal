@@ -29,6 +29,8 @@ import {
 
 import "./AttendancePage.css";
 
+import "./AttendancePage.css";
+
 const STATUS_META = {
   PRESENT: { label: "Present", className: "present" },
   LATE: { label: "Late", className: "late" },
