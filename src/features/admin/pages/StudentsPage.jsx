@@ -120,7 +120,6 @@ const StudentsPage = () => {
   });
   const [classOptions, setClassOptions] = useState([]);
   const [classStatus, setClassStatus] = useState("idle");
-  const [classError, setClassError] = useState("");
   const [classRetry, setClassRetry] = useState(0);
 
   useEffect(() => {
@@ -178,7 +177,6 @@ const StudentsPage = () => {
 
     let active = true;
     setClassStatus("loading");
-    setClassError("");
 
     const loadClassOptions = async () => {
       try {
@@ -194,9 +192,6 @@ const StudentsPage = () => {
           if (!active) return;
         }
 
-        setClassError(
-          error?.message || "Unable to load active classes.",
-        );
         setClassStatus("error");
       }
     };
