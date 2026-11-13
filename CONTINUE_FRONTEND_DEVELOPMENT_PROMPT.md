@@ -72,7 +72,8 @@ Implement Admin Student Directory read integration only:
 - Added loading/error/retry/empty states; no mock fallback remains. Unsupported credits, faculty, department and semester fields have been removed from this screen.
 - Read-only scope: no create/update actions and no backend/database/Render/deployment changes. No live Admin credentials were used.
 - PR #9: https://github.com/armanpreet-singh/smart-student-portal/pull/9 (open; targets main; not merged).
-- Latest handoff-updated head `0d28a50629be950d9dd8b111ac4a4fa1df34d8ff` passed GitHub Actions builds `43452109108` and `43452120023` (`npm ci` and `npm run build`). Cloudflare Pages failed on the same head with only a generic Deploy failed message and no detailed GitHub annotations; the cause is unconfirmed.
+- Follow-up cleanup removed the duplicate `justifyContent` key from the mobile Login CTA in `src/components/layout/Navigation.jsx`, preserving desktop/mobile centering.
+- On latest code head `2a457bd1125a5d03aa939b3024b8f59f54e72bc0`, GitHub Actions builds `43453090461` and `43453102554` both passed. Cloudflare Pages remains the deployment blocker: user-supplied logs show Vite build and all 89 static asset uploads succeeded, then Cloudflare failed publishing its Function with `Unknown internal error occurred`. The repository has no Functions directory, `_worker.js`, Wrangler config or Worker bindings; cause is unconfirmed and needs Cloudflare-side inspection or a successful retry.
 
 ## Completed Phase I, Chunk 4 — forced password-change workflow
 
