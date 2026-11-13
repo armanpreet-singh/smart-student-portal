@@ -703,5 +703,6 @@ const TeachersPage = () => {
       )}
     </div>
   );
+};
 
 export default TeachersPage;
