@@ -424,8 +424,9 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Branch: `feat/admin-class-subject-catalogue`, based on `main` at `db07903ce1003073f2e9b3902c295321c3427f3c` (PR #8 merge).
 - PR #9: https://github.com/armanpreet-singh/smart-student-portal/pull/9 — open against `main`; do not merge it without an explicit request.
 - PR #7 (Student Attendance) and PR #8 (Admin Attendance) were merged into `main` in dependency order before this chunk.
-- Latest documentation-updated branch head `0d28a50629be950d9dd8b111ac4a4fa1df34d8ff` passed GitHub Actions builds `43452109108` and `43452120023` (`npm ci` and `npm run build`).
-- Cloudflare Pages preview failed on that same head with only a generic `Deploy failed` message and no detailed annotations in the GitHub check output. The reason is unconfirmed; treat the Cloudflare preview as not verified.
+- Follow-up cleanup: removed the duplicate `justifyContent` key in the existing mobile Login CTA in `src/components/layout/Navigation.jsx`, while preserving horizontal centering for both desktop and mobile Login CTAs.
+- On latest code head `2a457bd1125a5d03aa939b3024b8f59f54e72bc0`, GitHub Actions builds `43453090461` and `43453102554` both passed (`npm ci` and `npm run build`).
+- Cloudflare Pages preview is still the deployment blocker. The supplied full log shows the Vite build completed, all 89 static assets were uploaded/published, then Cloudflare failed at `Failed to publish your Function` with `Unknown internal error occurred`. The repo has no `functions/` directory, `_worker.js`, Wrangler config or Worker bindings. This points to Cloudflare's Function/Worker publication layer rather than the app build; exact cause is unconfirmed and requires Cloudflare-side log/settings inspection or a successful retry.
 - No lint or unit-test scripts are configured. Live Admin-account end-to-end testing remains outstanding.
 
 ## Known issues and integration gaps
