@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Mail, RotateCw, Search, UserRound } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, Mail, RotateCw, Search, UserRound, UserPlus, X } from "lucide-react";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import { fetchAdminStudents } from "../api/adminStudentsApi";
+import {
+  createAdminStudent,
+  fetchActiveStudentClassOptions,
+} from "../api/adminStudentProvisioningApi";
 
 import "./StudentsPage.css";
 
@@ -101,6 +105,22 @@ const StudentsPage = () => {
   const [requestError, setRequestError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
   const [filterError, setFilterError] = useState("");
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createStatus, setCreateStatus] = useState("idle");
+  const [createError, setCreateError] = useState("");
+  const [createFieldErrors, setCreateFieldErrors] = useState({});
+  const [createSuccessMessage, setCreateSuccessMessage] = useState("");
+  const [createForm, setCreateForm] = useState({
+    fullName: "",
+    username: "",
+    email: "",
+    classId: "",
+    temporaryPassword: "",
+    confirmPassword: "",
+  });
+  const [classOptions, setClassOptions] = useState([]);
+  const [classStatus, setClassStatus] = useState("idle");
+  const [classRetry, setClassRetry] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -152,6 +172,158 @@ const StudentsPage = () => {
     refreshCurrentUser,
   ]);
 
+  useEffect(() => {
+    if (!createOpen) return undefined;
+
+    let active = true;
+    setClassStatus("loading");
+
+    const loadClassOptions = async () => {
+      try {
+        const options = await fetchActiveStudentClassOptions(accessToken);
+        if (!active) return;
+        setClassOptions(options);
+        setClassStatus("success");
+      } catch (error) {
+        if (!active) return;
+
+        if (error?.status === 401) {
+          await refreshCurrentUser();
+          if (!active) return;
+        }
+
+        setClassStatus("error");
+      }
+    };
+
+    loadClassOptions();
+
+    return () => {
+      active = false;
+    };
+  }, [accessToken, createOpen, classRetry, refreshCurrentUser]);
+
+  useEffect(() => {
+    if (!createOpen) return undefined;
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape" && createStatus !== "submitting") {
+        setCreateOpen(false);
+        setCreateForm({
+          fullName: "",
+          username: "",
+          email: "",
+          classId: "",
+          temporaryPassword: "",
+          confirmPassword: "",
+        });
+        setCreateError("");
+        setCreateFieldErrors({});
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [createOpen, createStatus]);
+
+  const updateCreateField = (field, value) => {
+    setCreateForm((current) => ({ ...current, [field]: value }));
+    setCreateFieldErrors((current) => ({ ...current, [field]: "" }));
+    setCreateError("");
+  };
+
+  const closeCreateDialog = () => {
+    if (createStatus === "submitting") return;
+    setCreateOpen(false);
+    setCreateForm({
+      fullName: "",
+      username: "",
+      email: "",
+      classId: "",
+      temporaryPassword: "",
+      confirmPassword: "",
+    });
+    setCreateError("");
+    setCreateFieldErrors({});
+  };
+
+  const handleCreateStudent = async (event) => {
+    event.preventDefault();
+    setCreateError("");
+
+    const errors = {};
+    const fullName = createForm.fullName.trim();
+    const username = createForm.username.trim();
+    const email = createForm.email.trim();
+    const passwordBytes = new TextEncoder().encode(
+      createForm.temporaryPassword,
+    ).length;
+
+    if (fullName.length < 2 || fullName.length > 120) {
+      errors.fullName = "Full name must be between 2 and 120 characters.";
+    }
+    if (
+      username.length < 3 ||
+      username.length > 40 ||
+      !/^[a-zA-Z0-9._-]+$/.test(username)
+    ) {
+      errors.username =
+        "Use 3–40 characters: letters, numbers, dots, underscores or hyphens.";
+    }
+    if (
+      email &&
+      (email.length > 254 ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    ) {
+      errors.email = "Enter a valid email address (254 characters or fewer).";
+    }
+    if (createForm.temporaryPassword.length < 12) {
+      errors.temporaryPassword =
+        "Temporary password must be at least 12 characters.";
+    } else if (passwordBytes > 72) {
+      errors.temporaryPassword =
+        "Temporary password must be no more than 72 UTF-8 bytes.";
+    }
+    if (createForm.temporaryPassword !== createForm.confirmPassword) {
+      errors.confirmPassword = "The passwords do not match.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setCreateFieldErrors(errors);
+      return;
+    }
+
+    setCreateFieldErrors({});
+    setCreateStatus("submitting");
+
+    try {
+      const created = await createAdminStudent(accessToken, createForm);
+      setCreateSuccessMessage(
+        `Student account created for ${created.fullName} (${created.username}). It is active and must change its temporary password at first sign-in.`,
+      );
+      setCreateOpen(false);
+      setCreateForm({
+        fullName: "",
+        username: "",
+        email: "",
+        classId: "",
+        temporaryPassword: "",
+        confirmPassword: "",
+      });
+      setRetryCount((value) => value + 1);
+    } catch (error) {
+      if (error?.status === 401) {
+        await refreshCurrentUser();
+      }
+      setCreateFieldErrors(error?.fieldErrors || {});
+      setCreateError(
+        error?.message || "Unable to create the student account.",
+      );
+    } finally {
+      setCreateStatus("idle");
+    }
+  };
+
   const hasFilters = Boolean(
     filters.search || filters.isActive !== "all",
   );
@@ -194,7 +366,29 @@ const StudentsPage = () => {
       <SectionHeader
         title="Student Directory"
         subtitle="Student accounts returned by the university administration service"
+        action={
+          <button
+            type="button"
+            className="d-btn-primary a-students-add-button"
+            onClick={() => {
+              setCreateSuccessMessage("");
+              setCreateError("");
+              setCreateFieldErrors({});
+              setCreateOpen(true);
+            }}
+          >
+            <UserPlus size={16} />
+            Add Student
+          </button>
+        }
       />
+
+      {createSuccessMessage && (
+        <div className="a-students-create-success" role="status">
+          <CheckCircle size={18} aria-hidden="true" />
+          <p>{createSuccessMessage}</p>
+        </div>
+      )}
 
       <DashboardCard className="a-students-filters">
         <form onSubmit={applyFilters}>
@@ -389,6 +583,205 @@ const StudentsPage = () => {
           </div>
         )}
       </DashboardCard>
+
+      {createOpen && (
+        <div
+          className="a-student-create-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (
+              event.target === event.currentTarget &&
+              createStatus !== "submitting"
+            ) {
+              closeCreateDialog();
+            }
+          }}
+        >
+          <section
+            className="a-student-create-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="a-student-create-title"
+          >
+            <div className="a-student-create-heading">
+              <div>
+                <h2 id="a-student-create-title">Create Student Account</h2>
+                <p>
+                  New accounts are active and must change the temporary
+                  password at first sign-in.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="a-student-create-close"
+                aria-label="Close create student form"
+                onClick={closeCreateDialog}
+                disabled={createStatus === "submitting"}
+              >
+                <X size={19} />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateStudent} noValidate>
+              <div className="a-student-create-fields">
+                <label className="a-student-create-field">
+                  <span>Full name</span>
+                  <input
+                    type="text"
+                    autoComplete="name"
+                    autoFocus
+                    maxLength={120}
+                    value={createForm.fullName}
+                    onChange={(event) =>
+                      updateCreateField("fullName", event.target.value)
+                    }
+                    aria-invalid={Boolean(createFieldErrors.fullName)}
+                    required
+                  />
+                  {createFieldErrors.fullName && (
+                    <small role="alert">{createFieldErrors.fullName}</small>
+                  )}
+                </label>
+
+                <label className="a-student-create-field">
+                  <span>Username</span>
+                  <input
+                    type="text"
+                    autoComplete="off"
+                    minLength={3}
+                    maxLength={40}
+                    value={createForm.username}
+                    onChange={(event) =>
+                      updateCreateField("username", event.target.value)
+                    }
+                    aria-invalid={Boolean(createFieldErrors.username)}
+                    required
+                  />
+                  <small>3–40 characters: letters, numbers, . _ -</small>
+                  {createFieldErrors.username && (
+                    <small role="alert">{createFieldErrors.username}</small>
+                  )}
+                </label>
+
+                <label className="a-student-create-field">
+                  <span>Email <em>Optional</em></span>
+                  <input
+                    type="email"
+                    autoComplete="email"
+                    maxLength={254}
+                    value={createForm.email}
+                    onChange={(event) =>
+                      updateCreateField("email", event.target.value)
+                    }
+                    aria-invalid={Boolean(createFieldErrors.email)}
+                  />
+                  {createFieldErrors.email && (
+                    <small role="alert">{createFieldErrors.email}</small>
+                  )}
+                </label>
+
+                <label className="a-student-create-field">
+                  <span>Class <em>Optional</em></span>
+                  <select
+                    value={createForm.classId}
+                    onChange={(event) =>
+                      updateCreateField("classId", event.target.value)
+                    }
+                    disabled={classStatus === "loading" || classStatus === "error"}
+                  >
+                    <option value="">
+                      {classStatus === "loading"
+                        ? "Loading active classes…"
+                        : "No class assigned"}
+                    </option>
+                    {classOptions.map((classItem) => (
+                      <option value={classItem.id} key={classItem.id}>
+                        {classItem.code} — {classItem.name}
+                      </option>
+                    ))}
+                  </select>
+                  {classStatus === "success" && (
+                    <small>Only active classes can be assigned.</small>
+                  )}
+                  {classStatus === "error" && (
+                    <small className="a-student-create-class-error">
+                      Active classes could not be loaded. Class is optional;
+                      retry or continue without a class.
+                      <button
+                        type="button"
+                        onClick={() => setClassRetry((value) => value + 1)}
+                      >
+                        Retry
+                      </button>
+                    </small>
+                  )}
+                </label>
+
+                <label className="a-student-create-field">
+                  <span>Temporary password</span>
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    value={createForm.temporaryPassword}
+                    onChange={(event) =>
+                      updateCreateField("temporaryPassword", event.target.value)
+                    }
+                    aria-invalid={Boolean(createFieldErrors.temporaryPassword)}
+                    required
+                  />
+                  <small>At least 12 characters and no more than 72 UTF-8 bytes.</small>
+                  {createFieldErrors.temporaryPassword && (
+                    <small role="alert">
+                      {createFieldErrors.temporaryPassword}
+                    </small>
+                  )}
+                </label>
+
+                <label className="a-student-create-field">
+                  <span>Confirm temporary password</span>
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    value={createForm.confirmPassword}
+                    onChange={(event) =>
+                      updateCreateField("confirmPassword", event.target.value)
+                    }
+                    aria-invalid={Boolean(createFieldErrors.confirmPassword)}
+                    required
+                  />
+                  {createFieldErrors.confirmPassword && (
+                    <small role="alert">{createFieldErrors.confirmPassword}</small>
+                  )}
+                </label>
+              </div>
+
+              {createError && (
+                <p className="a-student-create-error" role="alert">
+                  {createError}
+                </p>
+              )}
+
+              <div className="a-student-create-actions">
+                <button
+                  type="button"
+                  className="a-students-clear"
+                  onClick={closeCreateDialog}
+                  disabled={createStatus === "submitting"}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="d-btn-primary"
+                  disabled={createStatus === "submitting"}
+                >
+                  {createStatus === "submitting" ? "Creating account…" : "Create Student"}
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
     </div>
   );
 };
