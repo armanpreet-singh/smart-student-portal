@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `feat/admin-attendance-api`, based on main after PR #6 was merged. Phase II, Chunk 2 PR #8 is open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/8. Preceding Phase II, Chunk 1 PR #7 (Student Attendance) remains independently open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/7. Previous frontend PRs #2, #3, #4, #5 and #6 are merged into main.
+3. Current branch: `feat/admin-attendance-api`, based on main after PR #6 was merged. Phase II, Chunk 2 PR #8 is open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/8. Preceding Phase II, Chunk 1 PR #7 (Student Attendance) was merged into main at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`: https://github.com/armanpreet-singh/smart-student-portal/pull/7. Previous frontend PRs #2, #3, #4, #5 and #6 are merged into main.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -70,7 +70,7 @@ Implement the Admin Class and Subject Catalogue API integration only:
 - The page derives overall metrics, status counts, subject chart and class/subject rows from backend summary data. Present and Late count as attended; Absent is eligible; Excused is excluded. Null percentages are preserved.
 - Added date/class/subject filters, class-dependent subject options, loading, errors, retry, directory-choice retry and empty states. No mock fallback remains on the live report page.
 - GitHub Actions build run `43448089188` and Cloudflare Pages passed on implementation head `69aae5c9284d12a2c58b88015f8fbb3a5e3e9dd5`. Verify the final docs-updated head status below.
-- PR #8: https://github.com/armanpreet-singh/smart-student-portal/pull/8 (open against main; not merged). Student Attendance PR #7 remains separately open.
+- PR #8: https://github.com/armanpreet-singh/smart-student-portal/pull/8 (open against main; not merged). Student Attendance PR #7 was merged into main before the Admin Attendance PR.
 - No backend, database, Render or deployment changes; no live Admin credentials used.
 
 ## Completed Phase I, Chunk 4 — forced password-change workflow
