@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `feat/admin-attendance-api`, based on main after PR #6 was merged. Phase II, Chunk 2 PR #8 is open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/8. Preceding Phase II, Chunk 1 PR #7 (Student Attendance) was merged into main at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`: https://github.com/armanpreet-singh/smart-student-portal/pull/7. Previous frontend PRs #2, #3, #4, #5 and #6 are merged into main.
+3. Current branch: `feat/admin-class-subject-catalogue`, based on main after PR #8 was merged. Phase II, Chunk 1 PR #7 merged at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`; Phase II, Chunk 2 PR #8 merged at `db07903ce1003073f2e9b3902c295321c3427f3c`. Phase II, Chunk 3 PR #9 will target main. Previous frontend PRs #2–#8 are merged into main.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -51,27 +51,28 @@ The Teacher Attendance component now consumes the shared `useAuth()` Bearer toke
 
 Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`. The original implementation build runs `43429998901` and `43429991685` passed on head `386a37cc5c45e796bfc3ffc5d4b1832ff4576e98`.
 
-## Exact next task — Phase II, Chunk 3
+## Exact next task — Phase II, Chunk 4
 
-Implement the Admin Class and Subject Catalogue API integration only:
-1. Inspect `src/features/admin/pages/CoursesPage.jsx` and the `coursesListData` mock.
-2. Use backend-main GET `/api/admin/classes` and GET `/api/admin/subjects` with the shared Bearer token. Both are ADMIN-only and require `mustChangePassword=false`.
-3. Preserve the backend Class/Subject relationship. Class fields include id, code, name, academicYear, isActive and counts. Subject fields include id, classId, code, name, description, isActive and related class.
-4. Pagination is 1-based `page` and `pageSize` (1–100); optional filters are `search` and `isActive`, with `classId` also supported for subjects.
-5. Do not present unsupported credits, faculty, department or semester fields. Map the catalogue to Class and Subject concepts.
-6. Add loading/error/empty/retry states and real search/active/class filters; no mock fallback for live API errors.
+Implement Admin Student Directory read integration only:
+1. Inspect `src/features/admin/pages/StudentsPage.jsx` and the `studentsListData` mock.
+2. Use backend-main GET `/api/admin/users` with shared Bearer token and `role=STUDENT`; endpoint is ADMIN-only and requires `mustChangePassword=false`.
+3. Supported query: role (STUDENT or TEACHER), optional search (max 80), isActive=true|false, 1-based page and pageSize (1–100).
+4. Response `{ users, pagination }`; user fields include id, fullName, username, nullable email, role, nullable classId, mustChangePassword, isActive, timestamps and nullable class `{ id, code, name }`.
+5. Do not display or invent a roll number; backend User has no rollNumber field. Map only fields actually returned.
+6. Add search, active filter, pagination and loading/error/empty/retry states. Keep create, reset and status mutations out of this read-only slice; no mock fallback after live API errors.
 7. Build, verify, update/read both handoff docs and stop. Do not merge/deploy unless requested.
 
-## Completed Phase II, Chunk 2 — Admin Attendance Overview API integration
+## Completed Phase II, Chunk 3 — Admin Class and Subject Catalogue API integration
 
-- Current branch: `feat/admin-attendance-api`, based on main at PR #6 merge commit `4c8f5b5a9ed75f739f79cb7a14ec931570834a57`.
-- Replaced the Admin Attendance mock department percentages and top/lowest rankings with backend-main GET `/api/admin/attendance` aggregates.
-- New `src/features/admin/api/adminAttendanceApi.js` uses the shared Bearer token, supports fromDate/toDate/classId/subjectId, validates the report, and fetches paginated class/subject directories for filter choices.
-- The page derives overall metrics, status counts, subject chart and class/subject rows from backend summary data. Present and Late count as attended; Absent is eligible; Excused is excluded. Null percentages are preserved.
-- Added date/class/subject filters, class-dependent subject options, loading, errors, retry, directory-choice retry and empty states. No mock fallback remains on the live report page.
-- GitHub Actions build run `43448089188` and Cloudflare Pages passed on implementation head `69aae5c9284d12a2c58b88015f8fbb3a5e3e9dd5`. Verify the final docs-updated head status below.
-- PR #8: https://github.com/armanpreet-singh/smart-student-portal/pull/8 (open against main; not merged). Student Attendance PR #7 was merged into main before the Admin Attendance PR.
-- No backend, database, Render or deployment changes; no live Admin credentials used.
+- Current branch: `feat/admin-class-subject-catalogue`, based on main at PR #8 merge commit `db07903ce1003073f2e9b3902c295321c3427f3c`.
+- Replaced the mock Course Catalog and inert Create Course button with a read-only Class & Subject Catalogue.
+- Added `src/features/admin/api/adminCatalogueApi.js` for backend-main GET `/api/admin/classes` and GET `/api/admin/subjects` using the shared Bearer token, request timeout, response validation and pagination.
+- Classes view shows class code/name, academic year, backend student/subject counts and active status. Subjects view shows subject code/name, related class, academic year, nullable description and active status.
+- Added server-side search, active/inactive filter, page-size selection, previous/next pagination and a class filter for subjects. Class choices are loaded from paginated class API pages.
+- Added loading/error/retry/empty states; live failures do not fall back to sample course data.
+- Existing unsupported credits, faculty, department and semester fields are removed. No create/update actions or backend/database/Render/deployment changes.
+- PR #7 (Student Attendance) merged into main at `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`; PR #8 (Admin Attendance) merged at `db07903ce1003073f2e9b3902c295321c3427f3c`.
+- PR #9 will target main. Final build and Cloudflare results will be recorded on the docs-updated head. Live Admin-account testing remains outstanding.
 
 ## Completed Phase I, Chunk 4 — forced password-change workflow
 
