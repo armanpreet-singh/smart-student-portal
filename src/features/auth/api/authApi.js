@@ -1,17 +1,27 @@
 const DEFAULT_API_BASE_URL =
   "https://ltsu-smart-portal-api-0i8h.onrender.com";
 
-const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL
-).replace(/\/+$/, "");
-
-const LOGIN_TIMEOUT_MS = 12000;
+const REQUEST_TIMEOUT_MS = 12000;
 
 const ROLE_ROUTES = {
   STUDENT: "/dashboard",
   TEACHER: "/teacher",
   ADMIN: "/admin",
 };
+
+const VALID_ROLES = new Set(Object.keys(ROLE_ROUTES));
+
+export function getApiBaseUrl() {
+  return (
+    import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL
+  ).replace(/\/+$/, "");
+}
+
+function createApiError(message, status = 0) {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+}
 
 function getLoginErrorMessage(status, payload) {
   if (status === 401) {
@@ -36,13 +46,13 @@ export async function loginWithUsername({ username, password }) {
   const controller = new AbortController();
   const timeoutId = window.setTimeout(
     () => controller.abort(),
-    LOGIN_TIMEOUT_MS,
+    REQUEST_TIMEOUT_MS,
   );
 
   let response;
 
   try {
-    response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    response = await fetch(`${getApiBaseUrl()}/api/auth/login`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -56,11 +66,11 @@ export async function loginWithUsername({ username, password }) {
     });
   } catch (error) {
     if (error?.name === "AbortError") {
-      throw new Error("The sign-in request timed out. Please try again.");
+      throw createApiError("The sign-in request timed out. Please try again.");
     }
 
     if (error instanceof TypeError) {
-      throw new Error(
+      throw createApiError(
         "Unable to reach the sign-in service. Check your connection, API URL, and backend CORS settings.",
       );
     }
@@ -73,7 +83,10 @@ export async function loginWithUsername({ username, password }) {
   const payload = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(getLoginErrorMessage(response.status, payload));
+    throw createApiError(
+      getLoginErrorMessage(response.status, payload),
+      response.status,
+    );
   }
 
   const result = payload?.data;
@@ -85,14 +98,84 @@ export async function loginWithUsername({ username, password }) {
     result.tokenType !== "Bearer" ||
     !result.user ||
     typeof result.user.id !== "string" ||
-    !Object.hasOwn(ROLE_ROUTES, result.user.role)
+    !VALID_ROLES.has(result.user.role)
   ) {
-    throw new Error(
+    throw createApiError(
       "The sign-in service returned an unexpected account response. Please contact support.",
+      502,
     );
   }
 
   return result;
+}
+
+export async function fetchCurrentUser(accessToken) {
+  if (!accessToken) {
+    throw createApiError("A sign-in token is required.", 401);
+  }
+
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(
+    () => controller.abort(),
+    REQUEST_TIMEOUT_MS,
+  );
+
+  let response;
+
+  try {
+    response = await fetch(`${getApiBaseUrl()}/api/auth/me`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw createApiError(
+        "Session verification timed out. Check your connection and retry.",
+      );
+    }
+
+    if (error instanceof TypeError) {
+      throw createApiError(
+        "Unable to reach the authentication service. Check your connection and backend CORS settings.",
+      );
+    }
+
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+
+  const payload = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const message =
+      response.status === 401
+        ? "Your sign-in is invalid or has expired."
+        : response.status >= 500
+          ? "The authentication service is temporarily unavailable."
+          : payload?.message || "Unable to verify your sign-in.";
+
+    throw createApiError(message, response.status);
+  }
+
+  const user = payload?.data?.user;
+  if (
+    payload?.status !== "ok" ||
+    !user ||
+    typeof user.id !== "string" ||
+    !VALID_ROLES.has(user.role)
+  ) {
+    throw createApiError(
+      "The authentication service returned an invalid session response.",
+      502,
+    );
+  }
+
+  return user;
 }
 
 export function getPortalPath(role) {

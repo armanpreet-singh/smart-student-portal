@@ -1,0 +1,81 @@
+.session-recovery-notice {
+  position: fixed;
+  z-index: 1400;
+  top: 16px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: min(720px, calc(100vw - 32px));
+  padding: 14px 16px;
+  transform: translateX(-50%);
+  border: 1px solid var(--d-border, #d8dce5);
+  border-radius: 14px;
+  background: var(--d-surface, #ffffff);
+  color: var(--d-text, #1f2937);
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.16);
+}
+
+.session-recovery-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.session-recovery-copy strong {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.session-recovery-copy span {
+  color: var(--d-text-secondary, #64748b);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.session-recovery-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.session-recovery-actions button {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: var(--d-primary, #1b3a6b);
+  color: #ffffff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.session-recovery-actions button.secondary {
+  border-color: var(--d-border, #d8dce5);
+  background: transparent;
+  color: var(--d-text, #1f2937);
+}
+
+.session-recovery-actions button:focus-visible {
+  outline: 3px solid var(--d-gold, #c9a84c);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .session-recovery-notice {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .session-recovery-actions {
+    width: 100%;
+  }
+
+  .session-recovery-actions button {
+    flex: 1;
+  }
+}

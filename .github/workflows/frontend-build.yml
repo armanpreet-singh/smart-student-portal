@@ -6,6 +6,7 @@ on:
       - main
       - "ui/teacher-attendance-workflow"
       - "feat/auth-login-api"
+      - "feat/auth-session-provider"
   pull_request:
     branches:
       - main

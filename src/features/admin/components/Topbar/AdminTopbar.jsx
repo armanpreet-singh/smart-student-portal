@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import {
   Menu,
   Search,
@@ -23,11 +23,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useDashboardTheme } from "../../../../features/dashboard/hooks/useDashboardTheme";
 import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySubmenu';
 import { adminData } from "../../data/mockAdminData";
+import { useAuth } from "../../../auth/context/AuthContext";
 
 const AdminTopbar = memo(({ onMenuClick }) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { isDark, toggleTheme } = useDashboardTheme();
+  const { logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -171,7 +172,10 @@ const AdminTopbar = memo(({ onMenuClick }) => {
                 <button
                   className="d-dropdown-item logout"
                   role="menuitem"
-                  onClick={() => navigate("/")}
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    logout();
+                  }}
                 >
                   <LogOut size={16} />
                   <span>Logout</span>

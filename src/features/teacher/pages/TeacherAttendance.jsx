@@ -11,6 +11,8 @@ import toast from "react-hot-toast";
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
 import StatCard from "../../../features/dashboard/components/StatCard/StatCard";
+import { useAuth } from "../../auth/context/AuthContext";
+import { getApiBaseUrl } from "../../auth/api/authApi";
 import {
   demoTeacherAttendanceSubjects,
   readDemoAttendance,
@@ -18,21 +20,13 @@ import {
 } from "../data/mockTeacherAttendance";
 import "./../styles/teacherAttendance.css";
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+const API_BASE_URL = getApiBaseUrl();
 const STATUS_OPTIONS = [
   { value: "PRESENT", label: "Present" },
   { value: "ABSENT", label: "Absent" },
   { value: "LATE", label: "Late" },
   { value: "EXCUSED", label: "Excused" },
 ];
-
-function readAccessToken() {
-  try {
-    return window.localStorage.getItem("ltsu-access-token") || "";
-  } catch {
-    return "";
-  }
-}
 
 function getLocalDate() {
   const now = new Date();
@@ -85,18 +79,18 @@ async function requestApi(path, token, options = {}) {
   }
 }
 
-const readInitialMode = () =>
-  API_BASE_URL && readAccessToken() ? "loading" : "demo";
-
-const readInitialSubjects = () =>
-  readInitialMode() === "demo" ? demoTeacherAttendanceSubjects : [];
-
 const TeacherAttendance = memo(() => {
-  const [token] = useState(readAccessToken);
-  const [mode, setMode] = useState(readInitialMode);
-  const [subjects, setSubjects] = useState(readInitialSubjects);
-  const [selectedSubjectId, setSelectedSubjectId] = useState(
-    () => readInitialSubjects()[0]?.id || "",
+  const { accessToken, sessionStatus } = useAuth();
+  const token = accessToken || "";
+  const hasLiveSession = Boolean(API_BASE_URL && token);
+  const [mode, setMode] = useState(() =>
+    hasLiveSession ? "loading" : "demo",
+  );
+  const [subjects, setSubjects] = useState(() =>
+    hasLiveSession ? [] : demoTeacherAttendanceSubjects,
+  );
+  const [selectedSubjectId, setSelectedSubjectId] = useState(() =>
+    hasLiveSession ? "" : demoTeacherAttendanceSubjects[0]?.id || "",
   );
   const [attendanceDate, setAttendanceDate] = useState(getLocalDate);
   const [roster, setRoster] = useState([]);
@@ -140,7 +134,7 @@ const TeacherAttendance = memo(() => {
   }, []);
 
   const loadSubjects = useCallback(async () => {
-    if (!token || !API_BASE_URL) return;
+    if (!token || !API_BASE_URL || sessionStatus !== "authenticated") return;
 
     setLoading(true);
     setError("");
@@ -162,11 +156,27 @@ const TeacherAttendance = memo(() => {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [token, sessionStatus]);
 
   useEffect(() => {
     if (mode === "loading") loadSubjects();
   }, [mode, loadSubjects]);
+
+  useEffect(() => {
+    if (sessionStatus === "unavailable" && token && mode === "loading") {
+      setError(
+        "The sign-in could not be verified. Retry session verification before marking attendance.",
+      );
+      setMode("api-error");
+    }
+  }, [sessionStatus, token, mode]);
+
+  useEffect(() => {
+    if (sessionStatus === "restoring" && token && mode === "api-error") {
+      setError("");
+      setMode("loading");
+    }
+  }, [sessionStatus, token, mode]);
 
   useEffect(() => {
     if (mode !== "api" || !selectedSubjectId || !token) return undefined;
@@ -568,9 +578,9 @@ const TeacherAttendance = memo(() => {
 
       {isDemo && (
         <p className="teacher-attendance-demo-note">
-          Demo mode · Attendance is stored in this browser only. Live API mode
-          requires VITE_API_BASE_URL and a valid teacher access token in
-          localStorage under “ltsu-access-token”.
+          Demo mode · Attendance is stored in this browser only. Sign in with
+          a teacher account to use the live attendance service. The shared
+          authentication provider manages and verifies your session.
         </p>
       )}
     </div>
