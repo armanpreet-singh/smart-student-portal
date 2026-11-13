@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `feat/auth-forced-password-change`, based on main. PR #6 is open and mergeable, not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/6. Previous frontend PRs #2, #3, #4 and #5 have all been merged into main; PR #4 was merged before PR #5.
+3. Current branch: `feat/student-attendance-api`, based on main after PR #6 was merged. Phase II, Chunk 1 PR #7 is open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/7. Previous frontend PRs #2, #3, #4, #5 and #6 are all merged into main.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -47,23 +47,33 @@ Teacher Attendance has been rebuilt on `ui/teacher-attendance-workflow` with:
 - explicit note that roll-number clipboard controls are unavailable until the backend exposes actual rollNumber and class-time data.
 - frontend CI workflow `.github/workflows/frontend-build.yml`.
 
-The component expects a Bearer token at localStorage key `ltsu-access-token`. Existing LoginForm does not yet populate it; the live attendance calls cannot be used until the authentication chunk is completed.
+The Teacher Attendance component now consumes the shared `useAuth()` Bearer token. Login/session restoration is implemented; its live API workflow is available to verified Teacher accounts.
 
-Verified implementation/CI snapshot: branch head `386a37cc5c45e796bfc3ffc5d4b1832ff4576e98`; GitHub Actions run `43429998901` passed checkout, Node.js 22, `npm ci` and `npm run build` on that exact commit (run `43429991685` also passed on the same head). Frontend PR #2 is open, mergeable and unmerged. Subsequent handoff-only commits may advance the branch; always re-check live ref/PR/CI state before continuing.
+Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`. The original implementation build runs `43429998901` and `43429991685` passed on head `386a37cc5c45e796bfc3ffc5d4b1832ff4576e98`.
 
-## Exact next task — Phase II, Chunk 1
+## Exact next task — Phase II, Chunk 2
 
-Implement Student Attendance API integration only:
-1. Inspect the current Student Attendance page and mock data.
-2. Use backend-main GET `/api/student/attendance` with the shared Bearer token. Optional `fromDate` and `toDate` query values use YYYY-MM-DD; fromDate must be on or before toDate.
-3. Map `period` and `subjects`; each subject includes the subject/class object, `summary`, and `records` with date, status, remarks and recordedAt. Current statuses: PRESENT, ABSENT, LATE, EXCUSED.
-4. Preserve existing UI; add date filters and loading/error/empty/retry states, and derive totals/charts from real response data.
-5. Keep mock data isolated in demo mode; do not silently switch to demo on a live API failure or invent endpoints.
-6. Build, verify, update/read both handoff docs and stop. Do not merge/deploy unless requested.
+Implement the Admin Attendance Overview API integration only:
+1. Inspect `src/features/admin/pages/AttendancePage.jsx` and `deptAttendanceData` mock.
+2. Use backend-main GET `/api/admin/attendance` with the shared Bearer token. Access is ADMIN-only and requires the password-change flag to be cleared.
+3. Supported optional query parameters: `fromDate`, `toDate`, `classId`, `subjectId`. Dates use YYYY-MM-DD and fromDate must be on or before toDate.
+4. Response is `{ period, filters, summary, subjects }`. Overall/per-subject summaries provide counts PRESENT, ABSENT, LATE, EXCUSED, totalRecords, eligibleSessions, attendedSessions and nullable attendancePercentage. Subject rows include subject and class identity.
+5. Preserve the existing Admin design but remove unsupported department grouping and mock figures. Render only backend-supported overall and class/subject aggregates. Use the existing admin class/subject directory endpoints only as needed for actual filter choices.
+6. Add loading/error/empty/retry states, and never silently fall back to mock data on API errors.
+7. Build, verify, update/read both handoff documents and stop. Do not merge/deploy unless requested.
 
+## Completed Phase II, Chunk 1 — Student Attendance API integration
+
+- Current branch: `feat/student-attendance-api`, based on main at PR #6 merge commit `4c8f5b5a9ed75f739f79cb7a14ec931570834a57`.
+- Replaced the Student Attendance mock metrics, fake weekly/monthly charts, current-day/upcoming-class panel, mock insights and faculty names with data from backend-main GET `/api/student/attendance`.
+- New `src/features/dashboard/api/studentAttendanceApi.js` sends the shared Bearer token, optional `fromDate`/`toDate` filters, validates the response and reports API errors without a demo fallback.
+- The page derives overall totals, subject summaries, recent history and charts from the API. Present and Late count as attended; Absent is included in the eligible denominator; Excused is excluded. Null percentages stay `—`.
+- Includes date filters, ordering validation, loading/error/retry/no-subject/no-record states and responsive styling while retaining the existing dashboard theme.
+- Build run `43441634414` passed on implementation head `c818fae279b174a585e0c17b258b270d5a6a9b23`. Cloudflare preview was pending at the initial snapshot; verify the latest branch head and checks after handoff updates.
+- No backend, database, Render, deployment or live account credential testing.
 ## Completed Phase I, Chunk 4 — forced password-change workflow
 
-- PR #6: https://github.com/armanpreet-singh/smart-student-portal/pull/6 (open; mergeable; not merged). Branch `feat/auth-forced-password-change`.
+- PR #6: https://github.com/armanpreet-singh/smart-student-portal/pull/6 merged into main at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57`. Branch `feat/auth-forced-password-change`.
 - Backend main `POST /api/auth/change-password` accepts exactly `{ currentPassword, newPassword }`; no role, ID or confirmation field is sent.
 - Password rules mirror backend Zod: current password non-empty and <=72 UTF-8 bytes; new password >=12 characters, <=72 UTF-8 bytes and different from current. Confirmation remains client-side.
 - Accounts with `mustChangePassword=true` go to `/change-password`; ProtectedRoute blocks the three role dashboards until the backend clears the flag. Normal users cannot open the password-change route.
@@ -96,4 +106,4 @@ Implement Student Attendance API integration only:
 
 Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Broad categories still mock-backed include timetable, assignments, results, resources, announcements, academic calendar, departments and dashboard analytics. Admin also needs a dedicated teacher-subject assignment UI; Student duty-proof UI is dependent on backend draft PR #1 being approved/merged/deployed. Most existing pages need API loading/error/empty states and correct data/permission mapping before they can be marked Ready.
 
-After auth is complete, choose the next single highest-priority task from the updated handoff, verify current contracts first, and stop at the end of that chunk.
+Continue with Phase II, Chunk 2 (Admin Attendance Overview) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
