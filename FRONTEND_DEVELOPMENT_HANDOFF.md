@@ -3,10 +3,11 @@
 Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/auth-login-api` (stacked on `ui/teacher-attendance-workflow`)
-Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/3 (open; mergeable; stacked on the parent branch)
-Parent attendance pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/2 (open; not merged)
-Base commit for this chunk: `51374c348dd0eb12b76badf2793613aad6bb9180`
+Development branch: `feat/auth-session-provider` (branched from current main)
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/4 (open; mergeable; not merged)
+Previous frontend PR #2 (Teacher Attendance) merged into main: `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`
+Previous frontend PR #3 (backend login) merged into main: `84607ce7c81512b5529788964672b9b0ca4c92c9`
+Base commit for this chunk: `84607ce7c81512b5529788964672b9b0ca4c92c9`
 
 ## Working scope and rules
 
@@ -169,13 +170,12 @@ No existing role page met the full Ready standard at audit time. The page shells
 
 ## Completed frontend chunk — Phase I, Chunk 1: Backend-connected login
 
-### Final branch, PR and CI snapshot
+### Historical PR and CI snapshot
 
-- Auth branch head verified at the latest code-and-handoff snapshot: `c07aa2a2cfd27715b738ab920bf6a0d2b6f9ad04`.
-- Chunk comparison is against parent branch `ui/teacher-attendance-workflow`, not `main`; PR #3 is deliberately stacked on PR #2 to keep each chunk isolated.
-- PR #3: https://github.com/armanpreet-singh/smart-student-portal/pull/3 — open, mergeable, not merged. After parent PR #2 is merged, retarget PR #3 to `main`.
-- GitHub Actions run `43433208070` completed with conclusion `success` on the exact auth branch head `c07aa2a2cfd27715b738ab920bf6a0d2b6f9ad04`. Checkout, Node.js 22 setup, `npm ci` and `npm run build` all passed.
-- No live account sign-in was attempted. No deployment or backend/Render/Neon changes were made.
+- PR #2 was merged first using a regular merge commit: `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`.
+- PR #3 was then retargeted to `main` and merged using a regular merge commit: `84607ce7c81512b5529788964672b9b0ca4c92c9`.
+- The login implementation's GitHub Actions run `43433208070` passed on its original feature-branch head `c07aa2a2cfd27715b738ab920bf6a0d2b6f9ad04`.
+- No live account sign-in was attempted during Phase I, Chunk 1. No backend/Neon changes were made.
 
 ### Backend contract verified
 
@@ -211,10 +211,45 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - The token is stored in localStorage to remain compatible with the existing Teacher Attendance page. The next auth chunk must implement `GET /api/auth/me`, account/session restoration, expiration and logout. Route guards and forced password change are separate upcoming chunks.
 - No backend changes, database changes, Render environment changes or deployment were performed.
 
+## Completed frontend chunk — Phase I, Chunk 2: Shared authentication session management
+
+### Implementation
+
+- Added `AuthProvider` inside `BrowserRouter` in `src/main.jsx`; `App.jsx` displays the session-recovery notice.
+- The provider exposes the current access token, server-verified user, session status, `establishSession`, `restoreSession`, `retrySession` and `logout` through `useAuth()`.
+- On startup, if a stored token exists, it calls backend-main `GET /api/auth/me` with Bearer authorization. The returned user replaces the cached user snapshot. Cached user data is not read or trusted when restoring a session.
+- Session states: `restoring`, `authenticated`, `anonymous`, `expired` and `unavailable`.
+- HTTP 401 clears the saved token/user, marks the session expired, and redirects to `/login`. If a valid session is restored while already on `/login`, the provider routes to that verified user's dashboard.
+- Network/temporary service failures clear the in-memory user but preserve the token for retry. A recovery notice offers Retry and Sign out. The app does not treat stale cached roles as authenticated.
+- Login now calls `establishSession` instead of writing session keys itself. Storage access is centralized in `src/features/auth/utils/sessionStorage.js`.
+- Existing logout menu actions in Student, Teacher and Admin topbars now clear the shared token/user and navigate to `/login`.
+- Teacher Attendance now consumes `accessToken` and `sessionStatus` from the auth provider; it waits until the backend session is verified before loading live subjects. Its API base URL now uses the same shared `getApiBaseUrl()` helper as authentication.
+- No route guards or forced password-change page were added; these remain later Phase I chunks.
+
+### Files changed for this chunk
+
+1. `src/features/auth/context/AuthContext.jsx`
+2. `src/features/auth/utils/sessionStorage.js`
+3. `src/features/auth/api/authApi.js` — shared API base URL and `GET /api/auth/me` client.
+4. `src/features/auth/components/SessionRecoveryNotice.jsx` and `.css`
+5. `src/features/auth/components/LoginForm.jsx`
+6. `src/main.jsx` and `src/App.jsx`
+7. Student, Teacher and Admin topbar components.
+8. `src/features/teacher/pages/TeacherAttendance.jsx`
+9. `.github/workflows/frontend-build.yml`.
+
+### Branch, PR and verification
+
+- Branch: `feat/auth-session-provider`; base: `main`.
+- PR #4: https://github.com/armanpreet-singh/smart-student-portal/pull/4 — open, mergeable, not merged.
+- Code head at verification: `92be2959eb63161718d8b2669e889460a9677ffd`.
+- GitHub Actions build run `43436197757` passed on that exact head; PR check run `43436411634` also passed, and Cloudflare Pages check completed successfully.
+- Both `npm ci` and `npm run build` passed. There are no frontend lint or unit-test scripts.
+- No real account credentials were used. No backend, database, Render environment or deployment configuration was changed.
 ## Known issues and integration gaps
 
-- Login now authenticates against backend main and stores the returned token. Shared session restoration (`GET /api/auth/me`), logout, role route guards and forced password-change UI remain outstanding; until those chunks are complete, a page refresh or expired token is not centrally recovered.
-- The attendance page and login now share localStorage key `ltsu-access-token`. The planned auth provider can later replace direct reads without changing the backend contract.
+- Login is backend-connected and the shared session provider now restores and verifies tokens through `GET /api/auth/me`, handles expiry/network failure and supports logout. Role route guards and forced password-change UI remain outstanding.
+- Login, session provider and Teacher Attendance now use a shared auth context/session interface. The underlying short-lived access token remains stored under `ltsu-access-token` for compatibility.
 - Backend-main attendance status set differs from the confirmed product policy. Backend draft PR #1 is not merged/deployed and its database migration is not on primary.
 - User model and roster response do not include rollNumber; the requested copy output must remain disabled until a dedicated backend field and matching API response are introduced.
 - No attendance session/class-time data exists. Current uniqueness is one student/subject/date record, not multiple class sessions in one day.
@@ -224,16 +259,16 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Most non-attendance pages remain mock-backed or have inert controls; see audit above.
 - No lint/test scripts currently exist in the frontend package.
 
-## Exact next frontend task — Phase I, Chunk 2
+## Exact next frontend task — Phase I, Chunk 3
 
-Implement the **shared authentication session provider and session restoration** only:
-1. Add a shared auth context/provider that reads the existing `ltsu-access-token` token key and safe cached user.
-2. On app startup, call `GET /api/auth/me` with the Bearer token and replace cached user data with the current backend user.
-3. Handle loading, invalid/expired token, inactive account and network-unavailable states without trusting stale cached roles.
-4. Provide a logout action that clears the auth token and cached user and returns to the login screen.
-5. Refactor Teacher Attendance to consume the shared token/session interface (or preserve compatibility through a single auth utility) so it does not implement a second session mechanism.
-6. Do not add route guards or forced password-change UI yet; those are Phase I, Chunks 3 and 4.
-7. Preserve the existing role dashboards and login design. Run the frontend build, update both handoff files, read them back, verify CI and stop.
+Implement **role-based route protection** only:
+1. Add a reusable protected-route component that consumes `useAuth()`.
+2. Keep `/` and `/login` public. Protect `/dashboard/*` for `STUDENT`, `/teacher/*` for `TEACHER`, and `/admin/*` for `ADMIN`.
+3. While `sessionStatus === "restoring"`, show a loading state; do not decide access from cached user data.
+4. For anonymous/expired sessions, redirect to `/login`. For temporary verification-unavailable state, fail closed and show the session-recovery notice rather than mounting protected dashboard content.
+5. If a signed-in user opens another role's route, redirect to the dashboard derived from the backend-verified role.
+6. Do not implement the forced password-change page in this chunk; keep that for Phase I, Chunk 4.
+7. Preserve existing route trees and UI. Build, verify, update both handoff files, read them back and stop.
 
 
-After this auth chunk, return to the integration gaps in the audit. Do not merge/deploy or assume backend draft PR #1 is live.
+After this chunk, implement the forced password-change UI as Phase I, Chunk 4. Do not merge/deploy or assume backend draft PR #1 is live.
