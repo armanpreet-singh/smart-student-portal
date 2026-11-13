@@ -4,6 +4,7 @@ Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `ui/teacher-attendance-workflow`
+Pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/2 (open; not merged)
 Base commit at branch creation: `51f4b51e8a3a8e89e06bbef38bdfb574bb849020`
 
 ## Working scope and rules
@@ -154,7 +155,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 - Desktop/mobile were checked through responsive CSS review and breakpoints; no browser-driven viewport test was available in the GitHub connector.
 - This verifies a successful frontend production build, not a live authenticated API session or browser clipboard behavior.
 - No deployment was performed.
-- Frontend PR will be recorded here after the branch handoff is read back and PR creation is verified.
+- Frontend PR #2 is open and not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/2. The PR head at creation was `15b170bdecd77d9ada544e61dfb0251186c6ef7c`; later handoff refreshes advance the head. Do not merge without normal review.
 
 ## Known issues and integration gaps
 
