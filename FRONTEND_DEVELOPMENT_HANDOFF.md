@@ -349,7 +349,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 
 - Branch: `feat/student-attendance-api`, based on `main` at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57` (PR #6 merge).
 - PR #7: https://github.com/armanpreet-singh/smart-student-portal/pull/7 — open against `main`; do not merge it without an explicit request.
-- GitHub Actions build run `43441634414` completed successfully on implementation head `c818fae279b174a585e0c17b258b270d5a6a9b23` (`npm ci` and `npm run build`). Cloudflare Pages preview was pending at the first implementation snapshot; final head status will be rechecked after documentation updates.
+- Final Student Attendance PR #7 head `f5da8688302a87fbf3eb2e9da54a753991a2a763` passed GitHub Actions builds `43442444854` and `43442432240`, plus Cloudflare Pages.
 - No lint or unit-test scripts are configured. Live Student-account end-to-end testing remains outstanding.
 
 ## Completed frontend chunk — Phase II, Chunk 2: Admin Attendance Overview API integration
