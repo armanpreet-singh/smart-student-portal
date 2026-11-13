@@ -9,6 +9,7 @@ on:
       - "feat/auth-session-provider"
       - "feat/auth-role-route-guards"
       - "feat/auth-forced-password-change"
+      - "feat/admin-attendance-api"
   pull_request:
     branches:
       - main
