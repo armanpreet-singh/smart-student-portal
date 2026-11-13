@@ -3,12 +3,12 @@
 Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/auth-role-route-guards` (stacked on `feat/auth-session-provider`)
-Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/5 (open; mergeable; not merged; stacked on PR #4)
-Parent session-provider PR #4: https://github.com/armanpreet-singh/smart-student-portal/pull/4 (open; mergeable; not merged)
-Previous frontend PR #2 (Teacher Attendance) merged into main: `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`
-Previous frontend PR #3 (backend login) merged into main: `84607ce7c81512b5529788964672b9b0ca4c92c9`
-Base commit for this chunk: `9b1f35e4c99633741c039d219f2f03e634a443a3`
+Development branch: `feat/auth-forced-password-change` (branched from current main)
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/6 (open; mergeable; not merged)
+Previous frontend PR #4 (session provider) merged into main: `132b49e3269c99577f515121a60b0c99a7185f0f`
+Previous frontend PR #5 (role route protection) merged into main: `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`
+Previous frontend PRs #2 (Teacher Attendance) and #3 (backend login) are also merged into main.
+Base commit for this chunk: `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`
 
 ## Working scope and rules
 
@@ -58,8 +58,8 @@ No existing role page met the full Ready standard at audit time. The page shells
 
 | Role | Screen | Existing condition | Backend integration readiness | Missing work |
 |---|---|---|---|---|
-| Auth | Login / role selection | The form now posts the backend's `{username,password}` contract, stores the returned Bearer token and routes by the returned account role. | **Needs improvement** — login is connected; session restoration, route guards and forced password-change flow remain separate chunks. | Add shared `/me` session restoration, expiry/logout handling, role guards and forced password-change UI in subsequent chunks. |
-| Auth | Route access / session | Student, Teacher, and Admin route trees exist, but `App.jsx` mounts them without authentication/role guards. | **Needs improvement** — backend enforces role/ownership, frontend does not reflect session state. | Auth provider, role-aware route guards, signed-out redirects, password-change gate, logout and expired-session handling. |
+| Auth | Login / role selection | Login posts the backend's `{username,password}` contract, stores the Bearer token and follows the returned account role. Session restoration and the required-password-change path are implemented. | **Needs improvement** — implementation is complete for the current backend contract; live university-account verification remains outstanding. | Complete live account validation and verify deployed frontend origin is allowed by backend CORS. |
+| Auth | Route access / session | `AuthProvider` verifies `/api/auth/me`; `ProtectedRoute` restricts Student, Teacher and Admin trees by verified role and redirects temporary-password accounts to `/change-password`. | **Needs improvement** — frontend flow is implemented; verify with real provisioned accounts before marking Ready. | Live Student/Teacher/Admin account checks, including a first-login temporary password and expired session. |
 | Student | Dashboard Home | Uses mock stats, classes, courses, assignments, announcements, resources and activity. | **Needs improvement** — no composed dashboard endpoint is exposed by backend main. | Replace mock data only as each supported endpoint exists; show empty/loading/error states; avoid fabricating metrics. |
 | Student | Courses | Static mock course cards with faculty/progress fields. | **Needs improvement** — backend main has Class and Subject models, but no student course-list endpoint. | Define the student-facing Subject/Class read contract and map IDs/relationships rather than mock faculty/progress values. |
 | Student | Attendance | Rich charts, summary cards, subject table and current-day panel are all mock data. | **Needs improvement** — `GET /api/student/attendance` exists on backend main, but UI does not call it. | Connect authenticated self-only API; use backend totals/status history, date filters, proper null/zero denominator, and request states. |
@@ -140,7 +140,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 - In demo mode, uses separate API-shaped fixtures in `src/features/teacher/data/mockTeacherAttendance.js` and stores demo results in browser localStorage. It does not silently replace an API error with mock data.
 - Adds responsive layout rules using the existing `--d-*` theme variables in `src/features/teacher/styles/teacherAttendance.css`.
 - Explicitly explains why roll-number clipboard actions remain unavailable; it does not copy usernames or database IDs as roll numbers.
-- The component reads a short-lived access token from localStorage key `ltsu-access-token`. Phase I, Chunk 1 now writes this key after successful backend login. Session restoration via `/api/auth/me`, proactive expiry handling, logout and role route guards are still not implemented.
+- The component now reads the access token from the shared auth provider. Login, `/api/auth/me` restoration, logout, role route protection and forced password change are integrated through the same session context.
 - Current main API does not return attendance records for a selected date before marking. The UI can track submission state in its active session, but a revisit/refresh cannot reconstruct existing marks from main's current teacher API. Duplicate attendance returns a backend conflict (HTTP 409).
 - Component uses main's current four statuses. Do not change it to ON_DUTY_REVIEW until the backend draft is approved/merged/deployed.
 
@@ -271,18 +271,54 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 
 ### Branch, PR and verification
 
-- Branch: `feat/auth-role-route-guards`, stacked on `feat/auth-session-provider` so PR #4 remains independently reviewable.
-- Parent PR #4 contains the session provider required by this chunk and remains open/unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/4.
-- Branch base: `9b1f35e4c99633741c039d219f2f03e634a443a3`.
-- Final branch head: `13087a195042aa02a4fcd2994b3f7ee8ee1c5495`.
-- PR #5: https://github.com/armanpreet-singh/smart-student-portal/pull/5 — open, mergeable, not merged; base is `feat/auth-session-provider`. Retarget to `main` after PR #4 merges.
+- Branch: `feat/auth-role-route-guards`, originally stacked on `feat/auth-session-provider`.
+- PR #4 was subsequently merged into `main` at `132b49e3269c99577f515121a60b0c99a7185f0f`; PR #5 was retargeted to `main` and merged at `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`.
 - GitHub Actions run `43437899529` completed successfully on the exact branch head; checkout, Node.js 22 setup, `npm ci` and `npm run build` passed.
 - The frontend has no configured lint or unit-test scripts. No live account credentials were used.
 - No backend, database, Render environment or deployment changes were made.
+## Completed frontend chunk — Phase I, Chunk 4: Forced password-change workflow
+
+### Backend contract verified
+
+- Backend `main` exposes `POST /api/auth/change-password`, protected by `authenticate` and strict Zod validation.
+- Request body is exactly `{ currentPassword, newPassword }`. No user ID, role or confirmation field is accepted.
+- Current password must be non-empty and at most 72 UTF-8 bytes. New password must be at least 12 characters, at most 72 UTF-8 bytes, and different from the current password.
+- Success returns `{ status: "ok", message, data: { user } }`. The updated public user has `mustChangePassword: false`.
+- The backend also exposes `GET /api/auth/me`; the UI calls it again after the password-change response to confirm that the requirement is cleared before navigating.
+
+### Implementation
+
+- Login sends accounts with `mustChangePassword === true` directly to `/change-password`.
+- `ProtectedRoute` now supports `requirePasswordChange`. All Student, Teacher and Admin dashboard route trees redirect a verified temporary-password account to `/change-password`; a normal account opening that route is redirected to its own role dashboard.
+- The password-change screen reuses the existing LTSU authentication layout and includes current, new and confirm fields, visibility toggles, validation feedback, submit state, sign-out and success/error toasts.
+- Only `{ currentPassword, newPassword }` is sent to the backend. Password confirmation is checked locally and never sent.
+- Frontend validation matches the backend's 12-character / 72 UTF-8-byte / different-from-current rules. Backend field validation details and incorrect-current-password errors are displayed.
+- After the password-change API confirms `mustChangePassword: false`, the shared auth provider refreshes the current user using `/api/auth/me`. Dashboard navigation occurs only after the refreshed server user confirms the requirement is cleared.
+- No account provisioning, password reset, backend, database, Render environment or deployment changes were made.
+
+### Files changed for this chunk
+
+1. `src/features/auth/api/authApi.js` — `POST /api/auth/change-password` client and strict response validation.
+2. `src/features/auth/context/AuthContext.jsx` — authenticated current-user refresh action.
+3. `src/features/auth/components/ProtectedRoute.jsx` — required-password-change route gate.
+4. `src/features/auth/pages/PasswordChangePage.jsx` and `.css` — responsive LTSU password-change screen.
+5. `src/features/auth/components/LoginForm.jsx` — send temporary-password accounts to the change page.
+6. `src/App.jsx` — verified `/change-password` route.
+7. `.github/workflows/frontend-build.yml` — build on this feature branch.
+8. Both frontend handoff documents.
+
+### Branch, PR and verification
+
+- Branch: `feat/auth-forced-password-change`, based on `main` at `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`.
+- PR #6: https://github.com/armanpreet-singh/smart-student-portal/pull/6 — open, mergeable, not merged.
+- Implementation commit `4ebd35f2fc0e1bb58cd59d219f2f03e634a443a3` passed GitHub Actions build run `43439637720` and Cloudflare Pages.
+- Both `npm ci` and `npm run build` passed on that exact implementation commit. A documentation-only update will trigger another final build.
+- No real university credentials were used. The frontend package has no lint or unit-test script.
+
 ## Known issues and integration gaps
 
-- Login, shared session restoration/logout, and role-based route guards are implemented on the active frontend feature branches. The route-guard change is stacked on the still-open session-provider PR. Forced password-change UI remains outstanding.
-- Login, session provider and Teacher Attendance now use a shared auth context/session interface. The underlying short-lived access token remains stored under `ltsu-access-token` for compatibility.
+- Login, shared session restoration/logout, role-based route guards and forced password-change UI are implemented in merged or reviewable frontend changes. Phase I is complete at the code level; live university-account validation remains outstanding.
+- Login, session provider, Teacher Attendance, role route guards and forced password change use the shared auth context/session interface. The underlying short-lived token remains stored under `ltsu-access-token` for compatibility.
 - Backend-main attendance status set differs from the confirmed product policy. Backend draft PR #1 is not merged/deployed and its database migration is not on primary.
 - User model and roster response do not include rollNumber; the requested copy output must remain disabled until a dedicated backend field and matching API response are introduced.
 - No attendance session/class-time data exists. Current uniqueness is one student/subject/date record, not multiple class sessions in one day.
@@ -290,18 +326,17 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Cloudinary proof uploads on the backend draft require runtime credentials, currently not configured per draft handoff.
 - CORS origin must be configured on backend runtime for the actual frontend origin.
 - Most non-attendance pages remain mock-backed or have inert controls; see audit above.
-- No lint/test scripts currently exist in the frontend package.
+- No lint/test scripts currently exist in the frontend package. No real account credentials have been used for live end-to-end testing.
 
-## Exact next frontend task — Phase I, Chunk 4
+## Exact next frontend task — Phase II, Chunk 1
 
-Implement the **forced password-change workflow** only:
-1. After successful login/session restoration, inspect the backend-verified user's `mustChangePassword` flag.
-2. If true, require a dedicated password-change screen using backend-main `POST /api/auth/change-password` and its exact schema.
-3. Keep the route accessible to a verified session needing a password change, but prevent Student/Teacher/Admin dashboard route trees from mounting until the password change succeeds.
-4. Handle current password, new password, confirmation, backend validation errors, loading and success states. Do not send a user ID or role from the client; use the authenticated Bearer token.
-5. After success, refresh the current user via `GET /api/auth/me` and then route to the dashboard for the verified backend role.
-6. Preserve the existing LTSU login design and shared route/session provider. Do not add account provisioning or password-reset flows.
-7. Build, verify, update/read both handoff documents and stop. Do not merge/deploy unless explicitly requested.
+Implement the **Student Attendance API integration** only:
+1. Inspect the current Student Attendance page and its mock data before changing the screen.
+2. Use backend-main `GET /api/student/attendance` with the shared Bearer token. Optional query parameters are `fromDate` and `toDate`, both `YYYY-MM-DD`; if both are supplied, `fromDate` must be on or before `toDate`.
+3. The backend response contains `period` and `subjects`; each subject has a subject/class object, `summary`, and `records` with date/status/remarks/recordedAt. Current statuses are PRESENT, ABSENT, LATE and EXCUSED.
+4. Preserve the existing Student Attendance visual design; add date filters and loading/error/empty/retry states, and derive charts/totals only from backend data (avoid mock metrics in live mode).
+5. Do not add or assume endpoints that are not on backend main. Keep demo fixtures separate and never silently replace a live API error with mock data.
+6. Verify the endpoint/response contract, implement this screen only, build, update/read both handoff files and stop. Do not merge/deploy unless requested.
 
 
-After this chunk, return to the remaining integration gaps in the audit. Do not assume backend draft PR #1 is live.
+After this chunk, continue one UI integration slice at a time using only verified backend-main contracts. Do not assume backend draft PR #1 is live.
