@@ -3,11 +3,12 @@
 Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/auth-session-provider` (branched from current main)
-Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/4 (open; mergeable; not merged)
+Development branch: `feat/auth-role-route-guards` (stacked on `feat/auth-session-provider`)
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/5 (open; mergeable; not merged; stacked on PR #4)
+Parent session-provider PR #4: https://github.com/armanpreet-singh/smart-student-portal/pull/4 (open; mergeable; not merged)
 Previous frontend PR #2 (Teacher Attendance) merged into main: `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`
 Previous frontend PR #3 (backend login) merged into main: `84607ce7c81512b5529788964672b9b0ca4c92c9`
-Base commit for this chunk: `84607ce7c81512b5529788964672b9b0ca4c92c9`
+Base commit for this chunk: `9b1f35e4c99633741c039d219f2f03e634a443a3`
 
 ## Working scope and rules
 
@@ -246,9 +247,41 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - GitHub Actions build run `43436197757` passed on that exact head; PR check run `43436411634` also passed, and Cloudflare Pages check completed successfully.
 - Both `npm ci` and `npm run build` passed. There are no frontend lint or unit-test scripts.
 - No real account credentials were used. No backend, database, Render environment or deployment configuration was changed.
+## Completed frontend chunk — Phase I, Chunk 3: Role-based route protection
+
+### Implementation
+
+- Added reusable `ProtectedRoute` component using the shared `useAuth()` context and backend role-to-dashboard mapping.
+- Wrapped `/dashboard/*` in `allowedRole="STUDENT"`, `/teacher/*` in `allowedRole="TEACHER"`, and `/admin/*` in `allowedRole="ADMIN"` within `src/App.jsx`.
+- Public `/` landing and `/login` routes remain unguarded.
+- While the session status is `restoring`, protected content is not mounted; the user sees a centered session-verification state.
+- Anonymous and expired sessions are redirected to `/login`, retaining the attempted path in navigation state.
+- A verified user who opens another role's route is redirected to the dashboard derived from the server-verified role.
+- When session verification is temporarily unavailable, the guard fails closed and displays a session-unavailable state. The global recovery banner remains available for retry; the fallback also offers sign-out.
+- Added responsive, theme-token-based styling for loading and unavailable states, with focus-visible and reduced-motion handling.
+- No changes were made to the landing/login pages or any role dashboard UI. Forced password-change UI remains Phase I, Chunk 4.
+
+### Files changed for this chunk
+
+1. `src/features/auth/components/ProtectedRoute.jsx`
+2. `src/features/auth/components/ProtectedRoute.css`
+3. `src/App.jsx` — guard the three existing role route trees.
+4. `.github/workflows/frontend-build.yml` — run the build on the route-guard feature branch.
+5. Both frontend handoff documents.
+
+### Branch, PR and verification
+
+- Branch: `feat/auth-role-route-guards`, stacked on `feat/auth-session-provider` so PR #4 remains independently reviewable.
+- Parent PR #4 contains the session provider required by this chunk and remains open/unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/4.
+- Branch base: `9b1f35e4c99633741c039d219f2f03e634a443a3`.
+- Final branch head: `13087a195042aa02a4fcd2994b3f7ee8ee1c5495`.
+- PR #5: https://github.com/armanpreet-singh/smart-student-portal/pull/5 — open, mergeable, not merged; base is `feat/auth-session-provider`. Retarget to `main` after PR #4 merges.
+- GitHub Actions run `43437899529` completed successfully on the exact branch head; checkout, Node.js 22 setup, `npm ci` and `npm run build` passed.
+- The frontend has no configured lint or unit-test scripts. No live account credentials were used.
+- No backend, database, Render environment or deployment changes were made.
 ## Known issues and integration gaps
 
-- Login is backend-connected and the shared session provider now restores and verifies tokens through `GET /api/auth/me`, handles expiry/network failure and supports logout. Role route guards and forced password-change UI remain outstanding.
+- Login, shared session restoration/logout, and role-based route guards are implemented on the active frontend feature branches. The route-guard change is stacked on the still-open session-provider PR. Forced password-change UI remains outstanding.
 - Login, session provider and Teacher Attendance now use a shared auth context/session interface. The underlying short-lived access token remains stored under `ltsu-access-token` for compatibility.
 - Backend-main attendance status set differs from the confirmed product policy. Backend draft PR #1 is not merged/deployed and its database migration is not on primary.
 - User model and roster response do not include rollNumber; the requested copy output must remain disabled until a dedicated backend field and matching API response are introduced.
@@ -259,16 +292,16 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Most non-attendance pages remain mock-backed or have inert controls; see audit above.
 - No lint/test scripts currently exist in the frontend package.
 
-## Exact next frontend task — Phase I, Chunk 3
+## Exact next frontend task — Phase I, Chunk 4
 
-Implement **role-based route protection** only:
-1. Add a reusable protected-route component that consumes `useAuth()`.
-2. Keep `/` and `/login` public. Protect `/dashboard/*` for `STUDENT`, `/teacher/*` for `TEACHER`, and `/admin/*` for `ADMIN`.
-3. While `sessionStatus === "restoring"`, show a loading state; do not decide access from cached user data.
-4. For anonymous/expired sessions, redirect to `/login`. For temporary verification-unavailable state, fail closed and show the session-recovery notice rather than mounting protected dashboard content.
-5. If a signed-in user opens another role's route, redirect to the dashboard derived from the backend-verified role.
-6. Do not implement the forced password-change page in this chunk; keep that for Phase I, Chunk 4.
-7. Preserve existing route trees and UI. Build, verify, update both handoff files, read them back and stop.
+Implement the **forced password-change workflow** only:
+1. After successful login/session restoration, inspect the backend-verified user's `mustChangePassword` flag.
+2. If true, require a dedicated password-change screen using backend-main `POST /api/auth/change-password` and its exact schema.
+3. Keep the route accessible to a verified session needing a password change, but prevent Student/Teacher/Admin dashboard route trees from mounting until the password change succeeds.
+4. Handle current password, new password, confirmation, backend validation errors, loading and success states. Do not send a user ID or role from the client; use the authenticated Bearer token.
+5. After success, refresh the current user via `GET /api/auth/me` and then route to the dashboard for the verified backend role.
+6. Preserve the existing LTSU login design and shared route/session provider. Do not add account provisioning or password-reset flows.
+7. Build, verify, update/read both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 
 
-After this chunk, implement the forced password-change UI as Phase I, Chunk 4. Do not merge/deploy or assume backend draft PR #1 is live.
+After this chunk, return to the remaining integration gaps in the audit. Do not assume backend draft PR #1 is live.
