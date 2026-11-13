@@ -224,12 +224,12 @@ const AttendancePage = () => {
 
   const availableSubjects = useMemo(
     () =>
-      filters.classId
+      draftFilters.classId
         ? filterOptions.subjects.filter(
-            (item) => item.classId === filters.classId,
+            (item) => item.classId === draftFilters.classId,
           )
         : filterOptions.subjects,
-    [filterOptions.subjects, filters.classId],
+    [filterOptions.subjects, draftFilters.classId],
   );
 
   const chartData = useMemo(
