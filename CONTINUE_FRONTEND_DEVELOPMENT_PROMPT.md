@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `feat/admin-student-provisioning`, based on `main` at PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`. Phase II PR #9 merged into main at `d00fc61b54456b0fb313294c72aecedd62c9bd65`; PR #10 merged into main at `a32bfa04d132f2866938b7364eccb426bfb1e519`. Phase II PRs #7/#8 and frontend PRs #2–#6 are also merged. PR #11 (Admin Teacher Directory) remains open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/11. Phase II, Chunk 6 PR #12 will target main.
+3. Current branch: `feat/admin-student-provisioning`, based on `main` at PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`. Phase II PR #9 merged into main at `d00fc61b54456b0fb313294c72aecedd62c9bd65`; PR #10 merged into main at `a32bfa04d132f2866938b7364eccb426bfb1e519`. Phase II PRs #7/#8 and frontend PRs #2–#6 are also merged. PR #11 (Admin Teacher Directory) remains open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/11. Phase II, Chunk 6 PR #12 is open against main: https://github.com/armanpreet-singh/smart-student-portal/pull/12.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -70,7 +70,8 @@ Implement Admin Teacher Account Provisioning (create-only) using backend-main PO
 - Client validation mirrors backend name/username/email/password requirements, including the 72 UTF-8 password byte limit. The server remains authoritative.
 - Successful create response is validated; the UI confirms account creation, reports active/forced password-change state, clears password fields and refreshes the directory.
 - Temporary password is sent only in the POST body, is not persisted in browser storage and is not logged. Status/reset mutations, Teacher creation and backend changes are outside scope.
-- Final GitHub Actions and PR verification will be recorded after the branch head completes checks.
+- PR #12: https://github.com/armanpreet-singh/smart-student-portal/pull/12 is open against `main`; PR #11 (Teacher Directory) also remains open independently.
+- GitHub Actions build run `43463292958` passed on implementation/handoff head `cb6208295c2eb26fd58302376f4506569972b625` (`npm ci` and `npm run build`). A fresh check is expected after the final PR-metadata documentation update.
 ## Completed Phase II, Chunk 5 — Admin Teacher Directory API integration
 
 - Branch `feat/admin-teacher-directory`, based on main after PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`.

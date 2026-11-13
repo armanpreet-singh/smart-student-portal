@@ -4,7 +4,7 @@ Last updated: 2026-11-13
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/admin-student-provisioning` (branched from `main` after PR #10)
-Current pull request: Phase II, Chunk 6 — PR #12 will target `main`.
+Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/12 (open; targets `main`).
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
@@ -538,8 +538,8 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/admin-student-provisioning`, based on `main` after PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`.
-- PR #11 (Admin Teacher Directory) remains open against `main`; this Student create-only slice is independent and will be PR #12 against `main`.
-- CI build checks are being run on the final documentation-updated branch head; verification will be recorded after they complete.
+- PR #12: https://github.com/armanpreet-singh/smart-student-portal/pull/12 — open against `main`, independent of PR #11.
+- GitHub Actions build run `43463292958` passed on the implementation and handoff-updated commit `cb6208295c2eb26fd58302376f4506569972b625` (`npm ci` and `npm run build`). The final PR-metadata documentation update will receive a fresh build check.
 - No lint or unit-test scripts are configured. Live Admin-account creation testing remains outstanding.
 ## Known issues and integration gaps
 
