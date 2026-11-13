@@ -55,7 +55,7 @@ const LoginForm = () => {
   const [role, setRole] = useState("student");
   const [showPw, setShowPw] = useState(false);
   const navigate = useNavigate();
-  const rememberedUsername = getRememberedUsername();
+  const [rememberedUsername] = useState(getRememberedUsername);
 
   const {
     register,
@@ -96,8 +96,12 @@ const LoginForm = () => {
           JSON.stringify(result.user),
         );
       } catch {
-        window.localStorage.removeItem(ACCESS_TOKEN_KEY);
-        window.localStorage.removeItem(AUTH_USER_KEY);
+        try {
+          window.localStorage.removeItem(ACCESS_TOKEN_KEY);
+          window.localStorage.removeItem(AUTH_USER_KEY);
+        } catch {
+          // Keep the user-facing storage error even if browser cleanup is blocked.
+        }
         throw new Error(
           "Your browser blocked session storage. Enable site storage and try again.",
         );
