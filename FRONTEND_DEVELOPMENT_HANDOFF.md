@@ -904,9 +904,9 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Added current/new/confirm password inputs, reveal/hide, backend-aligned validation, submitting/error/success states, server field-error mapping, post-change `refreshCurrentUser()` verification and logout on 401. Password confirmation is client-only; passwords are never persisted or logged.
 - Added retry for unavailable session verification, accessible messaging for unsupported profile preferences and responsive `src/features/dashboard/pages/StudentSettings.css`; preserved `/dashboard/settings`, Student shell and theme.
 - Initial stacked PR #40 and clean pre-#39 PR #41 were closed without merge. PR #41 encountered conflicts after #39 merged because its branch shared stale handoff/workflow files. Clean replacement PR #42 is based on the updated `main` commit and contains only the Student Settings screen, stylesheet, workflow filter and corresponding handoff updates: https://github.com/armanpreet-singh/smart-student-portal/pull/42.
-- Earlier clean Student Settings handoff-inclusive head `6bd4e45336393873e639fbf6ca03b639882ee25e` passed GitHub Actions main-target build run `43592349116`; clean post-#39 PR #42 CI is pending.
+- Earlier clean Student Settings source snapshots passed build runs `43592220051` and `43592349116`. The post-#39 clean replacement head `0fc8ad5caf70bed1d2f9750d917f5b4887c6a435` passed GitHub Actions main-target build run `43592988139` (`npm ci`, `npm run build`). The final documentation-inclusive head will be rechecked before merge.
 - Frontend only. No backend, database, schema, migration, secret, deployment, credential or live account changes.
 
 ## Next frontend work
 
-After PR #39 (Student Profile) merges into `main`, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 31. Continue one supported workflow at a time; do not add editable UI for fields or operations that lack an authoritative backend contract.
+After PR #42 (Student Settings) merges, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 32. Continue one supported workflow at a time; do not add editable UI for fields or operations that lack an authoritative backend contract.
