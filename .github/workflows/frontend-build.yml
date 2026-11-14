@@ -39,10 +39,12 @@ on:
       - "feat/teacher-resources-capability"
       - "feat/teacher-profile-capability"
       - "feat/teacher-settings-capability"
+      - "feat/admin-profile-capability"
   pull_request:
     branches:
       - main
       - "feat/teacher-dashboard-capability"
+      - "feat/teacher-settings-capability"
 
 permissions:
   contents: read
