@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 15 PR #21 is `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`. Chunk 16 PR #22 (Admin Academic Calendar) is open against `main` on branch `feat/admin-calendar-capability`. Chunk 17 PR #23 (Teacher Academic Calendar) is open against PR #22's branch `feat/admin-calendar-capability`. Current Chunk 18 branch: `feat/student-calendar-capability`, stacked on PR #23's branch `feat/teacher-calendar-capability`; PR #24 targets that branch and must be merged after PR #22 and PR #23 are merged and retargeted to `main`. PRs #20 and #21 and PRs #15–#19 and earlier completed Phase II PRs are merged.
+3. Latest verified `main` after merging Chunk 18 PR #24 is `fb64e04b0f3f4e58e327767189f5d9430306d020`. Chunk 16 PR #22 (Admin Academic Calendar) merged at `8aa276de681933f102c58062f8616db9869a080b`; Chunk 17 PR #23 (Teacher Academic Calendar) merged at `ef599232f5eef8e4c5f107778627180bd0767c33`; Chunk 18 PR #24 (Student Academic Calendar) merged at `fb64e04b0f3f4e58e327767189f5d9430306d020`. Current Chunk 19 branch: `feat/student-announcements-capability`; PR #25 is open directly against `main`. PRs #20 and #21 and PRs #15–#19 and earlier completed Phase II PRs are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -117,7 +117,7 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 ## Completed Phase II, Chunk 17 — Teacher Academic Calendar Capability Alignment
 
-- Branch `feat/teacher-calendar-capability`, stacked on PR #22 branch `feat/admin-calendar-capability`; PR #23 targets that feature branch.
+- Branch `feat/teacher-calendar-capability`, originally stacked on PR #22; PR #23 merged into `main` at `ef599232f5eef8e4c5f107778627180bd0767c33`.
 - Backend-main has no Calendar/AcademicCalendar/Event Prisma model and no calendar/event routes for Teacher. Teacher routes expose assigned subjects, subject rosters and attendance marking only.
 - Removed four hard-coded 2023 Teacher Calendar events (mid-semester results, faculty meeting, DBMS viva and Diwali holidays). The page now shows an accessible capability-unavailable notice with no unsupported calendar controls.
 - Added responsive `TeacherCalendar.css`; preserved the Teacher calendar route, dashboard layout and shared components.
@@ -125,21 +125,29 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 ## Completed Phase II, Chunk 18 — Student Academic Calendar Capability Alignment
 
-- Branch `feat/student-calendar-capability`, stacked on PR #23 branch `feat/teacher-calendar-capability` at `ce23c20ee277bc3ccc21859ce0513a60d2cf164b`. PR #24 is open against that feature branch; merge PR #22, then PR #23, before retargeting PR #24 to `main`.
+- Branch `feat/student-calendar-capability`, originally stacked on PR #23; PR #24 merged into `main` at `fb64e04b0f3f4e58e327767189f5d9430306d020`.
 - Backend-main has no Calendar/AcademicCalendar/Event Prisma model or Student calendar route. The Student router exposes only its authenticated attendance read endpoint.
 - Removed the four hard-coded 2023 Student Calendar records (DBMS Mid-Sem, Tech Fest, CN Lab Viva and OS Mid-Sem) by replacing the page with an accessible capability-unavailable notice. The page no longer imports `calendarData`; shared `mockDashboardData.js` remains unchanged for other mock-backed dashboard screens.
 - Added responsive `CalendarPage.css`; preserved the Student `/dashboard/calendar` route, page heading and shared dashboard layout.
 - Source read-back covered the Student Calendar page, stylesheet, workflow and both handoff files. GitHub Actions push run `43568955517` completed successfully on implementation head `1bd74d37e695027408ae1b45e97151f596301c72`; `npm ci` and `npm run build` passed. The matching Cloudflare Pages check `132369006051` also completed successfully. The PR-specific build is not triggered while PR #24 targets a feature branch; it will run after the stack is retargeted to `main`.
 - No backend, database, schema, migration, secret, deployment or live calendar changes were made.
 
-## Exact next task — Phase II, Chunk 19 (proposed): Student Announcements Capability Alignment
+## Completed Phase II, Chunk 19 — Student Announcements Capability Alignment
 
-1. Reverify backend-main for Student announcement/notification models, authorized routes and read endpoints.
-2. Audit the Student Announcements page for fixed sample messages, audience or timestamps.
-3. If no supported Student announcements endpoint exists, replace sample content with an accessible capability-unavailable state.
-4. Preserve the existing Student layout and route; do not add backend functionality.
-5. Build, update both handoff documents, verify CI and stop.
+- Branch `feat/student-announcements-capability`, based directly on `main` at `fb64e04b0f3f4e58e327767189f5d9430306d020`; PR #25 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/25.
+- Backend-main has no Announcement/Notification Prisma model, no Student announcement read endpoint, no announcement routes in Admin or Teacher routers, and no separate notification router mounted by `src/app.js`.
+- Removed the three hard-coded Student announcement samples (exam schedule, Tech Fest registrations and library timing changes), their relative timestamps and category labels. The page now shows an accessible capability-unavailable state and no longer imports `announcementsData`.
+- Added responsive `AnnouncementsPage.css`; preserved the existing Student route and shared dashboard layout. Shared `mockDashboardData.js` remains unchanged for other screens.
+- Implementation commit `75729955689c7f3e6f3f2921a54285704ba39713` passed GitHub Actions push run `43570280493` and PR run `43570326248` (`npm ci`, `npm run build`); Cloudflare Pages check `132373055575` passed.
+- No backend, database, schema, migration, secret or deployment changes were made.
 
+## Exact next task — Phase II, Chunk 20 (proposed): Teacher Announcements Capability Alignment
+
+1. Inspect the Teacher navigation/routes and any Teacher announcement screen or dashboard surface.
+2. Reverify backend-main for Teacher announcement/notification models, authorized routes and read endpoints.
+3. Remove unsupported mock announcement content where no supported contract exists; show an accessible unavailable state.
+4. Preserve existing Teacher layouts/routes and do not add backend functionality.
+5. Update both handoff documents, verify CI and stop.
 
 ## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
 
@@ -253,4 +261,4 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Broad categories still mock-backed include timetable, assignments, results, resources, announcements, academic calendar, departments and dashboard analytics. Admin also needs a dedicated teacher-subject assignment UI; Student duty-proof UI is dependent on backend draft PR #1 being approved/merged/deployed. Most existing pages need API loading/error/empty states and correct data/permission mapping before they can be marked Ready.
 
-Continue with Phase II, Chunk 19 (Student Announcements Capability Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
+Continue with Phase II, Chunk 20 (Teacher Announcements Capability Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.

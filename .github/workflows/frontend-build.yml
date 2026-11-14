@@ -27,6 +27,7 @@ on:
       - "feat/admin-calendar-capability"
       - "feat/teacher-calendar-capability"
       - "feat/student-calendar-capability"
+      - "feat/student-announcements-capability"
   pull_request:
     branches:
       - main
