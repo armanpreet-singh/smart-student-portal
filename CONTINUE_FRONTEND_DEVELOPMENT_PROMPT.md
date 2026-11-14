@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `main`, at Chunk 8 PR #14 merge commit `b028a915973206e9cecea8a08a2ab827445149c1`. Phase II PR #9 merged at `d00fc61b54456b0fb313294c72aecedd62c9bd65`; PR #10 at `a32bfa04d132f2866938b7364eccb426bfb1e519`; PR #11 at `e2bbf343fffd11b714a7ad692e400174c20ee65b`; PR #12 at `2ad3c38118c5b5f250d94f824508c895bd938c9a`; PR #13 at `78a6936ff89bc477f5e0228c56d7d8151c74478d`; PR #14 at `b028a915973206e9cecea8a08a2ab827445149c1`. Phase II PRs #7/#8 and frontend PRs #2–#6 are also merged. No Phase II frontend PR is currently open.
+3. Latest verified `main` at the start of Phase II, Chunk 9 was `d4484cfc4384b024f86ee0f4d9590d59e5bae242`; it includes the Chunk 8 PR #14 merge and a newer handoff-only commit. Chunk 9 development branch: `feat/admin-managed-password-reset` (created from that `main` head). Phase II, Chunk 9 PR #15 is open against `main` and not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/15. Earlier Phase II PRs #7–#14 and frontend PRs #2–#6 are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -51,15 +51,25 @@ The Teacher Attendance component now consumes the shared `useAuth()` Bearer toke
 
 Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`. The original implementation build runs `43429998901` and `43429991685` passed on head `386a37cc5c45e796bfc3ffc5d4b1832ff4576e98`.
 
-## Exact next task — Phase II, Chunk 9
+## Exact next task — Phase II, Chunk 10 (proposed): Admin Teacher-to-Subject Assignment UI
 
-Implement Admin Managed Account Password Reset using backend-main POST `/api/admin/users/:userId/password-reset`:
-1. Add a reset-password action to Student and Teacher directories using shared Bearer-token authentication.
-2. Request body is exactly `{ temporaryPassword: string }`; backend password schema requires at least 12 characters and at most 72 UTF-8 bytes.
-3. Backend sets `mustChangePassword=true` and rejects attempts to reset the actor's own account or a non-managed account with HTTP 404. Handle validation, authorization, not-found and server errors.
-4. Require a clear confirmation and client-side password confirmation; never persist or log temporary passwords.
-5. Keep status changes and teacher-subject assignments outside this password-reset-only slice.
+Implement the missing Admin teacher-subject assignment workflow using backend-main POST `/api/admin/teacher-subject-assignments`:
+1. Reverify the live backend-main route, strict request schema, success response and service constraints before editing.
+2. Add one cohesive Admin assignment workflow using shared Bearer-token authentication and existing LTSU components.
+3. The backend currently expects exactly `{ teacherId, subjectId }`; it only accepts an active TEACHER and an active subject whose parent class is active.
+4. Load choices through existing backend-main teacher-directory and subject-catalogue APIs. Handle loading, empty, validation, authorization, duplicate and server errors.
+5. Keep password reset and account status controls outside this assignment-only slice.
 6. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
+## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
+
+- Verified backend-main `POST /api/admin/users/:userId/password-reset`; its strict body is exactly `{ temporaryPassword }`, password is at least 12 characters and at most 72 UTF-8 bytes, and success sets `mustChangePassword=true`.
+- Added `src/features/admin/api/adminAccountPasswordResetApi.js` with shared Bearer-token authentication, timeout, request/response validation, and handling for validation, authorization, not-found and server failures.
+- Added reusable `AccountPasswordResetControl.jsx` and CSS. It requires explicit confirmation of the selected account and matching client-side password confirmation.
+- Integrated the reset action into Student and Teacher directories. The signed-in Admin's own row is non-actionable; successful reset refreshes the directory and the existing password setup badge.
+- The request body contains only `{ temporaryPassword }`. Temporary passwords are not persisted or logged, and form values are cleared on success or dialog close.
+- Status controls and subject assignment remain outside this chunk. No backend, database, migration, secret or deployment changes were made. No real managed-account mutation was used for testing.
+- Feature branch: `feat/admin-managed-password-reset`, based on live `main` head `d4484cfc4384b024f86ee0f4d9590d59e5bae242`. PR #15 is open and unmerged. GitHub Actions run `43558387098` passed on handoff-updated head `b91accc4a61ebd2ad08626707178b985fde4d0c9` (`npm ci`, `npm run build`).
+
 ## Completed Phase II, Chunk 8 — Admin Managed Account Status Controls
 
 - Branch `feat/admin-account-status-controls`, based on main after PR #13 merge commit `78a6936ff89bc477f5e0228c56d7d8151c74478d`.
