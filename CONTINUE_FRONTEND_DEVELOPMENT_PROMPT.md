@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 10 is `fc24d228a63e61e7e628ab4cab58e959deb01e21`. Current Chunk 11 branch: `feat/admin-class-management`, based on that `main` head. Phase II, Chunk 11 PR #17 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/17. Phase II, Chunk 10 PR #16 and Chunk 9 PR #15 are merged into `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/16 and https://github.com/armanpreet-singh/smart-student-portal/pull/15. Earlier Phase II PRs #7–#14 and frontend PRs #2–#6 are merged.
+3. Latest verified `main` after merging Chunk 11 is `88503fbfb98c7229e6179ba04a45b0ec71c7745a`. Current Chunk 12 branch: `feat/admin-subject-management`, based on that `main` head. Phase II, Chunk 12 PR #18 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/18. Phase II PR #11 PR #17, Chunk 10 PR #16 and Chunk 9 PR #15 are merged into `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/17, https://github.com/armanpreet-singh/smart-student-portal/pull/16 and https://github.com/armanpreet-singh/smart-student-portal/pull/15. Earlier Phase II PRs #7–#14 and frontend PRs #2–#6 are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -76,13 +76,25 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 - Subject Catalogue remains read-only; current subject search/filter/pagination are preserved.
 - No live class mutation or backend/database/migration/secret/deployment change was made. Chunk 9 PR #15 and Chunk 10 PR #16 are merged into `main`.
 
-## Exact next task — Phase II, Chunk 12 (proposed): Admin Subject Management UI
+## Completed Phase II, Chunk 12 — Admin Subject Management UI
 
-1. Reverify backend-main Subject create/update routes, schemas, response projections, unique constraints, parent-Class eligibility and activation/archive rules.
-2. Add Subject create/edit and confirmed archive/reactivation using only backend-supported fields.
-3. Reuse current active-class directory choices, subject class filter, search, pagination and LTSU components.
-4. Handle inactive/not-found parent class, validation, duplicate subject code (409), authorization and server errors; refresh the directory after success.
-5. Keep unsupported credits, semester, department, faculty and assignment metadata out of the UI.
+- Branch: `feat/admin-subject-management`, based on `main` at `88503fbfb98c7229e6179ba04a45b0ec71c7745a`.
+- PR #18: https://github.com/armanpreet-singh/smart-student-portal/pull/18 (open, unmerged).
+- Reverified backend-main APIs: POST `/api/admin/subjects` accepts `{ classId, code, name, description? }` and returns 201; PATCH `/api/admin/subjects/:subjectId` accepts only `code`, `name`, `description`, and/or `isActive` and returns 200.
+- Client validation mirrors the server: code 1–30 characters using letters, numbers, dots, underscores or hyphens (normalized uppercase); name 2–120 characters; nullable description up to 500 characters.
+- Added `adminSubjectManagementApi.js` for authenticated POST/PATCH requests, strict allowed-field validation, subject response validation, timeout handling and 400/401/403/404/409/server/network error handling.
+- Extended `CoursesPage.jsx` and CSS with Add Subject, Edit and confirmed Archive/Reactivate controls. Creation requires an active class; existing parent class is fixed during edits because PATCH does not support `classId`; reactivation is blocked when the parent class is inactive.
+- Successful subject changes refresh the subject directory. New subject creation scopes the result to its returned class. Class Management, subject filters, search and pagination remain in place.
+- Unsupported credits, semester, department, faculty and class reassignment fields are not offered. No live subject mutation or backend/database/migration/secret/deployment change was made.
+- Chunk 11 PR #17 merged into `main` at `88503fbfb98c7229e6179ba04a45b0ec71c7745a`.
+
+## Exact next task — Phase II, Chunk 13 (proposed): Admin Reports & Analytics API Alignment
+
+1. Reverify backend-main Admin attendance report contracts and audit the mock-backed `ReportsPage`.
+2. Remove mock student-growth, department-distribution and course-enrollment metrics where no backend source exists.
+3. Present only report data supported by backend main, reusing the existing aggregate attendance report. Missing/unsupported metrics must not be represented as zero or as real university data.
+4. Reuse existing authenticated report clients and supported filters; preserve the LTSU design system and accessible loading/error/empty states.
+5. Keep new backend endpoints and ungrounded aggregation outside scope.
 6. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 
 ## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
