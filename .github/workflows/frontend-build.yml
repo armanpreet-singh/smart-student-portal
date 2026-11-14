@@ -21,6 +21,7 @@ on:
       - "feat/admin-teacher-subject-assignments"
       - "feat/admin-class-management"
       - "feat/admin-subject-management"
+      - "feat/admin-reports-analytics"
   pull_request:
     branches:
       - main

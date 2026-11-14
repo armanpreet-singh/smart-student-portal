@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 11 is `88503fbfb98c7229e6179ba04a45b0ec71c7745a`. Current Chunk 12 branch: `feat/admin-subject-management`, based on that `main` head. Phase II, Chunk 12 PR #18 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/18. Phase II PR #11 PR #17, Chunk 10 PR #16 and Chunk 9 PR #15 are merged into `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/17, https://github.com/armanpreet-singh/smart-student-portal/pull/16 and https://github.com/armanpreet-singh/smart-student-portal/pull/15. Earlier Phase II PRs #7–#14 and frontend PRs #2–#6 are merged.
+3. Latest verified `main` after merging Chunk 12 PR #18 is `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`. Current Chunk 13 branch: `feat/admin-reports-analytics`, being reconciled onto this main head. Chunk 13 PR #19 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/19. Chunk 12 PR #18 and earlier PRs #7–#17 are merged into `main`.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -79,23 +79,28 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 ## Completed Phase II, Chunk 12 — Admin Subject Management UI
 
 - Branch: `feat/admin-subject-management`, based on `main` at `88503fbfb98c7229e6179ba04a45b0ec71c7745a`.
-- PR #18: https://github.com/armanpreet-singh/smart-student-portal/pull/18 (open, unmerged).
-- Reverified backend-main APIs: POST `/api/admin/subjects` accepts `{ classId, code, name, description? }` and returns 201; PATCH `/api/admin/subjects/:subjectId` accepts only `code`, `name`, `description`, and/or `isActive` and returns 200.
-- Client validation mirrors the server: code 1–30 characters using letters, numbers, dots, underscores or hyphens (normalized uppercase); name 2–120 characters; nullable description up to 500 characters.
-- Added `adminSubjectManagementApi.js` for authenticated POST/PATCH requests, strict allowed-field validation, subject response validation, timeout handling and 400/401/403/404/409/server/network error handling.
-- Extended `CoursesPage.jsx` and CSS with Add Subject, Edit and confirmed Archive/Reactivate controls. Creation requires an active class; existing parent class is fixed during edits because PATCH does not support `classId`; reactivation is blocked when the parent class is inactive.
-- Successful subject changes refresh the subject directory. New subject creation scopes the result to its returned class. Class Management, subject filters, search and pagination remain in place.
-- Unsupported credits, semester, department, faculty and class reassignment fields are not offered. No live subject mutation or backend/database/migration/secret/deployment change was made.
-- Chunk 11 PR #17 merged into `main` at `88503fbfb98c7229e6179ba04a45b0ec71c7745a`.
+- PR #18 merged into `main` at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`. CI runs `43561272705` and `43561269307` both passed (`npm ci`, `npm run build`).
+- Backend-main POST `/api/admin/subjects` accepts `{ classId, code, name, description? }`; PATCH `/api/admin/subjects/:subjectId` accepts `code`, `name`, `description`, and/or `isActive`.
+- Subject create/edit/archive/reactivate UI added. New subjects require an active parent class; existing class association is fixed during edit because PATCH does not support `classId`; reactivation is blocked when the parent class is inactive.
+- Validation/duplicate 409/auth/not-found/server/network/timeout handling included. No live mutation or backend/database/secret/deployment change was made.
 
-## Exact next task — Phase II, Chunk 13 (proposed): Admin Reports & Analytics API Alignment
+## Completed Phase II, Chunk 13 — Admin Reports & Analytics API Alignment
 
-1. Reverify backend-main Admin attendance report contracts and audit the mock-backed `ReportsPage`.
-2. Remove mock student-growth, department-distribution and course-enrollment metrics where no backend source exists.
-3. Present only report data supported by backend main, reusing the existing aggregate attendance report. Missing/unsupported metrics must not be represented as zero or as real university data.
-4. Reuse existing authenticated report clients and supported filters; preserve the LTSU design system and accessible loading/error/empty states.
-5. Keep new backend endpoints and ungrounded aggregation outside scope.
-6. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
+- Branch: `feat/admin-reports-analytics`, being reconciled onto `main` at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d` after PR #18 merged.
+- PR #19 is open, unmerged and awaiting post-rebase CI.
+- Backend-main `GET /api/admin/attendance` provides period, applied filters, overall summary and per-subject summaries. Supported filters: `fromDate`, `toDate`, `classId`, `subjectId`.
+- Supported summary fields: PRESENT, ABSENT, LATE, EXCUSED, `totalRecords`, `eligibleSessions`, `attendedSessions`, nullable `attendancePercentage`. Eligible = PRESENT + ABSENT + LATE; attended = PRESENT + LATE; EXCUSED excluded; zero eligible denominator yields `null`.
+- Reports & Analytics now reuses the authenticated Attendance Overview report component/API, including filters, metrics, status breakdown, subject chart/table and loading/error/empty states.
+- Mock student growth, department distribution, course enrollment and monthly attendance trends are no longer shown as university metrics; the page explicitly notes that the API does not supply them.
+- Original pre-rebase CI runs `43561941727` and `43561937069` passed on original head `535f1124afbe8d95195798a5624592aaa3512357`; fresh combined build is pending. No backend/database/secret/deployment/live report changes were made.
+
+## Exact next task — Phase II, Chunk 14 (proposed): Admin Departments Capability Alignment
+
+1. Reverify backend-main for a Department model, routes, schemas and authorized read API.
+2. Audit the Admin Departments screen and identify static/mock fields.
+3. Do not show department, HOD, student or faculty counts as university data without an authoritative backend source; use an explicit unsupported state instead of fabricated values.
+4. Keep implementation frontend-only unless backend work is explicitly authorized.
+5. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 
 ## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
 
