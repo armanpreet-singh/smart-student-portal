@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 22 PR #28 is `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`. Chunk 21 PR #27 (Teacher Dashboard) merged at `c1484c39871d6ca8e195ffd555a52bb68e4f1569`; Chunk 22 PR #28 (Teacher My Classes) merged after it at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`. Current Chunk 23 branch: `feat/teacher-students-api`, based directly on this `main`; PR #29 is open against `main`. PRs #20 and #21 and PRs #15–#19 and earlier completed Phase II PRs are merged.
+3. Latest verified `main` after merging Chunk 22 PR #28 is `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`. Chunk 21 PR #27 (Teacher Dashboard) merged at `c1484c39871d6ca8e195ffd555a52bb68e4f1569`; Chunk 22 PR #28 (Teacher My Classes) merged at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`. Chunk 23 PR #29 is open against `main` on `feat/teacher-students-api`; Chunk 24 PR #30 (Teacher Assignments) is stacked on PR #29 and open with base `feat/teacher-students-api` on `feat/teacher-assignments-capability`. Merge #29 first, then retarget #30 to `main`. PRs #20 and #21 and PRs #15–#19 and earlier completed Phase II PRs are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -182,12 +182,20 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 - Final handoff-inclusive head `e038948b67bbe5cc685e933c9b38292cceac191e` passed GitHub Actions push run `43577766143` and PR run `43577833858` (`npm ci`, `npm run build`); Cloudflare Pages check `132395773519` passed. A follow-up documentation-only commit records these verified results; source implementation is unchanged.
 - No backend, database, schema, migration, secret or deployment changes. No live Teacher account or academic records were modified.
 
-## Exact next task — Phase II, Chunk 24 (proposed): Teacher Assignments Capability Alignment
+## Completed Phase II, Chunk 24 — Teacher Assignments Capability Alignment
 
-1. Audit the mock Teacher Assignments page against backend-main routes and Prisma models.
-2. No Assignment model or Teacher assignment/submission/grading endpoint is currently present in backend main; replace unsupported sample assignments, submission totals, grading statuses and create action with an accessible capability-unavailable state.
-3. Remove fake filters and inert actions; preserve the Teacher assignments route and shared shell.
-4. Do not add backend functionality or fabricate deadlines, submissions or grades.
+- Branch `feat/teacher-assignments-capability`, stacked on PR #29 / `feat/teacher-students-api` at `00cd0f68574d90816b5349a33c4f7e2544867f2e`; PR #30 is open against that branch: https://github.com/armanpreet-singh/smart-student-portal/pull/30.
+- Backend-main `prisma/schema.prisma` contains User, Class, Subject, TeacherSubject and Attendance; no Assignment/Submission model exists. Teacher routes expose assigned subjects, per-subject roster and attendance marking only; there are no assignment, submission, grading or results endpoints.
+- Replaced fixture-backed Teacher Assignments page with an accessible capability-unavailable state. Removed mock titles, subject/section labels, due dates, submission totals, grading states, completion percentages, fake status filters and inert Create Assignment action.
+- Added working navigation links to Teacher My Classes and Students. Preserved the existing Teacher assignments route and shared shell; added responsive `TeacherAssignments.css`.
+- Updated GitHub Actions filters for the feature branch and stacked PR base. No backend, database, schema, migration, secret or deployment changes. No live Teacher account or academic records were modified. CI verification will be documented after completion.
+
+## Exact next task — Phase II, Chunk 25 (proposed): Teacher Timetable Capability Alignment
+
+1. Audit the mock Teacher Weekly Timetable page against backend-main Prisma models and routes.
+2. Backend main has no timetable/schedule model or Teacher timetable endpoint; replace sample weekday sessions, times, rooms and lecture/lab labels with an accessible capability-unavailable state.
+3. Remove static timetable fixtures from the page and inert schedule actions; preserve the Teacher timetable route and shared shell.
+4. Do not infer lecture times, rooms, days or attendance from subject assignments.
 5. Update both handoff documents, verify CI and stop.
 
 ## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
@@ -302,4 +310,4 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Broad categories still mock-backed include timetable, assignments, results, resources, announcements, academic calendar, departments and dashboard analytics. Admin also needs a dedicated teacher-subject assignment UI; Student duty-proof UI is dependent on backend draft PR #1 being approved/merged/deployed. Most existing pages need API loading/error/empty states and correct data/permission mapping before they can be marked Ready.
 
-Continue with Phase II, Chunk 24 (Teacher Assignments Capability Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
+Continue with Phase II, Chunk 25 (Teacher Timetable Capability Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
