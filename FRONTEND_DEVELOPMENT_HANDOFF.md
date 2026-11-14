@@ -819,7 +819,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Added subject and roster loading states, API error/retry states, empty assigned-subject and empty-roster states, plus a no-search-match state.
 - Added responsive `src/features/teacher/pages/TeacherStudents.css`; preserved the existing `/teacher/students` route and shared Teacher shell. Added `feat/teacher-students-api` to the frontend build workflow push filters.
 - No backend, database, schema, migration, secret or deployment changes were made. No live Teacher account or academic records were modified.
-- Implementation commit: `cd67d541e50294c6fe62b9ab0457d85f7d932c04`. CI results will be recorded after final handoff update and verification.
+- Implementation commit: `cd67d541e50294c6fe62b9ab0457d85f7d932c04`; final handoff-inclusive head `e038948b67bbe5cc685e933c9b38292cceac191e` passed GitHub Actions push run `43577766143` and PR run `43577833858`, each including `npm ci` and `npm run build`. Cloudflare Pages check `132395773519` also passed. The follow-up documentation-only commit records these verified results; source implementation is unchanged.
 
 ## Exact next frontend task — Phase II, Chunk 24 (proposed): Teacher Assignments Capability Alignment
 
