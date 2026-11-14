@@ -852,7 +852,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Added responsive `src/features/teacher/pages/TeacherResources.css`; preserved the existing `/teacher/resources` route and shared Teacher shell/components.
 - Added `feat/teacher-resources-capability` to GitHub Actions push filters. Frontend only; no backend, database, schema, migration, storage, secret, deployment or live academic record changes.
 - PR #33: https://github.com/armanpreet-singh/smart-student-portal/pull/33 is open against `main`.
-- GitHub Actions push build run `43583068296` passed on the handoff-inclusive head `b2d92112d0b82cf50ecc28ac1b4ea888334ef7c5` (`npm ci`, `npm run build`). An earlier overlapping build on commit `2c49b45a1929cf9ba7bb89955270404d3127371f` failed because the page referenced `TeacherResources.css` before its creation commit had landed; the subsequent complete-tree build passed. PR-targeted verification for #33 is pending.
+- GitHub Actions push build run `43583068296` passed on the handoff-inclusive head `b2d92112d0b82cf50ecc28ac1b4ea888334ef7c5` (`npm ci`, `npm run build`). An earlier overlapping build on commit `2c49b45a1929cf9ba7bb89955270404d3127371f` failed because the page referenced `TeacherResources.css` before its creation commit had landed; the subsequent complete-tree build passed. PR #33 head `8fc33de2be63e2abbea4056e1e438fd8e59c5c47` passed push build run `43583245784` and main-target PR build run `43583249857`; both completed `npm ci` and `npm run build` successfully. The follow-up handoff metadata commit does not change source implementation.
 
 ## Exact next frontend task — Phase II, Chunk 27 (proposed): Teacher Profile Capability Alignment
 
