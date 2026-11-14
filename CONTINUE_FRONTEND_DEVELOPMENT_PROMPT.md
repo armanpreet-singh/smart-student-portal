@@ -338,7 +338,7 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - Removed the decorative upload/dropzone UI because no file upload contract or storage endpoint exists.
 - Added responsive `TeacherResources.css`; preserved the `/teacher/resources` route and shared Teacher shell.
 - PR #33 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/33.
-- GitHub Actions push build run `43583068296` passed on head `b2d92112d0b82cf50ecc28ac1b4ea888334ef7c5`, including `npm ci` and `npm run build`. An earlier overlapping build failed because the stylesheet commit had not yet landed; the final complete-tree build passed. PR-targeted check is pending.
+- GitHub Actions push build run `43583068296` passed on head `b2d92112d0b82cf50ecc28ac1b4ea888334ef7c5`, including `npm ci` and `npm run build`. An earlier overlapping build failed because the stylesheet commit had not yet landed; the final complete-tree build passed. PR #33 head `8fc33de2be63e2abbea4056e1e438fd8e59c5c47` passed push build run `43583245784` and main-target PR build run `43583249857`; both ran `npm ci` and `npm run build` successfully. The final documentation-only update does not alter source.
 - Frontend-only; no backend/database/storage/deployment changes.
 
 Continue with Phase II, Chunk 27 (Teacher Profile Capability Alignment) as specified above. Verify backend-main contracts, finish one chunk, update both handoff files, verify CI and stop.
