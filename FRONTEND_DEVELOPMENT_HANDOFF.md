@@ -830,7 +830,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Removed fake status filters and the inert Create Assignment button. Added working links to existing My Classes and Students pages.
 - Added responsive `src/features/teacher/pages/TeacherAssignments.css`; preserved existing `/teacher/assignments` route and shared Teacher shell. Added `feat/teacher-assignments-capability` to GitHub Actions push filters and `feat/teacher-students-api` to pull-request base filters for this stacked PR.
 - No backend, database, schema, migration, secret or deployment changes were made. No live Teacher account or academic records were modified.
-- Implementation commit: `78a88a2504702f123312d96c4850b6fc581cdbd7`. CI results will be recorded after final handoff update and verification.
+- Implementation commit: `78a88a2504702f123312d96c4850b6fc581cdbd7`; implementation-plus-handoff head `5a779eb67e41bbe0071bf601bf5730953e1b061f` passed GitHub Actions push run `43579617820` (`npm ci`, `npm run build`) and Cloudflare Pages check `132401455069`. GitHub did not schedule a PR-triggered run for this stacked base branch; after PR #29 merges and PR #30 is retargeted to `main`, the PR-targeted build can run. The subsequent follow-up commit only updates these handoff records; source is unchanged.
 
 ## Exact next frontend task — Phase II, Chunk 25 (proposed): Teacher Timetable Capability Alignment
 
