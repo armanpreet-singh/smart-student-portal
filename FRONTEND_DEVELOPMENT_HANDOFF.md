@@ -904,7 +904,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Added current/new/confirm password fields, visibility controls, byte/length/difference validation, submitting/error/success states, mapped server field errors, post-change `refreshCurrentUser()` verification and session logout on 401. Confirmation is client-only; no password is persisted or logged.
 - Added a retry action for unavailable session verification, an accessible notice for unsupported profile preferences and responsive `src/features/dashboard/pages/StudentSettings.css`; preserved `/dashboard/settings`, shared Student shell and theme.
 - Original stacked PR #40 was closed without merge. Clean replacement PR #41 contains only Student Settings plus handoff/CI updates and targets `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/41. It can merge independently of PR #39.
-- Final handoff-inclusive head and successful main-target CI run IDs will be recorded after the build completes.
+- Pre-documentation main-target head `3d3bb67bd197f7da975b750c6272a09c99a9afcf` passed GitHub Actions build run `43592220051` (`npm ci`, `npm run build`); verify the final docs-only head as the release snapshot.
 - Frontend only. No backend, database, schema, migration, secret, deployment, credential or live account changes.
 
 ## Next frontend work
