@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/teacher-resources-capability`
-Current pull request: Phase II, Chunk 26 Teacher Learning Resources Capability Alignment PR #33 is open against `main` from `feat/teacher-resources-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/33. PR #31 (Teacher Assignments catch-up) merged into `main` at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 (Teacher Timetable) merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`. PR #29 (Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30's initial merge was into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, with its changes subsequently brought to `main` through PR #31.
+Development branch: `feat/teacher-profile-capability`
+Phase II, Chunk 26 Teacher Learning Resources PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. Phase II, Chunk 27 Teacher Profile replacement PR #35 is open against `main` from `feat/teacher-profile-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/35. Earlier stacked PR #34 was closed without merge during a clean rebase after PR #33's squash merge. PR #31 (Teacher Assignments catch-up) merged into `main` at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 (Teacher Timetable) merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`. PR #29 (Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30's initial merge was into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, with its changes subsequently brought to `main` through PR #31.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit after Chunk 25 / PR #32 merge: `06c7846d09585d3d11ef17529116a8e799308665`. It includes PR #29 Teacher Students, PR #31's catch-up of Chunk 24 Teacher Assignments and PR #32 Teacher Timetable. PR #31 merged at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 merged at `06c7846d09585d3d11ef17529116a8e799308665`.
+Latest verified `main` commit after Chunk 26 / PR #33 merge: `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. It includes PR #29 Teacher Students, PR #31 Teacher Assignments catch-up, PR #32 Teacher Timetable and PR #33 Teacher Learning Resources.
 
 ## Working scope and rules
 
@@ -86,7 +86,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Teacher | Timetable | Accessible capability-unavailable state; no mock weekday sessions, lecture times, rooms or lecture/lab labels are displayed. | **Not supported by backend main** — no timetable/schedule/session model or Teacher timetable endpoint exists. | Backend timetable/session model and authorized Teacher read endpoint required. |
 | Teacher | Learning Resources | Accessible capability-unavailable state; no sample resource cards or upload/dropzone controls are displayed. | **Not supported by backend main** — no Resource/learning-material model or Teacher resource listing/upload endpoint exists. | Backend resource metadata, file storage/access, sharing scope and authorized Teacher list/upload contracts required. |
 | Teacher | Academic Calendar | Accessible capability-unavailable state; no sample events are displayed. | **Not supported by backend main** — no calendar/event model or Teacher calendar route. | Backend event/calendar model, authorized Teacher read API and date/time-zone semantics required. |
-| Teacher | Profile | Hardcoded employee ID, contact details, experience and specialization. | **Needs improvement** — `/api/auth/me` supplies only basic account identity/role/class fields. | Bind known account fields and specify any additional staff profile model/contract before displaying values as authoritative. |
+| Teacher | Profile | Uses verified `AuthContext` account name, username, nullable email, role and account-created date; unsupported staff details are explicitly marked unavailable. The Teacher topbar dropdown uses the same authenticated identity and no longer displays the mock avatar/employee details. | **Aligned to backend main `GET /api/auth/me`** — returns public user identity fields; no Teacher staff-profile read/update endpoint exists. | Add employee ID, department, designation, phone, office location and professional details only after an authoritative staff-profile contract exists. Teacher Settings remains a separate incomplete workflow. |
 | Teacher | Settings | Form submits to console.log. | **Needs improvement** — backend password-change route exists; profile/system settings mutations do not. | Implement password change using API; separate unsupported preferences from account data. |
 | Admin | Dashboard Home | Static institutional totals/insights and quick-action cards. | **Needs improvement** — no aggregate dashboard endpoint exists. | Use current admin endpoints for actual counts and avoid unverified institutional metrics. |
 | Admin | Student Directory | Uses backend-main paginated `GET /api/admin/users?role=STUDENT`; supports search/status filters/pagination, create-only provisioning and confirmed active/inactive status changes through the managed-user API. | **Needs improvement** — read/create/status UI integration is implemented; validate with a provisioned Admin account and real Student accounts. | Verify real account creation and status changes including own-account protection. Password reset remains separate; backend exposes no rollNumber. |
@@ -851,14 +851,24 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Removed the inert upload/dropzone affordance; the page no longer implies that files can be selected, uploaded, stored, shared or assigned.
 - Added responsive `src/features/teacher/pages/TeacherResources.css`; preserved the existing `/teacher/resources` route and shared Teacher shell/components.
 - Added `feat/teacher-resources-capability` to GitHub Actions push filters. Frontend only; no backend, database, schema, migration, storage, secret, deployment or live academic record changes.
-- PR #33: https://github.com/armanpreet-singh/smart-student-portal/pull/33 is open against `main`.
-- GitHub Actions push build run `43583068296` passed on the handoff-inclusive head `b2d92112d0b82cf50ecc28ac1b4ea888334ef7c5` (`npm ci`, `npm run build`). An earlier overlapping build on commit `2c49b45a1929cf9ba7bb89955270404d3127371f` failed because the page referenced `TeacherResources.css` before its creation commit had landed; the subsequent complete-tree build passed. PR #33 head `8fc33de2be63e2abbea4056e1e438fd8e59c5c47` passed push build run `43583245784` and main-target PR build run `43583249857`; both completed `npm ci` and `npm run build` successfully. The follow-up handoff metadata commit does not change source implementation.
+- PR #33: https://github.com/armanpreet-singh/smart-student-portal/pull/33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`.
+- GitHub Actions push build run `43583068296` passed on the handoff-inclusive head `b2d92112d0b82cf50ecc28ac1b4ea888334ef7c5` (`npm ci`, `npm run build`). An earlier overlapping build on commit `2c49b45a1929cf9ba7bb89955270404d3127371f` failed because the page referenced `TeacherResources.css` before its creation commit had landed; the subsequent complete-tree build passed. PR #33 final head `6648336cb4e8dc3ad66f544d1c89f4ee399103dd` passed main-target PR build run `43583349413` (`npm ci`, `npm run build`); PR #33 then merged successfully. The follow-up handoff metadata commit does not change source implementation.
 
-## Exact next frontend task — Phase II, Chunk 27 (proposed): Teacher Profile Capability Alignment
+## Completed frontend chunk — Phase II, Chunk 27: Teacher Profile Capability Alignment
 
-1. Audit Teacher Profile fields and actions against backend-main `GET /api/auth/me` and any supported profile endpoints.
-2. Remove fabricated employee ID, department, designation, experience, phone and other unsupported profile values or mutations.
-3. Display only verified authenticated account fields; use an accessible notice for unsupported staff profile data.
-4. Preserve the Teacher Profile route, shared shell, theme and responsive behavior.
+- Backend main `GET /api/auth/me` returns public User fields: id, fullName, username, nullable email, role, classId, mustChangePassword, createdAt and updatedAt; no employee ID, department, designation, phone, office, experience or specialization. No Teacher staff-profile endpoint exists.
+- Replaced mock Teacher Profile information with authenticated `useAuth()` values; added an accessible staff-details-unavailable notice.
+- Updated Teacher topbar dropdown to use authenticated full name, username and email rather than mock faculty data and an unsourced portrait.
+- Added responsive `TeacherProfile.css`; preserved `/teacher/profile`, Teacher shell and theme. Settings was intentionally left for the next chunk.
+- Earlier stacked PR #34 was closed without merge after PR #33's squash merge made its original branch unmergeable. The branch was reset to the merged `main` and a clean replacement PR #35 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/35. Its six-file diff contains only the Profile UI, topbar, CI filter and handoff changes; no duplicate Resources changes.
+- GitHub Actions push build run `43585487245` passed on the Profile implementation/handoff snapshot `5fc0653b7e6ca5981c6e58eb13ef4cb5be4ee208` (`npm ci`, `npm run build`). The final documentation refresh is source-neutral; the clean main-target PR #35 build runs on its updated head.
+- Frontend-only; no backend, database, migration, secret, deployment, account or academic-record changes.
+
+## Exact next frontend task — Phase II, Chunk 28 (proposed): Teacher Settings Capability Alignment
+
+1. Audit Teacher Settings against backend-main `POST /api/auth/change-password` and `GET /api/auth/me`.
+2. Remove the fabricated Display Name, Official Email and Phone inputs and the console-only Save Changes action; no account-profile update endpoint exists.
+3. Integrate the supported authenticated password-change flow using the existing API helper, with current/new password validation, loading, success and failure states.
+4. Keep non-password profile preferences unavailable rather than editable; preserve `/teacher/settings`, theme and responsive shell.
 5. Update both handoff documents, verify CI and stop.
 

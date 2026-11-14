@@ -37,6 +37,7 @@ on:
       - "feat/teacher-assignments-capability"
       - "feat/teacher-timetable-capability"
       - "feat/teacher-resources-capability"
+      - "feat/teacher-profile-capability"
   pull_request:
     branches:
       - main

@@ -21,13 +21,12 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboardTheme } from "../../../../features/dashboard/hooks/useDashboardTheme";
 import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySubmenu';
-import { teacherData } from "../../data/mockTeacherData";
 import { useAuth } from "../../../auth/context/AuthContext";
 
 const TeacherTopbar = memo(({ onMenuClick }) => {
   const location = useLocation();
   const { isDark, toggleTheme } = useDashboardTheme();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -120,7 +119,7 @@ const TeacherTopbar = memo(({ onMenuClick }) => {
             aria-expanded={isDropdownOpen}
             aria-label="User Menu"
           >
-            <img src={teacherData.avatar} alt="User" />
+            <User size={19} aria-hidden="true" />
           </button>
 
           <AnimatePresence>
@@ -134,16 +133,28 @@ const TeacherTopbar = memo(({ onMenuClick }) => {
                 role="menu"
               >
                 <div className="d-dropdown-header">
-                  <img
-                    src={teacherData.avatar}
-                    alt="Avatar"
+                  <div
                     className="d-dropdown-avatar"
-                  />
+                    aria-hidden="true"
+                    style={{
+                      display: "grid",
+                      placeItems: "center",
+                      color: "var(--d-primary)",
+                      background: "var(--d-surface)",
+                    }}
+                  >
+                    <User size={22} />
+                  </div>
                   <div className="d-dropdown-user-info">
-                    <p className="d-dropdown-name">{teacherData.name}</p>
-                    <p className="d-dropdown-sub">{teacherData.employeeId}</p>
-                    <p className="d-dropdown-sub">{teacherData.department}</p>
-                    <p className="d-dropdown-sub">{teacherData.designation}</p>
+                    <p className="d-dropdown-name">
+                      {user?.fullName || "Teacher account"}
+                    </p>
+                    {user?.username && (
+                      <p className="d-dropdown-sub">@{user.username}</p>
+                    )}
+                    {user?.email && (
+                      <p className="d-dropdown-sub">{user.email}</p>
+                    )}
                   </div>
                 </div>
                 <div className="d-dropdown-divider"></div>
