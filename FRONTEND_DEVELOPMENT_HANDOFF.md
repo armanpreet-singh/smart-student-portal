@@ -843,7 +843,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Added `feat/teacher-timetable-capability` to GitHub Actions push filters and `feat/teacher-students-api` to pull-request base filters so the stacked PR can run CI.
 - Frontend only. No backend, database, schema, migration, secret, deployment, Teacher account or academic record changes were made.
 - PR #32 is open against `feat/teacher-students-api` at head `5d75aeaba183c7d44dcb52af103380b938d6c585`; after PR #31 merges, retarget #32 to `main`.
-- GitHub Actions push build run `43581945224` passed on the exact handoff-inclusive head. The PR-specific check is pending.
+- GitHub Actions push build run `43582171318` passed on the current PR head `aaaef97d24f63bbdf53914589e456fa314e4a0f2`, including `npm ci` and `npm run build`. GitHub did not schedule a separate pull-request event while PR #32 targets a feature branch; retargeting to `main` after PR #31 merges will enable the main-target PR check.
 
 ## Exact next frontend task — Phase II, Chunk 26 (proposed): Teacher Learning Resources Capability Alignment
 
