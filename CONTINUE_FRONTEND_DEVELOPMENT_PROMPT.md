@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 13 PR #19 is `641540bbd547eb6b295f746c4048be542651ce5e`. Current Chunk 15 branch: `feat/admin-announcements-capability`, stacked on PR #20 branch `feat/admin-departments-capability`. PR #20 (Chunk 14, Departments) is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/20. PR #21 (Chunk 15, Announcements) is open with PR #20's branch as its base, so merge #20 first and then retarget #21 to `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/21. PRs #15–#19 and earlier completed Phase II PRs are merged.
+3. Latest verified `main` after merging Chunk 15 PR #21 is `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`. Current Chunk 16 branch: `feat/admin-calendar-capability`, based directly on that `main` head. PR #20 (Chunk 14, Departments) merged at `010e99ef2474f5f63e1dfeda0b383e4b4ec159d4`; PR #21 (Chunk 15, Announcements) merged at `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`. PRs #15–#19 and earlier completed Phase II PRs are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -93,26 +93,35 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 ## Completed Phase II, Chunk 14 — Admin Departments Capability Alignment
 
-- Branch `feat/admin-departments-capability`, based on `main` at `641540bbd547eb6b295f746c4048be542651ce5e`; PR #20 remains open and unmerged.
+- Branch `feat/admin-departments-capability`, based on main at `641540bbd547eb6b295f746c4048be542651ce5e`; PR #20 merged at `010e99ef2474f5f63e1dfeda0b383e4b4ec159d4`.
 - Backend-main has no Department model, department fields, Admin read route, service or validation schema.
 - Replaced hard-coded department/HOD/student/faculty cards with an accessible capability-unavailable notice. No mock department fixture import remains in DepartmentsPage.
-- GitHub Actions PR run `43563316264` and push run `43563311740` passed on PR #20 head `467c58aee195f7a32460589783e15bd62afc97d6`.
+- GitHub Actions PR run `43563316264` and push run `43563311740` passed on PR #20 head `467c58aee195f7a32460589783e15bd62afc97d6`; post-merge main build `43566113320` passed.
 - No backend, database, schema, migration, secret, deployment or live data change.
 
 ## Completed Phase II, Chunk 15 — Admin Announcements Capability Alignment
 
-- Branch `feat/admin-announcements-capability`, stacked on PR #20 / `feat/admin-departments-capability` at `467c58aee195f7a32460589783e15bd62afc97d6`; PR #21 is open and unmerged against that base. Merge #20 first, then retarget #21 to `main`.
+- Branch `feat/admin-announcements-capability`; PR #21 merged into main at `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`.
 - Backend-main has no Announcement/Notification Prisma model, and no Admin, Student or Teacher announcement/notification routes.
 - Replaced two hard-coded sample messages and the inert New Announcement button with an accessible capability-unavailable notice. Fake audience, sent/scheduled status and sample announcement content are removed.
-- Added responsive styling and GitHub Actions workflow trigger. Push run `43564993391` passed on stacked code head `78c6d53f674e16d3c06419094fc2bdff25cf7c11` (`npm ci`, `npm run build`). A PR-target build will run after PR #20 merges and #21 is retargeted to `main`.
+- Added responsive styling and GitHub Actions workflow trigger. Push run `43565264008` passed on final head `f92835bead0cd0d689df5c4f196fc46a6aa591cd`; final head `build` and Cloudflare Pages checks passed. Post-merge main build `43566205135` passed.
 
-## Exact next task — Phase II, Chunk 16 (proposed): Admin Academic Calendar Capability Alignment
+## Completed Phase II, Chunk 16 — Admin Academic Calendar Capability Alignment
 
-1. Reverify backend-main for an Academic Calendar/Event model, authorized Admin routes, schemas and supported read/write operations.
-2. Audit the Admin Calendar page for hard-coded sample events, dates or inert event-management controls.
-3. Do not present sample events as the university calendar or imply unsupported publish/management controls are functional.
-4. If no API exists, replace mock content with a clear unavailable state; do not add backend functionality.
-5. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
+- Branch `feat/admin-calendar-capability`, based on main at `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`; PR #22 is open against `main`.
+- Backend-main has no Calendar/AcademicCalendar/Event Prisma model and no calendar/event endpoints in Admin, Student or Teacher route files; Admin academic services and validators expose no event contract.
+- Removed the two hard-coded 2023 events (“University Convocation” and “Diwali Holidays Begin”) from Admin Calendar. The page now displays an accessible capability-unavailable notice and does not imply that sample dates are official or manageable.
+- Added responsive `CalendarPage.css`; preserved the existing Admin `/calendar` route, shared dashboard components and layout.
+- Source read-back covered the Admin Calendar page, stylesheet, workflow and both handoff files. GitHub Actions push run `43566860529` and PR run `43566938543` both completed successfully on implementation head `c427cc3bb51e3fd1c607b7e3adae8a7c92e1981d`; both ran `npm ci` and `npm run build`. The matching Cloudflare Pages check also completed successfully.
+- No backend, database, schema, migration, secret, deployment or live calendar changes were made.
+
+## Exact next task — Phase II, Chunk 17 (proposed): Teacher Academic Calendar Capability Alignment
+
+1. Reverify backend-main for calendar/event models and Teacher calendar endpoints.
+2. Audit the Teacher Calendar screen for fixed sample events or unsupported event claims.
+3. If no supported endpoint exists, replace sample calendar data with an accessible capability-unavailable state.
+4. Preserve the existing Teacher layout and route; do not add backend functionality.
+5. Build, update both handoff documents, verify CI and stop.
 
 ## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
 
@@ -226,4 +235,4 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Broad categories still mock-backed include timetable, assignments, results, resources, announcements, academic calendar, departments and dashboard analytics. Admin also needs a dedicated teacher-subject assignment UI; Student duty-proof UI is dependent on backend draft PR #1 being approved/merged/deployed. Most existing pages need API loading/error/empty states and correct data/permission mapping before they can be marked Ready.
 
-Continue with Phase II, Chunk 2 (Admin Attendance Overview) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
+Continue with Phase II, Chunk 17 (Teacher Academic Calendar Capability Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
