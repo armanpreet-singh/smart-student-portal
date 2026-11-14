@@ -611,7 +611,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 
 - Branch: `feat/admin-account-status-controls`, based on `main` after PR #13 merge commit `78a6936ff89bc477f5e0228c56d7d8151c74478d`.
 - PR #14: https://github.com/armanpreet-singh/smart-student-portal/pull/14 — open against `main`; PRs #11–#13 are already merged.
-- GitHub Actions build run `43556552509` passed on implementation/handoff head `94fb910a4ec2d42e1ab0b08a1f98e28aea798c88` (`npm ci` and `npm run build`). A final check will run after this PR-metadata update.
+- GitHub Actions builds `43556779435` and `43556782854` both passed on final PR head `1205fb134e7122966081df331c7f774c564d335c` (`npm ci` and `npm run build`). Cloudflare Pages preview also deployed successfully: https://feat-admin-account-status-co.smart-student-portal.pages.dev.
 - No lint/unit-test scripts or live Admin status-change tests are configured.
 ## Known issues and integration gaps
 

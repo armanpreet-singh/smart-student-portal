@@ -69,7 +69,7 @@ Implement Admin Managed Account Password Reset using backend-main POST `/api/adm
 - The current Admin's own row shows a non-actionable `Your account` state; backend self-change guard remains authoritative and returns 404.
 - The backend status schema only permits the boolean `isActive`; the service limits changes to managed STUDENT/TEACHER roles. Password reset and subject assignment are outside this chunk.
 - PR #14: https://github.com/armanpreet-singh/smart-student-portal/pull/14 is open against `main`. No Admin credentials used for live status-change testing.
-- GitHub Actions build run `43556552509` passed on implementation/handoff head `94fb910a4ec2d42e1ab0b08a1f98e28aea798c88`; a final check will run after this PR-metadata update.
+- GitHub Actions builds `43556779435` and `43556782854` passed on final PR head `1205fb134e7122966081df331c7f774c564d335c`. Cloudflare Pages preview deployed successfully: https://feat-admin-account-status-co.smart-student-portal.pages.dev.
 ## Completed Phase II, Chunk 7 — Admin Teacher Account Provisioning (create-only)
 
 - Branch `feat/admin-teacher-provisioning`, based on main after PR #12 merge commit `2ad3c38118c5b5f250d94f824508c895bd938c9a`.
