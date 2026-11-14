@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 15 PR #21 is `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`. Chunk 16 PR #22 (Admin Academic Calendar) is open against `main` on branch `feat/admin-calendar-capability`. Chunk 17 PR #23 (Teacher Academic Calendar) is open against PR #22's branch `feat/admin-calendar-capability`. Current Chunk 18 branch: `feat/student-calendar-capability`, stacked on PR #23's branch `feat/teacher-calendar-capability`; PR #24 targets that branch and must be merged after PR #22 and PR #23 are merged and retargeted to `main`. PRs #20 and #21 and PRs #15–#19 and earlier completed Phase II PRs are merged.
+3. Latest verified `main` after merging Chunk 18 PR #24 is `fb64e04b0f3f4e58e327767189f5d9430306d020`. Chunk 16 PR #22 (Admin Academic Calendar) merged at `8aa276de681933f102c58062f8616db9869a080b`; Chunk 17 PR #23 (Teacher Academic Calendar) merged at `ef599232f5eef8e4c5f107778627180bd0767c33`; Chunk 18 PR #24 (Student Academic Calendar) merged at `fb64e04b0f3f4e58e327767189f5d9430306d020`. Current Chunk 19 branch: `feat/student-announcements-capability`; PR #25 is open directly against `main`. PRs #20 and #21 and PRs #15–#19 and earlier completed Phase II PRs are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -125,132 +125,26 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 ## Completed Phase II, Chunk 18 — Student Academic Calendar Capability Alignment
 
-- Branch `feat/student-calendar-capability`, stacked on PR #23 branch `feat/teacher-calendar-capability` at `ce23c20ee277bc3ccc21859ce0513a60d2cf164b`. PR #24 is open against that feature branch; merge PR #22, then PR #23, before retargeting PR #24 to `main`.
+- Branch `feat/student-calendar-capability`, originally stacked on PR #23; PR #24 merged into `main` at `fb64e04b0f3f4e58e327767189f5d9430306d020`.
 - Backend-main has no Calendar/AcademicCalendar/Event Prisma model or Student calendar route. The Student router exposes only its authenticated attendance read endpoint.
 - Removed the four hard-coded 2023 Student Calendar records (DBMS Mid-Sem, Tech Fest, CN Lab Viva and OS Mid-Sem) by replacing the page with an accessible capability-unavailable notice. The page no longer imports `calendarData`; shared `mockDashboardData.js` remains unchanged for other mock-backed dashboard screens.
 - Added responsive `CalendarPage.css`; preserved the Student `/dashboard/calendar` route, page heading and shared dashboard layout.
 - Source read-back covered the Student Calendar page, stylesheet, workflow and both handoff files. GitHub Actions push run `43568955517` completed successfully on implementation head `1bd74d37e695027408ae1b45e97151f596301c72`; `npm ci` and `npm run build` passed. The matching Cloudflare Pages check `132369006051` also completed successfully. The PR-specific build is not triggered while PR #24 targets a feature branch; it will run after the stack is retargeted to `main`.
 - No backend, database, schema, migration, secret, deployment or live calendar changes were made.
 
-## Exact next task — Phase II, Chunk 19 (proposed): Student Announcements Capability Alignment
+## Completed Phase II, Chunk 19 — Student Announcements Capability Alignment
 
-1. Reverify backend-main for Student announcement/notification models, authorized routes and read endpoints.
-2. Audit the Student Announcements page for fixed sample messages, audience or timestamps.
-3. If no supported Student announcements endpoint exists, replace sample content with an accessible capability-unavailable state.
-4. Preserve the existing Student layout and route; do not add backend functionality.
-5. Build, update both handoff documents, verify CI and stop.
+- Branch `feat/student-announcements-capability`, based directly on `main` at `fb64e04b0f3f4e58e327767189f5d9430306d020`; PR #25 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/25.
+- Backend-main has no Announcement/Notification Prisma model, no Student announcement read endpoint, no announcement routes in Admin or Teacher routers, and no separate notification router mounted by `src/app.js`.
+- Removed the three hard-coded Student announcement samples (exam schedule, Tech Fest registrations and library timing changes), their relative timestamps and category labels. The page now shows an accessible capability-unavailable state and no longer imports `announcementsData`.
+- Added responsive `AnnouncementsPage.css`; preserved the existing Student route and shared dashboard layout. Shared `mockDashboardData.js` remains unchanged for other screens.
+- Implementation commit `75729955689c7f3e6f3f2921a54285704ba39713` passed GitHub Actions push run `43570280493` and PR run `43570326248` (`npm ci`, `npm run build`); Cloudflare Pages check `132373055575` passed.
+- No backend, database, schema, migration, secret or deployment changes were made.
 
+## Exact next task — Phase II, Chunk 20 (proposed): Teacher Announcements Capability Alignment
 
-## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
-
-- Verified backend-main `POST /api/admin/users/:userId/password-reset`; its strict body is exactly `{ temporaryPassword }`, password is at least 12 characters and at most 72 UTF-8 bytes, and success sets `mustChangePassword=true`.
-- Added `src/features/admin/api/adminAccountPasswordResetApi.js` with shared Bearer-token authentication, timeout, request/response validation, and handling for validation, authorization, not-found and server failures.
-- Added reusable `AccountPasswordResetControl.jsx` and CSS. It requires explicit confirmation of the selected account and matching client-side password confirmation.
-- Integrated the reset action into Student and Teacher directories. The signed-in Admin's own row is non-actionable; successful reset refreshes the directory and the existing password setup badge.
-- The request body contains only `{ temporaryPassword }`. Temporary passwords are not persisted or logged, and form values are cleared on success or dialog close.
-- Status controls and subject assignment remain outside this chunk. No backend, database, migration, secret or deployment changes were made. No real managed-account mutation was used for testing.
-- Feature branch: `feat/admin-managed-password-reset`, based on live `main` head `d4484cfc4384b024f86ee0f4d9590d59e5bae242`. PR #15 merged into `main` at `3a8f7fc6fcae978922b628ee9e23349c166998ed`. GitHub Actions run `43558501510` passed on final PR head `7ec7110ce7dd7dedef578d377adfb4eb8f4ba78d` (`npm ci`, `npm run build`).
-
-## Completed Phase II, Chunk 8 — Admin Managed Account Status Controls
-
-- Branch `feat/admin-account-status-controls`, based on main after PR #13 merge commit `78a6936ff89bc477f5e0228c56d7d8151c74478d`.
-- Added `src/features/admin/api/adminAccountStatusApi.js` for PATCH `/api/admin/users/:userId/status`, sending exactly `{ isActive }`, with Bearer authentication, timeout, response validation and error handling.
-- Added reusable `AccountStatusControl.jsx` and CSS with Active/Inactive state, Activate/Deactivate actions and explicit confirmation.
-- Integrated controls in both Student and Teacher directories. Successful changes refresh the server-backed directory.
-- The current Admin's own row shows a non-actionable `Your account` state; backend self-change guard remains authoritative and returns 404.
-- The backend status schema only permits the boolean `isActive`; the service limits changes to managed STUDENT/TEACHER roles. Password reset and subject assignment are outside this chunk.
-- PR #14: https://github.com/armanpreet-singh/smart-student-portal/pull/14 merged into `main` at `b028a915973206e9cecea8a08a2ab827445149c1`. No Admin credentials used for live status-change testing.
-- GitHub Actions builds `43556779435` and `43556782854` passed on final PR head `1205fb134e7122966081df331c7f774c564d335c`; Cloudflare Pages preview also deployed successfully: https://feat-admin-account-status-co.smart-student-portal.pages.dev.
-## Completed Phase II, Chunk 7 — Admin Teacher Account Provisioning (create-only)
-
-- Branch `feat/admin-teacher-provisioning`, based on main after PR #12 merge commit `2ad3c38118c5b5f250d94f824508c895bd938c9a`.
-- Added `src/features/admin/api/adminTeacherProvisioningApi.js` with POST `/api/admin/users`, shared Bearer-token auth, timeout, backend-aligned name/username/email/password validation, response validation and duplicate-account handling.
-- Added Add Teacher action and create-only dialog to Teacher Directory: full name, username, optional email, temporary password and client-only confirmation.
-- Request sends `role=TEACHER`, normalized username and optional email. It deliberately omits `classId` because backend strict schema rejects teacher class assignment.
-- Handles validation and duplicate-account 409 errors. Success confirms account is active and must change its temporary password, clears password fields and refreshes the directory.
-- Temporary password is sent only in the POST body, never browser storage or logs. Teacher status/reset and subject assignment are outside scope.
-- PR #13: https://github.com/armanpreet-singh/smart-student-portal/pull/13 merged into `main` at `78a6936ff89bc477f5e0228c56d7d8151c74478d`; no Admin credentials used for live account test.
-- GitHub Actions builds `43469120271` and `43469130003` passed on final PR head `7888f80ce29f7412abe632fea08813a146e2bacc` (`npm ci` and `npm run build`).
-## Completed Phase II, Chunk 6 — Admin Student Account Provisioning (create-only)
-
-- Branch `feat/admin-student-provisioning`, based on main after PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`.
-- Added `src/features/admin/api/adminStudentProvisioningApi.js` with POST `/api/admin/users`, shared Bearer-token authentication, 12-second timeout, request/response validation, active class option loading and duplicate-account handling.
-- Added a create-only Add Student dialog to the Student Directory with full name, username, optional email/class, temporary password and client-only confirmation.
-- Active class choices are read from GET `/api/admin/classes?isActive=true`; selected class is verified again by the backend. Class assignment remains optional.
-- Client validation mirrors backend name/username/email/password requirements, including the 72 UTF-8 password byte limit. The server remains authoritative.
-- Successful create response is validated; the UI confirms account creation, reports active/forced password-change state, clears password fields and refreshes the directory.
-- Temporary password is sent only in the POST body, is not persisted in browser storage and is not logged. Status/reset mutations, Teacher creation and backend changes are outside scope.
-- PR #12: https://github.com/armanpreet-singh/smart-student-portal/pull/12 merged into `main` at `2ad3c38118c5b5f250d94f824508c895bd938c9a`.
-- GitHub Actions build run `43464024426` passed on final PR #12 head `6523d6972c7a64ce0ebeee1a68d698e9f4a1fa0a` (`npm ci` and `npm run build`).
-## Completed Phase II, Chunk 5 — Admin Teacher Directory API integration
-
-- Branch `feat/admin-teacher-directory`, based on main after PR #10 merge commit `a32bfa04d132f2866938b7364eccb426bfb1e519`.
-- Replaced the mock Faculty Directory and inert Add Faculty button with a read-only live Teacher Directory.
-- Added `src/features/admin/api/adminTeachersApi.js` for backend-main GET `/api/admin/users` with `role=TEACHER`, shared Bearer-token authentication, timeout handling, query validation and response validation.
-- Added backend-side search by fullName/username/email, active/inactive filtering, page-size selection and pagination.
-- Teacher rows display full name, username, nullable email, nullable linked class, active/inactive account status, mustChangePassword state and account creation date.
-- Removed unsupported faculty ID, department and subject fields; the directory endpoint has no employee ID, specialization, experience or teacher-subject assignment data.
-- Added loading/error/retry/empty/no-match states with the existing Admin dashboard design and responsive styling. No mock fallback or create/status/reset/assignment mutations are included.
-- PR #11: https://github.com/armanpreet-singh/smart-student-portal/pull/11 merged into `main` at `e2bbf343fffd11b714a7ad692e400174c20ee65b`; no Admin credentials were used for live account testing.
-- GitHub Actions builds `43460760974` and `43460774481` passed on the final PR #11 head `ab75554fd13474748696b50357b5583c6902d6ed`. Cloudflare Pages was still reporting a build in progress at the last check.
-## Completed Phase II, Chunk 4 — Admin Student Directory API integration
-
-- Branch `feat/admin-student-directory`, stacked on `feat/admin-class-subject-catalogue` / PR #9 at `768c41c113f93cde8c3bfd8bb4dea6d2b5974f59`.
-- Replaced the mock Student Directory and inert Add Student button with a read-only authenticated directory.
-- Added `src/features/admin/api/adminStudentsApi.js` for backend-main GET `/api/admin/users` with `role=STUDENT`, shared Bearer token, timeout handling, query validation and response validation.
-- Added backend-side search by fullName/username/email, active/inactive filter, page-size selection and pagination.
-- Student rows display full name, username, nullable email, nullable class identity, active/inactive account state, mustChangePassword state and created date.
-- No roll number, department or semester is fabricated; backend User has no rollNumber field. No mock fallback, account creation, password reset or account status mutation is included.
-- Added loading/error/retry/empty states with the existing Admin dashboard design and responsive styling.
-- PR #10: https://github.com/armanpreet-singh/smart-student-portal/pull/10 is open against `feat/admin-class-subject-catalogue` (PR #9); merge PR #9 first, then retarget PR #10 to `main` before merging.
-- GitHub Actions build run `43455879552` passed on implementation head `c6f22ed013b7523f33bc739042c66cf82576cd81` (`npm ci` and `npm run build`). Documentation-updated head verification will be recorded after CI completes.
-- The post-documentation-update head `bb33d5cd71ab5412f93eeb67d2cb582c81035ea9` passed GitHub Actions build run `43456291503` (`npm ci` and `npm run build`). No live Admin credentials were used; live account checks remain outstanding.
-## Completed Phase II, Chunk 3 — Admin Class and Subject Catalogue API integration
-
-- Branch `feat/admin-class-subject-catalogue`, based on main at PR #8 merge commit `db07903ce1003073f2e9b3902c295321c3427f3c`.
-- Replaced the mock Course Catalog and inert Create Course button with a read-only Class & Subject Catalogue.
-- Added `src/features/admin/api/adminCatalogueApi.js` for backend-main GET `/api/admin/classes` and GET `/api/admin/subjects` using the shared Bearer token, timeout handling, pagination and response validation.
-- Classes view includes class code/name, academic year, backend student/subject counts and active status. Subjects view includes subject code/name, related class, academic year, nullable description and active status.
-- Added server-side search, active/inactive filters, page-size selection, previous/next pagination and class filtering for subjects. Class options are loaded through the paginated class directory endpoint.
-- Added loading/error/retry/empty states; no mock fallback remains. Unsupported credits, faculty, department and semester fields have been removed from this screen.
-- Read-only scope: no create/update actions and no backend/database/Render/deployment changes. No live Admin credentials were used.
-- PR #9: https://github.com/armanpreet-singh/smart-student-portal/pull/9 (open; targets main; not merged).
-- Follow-up cleanup removed the duplicate `justifyContent` key from the mobile Login CTA in `src/components/layout/Navigation.jsx`, preserving desktop/mobile centering.
-- On latest code head `2a457bd1125a5d03aa939b3024b8f59f54e72bc0`, GitHub Actions builds `43453090461` and `43453102554` both passed. Cloudflare Pages remains the deployment blocker: user-supplied logs show Vite build and all 89 static asset uploads succeeded, then Cloudflare failed publishing its Function with `Unknown internal error occurred`. The repository has no Functions directory, `_worker.js`, Wrangler config or Worker bindings; cause is unconfirmed and needs Cloudflare-side inspection or a successful retry.
-
-## Completed Phase I, Chunk 4 — forced password-change workflow
-
-- PR #6: https://github.com/armanpreet-singh/smart-student-portal/pull/6 merged into main at `4c8f5b5a9ed75f739f79cb7a14ec931570834a57`. Branch `feat/auth-forced-password-change`.
-- Backend main `POST /api/auth/change-password` accepts exactly `{ currentPassword, newPassword }`; no role, ID or confirmation field is sent.
-- Password rules mirror backend Zod: current password non-empty and <=72 UTF-8 bytes; new password >=12 characters, <=72 UTF-8 bytes and different from current. Confirmation remains client-side.
-- Accounts with `mustChangePassword=true` go to `/change-password`; ProtectedRoute blocks the three role dashboards until the backend clears the flag. Normal users cannot open the password-change route.
-- After the endpoint returns success, the shared auth provider calls GET `/api/auth/me` again. Navigation to the verified user's role dashboard happens only after the refreshed user confirms `mustChangePassword=false`.
-- Build run `43439637720` and Cloudflare Pages passed on implementation commit `4ebd35f2fc0e1bb58cd59d219f2f03e634a443a3`.
-- No real university credentials were used; no backend/database/Render/deployment changes were made.
-
-## Completed Phase I, Chunk 3 — role-based route protection
-
-- PR #5 merged into main at `9dc22f762c8b82cd5e59d34110e269f5af9d3b07`; parent PR #4 (session provider) merged first at `132b49e3269c99577f515121a60b0c99a7185f0f`.
-- ProtectedRoute wraps Student `/dashboard/*`, Teacher `/teacher/*` and Admin `/admin/*` based on backend-verified role. Landing and login remain public.
-- Anonymous/expired sessions redirect to login; wrong-role routes redirect to the correct verified dashboard; protected pages fail closed while restoring or when verification is unavailable.
-- Build run `43437899529` and Cloudflare Pages passed on route-guard implementation head.
-
-## Completed Phase I, Chunk 2 — shared authentication session management
-
-- PR #4 merged into main at `132b49e3269c99577f515121a60b0c99a7185f0f`.
-- AuthProvider verifies restored tokens through GET `/api/auth/me`; stale cached roles are not trusted. Invalid sessions clear token/user; temporary network errors preserve the token for retry.
-- Student, Teacher and Admin logout controls clear the shared session. Teacher Attendance consumes the provider token.
-- Build run `43436994527` passed on the implementation snapshot; Cloudflare Pages passed.
-
-## Completed Phase I, Chunk 1 — backend-connected login
-
-- PR #3 merged into main at `84607ce7c81512b5529788964672b9b0ca4c92c9`; Teacher Attendance PR #2 merged first at `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`.
-- Login calls backend-main POST `/api/auth/login` with exactly `{ username, password }`. Backend role routes to the correct portal; access token is stored at `ltsu-access-token`.
-- Includes backend-aligned validation, timeout, error feedback and Remember username. API URL is configurable through VITE_API_BASE_URL.
-- No live account credentials were used. Original login build run `43433208070` passed.
-
-## Audit and future work
-
-Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Broad categories still mock-backed include timetable, assignments, results, resources, announcements, academic calendar, departments and dashboard analytics. Admin also needs a dedicated teacher-subject assignment UI; Student duty-proof UI is dependent on backend draft PR #1 being approved/merged/deployed. Most existing pages need API loading/error/empty states and correct data/permission mapping before they can be marked Ready.
-
-Continue with Phase II, Chunk 19 (Student Announcements Capability Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
+1. Inspect the Teacher navigation/routes and any Teacher announcement screen or dashboard surface.
+2. Reverify backend-main for Teacher announcement/notification models, authorized routes and read endpoints.
+3. Remove unsupported mock announcement content where no supported contract exists; show an accessible unavailable state.
+4. Preserve existing Teacher layouts/routes and do not add backend functionality.
+5. Update both handoff documents, verify CI and stop.
