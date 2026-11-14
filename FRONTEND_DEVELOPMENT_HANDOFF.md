@@ -4,7 +4,7 @@ Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/teacher-resources-capability`
-Current development: Phase II, Chunk 26 Teacher Learning Resources Capability Alignment is on `feat/teacher-resources-capability`, based on `main` after PR #32 merged. PR #31 (Teacher Assignments catch-up) merged into `main` at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 (Teacher Timetable) merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`. PR #29 (Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30's initial merge was into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, with its changes subsequently brought to `main` through PR #31.
+Current pull request: Phase II, Chunk 26 Teacher Learning Resources Capability Alignment PR #33 is open against `main` from `feat/teacher-resources-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/33. PR #31 (Teacher Assignments catch-up) merged into `main` at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 (Teacher Timetable) merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`. PR #29 (Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30's initial merge was into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, with its changes subsequently brought to `main` through PR #31.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -851,7 +851,8 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Removed the inert upload/dropzone affordance; the page no longer implies that files can be selected, uploaded, stored, shared or assigned.
 - Added responsive `src/features/teacher/pages/TeacherResources.css`; preserved the existing `/teacher/resources` route and shared Teacher shell/components.
 - Added `feat/teacher-resources-capability` to GitHub Actions push filters. Frontend only; no backend, database, schema, migration, storage, secret, deployment or live academic record changes.
-- Implementation and final CI verification details will be recorded below after PR checks complete.
+- PR #33: https://github.com/armanpreet-singh/smart-student-portal/pull/33 is open against `main`.
+- GitHub Actions push build run `43583068296` passed on the handoff-inclusive head `b2d92112d0b82cf50ecc28ac1b4ea888334ef7c5` (`npm ci`, `npm run build`). An earlier overlapping build on commit `2c49b45a1929cf9ba7bb89955270404d3127371f` failed because the page referenced `TeacherResources.css` before its creation commit had landed; the subsequent complete-tree build passed. PR-targeted verification for #33 is pending.
 
 ## Exact next frontend task — Phase II, Chunk 27 (proposed): Teacher Profile Capability Alignment
 
