@@ -1,72 +1,54 @@
-import React, { memo, useState } from "react";
-import { Upload } from "lucide-react";
-import ResourceCard from "../../../features/dashboard/components/ResourceCard/ResourceCard";
+import React, { memo } from "react";
+import { FolderOpen, Info } from "lucide-react";
+
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
 
-const mockResources = [
-  {
-    id: 1,
-    title: "DBMS Module 4 Notes",
-    type: "Lecture Notes",
-    course: "DBMS",
-    size: "3.1 MB",
-  },
-  {
-    id: 2,
-    title: "CN TCP/IP Slides",
-    type: "PPT",
-    course: "CN",
-    size: "5.4 MB",
-  },
-  {
-    id: 3,
-    title: "OS Process Scheduling Reference",
-    type: "Reference Material",
-    course: "OS",
-    size: "1.8 MB",
-  },
-];
+import "./TeacherResources.css";
 
 const TeacherResources = memo(() => (
   <div className="d-page-container">
     <SectionHeader
       title="Learning Resources"
-      subtitle="Manage and upload study materials"
+      subtitle="Resource availability from verified university content services"
     />
 
     <DashboardCard
-      style={{
-        borderStyle: "dashed",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "40px",
-        marginBottom: "24px",
-        cursor: "pointer",
-      }}
+      className="t-resources-unavailable"
+      padding={false}
     >
-      <Upload size={32} color="var(--d-text-secondary)" />
-      <h4 style={{ margin: "16px 0 4px", color: "var(--d-text)" }}>
-        Upload New Material
-      </h4>
-      <p
-        style={{
-          margin: 0,
-          fontSize: "13px",
-          color: "var(--d-text-secondary)",
-        }}
+      <section
+        className="t-resources-unavailable-content"
+        role="status"
+        aria-labelledby="t-resources-unavailable-title"
       >
-        Drag and drop files here, or click to browse
-      </p>
-    </DashboardCard>
+        <div className="t-resources-unavailable-icon" aria-hidden="true">
+          <FolderOpen size={25} />
+        </div>
 
-    <div className="d-list-stack">
-      {mockResources.map((res) => (
-        <ResourceCard key={res.id} {...res} />
-      ))}
-    </div>
+        <div className="t-resources-unavailable-copy">
+          <div className="t-resources-unavailable-label">
+            <Info size={14} aria-hidden="true" />
+            Backend capability unavailable
+          </div>
+
+          <h3 id="t-resources-unavailable-title">
+            Learning resource data is not available yet
+          </h3>
+
+          <p>
+            The current backend does not define a Resource or learning-material
+            model, or expose Teacher resource listing or upload endpoints.
+          </p>
+          <p>
+            Available files, file details, storage and sharing permissions
+            cannot be verified through the supported APIs, so sample resource
+            cards and upload controls are intentionally not displayed.
+          </p>
+        </div>
+      </section>
+    </DashboardCard>
   </div>
 ));
+
 export default TeacherResources;
