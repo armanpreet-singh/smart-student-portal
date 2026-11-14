@@ -115,7 +115,11 @@ function MetricCard({ title, value, icon: Icon, tone }) {
   );
 }
 
-const AttendancePage = () => {
+const AttendancePage = ({
+  title = "Attendance Overview",
+  subtitle = "University attendance aggregates by class and subject",
+  showReportScopeNotice = false,
+}) => {
   const { accessToken, refreshCurrentUser } = useAuth();
 
   const [filterOptions, setFilterOptions] = useState({
@@ -358,10 +362,19 @@ const AttendancePage = () => {
 
   return (
     <div className="d-page-container">
-      <SectionHeader
-        title="Attendance Overview"
-        subtitle="University attendance aggregates by class and subject"
-      />
+      <SectionHeader title={title} subtitle={subtitle} />
+
+      {showReportScopeNotice && (
+        <DashboardCard className="a-attendance-report-scope-note">
+          <p>
+            This page shows data currently exposed by the Admin reporting API:
+            attendance aggregates by subject, class and date range. Student
+            growth, department distribution, course enrollment and monthly
+            attendance trends are not included in that API and are not presented
+            here as university metrics.
+          </p>
+        </DashboardCard>
+      )}
 
       <DashboardCard className="a-attendance-filters">
         <form onSubmit={applyFilters}>

@@ -446,3 +446,17 @@
     animation: none;
   }
 }
+
+
+/* Reports & Analytics scope notice */
+.a-attendance-report-scope-note {
+  padding: 14px 18px;
+  border-left: 3px solid var(--d-primary);
+}
+
+.a-attendance-report-scope-note p {
+  margin: 0;
+  color: var(--d-text-secondary);
+  font-size: 12px;
+  line-height: 1.6;
+}
