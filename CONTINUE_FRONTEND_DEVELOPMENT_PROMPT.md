@@ -68,7 +68,7 @@ Implement the missing Admin teacher-subject assignment workflow using backend-ma
 - Integrated the reset action into Student and Teacher directories. The signed-in Admin's own row is non-actionable; successful reset refreshes the directory and the existing password setup badge.
 - The request body contains only `{ temporaryPassword }`. Temporary passwords are not persisted or logged, and form values are cleared on success or dialog close.
 - Status controls and subject assignment remain outside this chunk. No backend, database, migration, secret or deployment changes were made. No real managed-account mutation was used for testing.
-- Feature branch: `feat/admin-managed-password-reset`, based on live `main` head `d4484cfc4384b024f86ee0f4d9590d59e5bae242`. PR #15 is open and unmerged; final-head GitHub Actions status must be checked live after documentation updates.
+- Feature branch: `feat/admin-managed-password-reset`, based on live `main` head `d4484cfc4384b024f86ee0f4d9590d59e5bae242`. PR #15 is open and unmerged. GitHub Actions run `43558387098` passed on handoff-updated head `b91accc4a61ebd2ad08626707178b985fde4d0c9` (`npm ci`, `npm run build`).
 
 ## Completed Phase II, Chunk 8 — Admin Managed Account Status Controls
 
