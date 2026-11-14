@@ -31,9 +31,11 @@ on:
       - "feat/teacher-announcements-capability"
       - "feat/teacher-dashboard-capability"
       - "feat/teacher-students-api"
+      - "feat/teacher-students-api"
       - "feat/teacher-classes-api"
       - "feat/teacher-students-api"
       - "feat/teacher-assignments-capability"
+      - "feat/teacher-timetable-capability"
   pull_request:
     branches:
       - main
