@@ -1,19 +1,20 @@
 # LTSU Smart Portal — Frontend Development Handoff
 
-Last updated: 2026-11-13
+Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/admin-account-status-controls` (branched from `main` after PR #13)
-Current pull request: https://github.com/armanpreet-singh/smart-student-portal/pull/14 (open; targets `main`).
+Development branch: `main`
+Current pull request: none — Phase II, Chunk 8 PR #14 has merged.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
 Phase II, Chunk 6 Admin Student Account Provisioning PR #12 merged into `main`: `2ad3c38118c5b5f250d94f824508c895bd938c9a`.
 Phase II, Chunk 7 Admin Teacher Account Provisioning PR #13 merged into `main`: `78a6936ff89bc477f5e0228c56d7d8151c74478d`.
+Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main`: `b028a915973206e9cecea8a08a2ab827445149c1`.
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Base commit for this chunk: `bb66275861b73d15234e21ec8a2f5336f6b61805`
+Latest main commit: `b028a915973206e9cecea8a08a2ab827445149c1`
 
 ## Working scope and rules
 
@@ -610,8 +611,8 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/admin-account-status-controls`, based on `main` after PR #13 merge commit `78a6936ff89bc477f5e0228c56d7d8151c74478d`.
-- PR #14: https://github.com/armanpreet-singh/smart-student-portal/pull/14 — open against `main`; PRs #11–#13 are already merged.
-- GitHub Actions builds `43556779435` and `43556782854` both passed on final PR head `1205fb134e7122966081df331c7f774c564d335c` (`npm ci` and `npm run build`). Cloudflare Pages preview also deployed successfully: https://feat-admin-account-status-co.smart-student-portal.pages.dev.
+- PR #14: https://github.com/armanpreet-singh/smart-student-portal/pull/14 merged into `main` at `b028a915973206e9cecea8a08a2ab827445149c1`.
+- GitHub Actions builds `43556779435` and `43556782854` passed on final PR head `1205fb134e7122966081df331c7f774c564d335c` (`npm ci` and `npm run build`). Cloudflare Pages preview deployed successfully: https://feat-admin-account-status-co.smart-student-portal.pages.dev.
 - No lint/unit-test scripts or live Admin status-change tests are configured.
 ## Known issues and integration gaps
 
