@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-14: PR #31 (Teacher Assignments catch-up) merged into `main` at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 (Teacher Timetable) merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`. Current Chunk 26 development branch is `feat/teacher-resources-capability`, based on that updated `main`.
+3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #34 (Teacher Profile) is open and retargeted to `main` from `feat/teacher-profile-capability`.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -341,4 +341,10 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - GitHub Actions push build run `43583068296` passed on head `b2d92112d0b82cf50ecc28ac1b4ea888334ef7c5`, including `npm ci` and `npm run build`. An earlier overlapping build failed because the stylesheet commit had not yet landed; the final complete-tree build passed. PR #33 head `8fc33de2be63e2abbea4056e1e438fd8e59c5c47` passed push build run `43583245784` and main-target PR build run `43583249857`; both ran `npm ci` and `npm run build` successfully. The final documentation-only update does not alter source.
 - Frontend-only; no backend/database/storage/deployment changes.
 
-Continue with Phase II, Chunk 27 (Teacher Profile Capability Alignment) as specified above. Verify backend-main contracts, finish one chunk, update both handoff files, verify CI and stop.
+## Completed Phase II, Chunk 27 — Teacher Profile Capability Alignment
+
+- Uses verified `AuthContext` account name, username, nullable email, role and account-created date; unsupported employee ID, department, designation, phone, office and professional details are not shown.
+- Teacher topbar dropdown now uses authenticated account details instead of mock Teacher data.
+- PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. PR #34 carries only Profile changes and is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/34.
+
+Continue with Phase II, Chunk 28 (Teacher Settings Capability Alignment) as specified in the handoff. Verify backend-main contracts, complete one chunk, update both handoff files, verify CI and stop.
