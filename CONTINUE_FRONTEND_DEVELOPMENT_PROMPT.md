@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Current branch: `main`, at PR #13 merge commit `78a6936ff89bc477f5e0228c56d7d8151c74478d`. Phase II PR #9 merged at `d00fc61b54456b0fb313294c72aecedd62c9bd65`; PR #10 at `a32bfa04d132f2866938b7364eccb426bfb1e519`; PR #11 at `e2bbf343fffd11b714a7ad692e400174c20ee65b`; PR #12 at `2ad3c38118c5b5f250d94f824508c895bd938c9a`; PR #13 at `78a6936ff89bc477f5e0228c56d7d8151c74478d`. Phase II PRs #7/#8 and frontend PRs #2–#6 are also merged. No Phase II frontend PR is currently open.
+3. Current branch: `feat/admin-account-status-controls`, based on `main` at PR #13 merge commit `78a6936ff89bc477f5e0228c56d7d8151c74478d`. Phase II PR #9 merged at `d00fc61b54456b0fb313294c72aecedd62c9bd65`; PR #10 at `a32bfa04d132f2866938b7364eccb426bfb1e519`; PR #11 at `e2bbf343fffd11b714a7ad692e400174c20ee65b`; PR #12 at `2ad3c38118c5b5f250d94f824508c895bd938c9a`; PR #13 at `78a6936ff89bc477f5e0228c56d7d8151c74478d`. Phase II PRs #7/#8 and frontend PRs #2–#6 are also merged. Phase II, Chunk 8 PR #14 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/14.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -51,15 +51,25 @@ The Teacher Attendance component now consumes the shared `useAuth()` Bearer toke
 
 Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`. The original implementation build runs `43429998901` and `43429991685` passed on head `386a37cc5c45e796bfc3ffc5d4b1832ff4576e98`.
 
-## Exact next task — Phase II, Chunk 8
+## Exact next task — Phase II, Chunk 9
 
-Implement Admin Managed Account Status Controls using backend-main PATCH `/api/admin/users/:userId/status`:
-1. Integrate in Student and Teacher directories with shared Bearer-token authentication.
-2. Request body is exactly `{ isActive: boolean }`; validate the response user before updating UI state.
-3. Backend updates only managed STUDENT/TEACHER accounts and rejects changing the actor's own account. Handle 404, validation, authorization and server errors.
-4. Add confirmation before activation/deactivation, clearly distinguish status and refresh the relevant directory after success.
-5. Keep password reset and teacher-subject assignment outside this status-only slice.
-6. Build, verify and update both handoff documents. Do not merge/deploy unless explicitly requested.
+Implement Admin Managed Account Password Reset using backend-main POST `/api/admin/users/:userId/password-reset`:
+1. Add a reset-password action to Student and Teacher directories using shared Bearer-token authentication.
+2. Request body is exactly `{ temporaryPassword: string }`; backend password schema requires at least 12 characters and at most 72 UTF-8 bytes.
+3. Backend sets `mustChangePassword=true` and rejects attempts to reset the actor's own account or a non-managed account with HTTP 404. Handle validation, authorization, not-found and server errors.
+4. Require a clear confirmation and client-side password confirmation; never persist or log temporary passwords.
+5. Keep status changes and teacher-subject assignments outside this password-reset-only slice.
+6. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
+## Completed Phase II, Chunk 8 — Admin Managed Account Status Controls
+
+- Branch `feat/admin-account-status-controls`, based on main after PR #13 merge commit `78a6936ff89bc477f5e0228c56d7d8151c74478d`.
+- Added `src/features/admin/api/adminAccountStatusApi.js` for PATCH `/api/admin/users/:userId/status`, sending exactly `{ isActive }`, with Bearer authentication, timeout, response validation and error handling.
+- Added reusable `AccountStatusControl.jsx` and CSS with Active/Inactive state, Activate/Deactivate actions and explicit confirmation.
+- Integrated controls in both Student and Teacher directories. Successful changes refresh the server-backed directory.
+- The current Admin's own row shows a non-actionable `Your account` state; backend self-change guard remains authoritative and returns 404.
+- The backend status schema only permits the boolean `isActive`; the service limits changes to managed STUDENT/TEACHER roles. Password reset and subject assignment are outside this chunk.
+- PR #14: https://github.com/armanpreet-singh/smart-student-portal/pull/14 is open against `main`. No Admin credentials used for live status-change testing.
+- GitHub Actions builds `43556779435` and `43556782854` passed on final PR head `1205fb134e7122966081df331c7f774c564d335c`. Cloudflare Pages preview deployed successfully: https://feat-admin-account-status-co.smart-student-portal.pages.dev.
 ## Completed Phase II, Chunk 7 — Admin Teacher Account Provisioning (create-only)
 
 - Branch `feat/admin-teacher-provisioning`, based on main after PR #12 merge commit `2ad3c38118c5b5f250d94f824508c895bd938c9a`.

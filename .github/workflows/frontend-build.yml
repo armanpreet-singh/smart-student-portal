@@ -16,6 +16,7 @@ on:
       - "feat/admin-teacher-directory"
       - "feat/admin-student-provisioning"
       - "feat/admin-teacher-provisioning"
+      - "feat/admin-account-status-controls"
   pull_request:
     branches:
       - main

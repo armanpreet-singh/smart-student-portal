@@ -1,0 +1,169 @@
+.a-account-status-control {
+  display: flex;
+  min-width: 112px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.a-account-status-badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 30px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.a-account-status-badge.active {
+  background: rgba(22, 163, 74, 0.1);
+  color: var(--d-success);
+}
+
+.a-account-status-badge.inactive {
+  background: rgba(100, 116, 139, 0.12);
+  color: var(--d-text-secondary);
+}
+
+.a-account-status-trigger {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--d-primary);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.a-account-status-trigger:hover {
+  color: var(--d-primary-hover, var(--d-primary));
+}
+
+.a-account-status-trigger:focus-visible,
+.a-account-status-actions button:focus-visible {
+  outline: 3px solid var(--d-gold);
+  outline-offset: 3px;
+}
+
+.a-account-status-self,
+.a-account-status-notice {
+  color: var(--d-text-secondary);
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.a-account-status-notice {
+  color: var(--d-success);
+}
+
+.a-account-status-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 22px;
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(3px);
+}
+
+.a-account-status-dialog {
+  width: min(100%, 440px);
+  padding: 24px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-lg);
+  background: var(--d-surface);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+  color: var(--d-text);
+}
+
+.a-account-status-dialog h2 {
+  margin: 0;
+  color: var(--d-text);
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.a-account-status-dialog > p {
+  margin: 10px 0 0;
+  color: var(--d-text-secondary);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.a-account-status-dialog > p.a-account-status-error {
+  color: var(--d-danger);
+}
+
+.a-account-status-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 22px;
+  padding-top: 17px;
+  border-top: 1px solid var(--d-border);
+}
+
+.a-account-status-actions button {
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.a-account-status-cancel {
+  background: var(--d-bg);
+  color: var(--d-text-secondary);
+}
+
+.a-account-status-confirm {
+  border-color: transparent !important;
+  color: #fff;
+}
+
+.a-account-status-confirm.activate {
+  background: var(--d-success);
+}
+
+.a-account-status-confirm.deactivate {
+  background: var(--d-danger);
+}
+
+.a-account-status-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 600px) {
+  .a-account-status-backdrop {
+    align-items: flex-end;
+    padding: 10px;
+  }
+
+  .a-account-status-dialog {
+    width: 100%;
+    padding: 20px 17px;
+    border-radius: var(--d-radius-lg) var(--d-radius-lg) 0 0;
+  }
+
+  .a-account-status-actions button {
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .a-account-status-backdrop {
+    backdrop-filter: none;
+  }
+}
