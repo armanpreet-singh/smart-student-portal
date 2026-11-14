@@ -4,7 +4,7 @@ Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/admin-announcements-capability`
-Current pull requests: Phase II, Chunk 14 PR #20 (Departments) is open against `main` on `feat/admin-departments-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/20. Phase II, Chunk 15 PR #21 (Announcements) is open against `main` on `feat/admin-announcements-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/21. Phase II, Chunk 13 PR #19 merged into `main` at `641540bbd547eb6b295f746c4048be542651ce5e`; Chunk 12 PR #18 merged at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`; Chunk 11 PR #17 and earlier completed PRs are merged.
+Current pull requests: Phase II, Chunk 14 PR #20 (Departments) is open against `main` on `feat/admin-departments-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/20. Phase II, Chunk 15 PR #21 (Announcements) is stacked on PR #20 with base `feat/admin-departments-capability`; merge #20 first, then retarget #21 to `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/21. Phase II, Chunk 13 PR #19 merged into `main` at `641540bbd547eb6b295f746c4048be542651ce5e`; Chunk 12 PR #18 merged at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`; Chunk 11 PR #17 and earlier completed PRs are merged.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit after Chunk 13 merge: `641540bbd547eb6b295f746c4048be542651ce5e`. PR #20 (Chunk 14) and PR #21 (Chunk 15) are separate branches based on this main head; neither includes the other's page implementation.
+Latest verified `main` commit after Chunk 13 merge: `641540bbd547eb6b295f746c4048be542651ce5e`. PR #20 (Chunk 14) is based on this main head; PR #21 (Chunk 15) is stacked on PR #20 and contains only the announcement page plus shared workflow/handoff changes relative to that base.
 
 ## Working scope and rules
 
@@ -723,8 +723,8 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 
 ## Completed frontend chunk — Phase II, Chunk 15: Admin Announcements Capability Alignment
 
-- Branch: `feat/admin-announcements-capability`, based on `main` at `641540bbd547eb6b295f746c4048be542651ce5e`.
-- PR #21: https://github.com/armanpreet-singh/smart-student-portal/pull/21 (open against `main`, not merged).
+- Branch: `feat/admin-announcements-capability`, stacked on PR #20 / `feat/admin-departments-capability` at `467c58aee195f7a32460589783e15bd62afc97d6` (whose base is `main` at `641540bbd547eb6b295f746c4048be542651ce5e`).
+- PR #21: https://github.com/armanpreet-singh/smart-student-portal/pull/21 (open against `feat/admin-departments-capability`; merge PR #20 first, then retarget #21 to `main`).
 - Reverified backend-main `prisma/schema.prisma`: no Announcement or Notification model. Admin, Student and Teacher route files contain no announcement/notification endpoints; the app mounts only the existing auth/admin/teacher/student route groups.
 - The previous Admin page had two hard-coded sample messages with unverified audience/date/status values and an inert New Announcement button. Replaced the content with an accessible capability-unavailable notice; sample messages, fake sent/scheduled states and unsupported publishing controls are no longer displayed.
 - Added responsive `AnnouncementsPage.css` and a workflow trigger for `feat/admin-announcements-capability`. The workflow also retains the separate open Chunk 14 branch trigger.

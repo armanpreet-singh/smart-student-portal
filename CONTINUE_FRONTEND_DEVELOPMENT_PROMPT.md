@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 13 PR #19 is `641540bbd547eb6b295f746c4048be542651ce5e`. Current Chunk 15 branch: `feat/admin-announcements-capability`, based on that main head. PR #21 (Chunk 15) is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/21. PR #20 (Chunk 14, Departments) is also open and unmerged on a separate branch: https://github.com/armanpreet-singh/smart-student-portal/pull/20. PRs #15–#19 and earlier completed Phase II PRs are merged.
+3. Latest verified `main` after merging Chunk 13 PR #19 is `641540bbd547eb6b295f746c4048be542651ce5e`. Current Chunk 15 branch: `feat/admin-announcements-capability`, stacked on PR #20 branch `feat/admin-departments-capability`. PR #20 (Chunk 14, Departments) is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/20. PR #21 (Chunk 15, Announcements) is open with PR #20's branch as its base, so merge #20 first and then retarget #21 to `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/21. PRs #15–#19 and earlier completed Phase II PRs are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -101,7 +101,7 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 ## Completed Phase II, Chunk 15 — Admin Announcements Capability Alignment
 
-- Branch `feat/admin-announcements-capability`, based on `main` at `641540bbd547eb6b295f746c4048be542651ce5e`; PR #21 is open and unmerged.
+- Branch `feat/admin-announcements-capability`, stacked on PR #20 / `feat/admin-departments-capability` at `467c58aee195f7a32460589783e15bd62afc97d6`; PR #21 is open and unmerged against that base. Merge #20 first, then retarget #21 to `main`.
 - Backend-main has no Announcement/Notification Prisma model, and no Admin, Student or Teacher announcement/notification routes.
 - Replaced two hard-coded sample messages and the inert New Announcement button with an accessible capability-unavailable notice. Fake audience, sent/scheduled status and sample announcement content are removed.
 - Added responsive styling and GitHub Actions workflow trigger. PR/push CI and final result will be recorded after completion.
