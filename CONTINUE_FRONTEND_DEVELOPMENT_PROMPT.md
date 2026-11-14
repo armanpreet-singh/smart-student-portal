@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #34 (Teacher Profile) is open and retargeted to `main` from `feat/teacher-profile-capability`.
+3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #35 (Teacher Profile replacement) is open against `main` from `feat/teacher-profile-capability`. Earlier stacked PR #34 was closed without merge when its squash-dependent history became unmergeable.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -345,6 +345,7 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 
 - Uses verified `AuthContext` account name, username, nullable email, role and account-created date; unsupported employee ID, department, designation, phone, office and professional details are not shown.
 - Teacher topbar dropdown now uses authenticated account details instead of mock Teacher data.
-- PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. PR #34 carries only Profile changes and is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/34.
+- PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. Original stacked PR #34 was closed without merge during clean rebase; clean replacement PR #35 carries only Profile changes against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/35.
+- GitHub Actions push build run `43585487245` passed on the Profile implementation snapshot (`npm ci`, `npm run build`).
 
 Continue with Phase II, Chunk 28 (Teacher Settings Capability Alignment) as specified in the handoff. Verify backend-main contracts, complete one chunk, update both handoff files, verify CI and stop.
