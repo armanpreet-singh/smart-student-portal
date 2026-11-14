@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` at the start of Phase II, Chunk 9 was `d4484cfc4384b024f86ee0f4d9590d59e5bae242`; it includes the Chunk 8 PR #14 merge and a newer handoff-only commit. Chunk 9 development branch: `feat/admin-managed-password-reset` (created from that `main` head). PR status is to be verified live; do not assume it is open or merged. Earlier Phase II PRs #7–#14 and frontend PRs #2–#6 are merged.
+3. Latest verified `main` at the start of Phase II, Chunk 9 was `d4484cfc4384b024f86ee0f4d9590d59e5bae242`; it includes the Chunk 8 PR #14 merge and a newer handoff-only commit. Chunk 9 development branch: `feat/admin-managed-password-reset` (created from that `main` head). Phase II, Chunk 9 PR #15 is open against `main` and not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/15. Earlier Phase II PRs #7–#14 and frontend PRs #2–#6 are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -68,7 +68,7 @@ Implement the missing Admin teacher-subject assignment workflow using backend-ma
 - Integrated the reset action into Student and Teacher directories. The signed-in Admin's own row is non-actionable; successful reset refreshes the directory and the existing password setup badge.
 - The request body contains only `{ temporaryPassword }`. Temporary passwords are not persisted or logged, and form values are cleared on success or dialog close.
 - Status controls and subject assignment remain outside this chunk. No backend, database, migration, secret or deployment changes were made. No real managed-account mutation was used for testing.
-- Feature branch: `feat/admin-managed-password-reset`, based on live `main` head `d4484cfc4384b024f86ee0f4d9590d59e5bae242`. PR/build verification is to be confirmed from live GitHub state after this documentation commit.
+- Feature branch: `feat/admin-managed-password-reset`, based on live `main` head `d4484cfc4384b024f86ee0f4d9590d59e5bae242`. PR #15 is open and unmerged; final-head GitHub Actions status must be checked live after documentation updates.
 
 ## Completed Phase II, Chunk 8 — Admin Managed Account Status Controls
 
