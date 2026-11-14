@@ -709,7 +709,8 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Overall and per-subject summaries expose PRESENT, ABSENT, LATE, EXCUSED, `totalRecords`, `eligibleSessions`, `attendedSessions` and nullable `attendancePercentage`. Eligible = PRESENT + ABSENT + LATE; attended = PRESENT + LATE; EXCUSED is excluded; zero eligible denominator returns `null`.
 - Replaced mock-backed Reports & Analytics with a wrapper over the existing authenticated Attendance Overview component and API client. It reuses supported filters, summary metrics, subject chart/table, and loading/error/empty states.
 - Unsupported student growth, department distribution, course enrollment and monthly attendance trends are explicitly identified as unavailable from the current Admin report API and are not presented as real metrics.
-- Initial pre-rebase CI runs `43561941727` (PR) and `43561937069` (push) passed on the original PR head `535f1124afbe8d95195798a5624592aaa3512357`. Fresh CI after incorporating merged Chunk 12 is pending.
+- Initial pre-rebase CI runs `43561941727` (PR) and `43561937069` (push) passed on the original PR head `535f1124afbe8d95195798a5624592aaa3512357`.
+- Fresh post-rebase GitHub Actions runs `43562618943` (pull request) and `43562614042` (push) both passed on combined head `4fc53b7d32fb340b1a7115ec9179ca71eb1fbc75`; `npm ci` and `npm run build` passed with Chunk 12 included.
 - No backend, database, migration, secret, deployment or live report data changes were made.
 
 ## Exact next frontend task — Phase II, Chunk 14 (proposed): Admin Departments Capability Alignment

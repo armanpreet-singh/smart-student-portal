@@ -92,7 +92,8 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 - Supported summary fields: PRESENT, ABSENT, LATE, EXCUSED, `totalRecords`, `eligibleSessions`, `attendedSessions`, nullable `attendancePercentage`. Eligible = PRESENT + ABSENT + LATE; attended = PRESENT + LATE; EXCUSED excluded; zero eligible denominator yields `null`.
 - Reports & Analytics now reuses the authenticated Attendance Overview report component/API, including filters, metrics, status breakdown, subject chart/table and loading/error/empty states.
 - Mock student growth, department distribution, course enrollment and monthly attendance trends are no longer shown as university metrics; the page explicitly notes that the API does not supply them.
-- Original pre-rebase CI runs `43561941727` and `43561937069` passed on original head `535f1124afbe8d95195798a5624592aaa3512357`; fresh combined build is pending. No backend/database/secret/deployment/live report changes were made.
+- Original pre-rebase CI runs `43561941727` and `43561937069` passed on original head `535f1124afbe8d95195798a5624592aaa3512357`.
+- Fresh post-rebase GitHub Actions runs `43562618943` (pull request) and `43562614042` (push) both passed on combined head `4fc53b7d32fb340b1a7115ec9179ca71eb1fbc75`; `npm ci` and `npm run build` passed with Chunk 12 included. No backend/database/secret/deployment/live report changes were made.
 
 ## Exact next task — Phase II, Chunk 14 (proposed): Admin Departments Capability Alignment
 
