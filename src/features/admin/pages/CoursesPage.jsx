@@ -487,6 +487,7 @@ const CoursesPage = () => {
     setActiveTab(tab);
     setPage(1);
     setFilterError("");
+    setClassMutationSuccess("");
   };
 
 
@@ -751,7 +752,7 @@ const CoursesPage = () => {
 
         {requestStatus === "success" && rows.length > 0 && activeTab === "classes" && (
           <div className="a-catalogue-table-scroll">
-            <table className="a-catalogue-table">
+            <table className="a-catalogue-table a-catalogue-class-table">
               <thead>
                 <tr>
                   <th>Class</th>
