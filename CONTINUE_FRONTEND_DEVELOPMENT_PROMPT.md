@@ -337,6 +337,8 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - Replaced the mock Teacher resource list with an accessible capability-unavailable notice; removed sample titles, file types, courses and file sizes.
 - Removed the decorative upload/dropzone UI because no file upload contract or storage endpoint exists.
 - Added responsive `TeacherResources.css`; preserved the `/teacher/resources` route and shared Teacher shell.
-- Frontend-only; no backend/database/storage/deployment changes. Final CI verification and PR details will be added after checks complete.
+- PR #33 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/33.
+- GitHub Actions push build run `43583068296` passed on head `b2d92112d0b82cf50ecc28ac1b4ea888334ef7c5`, including `npm ci` and `npm run build`. An earlier overlapping build failed because the stylesheet commit had not yet landed; the final complete-tree build passed. PR-targeted check is pending.
+- Frontend-only; no backend/database/storage/deployment changes.
 
 Continue with Phase II, Chunk 27 (Teacher Profile Capability Alignment) as specified above. Verify backend-main contracts, finish one chunk, update both handoff files, verify CI and stop.
