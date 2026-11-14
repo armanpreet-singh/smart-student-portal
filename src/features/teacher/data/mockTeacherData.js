@@ -15,12 +15,6 @@ export const teacherStatsData = [
   { id: 5, title: "Pending Results", value: "1", icon: "BarChart3", trend: "OS Mid-Sem due tomorrow", color: "#D4AF37" },
 ];
 
-export const teacherScheduleData = [
-  { id: 1, time: "09:00 AM", subject: "Database Management Systems", semester: "5th Sem", section: "A", room: "Room 301", students: 42, isCurrent: true },
-  { id: 2, time: "11:00 AM", subject: "Computer Networks", semester: "5th Sem", section: "B", room: "Lab 102", students: 45 },
-  { id: 3, time: "02:00 PM", subject: "Operating Systems", semester: "3rd Sem", section: "A", room: "Room 205", students: 41 }
-];
-
 export const teacherClassesData = [
   { id: 1, name: "Database Management Systems", semester: "5th Sem", section: "A", students: 42, attendance: 88, nextLecture: "Today, 09:00 AM" },
   { id: 2, name: "Computer Networks", semester: "5th Sem", section: "B", students: 45, attendance: 75, nextLecture: "Today, 11:00 AM" },
