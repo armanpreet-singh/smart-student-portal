@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/teacher-students-api`
-Current pull requests: PR #29 (Chunk 23 Teacher Students API Alignment) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`. PR #30 (Chunk 24 Teacher Assignments Capability Alignment) is closed/merged into the `feat/teacher-students-api` branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`; because its base was that feature branch, its changes are not yet part of `main`. Follow-up PR #31 carries Chunk 24 to `main` before the stacked Chunk 25 timetable work is merged: https://github.com/armanpreet-singh/smart-student-portal/pull/31. Phase II, Chunk 22 PR #28 (Teacher My Classes) merged into `main` at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`; Chunk 21 PR #27 merged at `c1484c39871d6ca8e195ffd555a52bb68e4f1569`. Chunk 20 PR #26 merged at `94c377726153dc86c4b578e29e9dd4745a692771`; Chunk 19 PR #25 merged at `81cf6ef370d98db8919e547135194d33bbac2112`. Chunk 18 PR #24 merged at `fb64e04b0f3f4e58e327767189f5d9430306d020`; Chunk 17 PR #23 merged at `ef599232f5eef8e4c5f107778627180bd0767c33`; Chunk 16 PR #22 merged at `8aa276de681933f102c58062f8616db9869a080b`. Phase II PRs #20 and #21 and PRs #15–#19 and earlier completed PRs are merged.
+Development branch: `feat/teacher-timetable-capability`
+Current pull requests: PR #31 (Chunk 24 Teacher Assignments catch-up) is open against `main` from `feat/teacher-students-api`: https://github.com/armanpreet-singh/smart-student-portal/pull/31. Chunk 25 Teacher Timetable is developed on `feat/teacher-timetable-capability`, stacked on `feat/teacher-students-api`; its PR will remain based on that parent branch until PR #31 merges, then be retargeted to `main`. PR #29 (Chunk 23 Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30 (Chunk 24 Teacher Assignments) is closed/merged into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, not directly into `main`.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -83,7 +83,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Teacher | Assignments | Accessible capability-unavailable state; mock assignment cards, sample submission/grading figures, fake status filters and inert Create Assignment action removed. | **Not supported by backend main** — no Assignment or Submission Prisma model and no Teacher assignment, submission, grading or results endpoint. | Backend Assignment/Submission models, authenticated Teacher read/create/update/submission and grading contracts, permissions and validation required. |
 | Teacher | Students | Authenticated Teacher selects one active assigned subject; the page loads that subject's active roster and displays returned student full name and username with local search. Includes subject/roster loading, error/retry and empty states. | **API-integrated in Chunk 23 PR #29; live Teacher-account/data validation remains outstanding.** | The roster endpoint returns only student id, fullName and username. Roll number, attendance percentage, CGPA and global Teacher student directory are not supported. |
 | Teacher | Announcements | Accessible capability-unavailable state; mock feed, dashboard count/shortcut and unsupported unread-notification indicator removed. | **Not supported by backend main** — no Announcement/Notification model or Teacher read/publish route. | Backend announcement audience, publishing, authorization and read-state contract required. |
-| Teacher | Timetable | Hardcoded weekday schedule. | **Needs improvement** — no timetable API/model exists. | Backend timetable/session and class-time contract required. |
+| Teacher | Timetable | Accessible capability-unavailable state; no mock weekday sessions, lecture times, rooms or lecture/lab labels are displayed. | **Not supported by backend main** — no timetable/schedule/session model or Teacher timetable endpoint exists. | Backend timetable/session model and authorized Teacher read endpoint required. |
 | Teacher | Learning Resources | Static cards and decorative upload area. | **Needs improvement** — no learning-resource upload/list API exists. | Backend resource authorization, metadata, upload constraints and storage contract required. |
 | Teacher | Academic Calendar | Accessible capability-unavailable state; no sample events are displayed. | **Not supported by backend main** — no calendar/event model or Teacher calendar route. | Backend event/calendar model, authorized Teacher read API and date/time-zone semantics required. |
 | Teacher | Profile | Hardcoded employee ID, contact details, experience and specialization. | **Needs improvement** — `/api/auth/me` supplies only basic account identity/role/class fields. | Bind known account fields and specify any additional staff profile model/contract before displaying values as authoritative. |
@@ -832,11 +832,23 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - No backend, database, schema, migration, secret or deployment changes were made. No live Teacher account or academic records were modified.
 - Implementation commit: `78a88a2504702f123312d96c4850b6fc581cdbd7`; implementation-plus-handoff head `5a779eb67e41bbe0071bf601bf5730953e1b061f` passed GitHub Actions push run `43579617820` (`npm ci`, `npm run build`) and Cloudflare Pages check `132401455069`. GitHub did not schedule a PR-triggered run for this stacked base branch; PR #31 is the catch-up PR targeting `main`; the stacked Chunk 25 PR will target `feat/teacher-students-api` until PR #31 merges. The subsequent follow-up commit only updates these handoff records; source is unchanged.
 
-## Exact next frontend task — Phase II, Chunk 25 (proposed): Teacher Timetable Capability Alignment
+## Completed frontend chunk — Phase II, Chunk 25: Teacher Timetable Capability Alignment
 
-1. Audit the mock Teacher Weekly Timetable page against backend-main Prisma models and routes.
-2. Backend main has no timetable/schedule model or Teacher timetable endpoint; replace the sample weekday sessions, times, rooms and lecture/lab labels with an accessible capability-unavailable state.
-3. Remove static timetable fixtures from the page and any inert schedule actions; preserve the Teacher timetable route and shared shell.
-4. Do not infer lecture times, rooms, days or attendance from subject assignments.
+- Branch: `feat/teacher-timetable-capability`, stacked on `feat/teacher-students-api` at parent head `5c704170e3fad2421cf7efdbbe5627507324fc9f`. The parent includes PR #29's merged Teacher Students work and PR #30's Assignment capability changes.
+- PR #31 (Chunk 24 catch-up) is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/31. The Chunk 25 PR is intentionally stacked on `feat/teacher-students-api` until #31 merges; then retarget it to `main`.
+- Reverified backend-main `prisma/schema.prisma`, `src/routes/teacher-routes.js` and `src/app.js`: Prisma models are User, Class, Subject, TeacherSubject and Attendance only; Teacher routes expose assigned-subject lookup, subject roster and attendance marking. No timetable/schedule/session model or Teacher timetable endpoint exists.
+- Replaced the sample Teacher weekly timetable with an accessible capability-unavailable state. Removed fabricated weekday sessions, subject/lecture/lab labels, times and room assignments; the page explains that official schedule data cannot be verified.
+- Removed the page-local `timetableData` and the now-unused `teacherScheduleData` export from `src/features/teacher/data/mockTeacherData.js`. Repository search confirmed the export had no remaining consumers.
+- Added responsive `src/features/teacher/pages/TeacherTimetable.css`; preserved the existing `/teacher/timetable` route, Teacher shell and shared page components.
+- Added `feat/teacher-timetable-capability` to GitHub Actions push filters and `feat/teacher-students-api` to pull-request base filters so the stacked PR can run CI.
+- Frontend only. No backend, database, schema, migration, secret, deployment, Teacher account or academic record changes were made.
+- Source implementation is committed; final CI verification for the handoff-inclusive head is pending.
+
+## Exact next frontend task — Phase II, Chunk 26 (proposed): Teacher Learning Resources Capability Alignment
+
+1. Audit the mock Teacher Learning Resources page against backend-main Prisma models, route files and mounted endpoints.
+2. Backend main currently contains no Resource model and no Teacher resource list/upload endpoint; replace unsupported sample resource cards and the inert upload/dropzone affordance with an accessible capability-unavailable state.
+3. Remove fabricated resource titles, types, courses, file sizes and unsupported upload actions; preserve the Teacher resources route and shared shell.
+4. Do not imply that files were stored, shared, downloadable or assigned to a class without a backend contract.
 5. Update both handoff documents, verify CI and stop.
 
