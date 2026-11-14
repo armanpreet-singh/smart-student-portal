@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/teacher-classes-api`
-Current pull requests: Phase II, Chunk 22 PR #28 (Teacher My Classes API Alignment) is open on `feat/teacher-classes-api` with base `feat/teacher-dashboard-capability`; merge PR #27 first, then retarget #28 to `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/28. Phase II, Chunk 21 PR #27 (Teacher Dashboard) remains open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/27. Chunk 20 PR #26 (Teacher Announcements) merged into `main` at `94c377726153dc86c4b578e29e9dd4745a692771`; Chunk 19 PR #25 (Student Announcements) merged at `81cf6ef370d98db8919e547135194d33bbac2112`. Chunk 18 PR #24 merged at `fb64e04b0f3f4e58e327767189f5d9430306d020`; Chunk 17 PR #23 merged at `ef599232f5eef8e4c5f107778627180bd0767c33`; Chunk 16 PR #22 merged at `8aa276de681933f102c58062f8616db9869a080b`. Phase II PRs #20 and #21 and PRs #15–#19 and earlier completed PRs are merged.
+Development branch: `feat/teacher-students-api`
+Current pull requests: Phase II, Chunk 23 PR #29 (Teacher Students API Alignment) is open against `main` on `feat/teacher-students-api`: https://github.com/armanpreet-singh/smart-student-portal/pull/29. Phase II, Chunk 22 PR #28 (Teacher My Classes) merged into `main` at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`; Chunk 21 PR #27 (Teacher Dashboard) merged at `c1484c39871d6ca8e195ffd555a52bb68e4f1569`. Chunk 20 PR #26 (Teacher Announcements) merged at `94c377726153dc86c4b578e29e9dd4745a692771`; Chunk 19 PR #25 (Student Announcements) merged at `81cf6ef370d98db8919e547135194d33bbac2112`. Chunk 18 PR #24 merged at `fb64e04b0f3f4e58e327767189f5d9430306d020`; Chunk 17 PR #23 merged at `ef599232f5eef8e4c5f107778627180bd0767c33`; Chunk 16 PR #22 merged at `8aa276de681933f102c58062f8616db9869a080b`. Phase II PRs #20 and #21 and PRs #15–#19 and earlier completed PRs are merged.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit after Chunk 20 / PR #26 merge: `94c377726153dc86c4b578e29e9dd4745a692771`. Chunk 21 / PR #27 is based directly on this commit and remains open; Chunk 22 / PR #28 is stacked on PR #27 head `dbd53c39cb36caa1d17df14c23e72fca78123d7f`.
+Latest verified `main` commit after Chunk 22 / PR #28 merge: `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`. Chunk 21 / PR #27 merged at `c1484c39871d6ca8e195ffd555a52bb68e4f1569`; Chunk 22 / PR #28 merged directly after it at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`. Chunk 23 / PR #29 is based directly on this updated `main`.
 
 ## Working scope and rules
 
@@ -81,7 +81,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Teacher | My Classes | Reads authenticated active subject assignments from `GET /api/teacher/subjects`; displays returned subject code/name, class code/name/academic year and assignment date. Includes loading, API error/retry and empty states with no mock fallback. | **API-integrated in Chunk 22 PR #28; live Teacher-account/data validation remains outstanding.** No roster size, timetable or attendance percentage is shown. | Validate with a provisioned Teacher account; roster and attendance actions remain on their dedicated supported screens. |
 | Teacher | Attendance | Uses the shared session token with current backend-main subject discovery, roster and bulk-attendance APIs; supports demo fixtures separately. | **Needs improvement** — live integration exists; no rollNumber or class time is exposed by backend main. | Validate with a real Teacher account; do not add roll-number clipboard or draft-only duty-review/correction behavior until the backend contract is live. |
 | Teacher | Assignments | Mock submissions and filters; Create Assignment action is inert. | **Needs improvement** — no assignment API/model exists on backend main or inspected draft. | Backend assignment/submission API and permission contract required. |
-| Teacher | Students | Mock roll numbers, attendance and CGPA; name-only filtering. | **Needs improvement** — per-subject roster exists but returns id, fullName and username only. | Connect roster scoped to assigned subject; do not present username as roll number; CGPA and global teacher directory are unsupported. |
+| Teacher | Students | Authenticated Teacher selects one active assigned subject; the page loads that subject's active roster and displays returned student full name and username with local search. Includes subject/roster loading, error/retry and empty states. | **API-integrated in Chunk 23 PR #29; live Teacher-account/data validation remains outstanding.** | The roster endpoint returns only student id, fullName and username. Roll number, attendance percentage, CGPA and global Teacher student directory are not supported. |
 | Teacher | Announcements | Accessible capability-unavailable state; mock feed, dashboard count/shortcut and unsupported unread-notification indicator removed. | **Not supported by backend main** — no Announcement/Notification model or Teacher read/publish route. | Backend announcement audience, publishing, authorization and read-state contract required. |
 | Teacher | Timetable | Hardcoded weekday schedule. | **Needs improvement** — no timetable API/model exists. | Backend timetable/session and class-time contract required. |
 | Teacher | Learning Resources | Static cards and decorative upload area. | **Needs improvement** — no learning-resource upload/list API exists. | Backend resource authorization, metadata, upload constraints and storage contract required. |
@@ -787,7 +787,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ## Completed frontend chunk — Phase II, Chunk 21: Teacher Dashboard Capability Alignment
 
 - Branch: `feat/teacher-dashboard-capability`, based directly on `main` at `94c377726153dc86c4b578e29e9dd4745a692771`.
-- PR #27: https://github.com/armanpreet-singh/smart-student-portal/pull/27 is open against `main`.
+- PR #27: https://github.com/armanpreet-singh/smart-student-portal/pull/27 merged into `main` at `c1484c39871d6ca8e195ffd555a52bb68e4f1569`.
 - Reverified backend-main `prisma/schema.prisma`, `src/routes/teacher-routes.js`, `src/services/attendance-service.js`, `src/routes/auth-routes.js`, `src/services/auth-service.js` and `src/app.js`: the Teacher API supports assigned-subject lookup, active subject rosters and attendance marking. Authenticated `GET /api/auth/me` returns verified basic identity fields including `fullName`; it does not provide designation, department, employee ID or semester. No timetable, dashboard aggregates, assignment, grading, results or insights endpoint/model exists.
 - Replaced the mock Teacher hero/profile data, five remaining fabricated summary cards, hard-coded daily schedule, mock insight alerts and inert quick-action buttons with an accessible capability-unavailable state. The page displays only the verified `user.fullName` from `AuthContext` when available.
 - Added a working link to the existing Teacher Attendance workflow, which is supported by assigned-subject, roster and attendance-marking endpoints.
@@ -798,7 +798,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ## Completed frontend chunk — Phase II, Chunk 22: Teacher My Classes API Alignment
 
 - Branch: `feat/teacher-classes-api`, stacked on PR #27 / `feat/teacher-dashboard-capability` at `dbd53c39cb36caa1d17df14c23e72fca78123d7f`.
-- PR #28: https://github.com/armanpreet-singh/smart-student-portal/pull/28 is open against `feat/teacher-dashboard-capability`; merge PR #27 first, then retarget PR #28 to `main`.
+- PR #28: https://github.com/armanpreet-singh/smart-student-portal/pull/28 merged into `main` at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`, after prerequisite PR #27 merged first.
 - Reverified backend-main `src/routes/teacher-routes.js`, `src/services/attendance-service.js`, `prisma/schema.prisma` and `src/app.js`: authenticated Teacher `GET /api/teacher/subjects` returns `{ status: "ok", data: { subjects } }`. Each row includes `assignedAt` and a subject with `id`, `code`, `name`, `classId`, and nested class `id`, `code`, `name`, `academicYear`. The service filters to active subject and class assignments.
 - Added `src/features/teacher/api/teacherSubjectsApi.js` with Bearer-token authentication, 12-second timeout, network/authorization/server error handling and strict response validation.
 - Replaced the fixture-backed `TeacherClasses.jsx` with backend-backed subject cards. Only verified subject/class fields and assignment timestamp are displayed. Removed unsupported student totals, timetable/next-lecture information, attendance percentages and inert Attendance/Assignments quick actions.
@@ -808,10 +808,23 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - No backend, database, schema, migration, secret or deployment changes were made. No live account or academic records were modified.
 - Implementation commit: `0e4a32a0d3096eab24e3d62e83fb0131c567801d`; final handoff-inclusive head `c6a8557548b6b43cd95f3172530263ce442c1b27` passed GitHub Actions push run `43575412273` and stacked PR run `43575415501`, both including `npm ci` and `npm run build`. Cloudflare Pages check `132388528302` also passed. A follow-up documentation-only commit records these verified CI results; the source implementation is unchanged.
 
-## Exact next frontend task — Phase II, Chunk 23 (proposed): Teacher Students API Alignment
+## Completed frontend chunk — Phase II, Chunk 23: Teacher Students API Alignment
 
-1. Replace mock Teacher Students rows with the authenticated assigned-subject and per-subject roster endpoints already present on backend main.
-2. Let the Teacher select one of their assigned subjects and display only the returned student `id`, `fullName` and `username`, plus the returned subject/class identifiers and names.
-3. Remove unsupported roll numbers, CGPA and global student claims; do not present usernames or database IDs as roll numbers.
-4. Add loading, error/retry, empty-subject and empty-roster states; preserve the Teacher route and shared shell.
+- Branch: `feat/teacher-students-api`, based directly on `main` at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`.
+- PR #29: https://github.com/armanpreet-singh/smart-student-portal/pull/29 is open against `main`.
+- Reverified backend-main `src/routes/teacher-routes.js`, `src/services/attendance-service.js`, `src/validators/attendance-schemas.js`, `prisma/schema.prisma` and `src/app.js`: authenticated Teacher `GET /api/teacher/subjects` returns active subject assignments; `GET /api/teacher/subjects/:subjectId/roster` verifies that the subject is assigned and active for the current Teacher and returns the selected subject/class plus active students. Roster student fields are exactly `id`, `fullName`, `username`.
+- Extended `src/features/teacher/api/teacherSubjectsApi.js` with `fetchTeacherSubjectRoster`, using the shared Bearer-token request helper, 12-second timeout, 401/403/404/server/network/timeout handling, strict response validation, selected subject/class identity matching and unique student ID validation.
+- Replaced the mock `TeacherStudents.jsx` page with a subject-scoped flow: load the Teacher's active assignments, select an assigned subject, then request only that subject's roster. Displays returned student full name and username; searches locally by those fields.
+- Removed unsupported global student listings, roll numbers, sections, attendance percentages and CGPA. Database IDs are used only for response validation and stable row keys; usernames are not presented as roll numbers.
+- Added subject and roster loading states, API error/retry states, empty assigned-subject and empty-roster states, plus a no-search-match state.
+- Added responsive `src/features/teacher/pages/TeacherStudents.css`; preserved the existing `/teacher/students` route and shared Teacher shell. Added `feat/teacher-students-api` to the frontend build workflow push filters.
+- No backend, database, schema, migration, secret or deployment changes were made. No live Teacher account or academic records were modified.
+- Implementation commit: `cd67d541e50294c6fe62b9ab0457d85f7d932c04`. CI results will be recorded after final handoff update and verification.
+
+## Exact next frontend task — Phase II, Chunk 24 (proposed): Teacher Assignments Capability Alignment
+
+1. Audit the mock Teacher Assignments page against backend-main routes and Prisma models.
+2. No Assignment model or Teacher assignment/submission/grading endpoint is currently present in backend main; replace unsupported sample assignments, submission totals, grading statuses and create action with an accessible capability-unavailable state.
+3. Remove fake filters and inert actions; preserve the Teacher assignments route and shared shell.
+4. Do not add backend functionality or fabricate deadlines, submissions or grades.
 5. Update both handoff documents, verify CI and stop.
