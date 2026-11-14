@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #35 (Teacher Profile replacement) merged into `main` at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. Earlier stacked PR #34 was closed without merge when its squash-dependent history became unmergeable. Current Phase II, Chunk 28 PR #36 is open against `main` from `feat/teacher-settings-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/36.
+3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #35 (Teacher Profile replacement) merged into `main` at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`; PR #36 (Teacher Settings) merged into `main` at `96ad2fe3a635797f388c65ee8189563da2851262`. The original stacked Admin Profile PR #37 was closed without merge to avoid repeating the squash-merged Teacher Settings changes; clean replacement PR #38 targets `main` from `feat/admin-profile-capability-clean`: https://github.com/armanpreet-singh/smart-student-portal/pull/38.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -355,7 +355,17 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - Added current/new/confirm password fields, visibility toggles, backend-aligned validation, submitting/error/success states and a verified session refresh through `refreshCurrentUser()`. Confirmation remains client-only; only currentPassword and newPassword are sent.
 - Non-password account preferences are marked unavailable because there is no profile-update endpoint.
 - Preserved `/teacher/settings` and the existing Teacher shell/theme; added responsive `TeacherSettings.css`.
-- PR #33 merged at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; clean Profile PR #35 merged at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. PR #34 was closed without merge and replaced by #35. PR #36 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/36.
+- PR #36 merged into `main` at `96ad2fe3a635797f388c65ee8189563da2851262`; original stacked PR #37 was closed without merge because its branch included the squash-merged Teacher Settings history. Clean replacement PR #38 contains only Admin Profile changes and targets `main`.
 - GitHub Actions push build run `43586082692` passed on the implementation and initial handoff snapshot `e59cefbeb90e53382d541138dcd59f4ec5bb3fef` (`npm ci`, `npm run build`).
 
-Continue with the next outstanding screen only after checking the live backend contract. Re-audit the remaining screen inventory before selecting Phase II, Chunk 29.
+## Completed Phase II, Chunk 29 — Admin Profile Capability Alignment
+
+- Replaced mock Admin Profile contact and professional data with authenticated `AuthContext` fields: full name, username, nullable email, role and account-created date.
+- Removed mock avatar, employee ID, department, phone, office, fabricated “Super Admin” label and unverified last-login timestamp.
+- Updated Admin topbar account dropdown to use authenticated identity instead of mock Admin fixture data.
+- Backend main `GET /api/auth/me` returns public User identity fields; no Admin-specific profile/last-login endpoint exists.
+- Added accessible messaging for unavailable extended profile details and responsive `ProfilePage.css`; preserved `/admin/profile` and Admin shell/theme.
+- Original stacked PR #37 was closed without merge; clean replacement PR #38 contains only Admin Profile work and targets `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/38.
+- GitHub Actions push build run `43587179882` passed on source head `45c7ce23732bb5fc1dea520b259c315a5b294734` (`npm ci`, `npm run build`).
+
+After PR #38 (Admin Profile) merges, re-audit the remaining Teacher/Admin screen inventory against backend-main and select Chunk 30.
