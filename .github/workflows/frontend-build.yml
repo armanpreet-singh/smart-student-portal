@@ -38,6 +38,7 @@ on:
       - "feat/teacher-timetable-capability"
       - "feat/teacher-resources-capability"
       - "feat/teacher-profile-capability"
+      - "feat/teacher-settings-capability"
   pull_request:
     branches:
       - main
