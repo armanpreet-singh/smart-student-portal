@@ -9,6 +9,7 @@ import {
   BookOpen,
   Building,
   UserCheck,
+  ClipboardList,
   Megaphone,
   CalendarDays,
   BarChart3,
@@ -72,6 +73,9 @@ const AdminSidebar = memo(({ isOpen, onClose }) => (
         </NavItem>
         <NavItem to="/admin/courses" icon={BookOpen}>
           Courses
+        </NavItem>
+        <NavItem to="/admin/teacher-subject-assignments" icon={ClipboardList}>
+          Teaching Assignments
         </NavItem>
         <NavItem to="/admin/departments" icon={Building}>
           Departments

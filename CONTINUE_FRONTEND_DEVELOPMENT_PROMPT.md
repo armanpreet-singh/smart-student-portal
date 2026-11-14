@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` at the start of Phase II, Chunk 9 was `d4484cfc4384b024f86ee0f4d9590d59e5bae242`; it includes the Chunk 8 PR #14 merge and a newer handoff-only commit. Chunk 9 development branch: `feat/admin-managed-password-reset` (created from that `main` head). Phase II, Chunk 9 PR #15 is open against `main` and not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/15. Earlier Phase II PRs #7–#14 and frontend PRs #2–#6 are merged.
+3. Latest verified `main` after merging Chunk 9 is `3a8f7fc6fcae978922b628ee9e23349c166998ed`. Current Chunk 10 branch: `feat/admin-teacher-subject-assignments`, rebased onto that `main` head. Phase II, Chunk 10 PR #16 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/16. Phase II, Chunk 9 PR #15 is merged into `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/15. Earlier Phase II PRs #7–#14 and frontend PRs #2–#6 are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -51,15 +51,28 @@ The Teacher Attendance component now consumes the shared `useAuth()` Bearer toke
 
 Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400811b8d6ba5bd955fb133be7a8`. The original implementation build runs `43429998901` and `43429991685` passed on head `386a37cc5c45e796bfc3ffc5d4b1832ff4576e98`.
 
-## Exact next task — Phase II, Chunk 10 (proposed): Admin Teacher-to-Subject Assignment UI
+## Completed Phase II, Chunk 10 — Admin Teacher-to-Subject Assignment UI
 
-Implement the missing Admin teacher-subject assignment workflow using backend-main POST `/api/admin/teacher-subject-assignments`:
-1. Reverify the live backend-main route, strict request schema, success response and service constraints before editing.
-2. Add one cohesive Admin assignment workflow using shared Bearer-token authentication and existing LTSU components.
-3. The backend currently expects exactly `{ teacherId, subjectId }`; it only accepts an active TEACHER and an active subject whose parent class is active.
-4. Load choices through existing backend-main teacher-directory and subject-catalogue APIs. Handle loading, empty, validation, authorization, duplicate and server errors.
-5. Keep password reset and account status controls outside this assignment-only slice.
-6. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
+- Feature branch: `feat/admin-teacher-subject-assignments`, based on `main` at `d4484cfc4384b024f86ee0f4d9590d59e5bae242`.
+- PR #16: https://github.com/armanpreet-singh/smart-student-portal/pull/16 (open, unmerged, mergeable).
+- Reverified backend-main Admin-only `POST /api/admin/teacher-subject-assignments`; strict request body is exactly `{ teacherId, subjectId }`; success is HTTP 201 with `{ status: "ok", data: { assignment: { id, teacherId, subjectId, assignedAt } } }`.
+- Backend requires an active TEACHER, active subject and active parent class; duplicate assignments return 409. The backend remains authoritative.
+- Added `adminTeacherSubjectAssignmentsApi.js` with shared Bearer auth, 12-second timeout, request/response validation and handling for 400, 401, 403, 409, server, network and timeout outcomes.
+- Added `TeacherSubjectAssignmentsPage.jsx` and CSS. It obtains all pages of choices from the existing Teacher Directory and Subject Catalogue endpoints, filters to active TEACHER accounts and active subjects in active classes, groups subjects by class, and provides loading/error/empty/retry states.
+- The UI previews the selected teacher and subject, requires an explicit review/confirmation before POST, and displays the confirmed assignment result. It refreshes auth on 401.
+- Added route `/admin/teacher-subject-assignments`, the “Teaching Assignments” Admin navigation item, and the feature branch in frontend CI.
+- Backend main has no assignment-list endpoint, so no ungrounded assignments table was added.
+- GitHub Actions run `43559468023` passed on final implementation head `3968938daec63a0438822c296f44969f9dbb7bd1`; `npm ci` and `npm run build` succeeded. No lint/unit-test scripts are configured.
+- No live assignment mutation, backend/database/migration/secret/deployment work occurred. PR #15 (Chunk 9 Password Reset) was merged into `main` at `3a8f7fc6fcae978922b628ee9e23349c166998ed`.
+
+## Exact next task — Phase II, Chunk 11 (proposed): Admin Class Management UI
+
+1. Reverify backend-main class create/update contracts, strict schemas, response projections, status/archive semantics and Admin middleware.
+2. Extend the existing Class Catalogue with create/edit and archive/reactivate controls using only supported fields: `code`, `name`, `academicYear`, and `isActive`.
+3. Reuse current catalogue search, filters, pagination, layout and design system. Keep Subject CRUD outside this chunk.
+4. Handle validation, unique-code conflicts, not-found/inactive records, authorization and server errors; refresh the directory after success.
+5. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
+
 ## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
 
 - Verified backend-main `POST /api/admin/users/:userId/password-reset`; its strict body is exactly `{ temporaryPassword }`, password is at least 12 characters and at most 72 UTF-8 bytes, and success sets `mustChangePassword=true`.
@@ -68,7 +81,7 @@ Implement the missing Admin teacher-subject assignment workflow using backend-ma
 - Integrated the reset action into Student and Teacher directories. The signed-in Admin's own row is non-actionable; successful reset refreshes the directory and the existing password setup badge.
 - The request body contains only `{ temporaryPassword }`. Temporary passwords are not persisted or logged, and form values are cleared on success or dialog close.
 - Status controls and subject assignment remain outside this chunk. No backend, database, migration, secret or deployment changes were made. No real managed-account mutation was used for testing.
-- Feature branch: `feat/admin-managed-password-reset`, based on live `main` head `d4484cfc4384b024f86ee0f4d9590d59e5bae242`. PR #15 is open and unmerged. GitHub Actions run `43558387098` passed on handoff-updated head `b91accc4a61ebd2ad08626707178b985fde4d0c9` (`npm ci`, `npm run build`).
+- Feature branch: `feat/admin-managed-password-reset`, based on live `main` head `d4484cfc4384b024f86ee0f4d9590d59e5bae242`. PR #15 merged into `main` at `3a8f7fc6fcae978922b628ee9e23349c166998ed`. GitHub Actions run `43558501510` passed on final PR head `7ec7110ce7dd7dedef578d377adfb4eb8f4ba78d` (`npm ci`, `npm run build`).
 
 ## Completed Phase II, Chunk 8 — Admin Managed Account Status Controls
 

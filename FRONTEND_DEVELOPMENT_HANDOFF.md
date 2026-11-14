@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/admin-managed-password-reset`
-Current pull request: Phase II, Chunk 9 PR #15 is open against `main` and not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/15.
+Development branch: `feat/admin-teacher-subject-assignments`
+Current pull request: Phase II, Chunk 10 PR #16 is open against `main` and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/16. Phase II, Chunk 9 PR #15 is merged into `main` at `3a8f7fc6fcae978922b628ee9e23349c166998ed`: https://github.com/armanpreet-singh/smart-student-portal/pull/15.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit at Chunk 9 start: `d4484cfc4384b024f86ee0f4d9590d59e5bae242` (handoff-only update after Chunk 8).
+Latest verified `main` commit after Chunk 9 merge: `3a8f7fc6fcae978922b628ee9e23349c166998ed`. Chunk 10 PR #16 has been rebased onto this `main` head and remains open for merge.
 
 ## Working scope and rules
 
@@ -645,7 +645,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/admin-managed-password-reset`, created from live `main` at `d4484cfc4384b024f86ee0f4d9590d59e5bae242`.
-- PR #15 is open against `main`; it remains unmerged. No deployment was performed.
+- PR #15 merged into `main` at `3a8f7fc6fcae978922b628ee9e23349c166998ed`. No deployment was performed.
 - GitHub Actions run `43558387098` completed with `success` on PR head `b91accc4a61ebd2ad08626707178b985fde4d0c9`; both `npm ci` and `npm run build` passed. This was the final handoff-updated head when the run was checked.
 - No lint or unit-test scripts are configured. Live Admin/Student/Teacher password reset validation remains outstanding.
 
@@ -662,14 +662,29 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Most non-attendance pages remain mock-backed or have inert controls; see audit above.
 - No lint/test scripts currently exist in the frontend package. No real account credentials have been used for live end-to-end testing.
 
-## Exact next frontend task — Phase II, Chunk 10 (proposed): Admin Teacher-to-Subject Assignment UI
+## Completed frontend chunk — Phase II, Chunk 10: Admin Teacher-to-Subject Assignment UI
 
-Implement the missing Admin teacher-subject assignment workflow using backend-main `POST /api/admin/teacher-subject-assignments`:
-1. First verify the live backend-main route, strict request schema, success response and service constraints again.
-2. Add one cohesive assignment workflow in the Admin area using shared Bearer-token authentication and the existing LTSU layout/components.
-3. The backend currently expects `{ teacherId, subjectId }`; it only accepts an active TEACHER and an active subject whose parent class is active. Do not invent assignment fields.
-4. Use existing backend directory/catalogue APIs for options and handle loading, empty, validation, authorization, duplicate and server errors.
-5. Keep password reset and account status controls outside this assignment-only slice.
+- Feature branch: `feat/admin-teacher-subject-assignments`, created from live `main` at `d4484cfc4384b024f86ee0f4d9590d59e5bae242`.
+- PR #16: https://github.com/armanpreet-singh/smart-student-portal/pull/16. It is open against `main`, not merged, and GitHub reports it mergeable.
+- Reverified backend-main route, request schema and service before editing. The Admin-only endpoint is `POST /api/admin/teacher-subject-assignments`, with strict body exactly `{ teacherId, subjectId }`; it returns HTTP 201 with `{ status: "ok", data: { assignment: { id, teacherId, subjectId, assignedAt } } }`.
+- Backend eligibility rules require an active account with role `TEACHER`, an active Subject, and an active parent Class. Duplicate teacher/subject links return HTTP 409. These rules remain authoritative on the backend.
+- Added `src/features/admin/api/adminTeacherSubjectAssignmentsApi.js` for the Bearer-authenticated POST. It validates IDs and the created response, applies a 12-second timeout, and handles validation/ineligibility, expired session, forbidden access, duplicate, server, transport and timeout-uncertainty cases.
+- Added `src/features/admin/pages/TeacherSubjectAssignmentsPage.jsx` and its CSS. Choices are loaded from the existing paginated Teacher Directory and Subject Catalogue APIs. Only active TEACHER accounts and active Subjects belonging to active Classes are selectable. Subject options are grouped by Class.
+- The screen includes loading, retry, error and empty states, a selection preview, explicit review/confirmation before mutation, and success feedback after the API confirms creation. A 401 triggers the shared auth refresh.
+- Added the Admin route `/admin/teacher-subject-assignments` and sidebar link “Teaching Assignments”; added the feature branch to frontend build CI.
+- Backend main does not expose an assignment-list/read endpoint, so this slice deliberately does not invent a list of current assignments or claim to show existing links.
+- Verification: GitHub Actions run `43559468023` completed successfully on final implementation head `3968938daec63a0438822c296f44969f9dbb7bd1`. Both locked dependency installation (`npm ci`) and `npm run build` passed. The frontend package has no configured lint or unit-test script.
+- No live Admin account or teacher-subject assignment mutation was used for testing. No backend, database, migration, secrets or deployment were changed.
+- Chunk 9 password reset was merged separately through PR #15 into `main` at `3a8f7fc6fcae978922b628ee9e23349c166998ed`: https://github.com/armanpreet-singh/smart-student-portal/pull/15.
+
+## Exact next frontend task — Phase II, Chunk 11 (proposed): Admin Class Management UI
+
+Extend the existing read-only Admin Class Catalogue into a focused Class Management workflow:
+1. Reverify backend-main class create/update contracts, strict schemas, response projections, status/archive semantics and role middleware before editing.
+2. Add create and edit controls for Class fields actually supported by backend main (code, name and academicYear), with confirmation for archive/reactivation through the supported `isActive` update. Do not invent other fields.
+3. Reuse the existing catalogue directory, search/filter/pagination and LTSU components; preserve the current Subject Catalogue view.
+4. Handle validation, unique-code conflicts (409), inactive/not-found records, authorization, server failures and refresh the directory after success.
+5. Keep Subject CRUD and unrelated admin changes outside this slice.
 6. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 
 Continue to use only verified backend-main contracts. Do not assume backend draft PR #1 is live.

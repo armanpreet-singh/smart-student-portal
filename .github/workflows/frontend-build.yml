@@ -18,6 +18,7 @@ on:
       - "feat/admin-teacher-provisioning"
       - "feat/admin-account-status-controls"
       - "feat/admin-managed-password-reset"
+      - "feat/admin-teacher-subject-assignments"
   pull_request:
     branches:
       - main
