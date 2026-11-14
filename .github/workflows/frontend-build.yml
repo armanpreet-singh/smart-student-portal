@@ -36,6 +36,7 @@ on:
       - "feat/teacher-students-api"
       - "feat/teacher-assignments-capability"
       - "feat/teacher-timetable-capability"
+      - "feat/teacher-resources-capability"
   pull_request:
     branches:
       - main
