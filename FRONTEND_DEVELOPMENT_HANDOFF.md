@@ -806,7 +806,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Added responsive `src/features/teacher/pages/TeacherClasses.css`; preserved the existing `/teacher/classes` route and shared Teacher dashboard shell.
 - Added `feat/teacher-classes-api` to push workflow filters and `feat/teacher-dashboard-capability` to pull-request workflow base filters to run PR checks for this stacked PR.
 - No backend, database, schema, migration, secret or deployment changes were made. No live account or academic records were modified.
-- Implementation commit: `0e4a32a0d3096eab24e3d62e83fb0131c567801d`. CI results will be recorded after final handoff update and verification.
+- Implementation commit: `0e4a32a0d3096eab24e3d62e83fb0131c567801d`; final handoff-inclusive head `c6a8557548b6b43cd95f3172530263ce442c1b27` passed GitHub Actions push run `43575412273` and stacked PR run `43575415501`, both including `npm ci` and `npm run build`. Cloudflare Pages check `132388528302` also passed. A follow-up documentation-only commit records these verified CI results; the source implementation is unchanged.
 
 ## Exact next frontend task — Phase II, Chunk 23 (proposed): Teacher Students API Alignment
 
