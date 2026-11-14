@@ -10,7 +10,6 @@ import { useLocation, Link } from "react-router-dom";
 import {
   Menu,
   Search,
-  Bell,
   Sun,
   Moon,
   User,
@@ -112,10 +111,6 @@ const TeacherTopbar = memo(({ onMenuClick }) => {
           aria-label="Toggle theme"
         >
           {isDark ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-        <button className="d-icon-btn bell" aria-label="Notifications">
-          <Bell size={20} />
-          <span className="d-notification-dot"></span>
         </button>
 
         <div className="d-avatar-wrapper" ref={dropdownRef}>
