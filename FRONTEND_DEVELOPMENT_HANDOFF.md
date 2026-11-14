@@ -4,7 +4,7 @@ Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/teacher-settings-capability`
-Phase II, Chunk 26 Teacher Learning Resources PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. Phase II, Chunk 27 Teacher Profile replacement PR #35 merged into `main` at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. Earlier stacked PR #34 was closed without merge during a clean rebase after PR #33's squash merge. Phase II, Chunk 28 Teacher Settings is on `feat/teacher-settings-capability`. PR #31 (Teacher Assignments catch-up) merged into `main` at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 (Teacher Timetable) merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`. PR #29 (Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30's initial merge was into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, with its changes subsequently brought to `main` through PR #31.
+Phase II, Chunk 26 Teacher Learning Resources PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. Phase II, Chunk 27 Teacher Profile replacement PR #35 merged into `main` at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. Earlier stacked PR #34 was closed without merge during a clean rebase after PR #33's squash merge. Phase II, Chunk 28 Teacher Settings PR #36 is open against `main` from `feat/teacher-settings-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/36. PR #31 (Teacher Assignments catch-up) merged into `main` at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 (Teacher Timetable) merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`. PR #29 (Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30's initial merge was into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, with its changes subsequently brought to `main` through PR #31.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -873,7 +873,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - After the API confirms the update, the page refreshes the authenticated account through `refreshCurrentUser()` and verifies the returned account identity and password-change state. On 401, the session is cleared through the existing logout flow. Passwords are not stored or logged.
 - Added an accessible notice for unavailable non-password preferences; added responsive `TeacherSettings.css`; preserved `/teacher/settings`, Teacher shell and theme.
 - Frontend only. No backend, database, migration, secret, deployment, credential or live account changes.
-- PR #36 will carry this chunk against `main` after final CI verification.
+- PR #36 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/36. The handoff-inclusive implementation snapshot `e59cefbeb90e53382d541138dcd59f4ec5bb3fef` passed GitHub Actions push build run `43586082692` (`npm ci`, `npm run build`); the PR-targeted check runs on the updated final documentation head.
 
 ## Next frontend work
 
