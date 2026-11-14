@@ -6,6 +6,7 @@ import DashboardCard from "../../../features/dashboard/components/DashboardCard/
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import { fetchAdminTeachers } from "../api/adminTeachersApi";
 import AccountStatusControl from "../components/AccountStatusControl";
+import AccountPasswordResetControl from "../components/AccountPasswordResetControl";
 import { createAdminTeacher } from "../api/adminTeacherProvisioningApi";
 
 import "./TeachersPage.css";
@@ -482,6 +483,13 @@ const TeachersPage = () => {
                     <td>
                       <PasswordStatus
                         mustChangePassword={teacher.mustChangePassword}
+                      />
+                      <AccountPasswordResetControl
+                        accessToken={accessToken}
+                        account={teacher}
+                        actorId={user?.id}
+                        onUpdated={() => setRetryCount((value) => value + 1)}
+                        onUnauthorized={refreshCurrentUser}
                       />
                     </td>
                     <td className="a-teachers-created">
