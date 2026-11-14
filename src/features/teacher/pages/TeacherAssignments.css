@@ -1,0 +1,86 @@
+.t-assignments-unavailable {
+  padding: 28px;
+  border-left: 3px solid var(--d-primary);
+}
+
+.t-assignments-unavailable-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  max-width: 880px;
+}
+
+.t-assignments-unavailable-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(30, 58, 138, 0.1);
+  color: var(--d-primary);
+}
+
+.t-assignments-unavailable-copy {
+  min-width: 0;
+}
+
+.t-assignments-unavailable-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--d-text-secondary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.t-assignments-unavailable-copy h3 {
+  margin: 9px 0 12px;
+  color: var(--d-text);
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.t-assignments-unavailable-copy p {
+  margin: 0;
+  color: var(--d-text-secondary);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.t-assignments-unavailable-copy p + p {
+  margin-top: 8px;
+}
+
+.t-assignments-supported-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.t-assignments-supported-links a {
+  color: var(--d-primary);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.t-assignments-supported-links a:focus-visible {
+  outline: 2px solid var(--d-primary);
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .t-assignments-unavailable {
+    padding: 20px;
+  }
+
+  .t-assignments-unavailable-content {
+    flex-direction: column;
+    gap: 14px;
+  }
+}
