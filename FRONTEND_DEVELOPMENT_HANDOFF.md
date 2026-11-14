@@ -646,7 +646,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 
 - Branch: `feat/admin-managed-password-reset`, created from live `main` at `d4484cfc4384b024f86ee0f4d9590d59e5bae242`.
 - PR #15 is open against `main`; it remains unmerged. No deployment was performed.
-- The workflow runs `npm ci` and `npm run build`; final branch-head CI verification is to be recorded after the handoff update commits.
+- GitHub Actions run `43558387098` completed with `success` on PR head `b91accc4a61ebd2ad08626707178b985fde4d0c9`; both `npm ci` and `npm run build` passed. This was the final handoff-updated head when the run was checked.
 - No lint or unit-test scripts are configured. Live Admin/Student/Teacher password reset validation remains outstanding.
 
 ## Known issues and integration gaps
