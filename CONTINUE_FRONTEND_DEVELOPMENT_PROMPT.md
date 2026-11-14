@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-14: `main` is `04573f41327e09cfbb19225502002003de8105a3` after PR #29 merged. PR #30 is closed/merged at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34` into `feat/teacher-students-api`, not `main`. Follow-up PR #31 is open against `main` to carry the Assignment capability alignment onto main: https://github.com/armanpreet-singh/smart-student-portal/pull/31. Chunk 25 Timetable work remains stacked on `feat/teacher-students-api`; merge #31 first, then retarget the Chunk 25 PR to `main`.
+3. Live verification on 2026-11-14: `main` is `04573f41327e09cfbb19225502002003de8105a3` after PR #29 merged. PR #30 is closed/merged at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34` into `feat/teacher-students-api`, not `main`. Follow-up PR #31 is open against `main` to carry the Assignment capability alignment onto main: https://github.com/armanpreet-singh/smart-student-portal/pull/31. Chunk 25 Teacher Timetable work is on `feat/teacher-timetable-capability`, stacked on `feat/teacher-students-api`; merge #31 first, then retarget its child PR to `main`.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -310,4 +310,14 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Broad categories still mock-backed include timetable, assignments, results, resources, announcements, academic calendar, departments and dashboard analytics. Admin also needs a dedicated teacher-subject assignment UI; Student duty-proof UI is dependent on backend draft PR #1 being approved/merged/deployed. Most existing pages need API loading/error/empty states and correct data/permission mapping before they can be marked Ready.
 
-Continue with Phase II, Chunk 25 (Teacher Timetable Capability Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
+## Completed Phase II, Chunk 25 — Teacher Timetable Capability Alignment
+
+- Branch `feat/teacher-timetable-capability`, stacked on the Teacher Students feature branch containing PR #29 and the Chunk 24 PR #30 merge.
+- Backend main has no timetable/schedule/session model or Teacher timetable endpoint.
+- Replaced the mock weekly Teacher timetable with an accessible capability-unavailable notice; removed sample weekdays, times, rooms and lecture/lab schedule labels.
+- Removed unused `teacherScheduleData` from `mockTeacherData.js` after repository search confirmed there were no consumers.
+- Added responsive `TeacherTimetable.css`; preserved the `/teacher/timetable` route and shared shell. Updated frontend build workflow for the stacked branch/base.
+- PR #31 is the catch-up PR for Chunk 24 to `main`. The Chunk 25 PR must remain stacked on `feat/teacher-students-api` until #31 merges.
+- Frontend-only; no backend/database/deployment or live academic data changes.
+
+Continue with Phase II, Chunk 26 (Teacher Learning Resources Capability Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
