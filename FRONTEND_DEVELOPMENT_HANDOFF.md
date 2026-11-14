@@ -883,7 +883,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Updated Admin topbar dropdown to show authenticated account full name, username and email instead of the mock Admin fixture/portrait. Notification functionality remains outside this Profile chunk.
 - Added accessible messaging for unavailable extended administrator details and responsive `src/features/admin/pages/ProfilePage.css`; preserved `/admin/profile`, Admin shell and theme.
 - Original stacked PR #37 was closed without merge to avoid duplicating the squash-merged Teacher Settings history. Clean replacement branch `feat/admin-profile-capability-clean` is based directly on the merged PR #36 commit. PR #38 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/38.
-- GitHub Actions CI for the clean replacement's handoff-inclusive head is pending; record the final verified head and successful push/PR runs after they complete.
+- GitHub Actions verification is required on the final handoff-inclusive PR #38 head; the final passing `npm ci` / `npm run build` run is recorded in the PR and completion report before merge.
 - Frontend only. No backend, database, migration, secret, deployment, credential or live account changes.
 
 ## Next frontend work
