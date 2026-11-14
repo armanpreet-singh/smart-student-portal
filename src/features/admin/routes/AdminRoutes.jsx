@@ -6,6 +6,7 @@ const AdminHome = lazy(() => import("../pages/AdminHome"));
 const StudentsPage = lazy(() => import("../pages/StudentsPage"));
 const TeachersPage = lazy(() => import("../pages/TeachersPage"));
 const CoursesPage = lazy(() => import("../pages/CoursesPage"));
+const TeacherSubjectAssignmentsPage = lazy(() => import("../pages/TeacherSubjectAssignmentsPage"));
 const DepartmentsPage = lazy(() => import("../pages/DepartmentsPage"));
 const AttendancePage = lazy(() => import("../pages/AttendancePage"));
 const AnnouncementsPage = lazy(() => import("../pages/AnnouncementsPage"));
@@ -60,6 +61,14 @@ const AdminRoutes = () => (
         element={
           <Suspense fallback={<Fallback />}>
             <CoursesPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="teacher-subject-assignments"
+        element={
+          <Suspense fallback={<Fallback />}>
+            <TeacherSubjectAssignmentsPage />
           </Suspense>
         }
       />
