@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { updateManagedAccountStatus } from "../api/adminAccountStatusApi";
 
+import "./AccountStatusControl.css";
+
 const AccountStatusControl = ({
   accessToken,
   account,
