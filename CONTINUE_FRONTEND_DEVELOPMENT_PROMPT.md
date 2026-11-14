@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 18 PR #24 is `fb64e04b0f3f4e58e327767189f5d9430306d020`. Chunk 16 PR #22 (Admin Academic Calendar) merged at `8aa276de681933f102c58062f8616db9869a080b`; Chunk 17 PR #23 (Teacher Academic Calendar) merged at `ef599232f5eef8e4c5f107778627180bd0767c33`; Chunk 18 PR #24 (Student Academic Calendar) merged at `fb64e04b0f3f4e58e327767189f5d9430306d020`. Current Chunk 19 branch: `feat/student-announcements-capability`; PR #25 is open directly against `main`. PRs #20 and #21 and PRs #15–#19 and earlier completed Phase II PRs are merged.
+3. Latest verified `main` after merging Chunk 18 PR #24 is `fb64e04b0f3f4e58e327767189f5d9430306d020`. Chunk 16 PR #22 (Admin Academic Calendar) merged at `8aa276de681933f102c58062f8616db9869a080b`; Chunk 17 PR #23 (Teacher Academic Calendar) merged at `ef599232f5eef8e4c5f107778627180bd0767c33`; Chunk 18 PR #24 (Student Academic Calendar) merged at `fb64e04b0f3f4e58e327767189f5d9430306d020`. Chunk 19 PR #25 (Student Announcements) remains open against `main`. Current Chunk 20 branch: `feat/teacher-announcements-capability`, stacked on PR #25's branch `feat/student-announcements-capability`; PR #26 targets that branch and must be merged after PR #25, then retargeted to `main`. PRs #20 and #21 and PRs #15–#19 and earlier completed Phase II PRs are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -141,12 +141,21 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 - Implementation commit `75729955689c7f3e6f3f2921a54285704ba39713` passed GitHub Actions push run `43570280493` and PR run `43570326248` (`npm ci`, `npm run build`); Cloudflare Pages check `132373055575` passed.
 - No backend, database, schema, migration, secret or deployment changes were made.
 
-## Exact next task — Phase II, Chunk 20 (proposed): Teacher Announcements Capability Alignment
+## Completed Phase II, Chunk 20 — Teacher Announcements Capability Alignment
 
-1. Inspect the Teacher navigation/routes and any Teacher announcement screen or dashboard surface.
-2. Reverify backend-main for Teacher announcement/notification models, authorized routes and read endpoints.
-3. Remove unsupported mock announcement content where no supported contract exists; show an accessible unavailable state.
-4. Preserve existing Teacher layouts/routes and do not add backend functionality.
+- Branch `feat/teacher-announcements-capability`, stacked on PR #25 / `feat/student-announcements-capability` at `de0845bc4c6c8a839d520cb911853b47278ff934`; PR #26 targets that feature branch.
+- Backend-main has no Announcement/Notification Prisma model, no Teacher announcement read/publish endpoint, no announcement routes in Admin or Student routers, and no separate notification router mounted by `src/app.js`.
+- Removed three fixed Teacher announcement samples (syllabus completion, lab rescheduling and an extra lecture) along with target groups, relative timestamps and sent/draft states. The page now shows an accessible capability-unavailable state.
+- Removed the mock announcement count from Teacher dashboard stats, the inert Send Announcement shortcut, and the unsupported notification bell/unread dot from the Teacher topbar.
+- Added responsive `TeacherAnnouncements.css`; preserved the Teacher announcements route and existing shared dashboard shell/components. The announcement-specific mock statistic was removed; other `mockTeacherData.js` content remains unchanged.
+- No backend, database, schema, migration, secret or deployment changes were made.
+
+## Exact next task — Phase II, Chunk 21 (proposed): Teacher Dashboard Capability Alignment
+
+1. Audit remaining Teacher dashboard home statistics, schedule and insight summaries against backend-main contracts.
+2. Identify mock-only metrics and actions that cannot be supported by existing Teacher endpoints.
+3. Replace unsupported claims with clear unavailable states or remove inert affordances without changing unrelated Teacher screens.
+4. Preserve current Teacher routes, shell and dashboard styling; no backend changes.
 5. Update both handoff documents, verify CI and stop.
 
 ## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
@@ -261,4 +270,4 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Broad categories still mock-backed include timetable, assignments, results, resources, announcements, academic calendar, departments and dashboard analytics. Admin also needs a dedicated teacher-subject assignment UI; Student duty-proof UI is dependent on backend draft PR #1 being approved/merged/deployed. Most existing pages need API loading/error/empty states and correct data/permission mapping before they can be marked Ready.
 
-Continue with Phase II, Chunk 20 (Teacher Announcements Capability Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
+Continue with Phase II, Chunk 21 (Teacher Dashboard Capability Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.

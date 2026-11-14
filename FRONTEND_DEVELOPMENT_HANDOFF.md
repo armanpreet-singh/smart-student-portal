@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/student-announcements-capability`
-Current pull requests: Phase II, Chunk 19 PR #25 (Student Announcements) is open against `main` on `feat/student-announcements-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/25. Phase II, Chunk 18 PR #24 (Student Academic Calendar) merged into `main` at `fb64e04b0f3f4e58e327767189f5d9430306d020`; Chunk 17 PR #23 (Teacher Academic Calendar) merged at `ef599232f5eef8e4c5f107778627180bd0767c33`; Chunk 16 PR #22 (Admin Academic Calendar) merged at `8aa276de681933f102c58062f8616db9869a080b`. Phase II, Chunk 15 PR #21 (Announcements) merged into `main` at `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`; Phase II, Chunk 14 PR #20 (Departments) merged at `010e99ef2474f5f63e1dfeda0b383e4b4ec159d4`. Phase II, Chunk 13 PR #19 merged at `641540bbd547eb6b295f746c4048be542651ce5e`; Chunk 12 PR #18 merged at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`; Chunk 11 PR #17 and earlier completed PRs are merged.
+Development branch: `feat/teacher-announcements-capability`
+Current pull requests: Phase II, Chunk 20 PR #26 (Teacher Announcements) is stacked on PR #25 with base `feat/student-announcements-capability`; merge PR #25 first, then retarget #26 to `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/26. Phase II, Chunk 19 PR #25 (Student Announcements) remains open against `main` on `feat/student-announcements-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/25. Phase II, Chunk 18 PR #24 (Student Academic Calendar) merged into `main` at `fb64e04b0f3f4e58e327767189f5d9430306d020`; Chunk 17 PR #23 (Teacher Academic Calendar) merged at `ef599232f5eef8e4c5f107778627180bd0767c33`; Chunk 16 PR #22 (Admin Academic Calendar) merged at `8aa276de681933f102c58062f8616db9869a080b`. Phase II, Chunk 15 PR #21 (Announcements) merged into `main` at `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`; Phase II, Chunk 14 PR #20 (Departments) merged at `010e99ef2474f5f63e1dfeda0b383e4b4ec159d4`. Phase II, Chunk 13 PR #19 merged at `641540bbd547eb6b295f746c4048be542651ce5e`; Chunk 12 PR #18 merged at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`; Chunk 11 PR #17 and earlier completed PRs are merged.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit after Chunk 18 / PR #24 merge: `fb64e04b0f3f4e58e327767189f5d9430306d020`. Chunk 19 / PR #25 is based directly on this commit.
+Latest verified `main` commit after Chunk 18 / PR #24 merge: `fb64e04b0f3f4e58e327767189f5d9430306d020`. Chunk 19 / PR #25 is based directly on this commit; Chunk 20 / PR #26 is stacked on PR #25's head `de0845bc4c6c8a839d520cb911853b47278ff934`.
 
 ## Working scope and rules
 
@@ -82,7 +82,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Teacher | Attendance | Uses the shared session token with current backend-main subject discovery, roster and bulk-attendance APIs; supports demo fixtures separately. | **Needs improvement** — live integration exists; no rollNumber or class time is exposed by backend main. | Validate with a real Teacher account; do not add roll-number clipboard or draft-only duty-review/correction behavior until the backend contract is live. |
 | Teacher | Assignments | Mock submissions and filters; Create Assignment action is inert. | **Needs improvement** — no assignment API/model exists on backend main or inspected draft. | Backend assignment/submission API and permission contract required. |
 | Teacher | Students | Mock roll numbers, attendance and CGPA; name-only filtering. | **Needs improvement** — per-subject roster exists but returns id, fullName and username only. | Connect roster scoped to assigned subject; do not present username as roll number; CGPA and global teacher directory are unsupported. |
-| Teacher | Announcements | Static list; New Announcement button has no action. | **Needs improvement** — no announcement API/model exists. | Backend announcement publishing/targeting contract required. |
+| Teacher | Announcements | Accessible capability-unavailable state; mock feed, dashboard count/shortcut and unsupported unread-notification indicator removed. | **Not supported by backend main** — no Announcement/Notification model or Teacher read/publish route. | Backend announcement audience, publishing, authorization and read-state contract required. |
 | Teacher | Timetable | Hardcoded weekday schedule. | **Needs improvement** — no timetable API/model exists. | Backend timetable/session and class-time contract required. |
 | Teacher | Learning Resources | Static cards and decorative upload area. | **Needs improvement** — no learning-resource upload/list API exists. | Backend resource authorization, metadata, upload constraints and storage contract required. |
 | Teacher | Academic Calendar | Static fixed events. | **Needs improvement** — no calendar API/model exists. | Backend calendar/event contract required. |
@@ -772,10 +772,22 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Implementation commit `75729955689c7f3e6f3f2921a54285704ba39713` passed GitHub Actions push run `43570280493` and PR run `43570326248`, including `npm ci` and `npm run build`. Cloudflare Pages check `132373055575` also passed. Handoff-only documentation refresh follows the implementation commit.
 - No backend, database, schema, migration, secret, deployment or live announcement changes were made.
 
-## Exact next frontend task — Phase II, Chunk 20 (proposed): Teacher Announcements Capability Alignment
+## Completed frontend chunk — Phase II, Chunk 20: Teacher Announcements Capability Alignment
 
-1. Inspect the Teacher navigation/routes and any Teacher announcement screen or dashboard surface.
-2. Reverify backend-main for Teacher announcement/notification models, authorized routes and read endpoints.
-3. Remove any unsupported mock announcement content from the relevant Teacher screen and show an accessible capability-unavailable state where no supported contract exists.
-4. Preserve existing Teacher layouts/routes and leave backend functionality unchanged.
+- Branch: `feat/teacher-announcements-capability`, stacked on PR #25 / `feat/student-announcements-capability` at `de0845bc4c6c8a839d520cb911853b47278ff934`.
+- PR #26: https://github.com/armanpreet-singh/smart-student-portal/pull/26 targets `feat/student-announcements-capability`; merge PR #25 first, then retarget PR #26 to `main`.
+- Reverified backend-main `prisma/schema.prisma`, `src/routes/teacher-routes.js`, `src/routes/admin-routes.js`, `src/routes/student-routes.js` and `src/app.js`: no Announcement/Notification model, no role-specific announcement read/publish routes, and no separate notification router. Teacher routes expose assigned subjects, subject rosters and attendance marking only.
+- Replaced three hard-coded Teacher announcement records (syllabus completion, lab rescheduling and an extra lecture) with an accessible capability-unavailable state. Removed unsupported target audiences, relative timestamps, sent/draft badges and the inert New Announcement button.
+- Removed the mock Announcements count from `teacherStatsData`, the inert Send Announcement shortcut from `TeacherHome.jsx`, and the Teacher top-bar unread-notification dot/icon because no Notification contract exists.
+- Added responsive `src/features/teacher/pages/TeacherAnnouncements.css`; preserved the Teacher announcements route, page shell and shared dashboard components. Only the announcement-specific entry in `mockTeacherData.js` was removed; unrelated fixture data remains unchanged.
+- Added `feat/teacher-announcements-capability` to the frontend build workflow push filters.
+- Final code and documentation head / CI results will be recorded after the branch build completes.
+- No backend, database, schema, migration, secret, deployment or live announcement/notification changes were made.
+
+## Exact next frontend task — Phase II, Chunk 21 (proposed): Teacher Dashboard Capability Alignment
+
+1. Audit the remaining Teacher dashboard home statistics, schedule and insight summaries against backend-main contracts.
+2. Identify mock-only metrics and actions that cannot be supported by existing Teacher endpoints.
+3. Replace unsupported claims with clearly scoped unavailable states or remove inert affordances, without changing unrelated Teacher screens.
+4. Preserve current Teacher routes, shell and dashboard styling; no backend changes.
 5. Update both handoff documents, verify CI and stop.
