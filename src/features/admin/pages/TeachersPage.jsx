@@ -5,6 +5,7 @@ import { useAuth } from "../../auth/context/AuthContext";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import { fetchAdminTeachers } from "../api/adminTeachersApi";
+import AccountStatusControl from "../components/AccountStatusControl";
 import { createAdminTeacher } from "../api/adminTeacherProvisioningApi";
 
 import "./TeachersPage.css";
@@ -67,14 +68,6 @@ function EmptyState({ hasFilters }) {
   );
 }
 
-function AccountStatus({ isActive }) {
-  return (
-    <span className={`a-teachers-badge ${isActive ? "active" : "inactive"}`}>
-      {isActive ? "Active" : "Inactive"}
-    </span>
-  );
-}
-
 function PasswordStatus({ mustChangePassword }) {
   return (
     <span className={`a-teachers-badge ${mustChangePassword ? "pending" : "complete"}`}>
@@ -84,7 +77,7 @@ function PasswordStatus({ mustChangePassword }) {
 }
 
 const TeachersPage = () => {
-  const { accessToken, refreshCurrentUser } = useAuth();
+  const { accessToken, user, refreshCurrentUser } = useAuth();
 
   const [draftSearch, setDraftSearch] = useState("");
   const [draftStatus, setDraftStatus] = useState("all");
@@ -478,7 +471,13 @@ const TeachersPage = () => {
                       )}
                     </td>
                     <td>
-                      <AccountStatus isActive={teacher.isActive} />
+                      <AccountStatusControl
+                        accessToken={accessToken}
+                        account={teacher}
+                        actorId={user?.id}
+                        onUpdated={() => setRetryCount((value) => value + 1)}
+                        onUnauthorized={refreshCurrentUser}
+                      />
                     </td>
                     <td>
                       <PasswordStatus
