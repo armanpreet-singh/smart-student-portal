@@ -39,8 +39,10 @@ on:
       - "feat/teacher-resources-capability"
       - "feat/teacher-profile-capability"
       - "feat/teacher-settings-capability"
+      - "feat/student-profile-capability"
       - "feat/admin-profile-capability-clean"
       - "feat/student-profile-capability"
+      - "feat/student-settings-capability"
   pull_request:
     branches:
       - main
