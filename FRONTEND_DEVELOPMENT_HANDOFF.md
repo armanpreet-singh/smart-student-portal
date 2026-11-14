@@ -4,7 +4,7 @@ Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/admin-managed-password-reset`
-Current pull request: not created yet — Phase II, Chunk 9 is being verified on `feat/admin-managed-password-reset`. PR #14 remains merged.
+Current pull request: Phase II, Chunk 9 PR #15 is open against `main` and not merged: https://github.com/armanpreet-singh/smart-student-portal/pull/15.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -645,7 +645,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ### Branch, PR and verification
 
 - Branch: `feat/admin-managed-password-reset`, created from live `main` at `d4484cfc4384b024f86ee0f4d9590d59e5bae242`.
-- The work remains unmerged. No PR or deployment was created at the time of this handoff update.
+- PR #15 is open against `main`; it remains unmerged. No deployment was performed.
 - The workflow runs `npm ci` and `npm run build`; final branch-head CI verification is to be recorded after the handoff update commits.
 - No lint or unit-test scripts are configured. Live Admin/Student/Teacher password reset validation remains outstanding.
 
