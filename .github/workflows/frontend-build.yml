@@ -40,6 +40,7 @@ on:
       - "feat/teacher-profile-capability"
       - "feat/teacher-settings-capability"
       - "feat/admin-profile-capability-clean"
+      - "feat/student-profile-capability"
   pull_request:
     branches:
       - main

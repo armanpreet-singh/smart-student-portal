@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/admin-profile-capability-clean`
-Phase II, Chunk 26 Teacher Learning Resources PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. Phase II, Chunk 27 Teacher Profile replacement PR #35 merged into `main` at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`; PR #34 was closed without merge. Phase II, Chunk 28 Teacher Settings PR #36 merged into `main` at `96ad2fe3a635797f388c65ee8189563da2851262`. The original stacked Admin Profile PR #37 was closed without merge because its history included the squash-merged Teacher Settings work; clean replacement PR #38 is open against `main` from `feat/admin-profile-capability-clean`: https://github.com/armanpreet-singh/smart-student-portal/pull/38. PR #31, #32 and #29 history remains as documented below.
+Development branch: `feat/student-profile-capability`
+Phase II, Chunk 26 Teacher Learning Resources PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. Phase II, Chunk 27 Teacher Profile replacement PR #35 merged at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`; PR #34 was closed without merge. Phase II, Chunk 28 Teacher Settings PR #36 merged at `96ad2fe3a635797f388c65ee8189563da2851262`. Original stacked Admin Profile PR #37 was closed without merge; clean replacement PR #38 merged into `main` at `cc018e17c36a0a0dbd7ec830f61746d96738d44d`. Phase II, Chunk 30 Student Profile work is in progress on `feat/student-profile-capability`, with PR #39 open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/39. PR #31, #32 and #29 history remains as documented below.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit after Chunk 28 / PR #36 merge: `96ad2fe3a635797f388c65ee8189563da2851262`. It includes the earlier merged Teacher and Admin capabilities plus Teacher Settings.
+Latest verified `main` commit after Chunk 29 / PR #38 merge: `cc018e17c36a0a0dbd7ec830f61746d96738d44d`. It includes all earlier merged Teacher/Admin capabilities, Teacher Settings and authenticated Admin Profile alignment.
 
 ## Working scope and rules
 
@@ -75,7 +75,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Student | Resources | Static resource cards with client-side type tabs. | **Needs improvement** — no student resource API/model or download authorization exists on backend main. | Backend resource metadata, file access and authorization contract required. |
 | Student | Announcements | Accessible capability-unavailable state; the page no longer imports or displays sample announcement records. | **Not supported by backend main** — no Announcement/Notification model or Student announcements read route. | Backend announcement audience, publishing, authorization and read-state contract required. |
 | Student | Academic Calendar | Accessible capability-unavailable state; the page no longer imports shared sample calendar records. | **Not supported by backend main** — no calendar/event model or Student calendar route. | Backend event/calendar model, authorized Student read API and date/time-zone semantics required. |
-| Student | Profile | Profile fields, roll number, contact and academic details are hardcoded. | **Needs improvement** — `GET /api/auth/me` returns safe identity fields but no rollNumber, phone, program or batch. | Bind only returned fields; separately define missing profile data fields before displaying them as real account data. |
+| Student | Profile | Displays verified `GET /api/auth/me` identity fields (full name, username, nullable email, role and account-created date); extended academic/contact fields are identified as unavailable. Student dropdown uses verified identity. | **Aligned with backend main** — no Student profile endpoint and no rollNumber, program, semester, batch, phone, address or advisor fields exist; `classId` is an opaque ID. | Add missing profile data only after the backend defines an authoritative Student profile contract. |
 | Student | Settings | Display name/email/phone save to browser localStorage only. | **Needs improvement** — backend supports password change, not profile/settings mutation. | Connect password-change flow; keep local preferences separate from authoritative account data. |
 | Teacher | Dashboard Home | Displays only the verified account name from `AuthContext`; timetable, statistics, generated insights and inert quick actions have been replaced with an accessible capability-unavailable state and a working Attendance link. | **Not supported for dashboard summaries by backend main** — assigned-subject, roster and attendance APIs exist, but no timetable, dashboard aggregate, assignment, grading, results or insights endpoints. | Add dashboard metrics only when supported APIs exist; keep attendance reachable through its existing workflow. |
 | Teacher | My Classes | Reads authenticated active subject assignments from `GET /api/teacher/subjects`; displays returned subject code/name, class code/name/academic year and assignment date. Includes loading, API error/retry and empty states with no mock fallback. | **API-integrated in Chunk 22 PR #28; live Teacher-account/data validation remains outstanding.** No roster size, timetable or attendance percentage is shown. | Validate with a provisioned Teacher account; roster and attendance actions remain on their dedicated supported screens. |
@@ -882,10 +882,20 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Removed fixture-backed mock portrait, Admin contact email, phone, office location, department, employee ID, fabricated “Super Admin” designation and sample last-login time.
 - Updated Admin topbar dropdown to show authenticated account full name, username and email instead of the mock Admin fixture/portrait. Notification functionality remains outside this Profile chunk.
 - Added accessible messaging for unavailable extended administrator details and responsive `src/features/admin/pages/ProfilePage.css`; preserved `/admin/profile`, Admin shell and theme.
-- Original stacked PR #37 was closed without merge to avoid duplicating the squash-merged Teacher Settings history. Clean replacement branch `feat/admin-profile-capability-clean` is based directly on the merged PR #36 commit. PR #38 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/38.
-- GitHub Actions verification is required on the final handoff-inclusive PR #38 head; the final passing `npm ci` / `npm run build` run is recorded in the PR and completion report before merge.
+- Original stacked PR #37 was closed without merge to avoid duplicating the squash-merged Teacher Settings history. Clean replacement branch `feat/admin-profile-capability-clean` was based directly on the merged PR #36 commit. PR #38 merged into `main` at `cc018e17c36a0a0dbd7ec830f61746d96738d44d`: https://github.com/armanpreet-singh/smart-student-portal/pull/38.
+- Final handoff-inclusive head `4390162f1eca1686ad0838b3c6aa94b05f99102c` passed main-target GitHub Actions build run `43589981428`; all steps passed, including `npm ci` and `npm run build`.
 - Frontend only. No backend, database, migration, secret, deployment, credential or live account changes.
+
+## Completed frontend chunk — Phase II, Chunk 30: Student Profile Capability Alignment
+
+- Branch `feat/student-profile-capability`, based directly on `main` at `cc018e17c36a0a0dbd7ec830f61746d96738d44d`.
+- Reverified backend-main `GET /api/auth/me`, `src/services/auth-service.js` and `prisma/schema.prisma` (backend main `19d34e577000411520ebb66cbea9eb6833fa4824`). Public User fields include `id`, `fullName`, `username`, nullable `email`, `role`, `classId`, `mustChangePassword`, `createdAt` and `updatedAt`. No Student profile endpoint or rollNumber, program, semester, batch, telephone, address or advisor fields exist; `classId` alone is not a human-readable academic profile.
+- Replaced fixture-backed Student Profile details with verified `useAuth()` session fields: full name, username, nullable email, account role and account-created date. Added an unavailable state for extended academic/contact details and a retry action when session verification is unavailable.
+- Updated Student dashboard topbar account dropdown to use authenticated name, username and email. Removed the mock portrait, roll number, department and semester from the dropdown; preserved search, theme, notification, profile/settings links, accessibility and logout interactions.
+- Added responsive `src/features/dashboard/pages/StudentProfile.css`; preserved `/dashboard/profile`, Student shell and theme. `mockDashboardData.js` remains unchanged for other consumers.
+- PR #39 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/39. Final handoff-inclusive head and successful GitHub Actions push/PR build runs will be recorded before merge.
+- Frontend only. No backend, database, schema, migration, secret, deployment, credential or live account changes.
 
 ## Next frontend work
 
-After PR #38 (Admin Profile) merges into `main`, re-audit the remaining Teacher/Admin screen inventory against backend-main to select Chunk 30. Continue one supported workflow at a time; do not add editable UI for fields or operations that lack an authoritative backend contract.
+After PR #39 (Student Profile) merges into `main`, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 31. Continue one supported workflow at a time; do not add editable UI for fields or operations that lack an authoritative backend contract.

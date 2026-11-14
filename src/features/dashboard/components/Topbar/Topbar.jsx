@@ -22,13 +22,12 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySubmenu';
 import { useDashboardTheme } from "../../hooks/useDashboardTheme";
-import { studentData } from "../../data/mockDashboardData";
 import { useAuth } from "../../../auth/context/AuthContext";
 
 const Topbar = memo(({ onMenuClick }) => {
   const location = useLocation();
   const { isDark, toggleTheme } = useDashboardTheme();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -142,7 +141,7 @@ const Topbar = memo(({ onMenuClick }) => {
             aria-haspopup="true"
             aria-label="User Menu"
           >
-            <img src={studentData.avatar} alt="User" />
+            <User size={19} aria-hidden="true" />
           </button>
 
           <AnimatePresence>
@@ -157,16 +156,28 @@ const Topbar = memo(({ onMenuClick }) => {
                 aria-orientation="vertical"
               >
                 <div className="d-dropdown-header">
-                  <img
-                    src={studentData.avatar}
-                    alt="Avatar"
+                  <div
                     className="d-dropdown-avatar"
-                  />
+                    aria-hidden="true"
+                    style={{
+                      display: "grid",
+                      placeItems: "center",
+                      color: "var(--d-primary)",
+                      background: "var(--d-surface)",
+                    }}
+                  >
+                    <User size={22} />
+                  </div>
                   <div className="d-dropdown-user-info">
-                    <p className="d-dropdown-name">{studentData.name}</p>
-                    <p className="d-dropdown-sub">{studentData.rollNumber}</p>
-                    <p className="d-dropdown-sub">{studentData.department}</p>
-                    <p className="d-dropdown-sub">{studentData.semester}</p>
+                    <p className="d-dropdown-name">
+                      {user?.fullName || "Student account"}
+                    </p>
+                    {user?.username && (
+                      <p className="d-dropdown-sub">@{user.username}</p>
+                    )}
+                    {user?.email && (
+                      <p className="d-dropdown-sub">{user.email}</p>
+                    )}
                   </div>
                 </div>
 
