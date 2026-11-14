@@ -30,9 +30,11 @@ on:
       - "feat/student-announcements-capability"
       - "feat/teacher-announcements-capability"
       - "feat/teacher-dashboard-capability"
+      - "feat/teacher-classes-api"
   pull_request:
     branches:
       - main
+      - "feat/teacher-dashboard-capability"
 
 permissions:
   contents: read

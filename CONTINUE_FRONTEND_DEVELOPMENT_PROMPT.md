@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 20 PR #26 is `94c377726153dc86c4b578e29e9dd4745a692771`. Chunk 19 PR #25 (Student Announcements) merged at `81cf6ef370d98db8919e547135194d33bbac2112`; Chunk 20 PR #26 (Teacher Announcements) merged at `94c377726153dc86c4b578e29e9dd4745a692771`. Current Chunk 21 branch: `feat/teacher-dashboard-capability`, based directly on `main`; PR #27 is open against `main`. PRs #20 and #21 and PRs #15–#19 and earlier completed Phase II PRs are merged.
+3. Latest verified `main` after merging Chunk 20 PR #26 is `94c377726153dc86c4b578e29e9dd4745a692771`. Chunk 19 PR #25 (Student Announcements) merged at `81cf6ef370d98db8919e547135194d33bbac2112`; Chunk 20 PR #26 (Teacher Announcements) merged at `94c377726153dc86c4b578e29e9dd4745a692771`. Chunk 21 PR #27 (Teacher Dashboard) is open against `main` on `feat/teacher-dashboard-capability`; Chunk 22 PR #28 (Teacher My Classes) is stacked on PR #27 and is open with base `feat/teacher-dashboard-capability` on `feat/teacher-classes-api`. Merge #27 first, then retarget #28 to `main`. PRs #20 and #21 and PRs #15–#19 and earlier completed Phase II PRs are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -160,12 +160,23 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 - Implementation-plus-handoff head `29abbfbcc4742ecef9fbec3a684550ab71369f74` passed GitHub Actions push run `43573775688` and PR run `43573848697` (`npm ci`, `npm run build`); Cloudflare Pages check `132383569842` passed. The follow-up commit only records these results in the handoff files; dashboard source is unchanged.
 - No backend, database, schema, migration, secret or deployment changes were made.
 
-## Exact next task — Phase II, Chunk 22 (proposed): Teacher My Classes API Alignment
+## Completed Phase II, Chunk 22 — Teacher My Classes API Alignment
 
-1. Replace the mock Teacher My Classes listing with backend-main `GET /api/teacher/subjects`.
-2. Display only verified subject and class fields returned by the endpoint; do not infer timetable or attendance percentages.
-3. Add loading, API error/retry and empty states.
-4. Preserve the Teacher route and existing dashboard layout; no backend changes.
+- Branch `feat/teacher-classes-api`, stacked on PR #27 / `feat/teacher-dashboard-capability` at `dbd53c39cb36caa1d17df14c23e72fca78123d7f`; PR #28 is open against that feature branch: https://github.com/armanpreet-singh/smart-student-portal/pull/28.
+- Backend-main Teacher `GET /api/teacher/subjects` is protected for TEACHER sessions and returns active assignments with `assignedAt`, subject `id`, `code`, `name`, `classId`, and class `id`, `code`, `name`, `academicYear`.
+- Added `src/features/teacher/api/teacherSubjectsApi.js` with Bearer token, timeout, network/authorization/server error handling and contract validation.
+- Replaced the mock Teacher My Classes page with API-backed subject/class cards. Shows only verified subject code/name, class code/name/academic year and assignment date; does not show student counts, timetable data, attendance percentages or fake quick actions.
+- Added loading, API error/retry and empty states, plus a working link to the existing Attendance workflow. No mock fallback.
+- Added responsive `TeacherClasses.css` and updated workflow filters for stacked push and PR checks. Preserved the Teacher route and shell.
+- Final handoff-inclusive head `c6a8557548b6b43cd95f3172530263ce442c1b27` passed GitHub Actions push run `43575412273` and stacked PR run `43575415501` (`npm ci`, `npm run build`); Cloudflare Pages check `132388528302` passed. A follow-up documentation-only commit records these verification results; source implementation is unchanged.
+- No backend, database, schema, migration, secret or deployment changes. No live account or academic records were modified.
+
+## Exact next task — Phase II, Chunk 23 (proposed): Teacher Students API Alignment
+
+1. Replace mock Teacher Students rows with the authenticated assigned-subject and per-subject roster endpoints already present on backend main.
+2. Let the Teacher select one of their assigned subjects and display only the returned student `id`, `fullName` and `username`, plus returned subject/class identifiers and names.
+3. Remove unsupported roll numbers, CGPA and global student claims; never present usernames or database IDs as roll numbers.
+4. Add loading, error/retry, empty-subject and empty-roster states; preserve the Teacher route and shared shell.
 5. Update both handoff documents, verify CI and stop.
 
 ## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
@@ -280,4 +291,4 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Broad categories still mock-backed include timetable, assignments, results, resources, announcements, academic calendar, departments and dashboard analytics. Admin also needs a dedicated teacher-subject assignment UI; Student duty-proof UI is dependent on backend draft PR #1 being approved/merged/deployed. Most existing pages need API loading/error/empty states and correct data/permission mapping before they can be marked Ready.
 
-Continue with Phase II, Chunk 22 (Teacher My Classes API Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
+Continue with Phase II, Chunk 23 (Teacher Students API Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.

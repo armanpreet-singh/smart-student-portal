@@ -1,93 +1,197 @@
-import React, { memo, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { Users, Calendar, UserCheck, FileText } from 'lucide-react';
-import SectionHeader from '../../../features/dashboard/components/SectionHeader/SectionHeader';
-import DashboardCard from '../../../features/dashboard/components/DashboardCard/DashboardCard';
-import ProgressCard from '../../../features/dashboard/components/ProgressCard/ProgressCard';
-import QuickActionCard from '../../../features/dashboard/components/QuickActionCard/QuickActionCard';
-import { teacherClassesData } from '../data/mockTeacherData';
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import { AlertCircle, BookOpen, CalendarDays, GraduationCap, LoaderCircle, RefreshCw } from "lucide-react";
+import { Link } from "react-router-dom";
 
-// Helper to determine progress bar color based on attendance percentage
-const getAttendanceColor = (percentage) => {
-  if (percentage >= 80) return "#16A34A"; // Green
-  if (percentage >= 75) return "#F59E0B"; // Yellow
-  return "#DC2626"; // Red
-};
+import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
+import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
+import { useAuth } from "../../auth/context/AuthContext";
+import { fetchTeacherAssignedSubjects } from "../api/teacherSubjectsApi";
+
+import "./TeacherClasses.css";
+
+function formatAssignedDate(value) {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return null;
+
+  return new Intl.DateTimeFormat("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
 
 const TeacherClasses = memo(() => {
+  const { accessToken, sessionStatus, sessionError } = useAuth();
+  const requestSequence = useRef(0);
+  const [subjects, setSubjects] = useState([]);
+  const [loadState, setLoadState] = useState("loading");
+  const [error, setError] = useState("");
+
+  const loadSubjects = useCallback(async () => {
+    const requestId = ++requestSequence.current;
+
+    if (sessionStatus !== "authenticated" || !accessToken) {
+      setLoadState("error");
+      setError(
+        sessionError ||
+          "Your Teacher session is unavailable. Sign in again to view assigned subjects.",
+      );
+      return;
+    }
+
+    setLoadState("loading");
+    setError("");
+
+    try {
+      const result = await fetchTeacherAssignedSubjects(accessToken);
+      if (requestId !== requestSequence.current) return;
+
+      setSubjects(result);
+      setLoadState("success");
+    } catch (cause) {
+      if (requestId !== requestSequence.current) return;
+
+      setError(cause?.message || "Unable to load assigned subjects.");
+      setLoadState("error");
+    }
+  }, [accessToken, sessionError, sessionStatus]);
+
+  useEffect(() => {
+    if (sessionStatus === "authenticated") {
+      void loadSubjects();
+    } else if (sessionStatus === "restoring") {
+      setLoadState("loading");
+      setError("");
+    } else {
+      setLoadState("error");
+      setError(
+        sessionError ||
+          "Your Teacher session is unavailable. Sign in again to view assigned subjects.",
+      );
+    }
+
+    return () => {
+      requestSequence.current += 1;
+    };
+  }, [loadSubjects, sessionError, sessionStatus]);
+
   return (
     <div className="d-page-container">
-      <SectionHeader 
-        title="My Classes" 
-        subtitle="Manage your assigned courses and sections" 
+      <SectionHeader
+        title="My Classes"
+        subtitle="Active subjects and their assigned class details"
+        action={
+          <Link
+            className="d-btn-primary t-classes-attendance-link"
+            to="/teacher/attendance"
+          >
+            Open Attendance
+          </Link>
+        }
       />
 
-      <div className="d-grid-2">
-        {teacherClassesData.map((cls, index) => (
-          <motion.div
-            key={cls.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.1 }}
-          >
-            <DashboardCard className="d-course-card" style={{ display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}>
-              
-              {/* Header */}
-              <div className="d-course-header">
-                <h4 className="d-course-name" style={{ margin: 0, fontSize: '18px' }}>{cls.name}</h4>
-                <span style={{ 
-                  fontSize: '12px', 
-                  fontWeight: 600, 
-                  color: 'var(--d-primary)', 
-                  backgroundColor: 'rgba(30, 58, 138, 0.1)', 
-                  padding: '4px 10px', 
-                  borderRadius: '6px',
-                  whiteSpace: 'nowrap'
-                }}>
-                  {cls.semester} • {cls.section}
-                </span>
-              </div>
+      {loadState === "loading" && (
+        <div className="t-classes-state" role="status">
+          <LoaderCircle className="t-classes-spinner" size={22} />
+          <span>Loading your assigned subjects…</span>
+        </div>
+      )}
 
-              {/* Class Meta Info */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', color: 'var(--d-text-secondary)', fontSize: '14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Users size={15} />
-                  <span>{cls.students} Students</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Calendar size={15} />
-                  <span>Next: {cls.nextLecture}</span>
-                </div>
-              </div>
+      {loadState === "error" && (
+        <DashboardCard className="t-classes-state-card">
+          <div className="t-classes-state t-classes-error" role="alert">
+            <AlertCircle size={22} aria-hidden="true" />
+            <div className="t-classes-state-copy">
+              <strong>Unable to load assigned subjects</strong>
+              <span>{error}</span>
+              <button
+                className="d-btn-primary t-classes-retry"
+                type="button"
+                onClick={loadSubjects}
+              >
+                <RefreshCw size={16} aria-hidden="true" />
+                Retry
+              </button>
+            </div>
+          </div>
+        </DashboardCard>
+      )}
 
-              {/* Attendance Progress */}
-              <div style={{ marginTop: 'auto' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
-                  <span style={{ color: 'var(--d-text-secondary)' }}>Overall Attendance</span>
-                  <span style={{ fontWeight: 700, color: getAttendanceColor(cls.attendance) }}>{cls.attendance}%</span>
-                </div>
-                <ProgressCard 
-                  value={cls.attendance} 
-                  color={getAttendanceColor(cls.attendance)} 
-                  showLabel={false} 
-                />
-              </div>
+      {loadState === "success" && subjects.length === 0 && (
+        <DashboardCard className="t-classes-state-card">
+          <div className="t-classes-state" role="status">
+            <BookOpen size={25} aria-hidden="true" />
+            <strong>No active subjects assigned</strong>
+            <span>
+              No active subject assignments are currently available for this
+              Teacher account. Contact an administrator if you expect to see
+              a class here.
+            </span>
+          </div>
+        </DashboardCard>
+      )}
 
-              {/* Quick Actions */}
-              <div style={{ 
-                display: 'flex', 
-                gap: '8px', 
-                paddingTop: '16px', 
-                borderTop: '1px solid var(--d-border)' 
-              }}>
-                <QuickActionCard icon={UserCheck} label="Attendance" color="#16A34A" />
-                <QuickActionCard icon={FileText} label="Assignments" color="#1E3A8A" />
-              </div>
+      {loadState === "success" && subjects.length > 0 && (
+        <>
+          <p className="t-classes-result-count" role="status">
+            {subjects.length} active {subjects.length === 1 ? "subject" : "subjects"} assigned
+          </p>
 
-            </DashboardCard>
-          </motion.div>
-        ))}
-      </div>
+          <div className="d-grid-2 t-classes-grid">
+            {subjects.map(({ assignedAt, subject }) => {
+              const assignedDate = formatAssignedDate(assignedAt);
+
+              return (
+                <DashboardCard
+                  className="t-classes-card"
+                  key={subject.id}
+                >
+                  <div className="t-classes-card-header">
+                    <div className="t-classes-subject-icon" aria-hidden="true">
+                      <BookOpen size={20} />
+                    </div>
+                    <span className="t-classes-subject-code">
+                      {subject.code}
+                    </span>
+                  </div>
+
+                  <h4 className="t-classes-subject-name">{subject.name}</h4>
+
+                  <div className="t-classes-class-details">
+                    <div className="t-classes-detail">
+                      <GraduationCap size={17} aria-hidden="true" />
+                      <div>
+                        <span>Assigned class</span>
+                        <strong>{subject.class.name}</strong>
+                      </div>
+                    </div>
+                    <div className="t-classes-detail">
+                      <BookOpen size={17} aria-hidden="true" />
+                      <div>
+                        <span>Class code</span>
+                        <strong>{subject.class.code}</strong>
+                      </div>
+                    </div>
+                    <div className="t-classes-detail">
+                      <CalendarDays size={17} aria-hidden="true" />
+                      <div>
+                        <span>Academic year</span>
+                        <strong>{subject.class.academicYear}</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  {assignedDate && (
+                    <p className="t-classes-assigned-date">
+                      Assignment recorded {assignedDate}
+                    </p>
+                  )}
+                </DashboardCard>
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 });
