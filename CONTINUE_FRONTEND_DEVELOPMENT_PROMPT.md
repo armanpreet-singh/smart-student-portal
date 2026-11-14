@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #35 (Teacher Profile replacement) merged into `main` at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. Earlier stacked PR #34 was closed without merge when its squash-dependent history became unmergeable. Current Phase II, Chunk 28 branch is `feat/teacher-settings-capability`.
+3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #35 (Teacher Profile replacement) merged into `main` at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. Earlier stacked PR #34 was closed without merge when its squash-dependent history became unmergeable. Current Phase II, Chunk 28 PR #36 is open against `main` from `feat/teacher-settings-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/36.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -355,6 +355,7 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - Added current/new/confirm password fields, visibility toggles, backend-aligned validation, submitting/error/success states and a verified session refresh through `refreshCurrentUser()`. Confirmation remains client-only; only currentPassword and newPassword are sent.
 - Non-password account preferences are marked unavailable because there is no profile-update endpoint.
 - Preserved `/teacher/settings` and the existing Teacher shell/theme; added responsive `TeacherSettings.css`.
-- PR #33 merged at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; clean Profile PR #35 merged at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. PR #34 was closed without merge and replaced by #35.
+- PR #33 merged at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; clean Profile PR #35 merged at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. PR #34 was closed without merge and replaced by #35. PR #36 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/36.
+- GitHub Actions push build run `43586082692` passed on the implementation and initial handoff snapshot `e59cefbeb90e53382d541138dcd59f4ec5bb3fef` (`npm ci`, `npm run build`).
 
 Continue with the next outstanding screen only after checking the live backend contract. Re-audit the remaining screen inventory before selecting Phase II, Chunk 29.
