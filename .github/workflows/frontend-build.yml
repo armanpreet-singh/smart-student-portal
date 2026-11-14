@@ -29,6 +29,7 @@ on:
       - "feat/student-calendar-capability"
       - "feat/student-announcements-capability"
       - "feat/teacher-announcements-capability"
+      - "feat/teacher-dashboard-capability"
   pull_request:
     branches:
       - main
