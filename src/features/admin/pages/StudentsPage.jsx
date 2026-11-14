@@ -6,6 +6,7 @@ import DashboardCard from "../../../features/dashboard/components/DashboardCard/
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import { fetchAdminStudents } from "../api/adminStudentsApi";
 import AccountStatusControl from "../components/AccountStatusControl";
+import AccountPasswordResetControl from "../components/AccountPasswordResetControl";
 import {
   createAdminStudent,
   fetchActiveStudentClassOptions,
@@ -532,6 +533,13 @@ const StudentsPage = () => {
                     <td>
                       <PasswordStatus
                         mustChangePassword={student.mustChangePassword}
+                      />
+                      <AccountPasswordResetControl
+                        accessToken={accessToken}
+                        account={student}
+                        actorId={user?.id}
+                        onUpdated={() => setRetryCount((value) => value + 1)}
+                        onUnauthorized={refreshCurrentUser}
                       />
                     </td>
                     <td className="a-students-created">
