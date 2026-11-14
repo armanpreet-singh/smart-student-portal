@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 22 PR #28 is `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`. Chunk 21 PR #27 (Teacher Dashboard) merged at `c1484c39871d6ca8e195ffd555a52bb68e4f1569`; Chunk 22 PR #28 (Teacher My Classes) merged at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`. Chunk 23 PR #29 is open against `main` on `feat/teacher-students-api`; Chunk 24 PR #30 (Teacher Assignments) is stacked on PR #29 and open with base `feat/teacher-students-api` on `feat/teacher-assignments-capability`. Merge #29 first, then retarget #30 to `main`. PRs #20 and #21 and PRs #15–#19 and earlier completed Phase II PRs are merged.
+3. Live verification on 2026-11-14: `main` is `04573f41327e09cfbb19225502002003de8105a3` after PR #29 merged. PR #30 is closed/merged at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34` into `feat/teacher-students-api`, not `main`; its Assignment changes still need a follow-up PR to main. Chunk 25 Timetable work must remain stacked on `feat/teacher-students-api` so the Assignment capability alignment is retained. Merge the Chunk 24 catch-up PR into `main` first, then retarget the Chunk 25 PR to `main`.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
