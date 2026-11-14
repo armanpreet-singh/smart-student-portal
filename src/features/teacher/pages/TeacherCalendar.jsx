@@ -1,51 +1,54 @@
 import React, { memo } from "react";
-import { motion } from "framer-motion";
+import { CalendarDays, Info } from "lucide-react";
+
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
 
-const mockEvents = [
-  {
-    id: 1,
-    date: "2023-10-28",
-    title: "Submit OS Mid-Sem Results",
-    type: "exam",
-  },
-  { id: 2, date: "2023-10-30", title: "Faculty Meeting", type: "event" },
-  { id: 3, date: "2023-11-02", title: "DBMS Lab Final Viva", type: "viva" },
-  { id: 4, date: "2023-11-15", title: "Diwali Holidays", type: "holiday" },
-];
+import "./TeacherCalendar.css";
 
 const TeacherCalendar = memo(() => (
   <div className="d-page-container">
     <SectionHeader
       title="Academic Calendar"
-      subtitle="Important academic dates and deadlines"
+      subtitle="Academic dates and deadlines from verified university data"
     />
-    <div className="d-cal-list">
-      {mockEvents.map((ev) => (
-        <motion.div
-          key={ev.id}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <DashboardCard className="d-cal-event">
-            <div className="d-cal-date">
-              <span className="d-cal-day">{new Date(ev.date).getDate()}</span>
-              <span className="d-cal-month">
-                {new Date(ev.date).toLocaleString("default", {
-                  month: "short",
-                })}
-              </span>
-            </div>
-            <div className="d-cal-info">
-              <h4>{ev.title}</h4>
-              <span className={`d-type-badge ${ev.type}`}>{ev.type}</span>
-            </div>
-          </DashboardCard>
-        </motion.div>
-      ))}
-    </div>
+
+    <DashboardCard
+      className="t-calendar-unavailable"
+      padding={false}
+    >
+      <section
+        className="t-calendar-unavailable-content"
+        role="status"
+        aria-labelledby="t-calendar-unavailable-title"
+      >
+        <div className="t-calendar-unavailable-icon" aria-hidden="true">
+          <CalendarDays size={25} />
+        </div>
+
+        <div className="t-calendar-unavailable-copy">
+          <div className="t-calendar-unavailable-label">
+            <Info size={14} aria-hidden="true" />
+            Backend capability unavailable
+          </div>
+
+          <h3 id="t-calendar-unavailable-title">
+            Academic calendar data is not available yet
+          </h3>
+
+          <p>
+            The current backend does not define a Calendar or Event model or
+            expose a Teacher calendar read endpoint.
+          </p>
+          <p>
+            Official academic dates, faculty events, examinations and
+            deadlines cannot be verified from the supported APIs, so fixed
+            sample events are intentionally not displayed.
+          </p>
+        </div>
+      </section>
+    </DashboardCard>
   </div>
 ));
+
 export default TeacherCalendar;

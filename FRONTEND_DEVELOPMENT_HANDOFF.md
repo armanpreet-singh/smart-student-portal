@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/admin-calendar-capability`
-Current pull requests: Phase II, Chunk 16 PR #22 (Admin Academic Calendar) is open against `main` on `feat/admin-calendar-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/22. Phase II, Chunk 15 PR #21 (Announcements) merged into `main` at `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`; Phase II, Chunk 14 PR #20 (Departments) merged at `010e99ef2474f5f63e1dfeda0b383e4b4ec159d4`. Phase II, Chunk 13 PR #19 merged at `641540bbd547eb6b295f746c4048be542651ce5e`; Chunk 12 PR #18 merged at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`; Chunk 11 PR #17 and earlier completed PRs are merged.
+Development branch: `feat/teacher-calendar-capability`
+Current pull requests: Phase II, Chunk 16 PR #22 (Admin Academic Calendar) is open against `main` on `feat/admin-calendar-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/22. Phase II, Chunk 17 PR #23 (Teacher Academic Calendar) is stacked on PR #22 with base `feat/admin-calendar-capability`; merge #22 first, then retarget #23 to `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/23. Phase II, Chunk 15 PR #21 (Announcements) merged into `main` at `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`; Phase II, Chunk 14 PR #20 (Departments) merged at `010e99ef2474f5f63e1dfeda0b383e4b4ec159d4`. Phase II, Chunk 13 PR #19 merged at `641540bbd547eb6b295f746c4048be542651ce5e`; Chunk 12 PR #18 merged at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`; Chunk 11 PR #17 and earlier completed PRs are merged.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -741,10 +741,20 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Source read-back covered the Admin Calendar page, stylesheet, workflow and both handoff files. GitHub Actions push run `43566860529` and PR run `43566938543` both completed successfully on implementation head `c427cc3bb51e3fd1c607b7e3adae8a7c92e1981d`; both ran `npm ci` and `npm run build`. The matching Cloudflare Pages check also completed successfully.
 - No backend, database, schema, migration, secret, deployment or live calendar changes were made.
 
-## Exact next frontend task — Phase II, Chunk 17 (proposed): Teacher Academic Calendar Capability Alignment
+## Completed frontend chunk — Phase II, Chunk 17: Teacher Academic Calendar Capability Alignment
 
-1. Reverify backend-main for calendar/event models and Teacher calendar endpoints.
-2. Audit the Teacher Calendar screen for fixed sample events or unsupported event claims.
-3. If no supported endpoint exists, replace sample calendar data with an accessible capability-unavailable state.
-4. Preserve the existing Teacher layout and route; do not add backend functionality.
+- Branch: `feat/teacher-calendar-capability`, stacked on PR #22 / `feat/admin-calendar-capability` at `bcb4ad1f9c649b43c202a8a20a6f44f5c0b639f5` (whose base is `main` at `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`).
+- PR #23: https://github.com/armanpreet-singh/smart-student-portal/pull/23 is open against `feat/admin-calendar-capability`; merge PR #22 first, then retarget PR #23 to `main`.
+- Reverified backend-main Prisma schema and Teacher route: no Calendar/AcademicCalendar/Event model or Teacher calendar/event endpoint. The Teacher router currently exposes assigned subjects, subject rosters and attendance marking only.
+- The previous Teacher Calendar displayed four hard-coded 2023 entries (mid-semester results, faculty meeting, DBMS viva and Diwali holidays). Replaced them with an accessible capability-unavailable notice; no fixed dates, sample event labels or unsupported event management controls remain.
+- Added responsive `TeacherCalendar.css`; preserved the existing Teacher calendar page, route and shared dashboard components.
+- Source read-back and final GitHub Actions results will be recorded after the branch head is finalized.
+- No backend, database, schema, migration, secret, deployment or live calendar changes were made.
+
+## Exact next frontend task — Phase II, Chunk 18 (proposed): Student Academic Calendar Capability Alignment
+
+1. Reverify backend-main for Student calendar/event models or calendar endpoints.
+2. Audit the Student Academic Calendar for stale fixed dates and sample event claims.
+3. If no supported Student calendar endpoint exists, replace sample content with an accessible capability-unavailable state.
+4. Preserve the existing Student layout and route; do not add backend functionality.
 5. Verify the build, update both handoff documents and stop.
