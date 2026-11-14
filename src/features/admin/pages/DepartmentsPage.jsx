@@ -17,7 +17,7 @@ const DepartmentsPage = memo(() => (
       className="a-departments-unavailable"
       padding={false}
     >
-      <section className="a-departments-unavailable-content" role="status">
+      <section className="a-departments-unavailable-content" role="status" aria-labelledby="a-departments-unavailable-title">
         <div className="a-departments-unavailable-icon" aria-hidden="true">
           <Building2 size={25} />
         </div>

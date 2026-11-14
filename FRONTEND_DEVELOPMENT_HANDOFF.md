@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/admin-reports-analytics`
-Current pull request: Phase II, Chunk 13 PR #19 is open against `main` and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/19. Phase II, Chunk 12 PR #18 merged into `main` at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`: https://github.com/armanpreet-singh/smart-student-portal/pull/18. Phase II, Chunk 11 PR #17 merged into `main` at `88503fbfb98c7229e6179ba04a45b0ec71c7745a`: https://github.com/armanpreet-singh/smart-student-portal/pull/17. Phase II, Chunk 10 PR #16 and Chunk 9 PR #15 are also merged into `main`.
+Development branch: `feat/admin-departments-capability`
+Current pull request: Phase II, Chunk 14 PR #20 is open against `main` and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/20. Phase II, Chunk 13 PR #19 merged into `main` at `641540bbd547eb6b295f746c4048be542651ce5e`: https://github.com/armanpreet-singh/smart-student-portal/pull/19. Phase II, Chunk 12 PR #18 merged into `main` at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`: https://github.com/armanpreet-singh/smart-student-portal/pull/18. Phase II, Chunk 11 PR #17 and earlier PRs #7–#16 are also merged into `main`.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit after Chunk 12 merge: `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`. Chunk 13 branch `feat/admin-reports-analytics` and PR #19 are being rebased onto this head.
+Latest verified `main` commit after Chunk 13 merge: `641540bbd547eb6b295f746c4048be542651ce5e`. Chunk 14 branch `feat/admin-departments-capability` and PR #20 are based on this head.
 
 ## Working scope and rules
 
@@ -92,7 +92,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Admin | Student Directory | Uses backend-main paginated `GET /api/admin/users?role=STUDENT`; supports search/status filters/pagination, create-only provisioning and confirmed active/inactive status changes through the managed-user API. | **Needs improvement** — read/create/status UI integration is implemented; validate with a provisioned Admin account and real Student accounts. | Verify real account creation and status changes including own-account protection. Password reset remains separate; backend exposes no rollNumber. |
 | Admin | Teacher Directory | Uses backend-main paginated `GET /api/admin/users?role=TEACHER`; supports search/status filters/pagination, create-only provisioning and confirmed active/inactive status changes through the managed-user API. | **Needs improvement** — read/create/status UI integration is implemented; validate with a provisioned Admin account and real Teacher accounts. | Verify real account creation and status changes including own-account protection. Password reset and subject assignments remain separate; employee IDs, departments, specializations, experience and teacher-subject assignments are not provided by the directory. |
 | Admin | Class & Subject Catalogue | Separate Classes and Subjects views call backend-main GET `/api/admin/classes` and `/api/admin/subjects`; pagination, search, active filters and class-scoped subject filter use API data. | **Needs improvement** — read integration is implemented; verify with a provisioned Admin account and actual catalogue data. | Validate real data, pagination and class/subject relationships; create/update actions are outside this read-only chunk. |
-| Admin | Departments | Mock department/HOD/student/faculty counts. | **Needs improvement** — no Department model/API exists. | Backend department structure and authorized management/read API required. |
+| Admin | Departments | Explicit capability-unavailable state; no department names, HODs or student/faculty counts are displayed as university data. | **Implemented in Chunk 14 PR #20; pending merge** — verified backend main has no Department model or Admin department read endpoint. | Requires a backend Department model, relationships and authorized read API before a live directory can be implemented. |
 | Admin | Attendance Overview | Calls backend-main `GET /api/admin/attendance`; overall metrics, status counts, subject chart and class/subject table are derived from report aggregates. Date, class and subject filters use backend-supported query fields and directory data. | **Needs improvement** — integration is implemented; verify with a provisioned Admin account and real class/subject/attendance records. | Validate report filters and empty/zero-denominator cases with live university data; no department-level aggregation exists. |
 | Admin | Announcements | Static sample rows; New Announcement button inert. | **Needs improvement** — no announcement API/model exists. | Backend announcement targeting and publication contract required. |
 | Admin | Academic Calendar | Static fixed events. | **Needs improvement** — no calendar/event API/model exists. | Backend event/calendar contract required. |
@@ -703,21 +703,29 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 
 ## Completed frontend chunk — Phase II, Chunk 13: Admin Reports & Analytics API Alignment
 
-- Feature branch: `feat/admin-reports-analytics`, being reconciled onto `main` at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d` after PR #18 was merged.
-- PR #19: https://github.com/armanpreet-singh/smart-student-portal/pull/19 (open against `main`, not merged).
-- Reverified backend-main route `GET /api/admin/attendance`, returning HTTP 200 `{ status: "ok", data: { period, filters, summary, subjects } }`. Supported query fields are `fromDate`, `toDate`, `classId` and `subjectId`.
-- Overall and per-subject summaries expose PRESENT, ABSENT, LATE, EXCUSED, `totalRecords`, `eligibleSessions`, `attendedSessions` and nullable `attendancePercentage`. Eligible = PRESENT + ABSENT + LATE; attended = PRESENT + LATE; EXCUSED is excluded; zero eligible denominator returns `null`.
-- Replaced mock-backed Reports & Analytics with a wrapper over the existing authenticated Attendance Overview component and API client. It reuses supported filters, summary metrics, subject chart/table, and loading/error/empty states.
-- Unsupported student growth, department distribution, course enrollment and monthly attendance trends are explicitly identified as unavailable from the current Admin report API and are not presented as real metrics.
-- Initial pre-rebase CI runs `43561941727` (PR) and `43561937069` (push) passed on the original PR head `535f1124afbe8d95195798a5624592aaa3512357`.
-- Fresh post-rebase GitHub Actions runs `43562618943` (pull request) and `43562614042` (push) both passed on combined head `4fc53b7d32fb340b1a7115ec9179ca71eb1fbc75`; `npm ci` and `npm run build` passed with Chunk 12 included.
+- Feature branch: `feat/admin-reports-analytics`, based on `main` at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d` after PR #18 merged.
+- PR #19: https://github.com/armanpreet-singh/smart-student-portal/pull/19 merged into `main` at `641540bbd547eb6b295f746c4048be542651ce5e`.
+- Backend-main route `GET /api/admin/attendance` returns period, applied filters, overall summary and per-subject summaries. Supported query fields: `fromDate`, `toDate`, `classId`, `subjectId`.
+- Summary fields include PRESENT, ABSENT, LATE, EXCUSED, `totalRecords`, `eligibleSessions`, `attendedSessions` and nullable `attendancePercentage`. Eligible = PRESENT + ABSENT + LATE; attended = PRESENT + LATE; EXCUSED excluded; zero eligible denominator yields `null`.
+- Reports & Analytics reuses the authenticated Attendance Overview report component/API, with supported filters, metrics, status breakdown, subject chart/table and loading/error/empty states. Mock growth, department, enrollment and monthly trend charts are not presented as university metrics.
+- Initial pre-rebase CI runs `43561941727` and `43561937069` passed on the original PR head. Post-rebase CI runs `43562618943` and `43562614042` passed on combined head `4fc53b7d32fb340b1a7115ec9179ca71eb1fbc75`. Final PR-head runs `43562736157` (PR) and `43562732174` (push) passed on `67d2f26f8c6dd660b02035345a352fb11ff2f21f`; all ran `npm ci` and `npm run build`.
 - No backend, database, migration, secret, deployment or live report data changes were made.
 
-## Exact next frontend task — Phase II, Chunk 14 (proposed): Admin Departments Capability Alignment
+## Completed frontend chunk — Phase II, Chunk 14: Admin Departments Capability Alignment
 
-1. Reverify backend-main for a Department model, routes, schemas and authorized read API.
-2. Audit the Admin Departments screen and identify which displayed fields are static/mock data.
-3. Do not present department, HOD, student or faculty counts as university data without a supported backend source; use an explicit unavailable/not-supported state instead of fabricated or inferred values.
-4. Keep any implementation frontend-only unless the user separately authorizes backend work.
+- Feature branch: `feat/admin-departments-capability`, based on `main` at `641540bbd547eb6b295f746c4048be542651ce5e`.
+- PR #20: https://github.com/armanpreet-singh/smart-student-portal/pull/20 (open against `main`, not merged).
+- Reverified backend-main `prisma/schema.prisma`: no `Department` model or department/faculty fields. Admin routes contain no department read endpoint. `admin-academic-service.js` and `academic-schemas.js` contain no department service or validation schema.
+- The previous Departments page imported static `departmentsData` from `mockAdminData.js` and displayed mock department names, HOD names, student totals and faculty totals. Replaced it with an accessible capability-unavailable state that explains why these metrics are not shown.
+- The page no longer imports department fixtures or displays inferred records. Shared `mockAdminData.js` is unchanged for unrelated legacy screens.
+- Added responsive `DepartmentsPage.css` and a GitHub Actions push trigger for `feat/admin-departments-capability`.
+- No backend, database, schema, migration, secret, deployment or live data changes were made. No live Admin account was used.
+
+## Exact next frontend task — Phase II, Chunk 15 (proposed): Admin Announcements Capability Alignment
+
+1. Reverify backend-main for an Announcement model, authorized Admin routes, schemas and supported read/publish operations.
+2. Audit the Admin Announcements screen and identify static sample announcements or inert actions.
+3. Do not present sample announcements as published university content or imply unsupported publish/targeting controls are functional.
+4. If no API exists, replace mock records with a clear unavailable state and retain no fake data; do not add backend functionality in this frontend-only workflow.
 5. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 
