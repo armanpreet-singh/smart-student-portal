@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #35 (Teacher Profile replacement) is open against `main` from `feat/teacher-profile-capability`. Earlier stacked PR #34 was closed without merge when its squash-dependent history became unmergeable.
+3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #35 (Teacher Profile replacement) merged into `main` at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. Earlier stacked PR #34 was closed without merge when its squash-dependent history became unmergeable. Current Phase II, Chunk 28 PR #36 is open against `main` from `feat/teacher-settings-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/36.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -348,4 +348,14 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. Original stacked PR #34 was closed without merge during clean rebase; clean replacement PR #35 carries only Profile changes against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/35.
 - GitHub Actions push build run `43585487245` passed on the Profile implementation snapshot (`npm ci`, `npm run build`).
 
-Continue with Phase II, Chunk 28 (Teacher Settings Capability Alignment) as specified in the handoff. Verify backend-main contracts, complete one chunk, update both handoff files, verify CI and stop.
+## Completed Phase II, Chunk 28 — Teacher Settings Capability Alignment
+
+- Backend `POST /api/auth/change-password` is authenticated and accepts exactly `{ currentPassword, newPassword }`; current password is non-empty and <=72 UTF-8 bytes, new password is >=12 characters and <=72 UTF-8 bytes, and the values must differ.
+- Reused the existing frontend `changeCurrentPassword` helper; removed mock name/email/phone controls and the console-only submit handler.
+- Added current/new/confirm password fields, visibility toggles, backend-aligned validation, submitting/error/success states and a verified session refresh through `refreshCurrentUser()`. Confirmation remains client-only; only currentPassword and newPassword are sent.
+- Non-password account preferences are marked unavailable because there is no profile-update endpoint.
+- Preserved `/teacher/settings` and the existing Teacher shell/theme; added responsive `TeacherSettings.css`.
+- PR #33 merged at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; clean Profile PR #35 merged at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. PR #34 was closed without merge and replaced by #35. PR #36 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/36.
+- GitHub Actions push build run `43586082692` passed on the implementation and initial handoff snapshot `e59cefbeb90e53382d541138dcd59f4ec5bb3fef` (`npm ci`, `npm run build`).
+
+Continue with the next outstanding screen only after checking the live backend contract. Re-audit the remaining screen inventory before selecting Phase II, Chunk 29.
