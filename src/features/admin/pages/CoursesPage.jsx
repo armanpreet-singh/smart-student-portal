@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { BookOpen, Building2, ChevronLeft, ChevronRight, RotateCw, Search } from "lucide-react";
+import { AlertCircle, Archive, BookOpen, Building2, CheckCircle2, ChevronLeft, ChevronRight, Pencil, Plus, RotateCcw, RotateCw, Search, X } from "lucide-react";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
@@ -9,6 +9,7 @@ import {
   fetchAdminSubjects,
   fetchAllAdminClasses,
 } from "../api/adminCatalogueApi";
+import { createAdminClass, updateAdminClass } from "../api/adminClassManagementApi";
 
 import "./CoursesPage.css";
 
@@ -66,6 +67,239 @@ function ActiveBadge({ isActive }) {
   );
 }
 
+
+function ClassEditorDialog({ classRecord, submitting, error, onClose, onSave }) {
+  const [form, setForm] = useState(() => ({
+    code: classRecord?.code || "",
+    name: classRecord?.name || "",
+    academicYear: classRecord?.academicYear || "",
+  }));
+  const [validationError, setValidationError] = useState("");
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && !submitting) onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose, submitting]);
+
+  const updateField = (field, value) => {
+    setForm((current) => ({ ...current, [field]: value }));
+    setValidationError("");
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const values = {
+      code: form.code.trim().toUpperCase(),
+      name: form.name.trim(),
+      academicYear: form.academicYear.trim(),
+    };
+
+    if (
+      !values.code ||
+      values.code.length > 30 ||
+      !/^[A-Z0-9._-]+$/.test(values.code)
+    ) {
+      setValidationError(
+        "Use 1–30 characters for the class code: letters, numbers, dots, underscores, or hyphens.",
+      );
+      return;
+    }
+    if (values.name.length < 2 || values.name.length > 120) {
+      setValidationError("Class name must be between 2 and 120 characters.");
+      return;
+    }
+    if (values.academicYear.length < 4 || values.academicYear.length > 20) {
+      setValidationError("Academic year must be between 4 and 20 characters.");
+      return;
+    }
+
+    onSave(values);
+  };
+
+  return (
+    <div
+      className="a-class-modal-backdrop"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget && !submitting) onClose();
+      }}
+    >
+      <section
+        className="a-class-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="a-class-editor-title"
+      >
+        <div className="a-class-modal-heading">
+          <div>
+            <span>{classRecord ? "Edit class" : "New class"}</span>
+            <h3 id="a-class-editor-title">
+              {classRecord ? "Update class details" : "Create a class"}
+            </h3>
+          </div>
+          <button
+            type="button"
+            aria-label="Close class form"
+            onClick={onClose}
+            disabled={submitting}
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <p className="a-class-modal-description">
+          Enter the class details used in the university academic catalogue.
+        </p>
+
+        <form className="a-class-editor-form" onSubmit={handleSubmit}>
+          <label className="d-form-group">
+            <span>Class code</span>
+            <input
+              autoFocus
+              required
+              value={form.code}
+              maxLength={30}
+              pattern="[A-Za-z0-9._-]+"
+              placeholder="e.g. CSE-2026"
+              onChange={(event) => updateField("code", event.target.value)}
+            />
+            <small>1–30 characters; letters, numbers, dots, underscores, or hyphens.</small>
+          </label>
+          <label className="d-form-group">
+            <span>Class name</span>
+            <input
+              required
+              value={form.name}
+              maxLength={120}
+              minLength={2}
+              placeholder="e.g. B.Tech Computer Science"
+              onChange={(event) => updateField("name", event.target.value)}
+            />
+          </label>
+          <label className="d-form-group">
+            <span>Academic year</span>
+            <input
+              required
+              value={form.academicYear}
+              maxLength={20}
+              minLength={4}
+              placeholder="e.g. 2026–2027"
+              onChange={(event) => updateField("academicYear", event.target.value)}
+            />
+            <small>4–20 characters.</small>
+          </label>
+
+          {(validationError || error) && (
+            <div className="a-class-dialog-error" role="alert">
+              <AlertCircle size={17} />
+              <span>{validationError || error}</span>
+            </div>
+          )}
+
+          <div className="a-class-modal-actions">
+            <button
+              type="button"
+              className="a-class-secondary-button"
+              onClick={onClose}
+              disabled={submitting}
+            >
+              Cancel
+            </button>
+            <button type="submit" className="d-btn-primary" disabled={submitting}>
+              {submitting
+                ? "Saving class…"
+                : classRecord
+                  ? "Save changes"
+                  : "Create class"}
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  );
+}
+
+function ClassStatusDialog({ classRecord, targetActive, submitting, error, onClose, onConfirm }) {
+  const actionLabel = targetActive ? "Reactivate" : "Archive";
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && !submitting) onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose, submitting]);
+
+  return (
+    <div
+      className="a-class-modal-backdrop"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget && !submitting) onClose();
+      }}
+    >
+      <section
+        className="a-class-modal a-class-status-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="a-class-status-title"
+      >
+        <div className="a-class-modal-heading">
+          <div>
+            <span>Class status</span>
+            <h3 id="a-class-status-title">{actionLabel} this class?</h3>
+          </div>
+          <button
+            type="button"
+            aria-label="Close status confirmation"
+            onClick={onClose}
+            disabled={submitting}
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="a-class-status-summary">
+          <strong>{classRecord.name}</strong>
+          <span>{classRecord.code} · {classRecord.academicYear}</span>
+          <p>
+            {targetActive
+              ? "This will make the existing class active again. Its record and related records are retained."
+              : "This will mark the class inactive. It does not delete the class or its related records."}
+          </p>
+        </div>
+
+        {error && (
+          <div className="a-class-dialog-error" role="alert">
+            <AlertCircle size={17} />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <div className="a-class-modal-actions">
+          <button
+            type="button"
+            className="a-class-secondary-button"
+            onClick={onClose}
+            disabled={submitting}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="d-btn-primary"
+            onClick={onConfirm}
+            disabled={submitting}
+          >
+            {submitting ? "Updating status…" : actionLabel}
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 const CoursesPage = () => {
   const { accessToken, refreshCurrentUser } = useAuth();
 
@@ -98,6 +332,12 @@ const CoursesPage = () => {
   const [requestError, setRequestError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
   const [filterError, setFilterError] = useState("");
+  const [classEditor, setClassEditor] = useState({ open: false, record: null });
+  const [classStatusAction, setClassStatusAction] = useState(null);
+  const [classMutationStatus, setClassMutationStatus] = useState("idle");
+  const [classEditorError, setClassEditorError] = useState("");
+  const [classStatusError, setClassStatusError] = useState("");
+  const [classMutationSuccess, setClassMutationSuccess] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -249,6 +489,102 @@ const CoursesPage = () => {
     setFilterError("");
   };
 
+
+  const openCreateClass = () => {
+    setClassMutationSuccess("");
+    setClassEditorError("");
+    setClassEditor({ open: true, record: null });
+  };
+
+  const openEditClass = (record) => {
+    setClassMutationSuccess("");
+    setClassEditorError("");
+    setClassEditor({ open: true, record });
+  };
+
+  const closeClassEditor = () => {
+    if (classMutationStatus !== "saving") {
+      setClassEditor({ open: false, record: null });
+      setClassEditorError("");
+    }
+  };
+
+  const saveClass = async (values) => {
+    if (classMutationStatus !== "idle") return;
+    setClassMutationStatus("saving");
+    setClassEditorError("");
+    setClassMutationSuccess("");
+
+    try {
+      if (classEditor.record) {
+        await updateAdminClass(accessToken, classEditor.record.id, values);
+        setClassMutationSuccess("Class details updated successfully.");
+      } else {
+        await createAdminClass(accessToken, values);
+        setClassMutationSuccess("Class created successfully.");
+        const cleared = { search: "", isActive: "all", classId: "" };
+        setDraftFilters(cleared);
+        setFilters(cleared);
+        setPage(1);
+      }
+
+      setClassEditor({ open: false, record: null });
+      setRetryCount((value) => value + 1);
+      setOptionsRetry((value) => value + 1);
+    } catch (error) {
+      if (error?.status === 401) await refreshCurrentUser();
+      setClassEditorError(
+        error?.message || "Unable to save this class. Please try again.",
+      );
+    } finally {
+      setClassMutationStatus("idle");
+    }
+  };
+
+  const openClassStatusAction = (record) => {
+    setClassMutationSuccess("");
+    setClassStatusError("");
+    setClassStatusAction({ record, targetActive: !record.isActive });
+  };
+
+  const closeClassStatusAction = () => {
+    if (classMutationStatus !== "updating-status") {
+      setClassStatusAction(null);
+      setClassStatusError("");
+    }
+  };
+
+  const confirmClassStatusAction = async () => {
+    if (!classStatusAction || classMutationStatus !== "idle") return;
+
+    setClassMutationStatus("updating-status");
+    setClassStatusError("");
+    setClassMutationSuccess("");
+
+    try {
+      await updateAdminClass(
+        accessToken,
+        classStatusAction.record.id,
+        { isActive: classStatusAction.targetActive },
+      );
+      setClassMutationSuccess(
+        classStatusAction.targetActive
+          ? "Class reactivated successfully."
+          : "Class archived successfully. The class record and related records were retained.",
+      );
+      setClassStatusAction(null);
+      setRetryCount((value) => value + 1);
+      setOptionsRetry((value) => value + 1);
+    } catch (error) {
+      if (error?.status === 401) await refreshCurrentUser();
+      setClassStatusError(
+        error?.message || "Unable to update class status. Please try again.",
+      );
+    } finally {
+      setClassMutationStatus("idle");
+    }
+  };
+
   const startRecord = pagination.total === 0 ? 0 : (pagination.page - 1) * pagination.pageSize + 1;
   const endRecord = Math.min(pagination.page * pagination.pageSize, pagination.total);
 
@@ -369,6 +705,12 @@ const CoursesPage = () => {
                 : "Records supplied by the university service"}
             </p>
           </div>
+          {activeTab === "classes" && (
+            <button type="button" className="d-btn-primary a-catalogue-add-class" onClick={openCreateClass}>
+              <Plus size={16} />
+              Add class
+            </button>
+          )}
           <label className="a-catalogue-page-size">
             <span>Rows</span>
             <select
@@ -384,6 +726,13 @@ const CoursesPage = () => {
             </select>
           </label>
         </div>
+
+        {classMutationSuccess && (
+          <div className="a-class-success-banner" role="status" aria-live="polite">
+            <CheckCircle2 size={17} />
+            <span>{classMutationSuccess}</span>
+          </div>
+        )}
 
         {requestStatus === "loading" && (
           <LoadingState message={`Retrieving the ${activeTab} directory.`} />
@@ -411,6 +760,7 @@ const CoursesPage = () => {
                   <th>Students</th>
                   <th>Subjects</th>
                   <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -422,6 +772,28 @@ const CoursesPage = () => {
                     <td>{item._count.students.toLocaleString()}</td>
                     <td>{item._count.subjects.toLocaleString()}</td>
                     <td><ActiveBadge isActive={item.isActive} /></td>
+                    <td>
+                      <div className="a-catalogue-row-actions">
+                        <button
+                          type="button"
+                          className="a-catalogue-row-action"
+                          onClick={() => openEditClass(item)}
+                          aria-label={`Edit ${item.name}`}
+                        >
+                          <Pencil size={14} />
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          className={`a-catalogue-row-action ${item.isActive ? "archive" : "reactivate"}`}
+                          onClick={() => openClassStatusAction(item)}
+                          aria-label={`${item.isActive ? "Archive" : "Reactivate"} ${item.name}`}
+                        >
+                          {item.isActive ? <Archive size={14} /> : <RotateCcw size={14} />}
+                          {item.isActive ? "Archive" : "Reactivate"}
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -499,6 +871,28 @@ const CoursesPage = () => {
         <p className="a-catalogue-selected-class">
           Filtering subjects for <strong>{selectedClass.code} — {selectedClass.name}</strong>.
         </p>
+      )}
+
+      {classEditor.open && (
+        <ClassEditorDialog
+          key={classEditor.record?.id || "new-class"}
+          classRecord={classEditor.record}
+          submitting={classMutationStatus === "saving"}
+          error={classEditorError}
+          onClose={closeClassEditor}
+          onSave={saveClass}
+        />
+      )}
+
+      {classStatusAction && (
+        <ClassStatusDialog
+          classRecord={classStatusAction.record}
+          targetActive={classStatusAction.targetActive}
+          submitting={classMutationStatus === "updating-status"}
+          error={classStatusError}
+          onClose={closeClassStatusAction}
+          onConfirm={confirmClassStatusAction}
+        />
       )}
     </div>
   );
