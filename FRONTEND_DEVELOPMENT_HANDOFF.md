@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/admin-teacher-subject-assignments`
-Current pull request: Phase II, Chunk 10 PR #16 is open against `main` and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/16. Phase II, Chunk 9 PR #15 is merged into `main` at `3a8f7fc6fcae978922b628ee9e23349c166998ed`: https://github.com/armanpreet-singh/smart-student-portal/pull/15.
+Development branch: `feat/admin-class-management`
+Current pull request: Phase II, Chunk 11 PR #17 is open against `main` and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/17. Phase II, Chunk 10 PR #16 merged into `main` at `fc24d228a63e61e7e628ab4cab58e959deb01e21`: https://github.com/armanpreet-singh/smart-student-portal/pull/16. Phase II, Chunk 9 PR #15 merged into `main` at `3a8f7fc6fcae978922b628ee9e23349c166998ed`: https://github.com/armanpreet-singh/smart-student-portal/pull/15.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit after Chunk 9 merge: `3a8f7fc6fcae978922b628ee9e23349c166998ed`. Chunk 10 PR #16 has been rebased onto this `main` head and remains open for merge.
+Latest verified `main` commit after Chunk 10 merge: `fc24d228a63e61e7e628ab4cab58e959deb01e21`. Chunk 11 branch `feat/admin-class-management` and PR #17 are based on this head.
 
 ## Working scope and rules
 
@@ -665,7 +665,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ## Completed frontend chunk — Phase II, Chunk 10: Admin Teacher-to-Subject Assignment UI
 
 - Feature branch: `feat/admin-teacher-subject-assignments`, created from live `main` at `d4484cfc4384b024f86ee0f4d9590d59e5bae242`.
-- PR #16: https://github.com/armanpreet-singh/smart-student-portal/pull/16. It is open against `main`, not merged, and GitHub reports it mergeable.
+- PR #16: https://github.com/armanpreet-singh/smart-student-portal/pull/16 merged into `main` at `fc24d228a63e61e7e628ab4cab58e959deb01e21` after successful rebased CI run `43560009483` on head `14601289a1227965b66db160fdb40fe03fd941c0`.
 - Reverified backend-main route, request schema and service before editing. The Admin-only endpoint is `POST /api/admin/teacher-subject-assignments`, with strict body exactly `{ teacherId, subjectId }`; it returns HTTP 201 with `{ status: "ok", data: { assignment: { id, teacherId, subjectId, assignedAt } } }`.
 - Backend eligibility rules require an active account with role `TEACHER`, an active Subject, and an active parent Class. Duplicate teacher/subject links return HTTP 409. These rules remain authoritative on the backend.
 - Added `src/features/admin/api/adminTeacherSubjectAssignmentsApi.js` for the Bearer-authenticated POST. It validates IDs and the created response, applies a 12-second timeout, and handles validation/ineligibility, expired session, forbidden access, duplicate, server, transport and timeout-uncertainty cases.
@@ -677,14 +677,25 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - No live Admin account or teacher-subject assignment mutation was used for testing. No backend, database, migration, secrets or deployment were changed.
 - Chunk 9 password reset was merged separately through PR #15 into `main` at `3a8f7fc6fcae978922b628ee9e23349c166998ed`: https://github.com/armanpreet-singh/smart-student-portal/pull/15.
 
-## Exact next frontend task — Phase II, Chunk 11 (proposed): Admin Class Management UI
 
-Extend the existing read-only Admin Class Catalogue into a focused Class Management workflow:
-1. Reverify backend-main class create/update contracts, strict schemas, response projections, status/archive semantics and role middleware before editing.
-2. Add create and edit controls for Class fields actually supported by backend main (code, name and academicYear), with confirmation for archive/reactivation through the supported `isActive` update. Do not invent other fields.
-3. Reuse the existing catalogue directory, search/filter/pagination and LTSU components; preserve the current Subject Catalogue view.
-4. Handle validation, unique-code conflicts (409), inactive/not-found records, authorization, server failures and refresh the directory after success.
-5. Keep Subject CRUD and unrelated admin changes outside this slice.
+## Completed frontend chunk — Phase II, Chunk 11: Admin Class Management UI
+
+- Feature branch: `feat/admin-class-management`, based on `main` at `fc24d228a63e61e7e628ab4cab58e959deb01e21`.
+- PR #17: https://github.com/armanpreet-singh/smart-student-portal/pull/17 (open against `main`, not merged).
+- Reverified backend-main Admin route and validators. `POST /api/admin/classes` accepts exactly `{ code, name, academicYear }` and returns HTTP 201 with `{ status: "ok", data: { class } }`. `PATCH /api/admin/classes/:classId` accepts only `code`, `name`, `academicYear`, and/or `isActive`; it returns HTTP 200 with the updated class projection.
+- Backend validation: class code 1–30 characters, letters/numbers/dots/underscores/hyphens and uppercased; name 2–120 characters; academicYear 4–20 characters. Unique code conflict returns 409; a missing class on update returns 404.
+- Added `src/features/admin/api/adminClassManagementApi.js` with authenticated POST/PATCH requests, client-side backend-aligned validation, class response validation, 12-second timeout and handling for 400, 401, 403, 404, 409, server, network and timeout-uncertainty cases.
+- Extended `src/features/admin/pages/CoursesPage.jsx` and CSS with Add Class, Edit, and confirmed Archive/Reactivate controls in the Class view. Archive/reactivate changes only `isActive`; records are retained. Successful mutations refresh the class directory and class filter options.
+- The existing Subject Catalogue remains read-only. Class/subject directory search, filtering and pagination are preserved.
+- No live class create/edit/archive/reactivate operation was used for testing. No backend, database, migration, secret or deployment changes were made.
+- Chunk 9 PR #15 merged into `main` at `3a8f7fc6fcae978922b628ee9e23349c166998ed`. Chunk 10 PR #16 merged into `main` at `fc24d228a63e61e7e628ab4cab58e959deb01e21`.
+
+## Exact next frontend task — Phase II, Chunk 12 (proposed): Admin Subject Management UI
+
+1. Reverify backend-main Subject create/update routes, strict schemas, response projections, unique constraints, parent-Class eligibility and activation/archive rules.
+2. Extend the existing Subject Catalogue with create/edit and confirmed archive/reactivation controls using only supported fields: `classId`, `code`, `name`, `description`, and `isActive` as appropriate to each endpoint.
+3. Reuse the existing class directory choices, class filter, search, pagination, LTSU components and current loading/error/empty states.
+4. Handle parent class inactive/not-found, validation, duplicate subject code (409), authorization and server errors; refresh the directory after successful changes.
+5. Keep department, credits, semester, faculty assignment and unrelated subject fields out of scope unless backend main exposes them.
 6. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 
-Continue to use only verified backend-main contracts. Do not assume backend draft PR #1 is live.

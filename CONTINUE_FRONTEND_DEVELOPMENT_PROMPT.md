@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 9 is `3a8f7fc6fcae978922b628ee9e23349c166998ed`. Current Chunk 10 branch: `feat/admin-teacher-subject-assignments`, rebased onto that `main` head. Phase II, Chunk 10 PR #16 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/16. Phase II, Chunk 9 PR #15 is merged into `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/15. Earlier Phase II PRs #7–#14 and frontend PRs #2–#6 are merged.
+3. Latest verified `main` after merging Chunk 10 is `fc24d228a63e61e7e628ab4cab58e959deb01e21`. Current Chunk 11 branch: `feat/admin-class-management`, based on that `main` head. Phase II, Chunk 11 PR #17 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/17. Phase II, Chunk 10 PR #16 and Chunk 9 PR #15 are merged into `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/16 and https://github.com/armanpreet-singh/smart-student-portal/pull/15. Earlier Phase II PRs #7–#14 and frontend PRs #2–#6 are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -54,7 +54,7 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 ## Completed Phase II, Chunk 10 — Admin Teacher-to-Subject Assignment UI
 
 - Feature branch: `feat/admin-teacher-subject-assignments`, based on `main` at `d4484cfc4384b024f86ee0f4d9590d59e5bae242`.
-- PR #16: https://github.com/armanpreet-singh/smart-student-portal/pull/16 (open, unmerged, mergeable).
+- PR #16: https://github.com/armanpreet-singh/smart-student-portal/pull/16 merged into `main` at `fc24d228a63e61e7e628ab4cab58e959deb01e21` after rebased CI run `43560009483` passed on final PR head `14601289a1227965b66db160fdb40fe03fd941c0`.
 - Reverified backend-main Admin-only `POST /api/admin/teacher-subject-assignments`; strict request body is exactly `{ teacherId, subjectId }`; success is HTTP 201 with `{ status: "ok", data: { assignment: { id, teacherId, subjectId, assignedAt } } }`.
 - Backend requires an active TEACHER, active subject and active parent class; duplicate assignments return 409. The backend remains authoritative.
 - Added `adminTeacherSubjectAssignmentsApi.js` with shared Bearer auth, 12-second timeout, request/response validation and handling for 400, 401, 403, 409, server, network and timeout outcomes.
@@ -65,13 +65,25 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 - GitHub Actions run `43559468023` passed on final implementation head `3968938daec63a0438822c296f44969f9dbb7bd1`; `npm ci` and `npm run build` succeeded. No lint/unit-test scripts are configured.
 - No live assignment mutation, backend/database/migration/secret/deployment work occurred. PR #15 (Chunk 9 Password Reset) was merged into `main` at `3a8f7fc6fcae978922b628ee9e23349c166998ed`.
 
-## Exact next task — Phase II, Chunk 11 (proposed): Admin Class Management UI
+## Completed Phase II, Chunk 11 — Admin Class Management UI
 
-1. Reverify backend-main class create/update contracts, strict schemas, response projections, status/archive semantics and Admin middleware.
-2. Extend the existing Class Catalogue with create/edit and archive/reactivate controls using only supported fields: `code`, `name`, `academicYear`, and `isActive`.
-3. Reuse current catalogue search, filters, pagination, layout and design system. Keep Subject CRUD outside this chunk.
-4. Handle validation, unique-code conflicts, not-found/inactive records, authorization and server errors; refresh the directory after success.
-5. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
+- Branch: `feat/admin-class-management`, based on `main` at `fc24d228a63e61e7e628ab4cab58e959deb01e21`.
+- PR #17: https://github.com/armanpreet-singh/smart-student-portal/pull/17 (open, unmerged).
+- Reverified backend-main class APIs: POST `/api/admin/classes` accepts exactly `{ code, name, academicYear }` and returns 201; PATCH `/api/admin/classes/:classId` accepts `code`, `name`, `academicYear`, and/or `isActive` and returns 200.
+- Client validation mirrors the backend: code 1–30 characters using letters, numbers, dots, underscores or hyphens (normalized uppercase); class name 2–120 characters; academic year 4–20 characters.
+- Added `adminClassManagementApi.js` for authenticated create/update requests, strict payload validation, returned class validation, timeout handling and 400/401/403/404/409/server/network error handling.
+- Extended `CoursesPage.jsx` and CSS with Add Class, Edit, and confirmed Archive/Reactivate controls. Status actions update `isActive` only; no class or related records are deleted. Successful changes refresh the directory and the class filter choices.
+- Subject Catalogue remains read-only; current subject search/filter/pagination are preserved.
+- No live class mutation or backend/database/migration/secret/deployment change was made. Chunk 9 PR #15 and Chunk 10 PR #16 are merged into `main`.
+
+## Exact next task — Phase II, Chunk 12 (proposed): Admin Subject Management UI
+
+1. Reverify backend-main Subject create/update routes, schemas, response projections, unique constraints, parent-Class eligibility and activation/archive rules.
+2. Add Subject create/edit and confirmed archive/reactivation using only backend-supported fields.
+3. Reuse current active-class directory choices, subject class filter, search, pagination and LTSU components.
+4. Handle inactive/not-found parent class, validation, duplicate subject code (409), authorization and server errors; refresh the directory after success.
+5. Keep unsupported credits, semester, department, faculty and assignment metadata out of the UI.
+6. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 
 ## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
 
