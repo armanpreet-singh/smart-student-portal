@@ -738,7 +738,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Reverified backend-main `prisma/schema.prisma`: no Calendar, AcademicCalendar or Event model. Admin, Student and Teacher route files expose no calendar/event endpoints; Admin academic services and validators have no event contract.
 - The Admin Calendar page previously rendered two hard-coded events (“University Convocation” and “Diwali Holidays Begin”) with fixed 2023 dates. Replaced them with an accessible capability-unavailable notice; no unsupported event creation, editing or publishing controls were added.
 - Added responsive `CalendarPage.css` and the `feat/admin-calendar-capability` workflow branch trigger. The existing Admin `/calendar` route and dashboard layout are preserved.
-- Final source read-back and GitHub Actions verification are recorded below after the build completes.
+- Source read-back covered the Admin Calendar page, stylesheet, workflow and both handoff files. GitHub Actions push run `43566860529` and PR run `43566938543` both completed successfully on implementation head `c427cc3bb51e3fd1c607b7e3adae8a7c92e1981d`; both ran `npm ci` and `npm run build`. The matching Cloudflare Pages check also completed successfully.
 - No backend, database, schema, migration, secret, deployment or live calendar changes were made.
 
 ## Exact next frontend task — Phase II, Chunk 17 (proposed): Teacher Academic Calendar Capability Alignment
