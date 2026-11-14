@@ -729,6 +729,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - The previous Admin page had two hard-coded sample messages with unverified audience/date/status values and an inert New Announcement button. Replaced the content with an accessible capability-unavailable notice; sample messages, fake sent/scheduled states and unsupported publishing controls are no longer displayed.
 - Added responsive `AnnouncementsPage.css` and a workflow trigger for `feat/admin-announcements-capability`. The workflow also retains the separate open Chunk 14 branch trigger.
 - No backend, database, schema, migration, secret, deployment or live announcement changes were made.
+- GitHub Actions push run `43564993391` passed on final stacked code head `78c6d53f674e16d3c06419094fc2bdff25cf7c11` (`npm ci`, `npm run build`). The pull-request workflow is configured for `main` targets and will run when PR #20 merges and PR #21 is retargeted to `main`.
 
 ## Exact next frontend task — Phase II, Chunk 16 (proposed): Admin Academic Calendar Capability Alignment
 

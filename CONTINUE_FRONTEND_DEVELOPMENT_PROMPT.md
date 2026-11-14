@@ -104,7 +104,7 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 - Branch `feat/admin-announcements-capability`, stacked on PR #20 / `feat/admin-departments-capability` at `467c58aee195f7a32460589783e15bd62afc97d6`; PR #21 is open and unmerged against that base. Merge #20 first, then retarget #21 to `main`.
 - Backend-main has no Announcement/Notification Prisma model, and no Admin, Student or Teacher announcement/notification routes.
 - Replaced two hard-coded sample messages and the inert New Announcement button with an accessible capability-unavailable notice. Fake audience, sent/scheduled status and sample announcement content are removed.
-- Added responsive styling and GitHub Actions workflow trigger. PR/push CI and final result will be recorded after completion.
+- Added responsive styling and GitHub Actions workflow trigger. Push run `43564993391` passed on stacked code head `78c6d53f674e16d3c06419094fc2bdff25cf7c11` (`npm ci`, `npm run build`). A PR-target build will run after PR #20 merges and #21 is retargeted to `main`.
 
 ## Exact next task — Phase II, Chunk 16 (proposed): Admin Academic Calendar Capability Alignment
 
