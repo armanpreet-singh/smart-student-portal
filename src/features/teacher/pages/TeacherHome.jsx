@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { UserCheck, FileText, Upload, Megaphone } from "lucide-react";
+import { UserCheck, FileText, Upload } from "lucide-react";
 import Hero from "../../dashboard/Hero/Hero";
 import StatCard from "../../../features/dashboard/components/StatCard/StatCard";
 import InsightCard from "../../../features/dashboard/components/InsightCard/InsightCard";
@@ -71,11 +71,6 @@ const TeacherHome = () => {
           color="#1E3A8A"
         />
         <QuickActionCard icon={Upload} label="Upload Notes" color="#294D9B" />
-        <QuickActionCard
-          icon={Megaphone}
-          label="Send Announcement"
-          color="#D4AF37"
-        />
       </div>
 
       <div className="d-grid-main">

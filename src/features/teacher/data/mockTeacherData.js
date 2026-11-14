@@ -13,7 +13,6 @@ export const teacherStatsData = [
   { id: 3, title: "Pending Attendance", value: "2", icon: "UserCheck", trend: "For today", color: "#F59E0B" },
   { id: 4, title: "To Grade", value: "28", icon: "FileCheck", trend: "DBMS Assignment", color: "#DC2626" },
   { id: 5, title: "Pending Results", value: "1", icon: "BarChart3", trend: "OS Mid-Sem due tomorrow", color: "#D4AF37" },
-  { id: 6, title: "Announcements", value: "3", icon: "Megaphone", trend: "2 active", color: "#16A34A" }
 ];
 
 export const teacherScheduleData = [
