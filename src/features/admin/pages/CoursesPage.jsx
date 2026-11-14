@@ -10,6 +10,7 @@ import {
   fetchAllAdminClasses,
 } from "../api/adminCatalogueApi";
 import { createAdminClass, updateAdminClass } from "../api/adminClassManagementApi";
+import { createAdminSubject, updateAdminSubject } from "../api/adminSubjectManagementApi";
 
 import "./CoursesPage.css";
 
@@ -300,6 +301,282 @@ function ClassStatusDialog({ classRecord, targetActive, submitting, error, onClo
   );
 }
 
+
+function SubjectEditorDialog({ subjectRecord, classOptions, submitting, error, onClose, onSave }) {
+  const [form, setForm] = useState(() => ({
+    classId: subjectRecord?.classId || "",
+    code: subjectRecord?.code || "",
+    name: subjectRecord?.name || "",
+    description: subjectRecord?.description || "",
+  }));
+  const [validationError, setValidationError] = useState("");
+  const activeClasses = classOptions.filter((item) => item.isActive);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && !submitting) onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose, submitting]);
+
+  const updateField = (field, value) => {
+    setForm((current) => ({ ...current, [field]: value }));
+    setValidationError("");
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const values = {
+      code: form.code.trim().toUpperCase(),
+      name: form.name.trim(),
+      description: form.description.trim() || null,
+    };
+
+    if (!subjectRecord) values.classId = form.classId;
+
+    if (
+      !values.code ||
+      values.code.length > 30 ||
+      !/^[A-Z0-9._-]+$/.test(values.code)
+    ) {
+      setValidationError(
+        "Use 1–30 characters for the subject code: letters, numbers, dots, underscores, or hyphens.",
+      );
+      return;
+    }
+    if (values.name.length < 2 || values.name.length > 120) {
+      setValidationError("Subject name must be between 2 and 120 characters.");
+      return;
+    }
+    if (form.description.length > 500) {
+      setValidationError("Subject description must be 500 characters or fewer.");
+      return;
+    }
+    if (!subjectRecord && !activeClasses.some((item) => item.id === form.classId)) {
+      setValidationError("Choose an active parent class from the university directory.");
+      return;
+    }
+
+    onSave(values);
+  };
+
+  return (
+    <div
+      className="a-class-modal-backdrop"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget && !submitting) onClose();
+      }}
+    >
+      <section
+        className="a-class-modal a-subject-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="a-subject-editor-title"
+      >
+        <div className="a-class-modal-heading">
+          <div>
+            <span>{subjectRecord ? "Edit subject" : "New subject"}</span>
+            <h3 id="a-subject-editor-title">
+              {subjectRecord ? "Update subject details" : "Create a subject"}
+            </h3>
+          </div>
+          <button
+            type="button"
+            aria-label="Close subject form"
+            onClick={onClose}
+            disabled={submitting}
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <p className="a-class-modal-description">
+          Enter the subject details supported by the university academic catalogue.
+        </p>
+
+        <form className="a-class-editor-form" onSubmit={handleSubmit}>
+          {!subjectRecord ? (
+            <label className="d-form-group">
+              <span>Parent class</span>
+              <select
+                required
+                value={form.classId}
+                onChange={(event) => updateField("classId", event.target.value)}
+              >
+                <option value="" disabled>Select an active class</option>
+                {activeClasses.map((item) => (
+                  <option value={item.id} key={item.id}>
+                    {item.code} — {item.name} · {item.academicYear}
+                  </option>
+                ))}
+              </select>
+              <small>Only active classes can receive new subjects.</small>
+            </label>
+          ) : (
+            <div className="a-subject-parent-summary">
+              <span>Parent class (fixed)</span>
+              <strong>{subjectRecord.class.code} — {subjectRecord.class.name}</strong>
+              <small>
+                {subjectRecord.class.academicYear}
+                {subjectRecord.class.isActive ? " · Active" : " · Inactive"}
+              </small>
+              <p>The backend does not support moving an existing subject to another class.</p>
+            </div>
+          )}
+
+          <label className="d-form-group">
+            <span>Subject code</span>
+            <input
+              autoFocus={Boolean(subjectRecord)}
+              required
+              value={form.code}
+              maxLength={30}
+              pattern="[A-Za-z0-9._-]+"
+              placeholder="e.g. CSE-101"
+              onChange={(event) => updateField("code", event.target.value)}
+            />
+            <small>1–30 characters; letters, numbers, dots, underscores, or hyphens.</small>
+          </label>
+
+          <label className="d-form-group">
+            <span>Subject name</span>
+            <input
+              required
+              value={form.name}
+              maxLength={120}
+              minLength={2}
+              placeholder="e.g. Programming Fundamentals"
+              onChange={(event) => updateField("name", event.target.value)}
+            />
+          </label>
+
+          <label className="d-form-group">
+            <span>Description <span className="a-subject-optional">(optional)</span></span>
+            <textarea
+              value={form.description}
+              maxLength={500}
+              rows={3}
+              placeholder="A brief subject description"
+              onChange={(event) => updateField("description", event.target.value)}
+            />
+            <small>{form.description.length}/500 characters</small>
+          </label>
+
+          {(validationError || error) && (
+            <div className="a-class-dialog-error" role="alert">
+              <AlertCircle size={17} />
+              <span>{validationError || error}</span>
+            </div>
+          )}
+
+          <div className="a-class-modal-actions">
+            <button
+              type="button"
+              className="a-class-secondary-button"
+              onClick={onClose}
+              disabled={submitting}
+            >
+              Cancel
+            </button>
+            <button type="submit" className="d-btn-primary" disabled={submitting}>
+              {submitting
+                ? "Saving subject…"
+                : subjectRecord
+                  ? "Save changes"
+                  : "Create subject"}
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  );
+}
+
+function SubjectStatusDialog({ subjectRecord, targetActive, submitting, error, onClose, onConfirm }) {
+  const actionLabel = targetActive ? "Reactivate" : "Archive";
+  const canReactivate = !targetActive || subjectRecord.class.isActive;
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && !submitting) onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose, submitting]);
+
+  return (
+    <div
+      className="a-class-modal-backdrop"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget && !submitting) onClose();
+      }}
+    >
+      <section
+        className="a-class-modal a-class-status-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="a-subject-status-title"
+      >
+        <div className="a-class-modal-heading">
+          <div>
+            <span>Subject status</span>
+            <h3 id="a-subject-status-title">{actionLabel} this subject?</h3>
+          </div>
+          <button
+            type="button"
+            aria-label="Close status confirmation"
+            onClick={onClose}
+            disabled={submitting}
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="a-class-status-summary">
+          <strong>{subjectRecord.name}</strong>
+          <span>
+            {subjectRecord.code} · {subjectRecord.class.code} — {subjectRecord.class.name}
+          </span>
+          <p>
+            {targetActive
+              ? canReactivate
+                ? "This will make the existing subject active again. Its record and parent class link are retained."
+                : "This subject cannot be reactivated while its parent class is inactive. Reactivate the parent class first."
+              : "This will mark the subject inactive. It does not delete the subject or its related records."}
+          </p>
+        </div>
+
+        {error && (
+          <div className="a-class-dialog-error" role="alert">
+            <AlertCircle size={17} />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <div className="a-class-modal-actions">
+          <button
+            type="button"
+            className="a-class-secondary-button"
+            onClick={onClose}
+            disabled={submitting}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="d-btn-primary"
+            onClick={onConfirm}
+            disabled={submitting || !canReactivate}
+          >
+            {submitting ? "Updating status…" : actionLabel}
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 const CoursesPage = () => {
   const { accessToken, refreshCurrentUser } = useAuth();
 
@@ -338,6 +615,12 @@ const CoursesPage = () => {
   const [classEditorError, setClassEditorError] = useState("");
   const [classStatusError, setClassStatusError] = useState("");
   const [classMutationSuccess, setClassMutationSuccess] = useState("");
+  const [subjectEditor, setSubjectEditor] = useState({ open: false, record: null });
+  const [subjectStatusAction, setSubjectStatusAction] = useState(null);
+  const [subjectMutationStatus, setSubjectMutationStatus] = useState("idle");
+  const [subjectEditorError, setSubjectEditorError] = useState("");
+  const [subjectStatusError, setSubjectStatusError] = useState("");
+  const [subjectMutationSuccess, setSubjectMutationSuccess] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -586,6 +869,113 @@ const CoursesPage = () => {
     }
   };
 
+
+  const openCreateSubject = () => {
+    setSubjectMutationSuccess("");
+    setSubjectEditorError("");
+    setSubjectEditor({ open: true, record: null });
+  };
+
+  const openEditSubject = (record) => {
+    setSubjectMutationSuccess("");
+    setSubjectEditorError("");
+    setSubjectEditor({ open: true, record });
+  };
+
+  const closeSubjectEditor = () => {
+    if (subjectMutationStatus !== "saving") {
+      setSubjectEditor({ open: false, record: null });
+      setSubjectEditorError("");
+    }
+  };
+
+  const saveSubject = async (values) => {
+    if (subjectMutationStatus !== "idle") return;
+    setSubjectMutationStatus("saving");
+    setSubjectEditorError("");
+    setSubjectMutationSuccess("");
+
+    try {
+      if (subjectEditor.record) {
+        await updateAdminSubject(accessToken, subjectEditor.record.id, values);
+        setSubjectMutationSuccess("Subject details updated successfully.");
+      } else {
+        const created = await createAdminSubject(accessToken, values);
+        setSubjectMutationSuccess("Subject created successfully.");
+        const nextFilters = {
+          search: "",
+          isActive: "all",
+          classId: created.classId,
+        };
+        setDraftFilters(nextFilters);
+        setFilters(nextFilters);
+        setPage(1);
+      }
+
+      setSubjectEditor({ open: false, record: null });
+      setRetryCount((value) => value + 1);
+    } catch (error) {
+      if (error?.status === 401) await refreshCurrentUser();
+      setSubjectEditorError(
+        error?.message || "Unable to save this subject. Please try again.",
+      );
+    } finally {
+      setSubjectMutationStatus("idle");
+    }
+  };
+
+  const openSubjectStatusAction = (record) => {
+    setSubjectMutationSuccess("");
+    setSubjectStatusError("");
+    setSubjectStatusAction({ record, targetActive: !record.isActive });
+  };
+
+  const closeSubjectStatusAction = () => {
+    if (subjectMutationStatus !== "updating-status") {
+      setSubjectStatusAction(null);
+      setSubjectStatusError("");
+    }
+  };
+
+  const confirmSubjectStatusAction = async () => {
+    if (!subjectStatusAction || subjectMutationStatus !== "idle") return;
+    if (
+      subjectStatusAction.targetActive &&
+      !subjectStatusAction.record.class.isActive
+    ) {
+      setSubjectStatusError(
+        "Reactivate the parent class before reactivating this subject.",
+      );
+      return;
+    }
+
+    setSubjectMutationStatus("updating-status");
+    setSubjectStatusError("");
+    setSubjectMutationSuccess("");
+
+    try {
+      await updateAdminSubject(
+        accessToken,
+        subjectStatusAction.record.id,
+        { isActive: subjectStatusAction.targetActive },
+      );
+      setSubjectMutationSuccess(
+        subjectStatusAction.targetActive
+          ? "Subject reactivated successfully."
+          : "Subject archived successfully. The subject record and class link were retained.",
+      );
+      setSubjectStatusAction(null);
+      setRetryCount((value) => value + 1);
+    } catch (error) {
+      if (error?.status === 401) await refreshCurrentUser();
+      setSubjectStatusError(
+        error?.message || "Unable to update subject status. Please try again.",
+      );
+    } finally {
+      setSubjectMutationStatus("idle");
+    }
+  };
+
   const startRecord = pagination.total === 0 ? 0 : (pagination.page - 1) * pagination.pageSize + 1;
   const endRecord = Math.min(pagination.page * pagination.pageSize, pagination.total);
 
@@ -712,6 +1102,17 @@ const CoursesPage = () => {
               Add class
             </button>
           )}
+          {activeTab === "subjects" && (
+            <button
+              type="button"
+              className="d-btn-primary a-catalogue-add-class"
+              onClick={openCreateSubject}
+              disabled={optionsStatus !== "success" || !classOptions.some((item) => item.isActive)}
+            >
+              <Plus size={16} />
+              Add subject
+            </button>
+          )}
           <label className="a-catalogue-page-size">
             <span>Rows</span>
             <select
@@ -728,10 +1129,16 @@ const CoursesPage = () => {
           </label>
         </div>
 
-        {classMutationSuccess && (
+        {classMutationSuccess && activeTab === "classes" && (
           <div className="a-class-success-banner" role="status" aria-live="polite">
             <CheckCircle2 size={17} />
             <span>{classMutationSuccess}</span>
+          </div>
+        )}
+        {subjectMutationSuccess && activeTab === "subjects" && (
+          <div className="a-class-success-banner" role="status" aria-live="polite">
+            <CheckCircle2 size={17} />
+            <span>{subjectMutationSuccess}</span>
           </div>
         )}
 
@@ -813,6 +1220,7 @@ const CoursesPage = () => {
                   <th>Academic year</th>
                   <th>Description</th>
                   <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -827,6 +1235,28 @@ const CoursesPage = () => {
                     <td>{item.class.academicYear}</td>
                     <td className="a-catalogue-description">{item.description || "—"}</td>
                     <td><ActiveBadge isActive={item.isActive} /></td>
+                    <td>
+                      <div className="a-catalogue-row-actions a-subject-row-actions">
+                        <button
+                          type="button"
+                          className="a-catalogue-row-action"
+                          onClick={() => openEditSubject(item)}
+                          aria-label={`Edit ${item.name}`}
+                        >
+                          <Pencil size={14} />
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          className={`a-catalogue-row-action ${item.isActive ? "archive" : "reactivate"}`}
+                          onClick={() => openSubjectStatusAction(item)}
+                          aria-label={`${item.isActive ? "Archive" : "Reactivate"} ${item.name}`}
+                        >
+                          {item.isActive ? <Archive size={14} /> : <RotateCcw size={14} />}
+                          {item.isActive ? "Archive" : "Reactivate"}
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -893,6 +1323,28 @@ const CoursesPage = () => {
           error={classStatusError}
           onClose={closeClassStatusAction}
           onConfirm={confirmClassStatusAction}
+        />
+      )}
+      {subjectEditor.open && (
+        <SubjectEditorDialog
+          key={subjectEditor.record?.id || "new-subject"}
+          subjectRecord={subjectEditor.record}
+          classOptions={classOptions}
+          submitting={subjectMutationStatus === "saving"}
+          error={subjectEditorError}
+          onClose={closeSubjectEditor}
+          onSave={saveSubject}
+        />
+      )}
+
+      {subjectStatusAction && (
+        <SubjectStatusDialog
+          subjectRecord={subjectStatusAction.record}
+          targetActive={subjectStatusAction.targetActive}
+          submitting={subjectMutationStatus === "updating-status"}
+          error={subjectStatusError}
+          onClose={closeSubjectStatusAction}
+          onConfirm={confirmSubjectStatusAction}
         />
       )}
     </div>

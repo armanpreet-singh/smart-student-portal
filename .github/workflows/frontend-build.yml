@@ -20,6 +20,7 @@ on:
       - "feat/admin-managed-password-reset"
       - "feat/admin-teacher-subject-assignments"
       - "feat/admin-class-management"
+      - "feat/admin-subject-management"
   pull_request:
     branches:
       - main
