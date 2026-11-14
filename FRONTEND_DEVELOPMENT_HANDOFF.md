@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/teacher-assignments-capability`
-Current pull requests: Phase II, Chunk 24 PR #30 (Teacher Assignments Capability Alignment) is open on `feat/teacher-assignments-capability` with base `feat/teacher-students-api`; merge PR #29 first, then retarget #30 to `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/30. Phase II, Chunk 23 PR #29 (Teacher Students API Alignment) remains open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/29. Chunk 22 PR #28 (Teacher My Classes) merged into `main` at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`; Chunk 21 PR #27 (Teacher Dashboard) merged at `c1484c39871d6ca8e195ffd555a52bb68e4f1569`. Chunk 20 PR #26 (Teacher Announcements) merged at `94c377726153dc86c4b578e29e9dd4745a692771`; Chunk 19 PR #25 (Student Announcements) merged at `81cf6ef370d98db8919e547135194d33bbac2112`. Chunk 18 PR #24 merged at `fb64e04b0f3f4e58e327767189f5d9430306d020`; Chunk 17 PR #23 merged at `ef599232f5eef8e4c5f107778627180bd0767c33`; Chunk 16 PR #22 merged at `8aa276de681933f102c58062f8616db9869a080b`. Phase II PRs #20 and #21 and PRs #15–#19 and earlier completed PRs are merged.
+Development branch: `feat/teacher-students-api`
+Current pull requests: PR #29 (Chunk 23 Teacher Students API Alignment) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`. PR #30 (Chunk 24 Teacher Assignments Capability Alignment) is closed/merged into the `feat/teacher-students-api` branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`; because its base was that feature branch, its changes are not yet part of `main`. A follow-up PR will carry Chunk 24 to `main` before the stacked Chunk 25 timetable work is merged. Phase II, Chunk 22 PR #28 (Teacher My Classes) merged into `main` at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`; Chunk 21 PR #27 merged at `c1484c39871d6ca8e195ffd555a52bb68e4f1569`. Chunk 20 PR #26 merged at `94c377726153dc86c4b578e29e9dd4745a692771`; Chunk 19 PR #25 merged at `81cf6ef370d98db8919e547135194d33bbac2112`. Chunk 18 PR #24 merged at `fb64e04b0f3f4e58e327767189f5d9430306d020`; Chunk 17 PR #23 merged at `ef599232f5eef8e4c5f107778627180bd0767c33`; Chunk 16 PR #22 merged at `8aa276de681933f102c58062f8616db9869a080b`. Phase II PRs #20 and #21 and PRs #15–#19 and earlier completed PRs are merged.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit after Chunk 22 / PR #28 merge: `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`. Chunk 21 / PR #27 merged at `c1484c39871d6ca8e195ffd555a52bb68e4f1569`; Chunk 22 / PR #28 merged directly after it at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`. Chunk 23 / PR #29 is based directly on this updated `main`.
+Latest verified `main` commit after Chunk 23 / PR #29 merge: `04573f41327e09cfbb19225502002003de8105a3`. It contains the Teacher Students API alignment from PR #29. Chunk 24 PR #30's merge commit `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34` is on `feat/teacher-students-api` and is not yet in `main`; bring it onto `main` before merging Chunk 25.
 
 ## Working scope and rules
 
@@ -811,7 +811,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ## Completed frontend chunk — Phase II, Chunk 23: Teacher Students API Alignment
 
 - Branch: `feat/teacher-students-api`, based directly on `main` at `2ccfe31cdfedd1437ddda5b515b0825f2be72f02`.
-- PR #29: https://github.com/armanpreet-singh/smart-student-portal/pull/29 is open against `main`.
+- PR #29: https://github.com/armanpreet-singh/smart-student-portal/pull/29 merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`.
 - Reverified backend-main `src/routes/teacher-routes.js`, `src/services/attendance-service.js`, `src/validators/attendance-schemas.js`, `prisma/schema.prisma` and `src/app.js`: authenticated Teacher `GET /api/teacher/subjects` returns active subject assignments; `GET /api/teacher/subjects/:subjectId/roster` verifies that the subject is assigned and active for the current Teacher and returns the selected subject/class plus active students. Roster student fields are exactly `id`, `fullName`, `username`.
 - Extended `src/features/teacher/api/teacherSubjectsApi.js` with `fetchTeacherSubjectRoster`, using the shared Bearer-token request helper, 12-second timeout, 401/403/404/server/network/timeout handling, strict response validation, selected subject/class identity matching and unique student ID validation.
 - Replaced the mock `TeacherStudents.jsx` page with a subject-scoped flow: load the Teacher's active assignments, select an assigned subject, then request only that subject's roster. Displays returned student full name and username; searches locally by those fields.
@@ -824,7 +824,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ## Completed frontend chunk — Phase II, Chunk 24: Teacher Assignments Capability Alignment
 
 - Branch: `feat/teacher-assignments-capability`, stacked on PR #29 / `feat/teacher-students-api` at `00cd0f68574d90816b5349a33c4f7e2544867f2e`.
-- PR #30: https://github.com/armanpreet-singh/smart-student-portal/pull/30 is open against `feat/teacher-students-api`; merge PR #29 first, then retarget PR #30 to `main`.
+- PR #30: https://github.com/armanpreet-singh/smart-student-portal/pull/30 is closed/merged into `feat/teacher-students-api` at merge commit `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`. Its base was `feat/teacher-students-api`, so this merge did not update `main`; a follow-up PR is required to carry these already-implemented changes to `main`.
 - Reverified backend-main `prisma/schema.prisma`, `src/routes/teacher-routes.js`, `src/routes/admin-routes.js`, `src/routes/student-routes.js`, `src/services` and `src/app.js`. Schema models are User, Class, Subject, TeacherSubject and Attendance; no Assignment/Submission model exists. Teacher routes expose only assigned-subject lookup, subject roster and attendance marking; no assignment, submission, grading or results endpoint exists.
 - Replaced fixture-backed Teacher Assignments UI with an accessible capability-unavailable state. The page no longer imports or renders `teacherAssignmentsData`, mock assignment titles, subject/section labels, due dates, submission totals, grading states or completion percentages.
 - Removed fake status filters and the inert Create Assignment button. Added working links to existing My Classes and Students pages.
