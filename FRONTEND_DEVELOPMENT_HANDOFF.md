@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/teacher-profile-capability`
-Phase II, Chunk 26 Teacher Learning Resources PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. Phase II, Chunk 27 Teacher Profile replacement PR #35 is open against `main` from `feat/teacher-profile-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/35. Earlier stacked PR #34 was closed without merge during a clean rebase after PR #33's squash merge. PR #31 (Teacher Assignments catch-up) merged into `main` at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 (Teacher Timetable) merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`. PR #29 (Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30's initial merge was into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, with its changes subsequently brought to `main` through PR #31.
+Development branch: `feat/teacher-settings-capability`
+Phase II, Chunk 26 Teacher Learning Resources PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. Phase II, Chunk 27 Teacher Profile replacement PR #35 merged into `main` at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. Earlier stacked PR #34 was closed without merge during a clean rebase after PR #33's squash merge. Phase II, Chunk 28 Teacher Settings is on `feat/teacher-settings-capability`. PR #31 (Teacher Assignments catch-up) merged into `main` at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 (Teacher Timetable) merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`. PR #29 (Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30's initial merge was into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, with its changes subsequently brought to `main` through PR #31.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit after Chunk 26 / PR #33 merge: `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. It includes PR #29 Teacher Students, PR #31 Teacher Assignments catch-up, PR #32 Teacher Timetable and PR #33 Teacher Learning Resources.
+Latest verified `main` commit after Chunk 27 / PR #35 merge: `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`. It includes PR #29 Teacher Students, PR #31 Teacher Assignments catch-up, PR #32 Teacher Timetable, PR #33 Teacher Learning Resources and PR #35 Teacher Profile.
 
 ## Working scope and rules
 
@@ -87,7 +87,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Teacher | Learning Resources | Accessible capability-unavailable state; no sample resource cards or upload/dropzone controls are displayed. | **Not supported by backend main** — no Resource/learning-material model or Teacher resource listing/upload endpoint exists. | Backend resource metadata, file storage/access, sharing scope and authorized Teacher list/upload contracts required. |
 | Teacher | Academic Calendar | Accessible capability-unavailable state; no sample events are displayed. | **Not supported by backend main** — no calendar/event model or Teacher calendar route. | Backend event/calendar model, authorized Teacher read API and date/time-zone semantics required. |
 | Teacher | Profile | Uses verified `AuthContext` account name, username, nullable email, role and account-created date; unsupported staff details are explicitly marked unavailable. The Teacher topbar dropdown uses the same authenticated identity and no longer displays the mock avatar/employee details. | **Aligned to backend main `GET /api/auth/me`** — returns public user identity fields; no Teacher staff-profile read/update endpoint exists. | Add employee ID, department, designation, phone, office location and professional details only after an authoritative staff-profile contract exists. Teacher Settings remains a separate incomplete workflow. |
-| Teacher | Settings | Form submits to console.log. | **Needs improvement** — backend password-change route exists; profile/system settings mutations do not. | Implement password change using API; separate unsupported preferences from account data. |
+| Teacher | Settings | Authenticated password-change form uses the existing `changeCurrentPassword` helper, current/new/confirm fields, backend-aligned validation, loading/error/success states and a verified session refresh. Other profile preferences are explicitly unavailable. | **Password change API-integrated** — authenticated `POST /api/auth/change-password`; no account-profile update endpoint exists. | Validate with a provisioned Teacher account; implement editable name/email/phone preferences only when the backend exposes an authorized update contract. |
 | Admin | Dashboard Home | Static institutional totals/insights and quick-action cards. | **Needs improvement** — no aggregate dashboard endpoint exists. | Use current admin endpoints for actual counts and avoid unverified institutional metrics. |
 | Admin | Student Directory | Uses backend-main paginated `GET /api/admin/users?role=STUDENT`; supports search/status filters/pagination, create-only provisioning and confirmed active/inactive status changes through the managed-user API. | **Needs improvement** — read/create/status UI integration is implemented; validate with a provisioned Admin account and real Student accounts. | Verify real account creation and status changes including own-account protection. Password reset remains separate; backend exposes no rollNumber. |
 | Admin | Teacher Directory | Uses backend-main paginated `GET /api/admin/users?role=TEACHER`; supports search/status filters/pagination, create-only provisioning and confirmed active/inactive status changes through the managed-user API. | **Needs improvement** — read/create/status UI integration is implemented; validate with a provisioned Admin account and real Teacher accounts. | Verify real account creation and status changes including own-account protection. Password reset and subject assignments remain separate; employee IDs, departments, specializations, experience and teacher-subject assignments are not provided by the directory. |
@@ -860,15 +860,22 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Replaced mock Teacher Profile information with authenticated `useAuth()` values; added an accessible staff-details-unavailable notice.
 - Updated Teacher topbar dropdown to use authenticated full name, username and email rather than mock faculty data and an unsourced portrait.
 - Added responsive `TeacherProfile.css`; preserved `/teacher/profile`, Teacher shell and theme. Settings was intentionally left for the next chunk.
-- Earlier stacked PR #34 was closed without merge after PR #33's squash merge made its original branch unmergeable. The branch was reset to the merged `main` and a clean replacement PR #35 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/35. Its six-file diff contains only the Profile UI, topbar, CI filter and handoff changes; no duplicate Resources changes.
-- GitHub Actions push build run `43585487245` passed on the Profile implementation/handoff snapshot `5fc0653b7e6ca5981c6e58eb13ef4cb5be4ee208` (`npm ci`, `npm run build`). The final documentation refresh is source-neutral; the clean main-target PR #35 build runs on its updated head.
+- Earlier stacked PR #34 was closed without merge after PR #33's squash merge made its original branch unmergeable. A clean replacement PR #35 was created from merged `main`, contained only Profile changes and merged into `main` at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`.
+- GitHub Actions main-target PR build run `43585640743` passed on PR #35 head `e4a27c216ad5676c1fd36c5415f2f7dd479c3ac6` (`npm ci`, `npm run build`).
 - Frontend-only; no backend, database, migration, secret, deployment, account or academic-record changes.
 
-## Exact next frontend task — Phase II, Chunk 28 (proposed): Teacher Settings Capability Alignment
+## Completed frontend chunk — Phase II, Chunk 28: Teacher Settings Capability Alignment
 
-1. Audit Teacher Settings against backend-main `POST /api/auth/change-password` and `GET /api/auth/me`.
-2. Remove the fabricated Display Name, Official Email and Phone inputs and the console-only Save Changes action; no account-profile update endpoint exists.
-3. Integrate the supported authenticated password-change flow using the existing API helper, with current/new password validation, loading, success and failure states.
-4. Keep non-password profile preferences unavailable rather than editable; preserve `/teacher/settings`, theme and responsive shell.
-5. Update both handoff documents, verify CI and stop.
+- Reverified backend-main `src/routes/auth-routes.js`, `src/validators/auth-schemas.js` and `src/services/auth-service.js`. Authenticated `POST /api/auth/change-password` accepts exactly `{ currentPassword, newPassword }`; current password must be non-empty and at most 72 UTF-8 bytes, new password must be at least 12 characters and at most 72 UTF-8 bytes, and it must differ from the current password. The service verifies the current password, hashes the new password and sets `mustChangePassword=false`.
+- Reused frontend `changeCurrentPassword(accessToken, { currentPassword, newPassword })` from `src/features/auth/api/authApi.js`; no duplicate API client or endpoint was added.
+- Removed fabricated Display Name, Official Email and Phone inputs plus the console-only Save Changes handler. The backend has no authenticated account-profile update endpoint.
+- Added current/new/confirm password inputs, reveal/hide controls, client-side password policy validation, submitting state, server/field errors and success feedback. Confirmation is client-only; the request helper sends only the two backend contract fields.
+- After the API confirms the update, the page refreshes the authenticated account through `refreshCurrentUser()` and verifies the returned account identity and password-change state. On 401, the session is cleared through the existing logout flow. Passwords are not stored or logged.
+- Added an accessible notice for unavailable non-password preferences; added responsive `TeacherSettings.css`; preserved `/teacher/settings`, Teacher shell and theme.
+- Frontend only. No backend, database, migration, secret, deployment, credential or live account changes.
+- PR #36 will carry this chunk against `main` after final CI verification.
+
+## Next frontend work
+
+Re-audit the remaining Teacher/Admin screen inventory against backend-main before selecting Chunk 29. Continue one supported workflow at a time; do not add editable UI for fields or operations that lack an authoritative backend contract.
 
