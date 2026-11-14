@@ -4,7 +4,7 @@ Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `feat/teacher-timetable-capability`
-Current pull requests: PR #31 (Chunk 24 Teacher Assignments catch-up) is open against `main` from `feat/teacher-students-api`: https://github.com/armanpreet-singh/smart-student-portal/pull/31. Chunk 25 Teacher Timetable is developed on `feat/teacher-timetable-capability`, stacked on `feat/teacher-students-api`; its PR will remain based on that parent branch until PR #31 merges, then be retargeted to `main`. PR #29 (Chunk 23 Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30 (Chunk 24 Teacher Assignments) is closed/merged into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, not directly into `main`.
+Current pull requests: PR #31 (Chunk 24 Teacher Assignments catch-up) is open against `main` from `feat/teacher-students-api`: https://github.com/armanpreet-singh/smart-student-portal/pull/31. Chunk 25 Teacher Timetable PR #32 is open against `feat/teacher-students-api` from `feat/teacher-timetable-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/32. Merge PR #31 first, then retarget #32 to `main`. PR #29 (Chunk 23 Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30 (Chunk 24 Teacher Assignments) is closed/merged into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, not directly into `main`.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -835,14 +835,15 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ## Completed frontend chunk — Phase II, Chunk 25: Teacher Timetable Capability Alignment
 
 - Branch: `feat/teacher-timetable-capability`, stacked on `feat/teacher-students-api` at parent head `5c704170e3fad2421cf7efdbbe5627507324fc9f`. The parent includes PR #29's merged Teacher Students work and PR #30's Assignment capability changes.
-- PR #31 (Chunk 24 catch-up) is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/31. The Chunk 25 PR is intentionally stacked on `feat/teacher-students-api` until #31 merges; then retarget it to `main`.
+- PR #31 (Chunk 24 catch-up) is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/31. PR #32 (this Chunk 25 work) is open against `feat/teacher-students-api`: https://github.com/armanpreet-singh/smart-student-portal/pull/32. Merge #31 first, then retarget #32 to `main`.
 - Reverified backend-main `prisma/schema.prisma`, `src/routes/teacher-routes.js` and `src/app.js`: Prisma models are User, Class, Subject, TeacherSubject and Attendance only; Teacher routes expose assigned-subject lookup, subject roster and attendance marking. No timetable/schedule/session model or Teacher timetable endpoint exists.
 - Replaced the sample Teacher weekly timetable with an accessible capability-unavailable state. Removed fabricated weekday sessions, subject/lecture/lab labels, times and room assignments; the page explains that official schedule data cannot be verified.
 - Removed the page-local `timetableData` and the now-unused `teacherScheduleData` export from `src/features/teacher/data/mockTeacherData.js`. Repository search confirmed the export had no remaining consumers.
 - Added responsive `src/features/teacher/pages/TeacherTimetable.css`; preserved the existing `/teacher/timetable` route, Teacher shell and shared page components.
 - Added `feat/teacher-timetable-capability` to GitHub Actions push filters and `feat/teacher-students-api` to pull-request base filters so the stacked PR can run CI.
 - Frontend only. No backend, database, schema, migration, secret, deployment, Teacher account or academic record changes were made.
-- Source implementation is committed; final CI verification for the handoff-inclusive head is pending.
+- PR #32 is open against `feat/teacher-students-api` at head `5d75aeaba183c7d44dcb52af103380b938d6c585`; after PR #31 merges, retarget #32 to `main`.
+- GitHub Actions push build run `43581945224` passed on the exact handoff-inclusive head. The PR-specific check is pending.
 
 ## Exact next frontend task — Phase II, Chunk 26 (proposed): Teacher Learning Resources Capability Alignment
 
