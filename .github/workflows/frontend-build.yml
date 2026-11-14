@@ -23,6 +23,7 @@ on:
       - "feat/admin-subject-management"
       - "feat/admin-reports-analytics"
       - "feat/admin-departments-capability"
+      - "feat/admin-announcements-capability"
   pull_request:
     branches:
       - main

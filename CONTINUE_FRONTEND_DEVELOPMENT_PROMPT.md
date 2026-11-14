@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Latest verified `main` after merging Chunk 13 PR #19 is `641540bbd547eb6b295f746c4048be542651ce5e`. Current Chunk 14 branch: `feat/admin-departments-capability`, based on that head. Chunk 14 PR #20 is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/20. Chunk 13 PR #19, Chunk 12 PR #18 and earlier PRs #7–#17 are merged into `main`.
+3. Latest verified `main` after merging Chunk 13 PR #19 is `641540bbd547eb6b295f746c4048be542651ce5e`. Current Chunk 15 branch: `feat/admin-announcements-capability`, based on that main head. PR #21 (Chunk 15) is open and unmerged: https://github.com/armanpreet-singh/smart-student-portal/pull/21. PR #20 (Chunk 14, Departments) is also open and unmerged on a separate branch: https://github.com/armanpreet-singh/smart-student-portal/pull/20. PRs #15–#19 and earlier completed Phase II PRs are merged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -86,28 +86,32 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 ## Completed Phase II, Chunk 13 — Admin Reports & Analytics API Alignment
 
-- Branch: `feat/admin-reports-analytics`, based on `main` after PR #18 merged at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`.
-- PR #19 merged into `main` at `641540bbd547eb6b295f746c4048be542651ce5e`.
-- Backend-main `GET /api/admin/attendance` exposes supported filters `fromDate`, `toDate`, `classId`, `subjectId`, overall summary and per-subject aggregates.
-- Report summaries contain PRESENT, ABSENT, LATE, EXCUSED, `totalRecords`, `eligibleSessions`, `attendedSessions`, nullable `attendancePercentage`. Eligible = PRESENT + ABSENT + LATE; attended = PRESENT + LATE; EXCUSED excluded; zero denominator returns `null`.
-- Reports & Analytics now reuses the authenticated Attendance Overview UI/API and loading/error/empty states. Mock growth, department, enrollment and monthly-trend metrics are not presented as real university data.
-- Final CI runs `43562736157` (PR) and `43562732174` (push) passed on PR head `67d2f26f8c6dd660b02035345a352fb11ff2f21f`; `npm ci` and `npm run build` passed.
+- Branch `feat/admin-reports-analytics`; PR #19 merged into `main` at `641540bbd547eb6b295f746c4048be542651ce5e`.
+- Reused authenticated backend-main `GET /api/admin/attendance` and its date/class/subject filters, overall aggregates and per-subject breakdown. EXCUSED is excluded from the attendance percentage denominator; null remains no eligible data.
+- Replaced mock Reports & Analytics charts with the existing report component/API. Unsupported growth, department, enrollment and monthly trends are not shown as real metrics.
+- Final CI PR run `43562736157` and push run `43562732174` passed on final head `67d2f26f8c6dd660b02035345a352fb11ff2f21f`.
 
 ## Completed Phase II, Chunk 14 — Admin Departments Capability Alignment
 
-- Branch: `feat/admin-departments-capability`, based on `main` at `641540bbd547eb6b295f746c4048be542651ce5e`.
-- PR #20: https://github.com/armanpreet-singh/smart-student-portal/pull/20 (open, unmerged).
-- Backend-main Prisma schema has no Department model or department/faculty fields; Admin routes expose no department read endpoint; academic service/validators contain no department contract.
-- Removed the mock-backed department cards and replaced them with an accessible explanation that department names, HODs, student totals and faculty totals are unavailable from supported APIs.
-- The Departments page no longer imports `departmentsData`; shared mock fixtures remain untouched for unrelated legacy screens.
-- No backend/database/schema/migration/secret/deployment/live data change was made.
+- Branch `feat/admin-departments-capability`, based on `main` at `641540bbd547eb6b295f746c4048be542651ce5e`; PR #20 remains open and unmerged.
+- Backend-main has no Department model, department fields, Admin read route, service or validation schema.
+- Replaced hard-coded department/HOD/student/faculty cards with an accessible capability-unavailable notice. No mock department fixture import remains in DepartmentsPage.
+- GitHub Actions PR run `43563316264` and push run `43563311740` passed on PR #20 head `467c58aee195f7a32460589783e15bd62afc97d6`.
+- No backend, database, schema, migration, secret, deployment or live data change.
 
-## Exact next task — Phase II, Chunk 15 (proposed): Admin Announcements Capability Alignment
+## Completed Phase II, Chunk 15 — Admin Announcements Capability Alignment
 
-1. Reverify backend-main for an Announcement model, authorized Admin routes, schemas and supported read/publish operations.
-2. Audit the Admin Announcements screen and identify static sample announcements or inert actions.
-3. Do not present sample announcements as published university content or imply unsupported publish/targeting controls are functional.
-4. If no API exists, replace mock records with a clear unavailable state and retain no fake data; do not add backend functionality.
+- Branch `feat/admin-announcements-capability`, based on `main` at `641540bbd547eb6b295f746c4048be542651ce5e`; PR #21 is open and unmerged.
+- Backend-main has no Announcement/Notification Prisma model, and no Admin, Student or Teacher announcement/notification routes.
+- Replaced two hard-coded sample messages and the inert New Announcement button with an accessible capability-unavailable notice. Fake audience, sent/scheduled status and sample announcement content are removed.
+- Added responsive styling and GitHub Actions workflow trigger. PR/push CI and final result will be recorded after completion.
+
+## Exact next task — Phase II, Chunk 16 (proposed): Admin Academic Calendar Capability Alignment
+
+1. Reverify backend-main for an Academic Calendar/Event model, authorized Admin routes, schemas and supported read/write operations.
+2. Audit the Admin Calendar page for hard-coded sample events, dates or inert event-management controls.
+3. Do not present sample events as the university calendar or imply unsupported publish/management controls are functional.
+4. If no API exists, replace mock content with a clear unavailable state; do not add backend functionality.
 5. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
 
 ## Completed Phase II, Chunk 9 — Admin Managed Account Password Reset
