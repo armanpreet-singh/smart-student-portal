@@ -41,6 +41,7 @@ on:
       - "feat/teacher-settings-capability"
       - "feat/admin-profile-capability-clean"
       - "feat/student-profile-capability"
+      - "feat/student-settings-capability-main-sync"
   pull_request:
     branches:
       - main

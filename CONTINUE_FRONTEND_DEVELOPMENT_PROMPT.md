@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #35 (Teacher Profile replacement) merged at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`; PR #36 (Teacher Settings) merged at `96ad2fe3a635797f388c65ee8189563da2851262`; clean replacement PR #38 (Admin Profile) merged at `cc018e17c36a0a0dbd7ec830f61746d96738d44d`. Original stacked PRs #34 and #37 were closed without merge during clean replacements. Current Phase II, Chunk 30 PR #39 (Student Profile) is open against `main` from `feat/student-profile-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/39.
+3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #35 (Teacher Profile replacement) merged at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`; PR #36 (Teacher Settings) merged at `96ad2fe3a635797f388c65ee8189563da2851262`; PR #38 (Admin Profile clean replacement) merged at `cc018e17c36a0a0dbd7ec830f61746d96738d44d`; PR #39 (Student Profile) merged at `6325413178f297eea9fc730fb26b2cbe540715d7`. Original stacked PRs #34, #37 and #40 were closed without merge; PR #41 was also closed without merge after its merge conflict with the newly squash-merged PR #39. Current Phase II, Chunk 31 Student Settings clean replacement PR #42 is open against `main` from `feat/student-settings-capability-main-sync`: https://github.com/armanpreet-singh/smart-student-portal/pull/42.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -375,7 +375,19 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - Replaced mock Student Profile data with verified session name, username, nullable email, role and account-created date. Unsupported academic/contact details are explicitly unavailable.
 - Updated Student topbar dropdown to use authenticated name/username/email and a neutral account icon; removed the mock portrait, roll number, department and semester from the dropdown.
 - Added responsive `StudentProfile.css`; preserved `/dashboard/profile`, Student shell, theme and existing topbar interactions.
-- PR #39 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/39. Run final CI on the handoff-inclusive head before merge.
+- PR #39 merged into `main` at `6325413178f297eea9fc730fb26b2cbe540715d7`. Final handoff-inclusive head `47cd2aa361635e04258fd2c61c51cf3d256d0786` passed main-target build run `43590664299` (`npm ci`, `npm run build`).
 - Frontend only. No backend, database, schema, migration, secret, deployment, credential or live account changes.
 
-After PR #39 merges, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 31.
+## Current Phase II, Chunk 31 — Student Settings Capability Alignment
+
+- Clean branch `feat/student-settings-capability-main-sync` is based directly on updated `main` at `6325413178f297eea9fc730fb26b2cbe540715d7`, after Student Profile PR #39 merged.
+- Reverified backend-main `src/routes/auth-routes.js`, `src/validators/auth-schemas.js`, `src/services/auth-service.js` and frontend `src/features/auth/api/authApi.js`. Authenticated `POST /api/auth/change-password` accepts exactly `{ currentPassword, newPassword }`; current password is non-empty and <=72 UTF-8 bytes, new password is >=12 characters and <=72 UTF-8 bytes, and values must differ.
+- Reused existing `changeCurrentPassword` helper; request sends only current/new password fields, requires the authenticated Bearer token, validates returned user and handles timeout/network/server errors.
+- Removed mock Display Name, Official Email and Phone inputs and browser-local `ltsu-profile-settings` save. No Student profile-update endpoint exists.
+- Added current/new/confirm inputs, visibility toggles, byte/length/difference validation, submitting/error/success states, mapped server field errors, post-change `refreshCurrentUser()` verification and 401 logout. Confirmation remains client-only; no password is persisted or logged.
+- Added retry for unavailable session verification, accessible unsupported-preferences notice and responsive `StudentSettings.css`; preserved `/dashboard/settings`, Student shell and theme.
+- PR #40 (initial stacked version) was closed without merge. PR #41 (clean main-based version) was also closed without merge because the intervening PR #39 squash merge caused conflicts in shared documentation/workflow files. PR #42 is the clean replacement based directly on the post-#39 `main` commit and can merge independently: https://github.com/armanpreet-singh/smart-student-portal/pull/42.
+- Earlier clean Student Settings source snapshots passed build runs `43592220051` and `43592349116`. The post-#39 clean replacement head `0fc8ad5caf70bed1d2f9750d917f5b4887c6a435` passed GitHub Actions main-target build run `43592988139` (`npm ci`, `npm run build`). The final documentation-inclusive head will be rechecked before merge.
+- Frontend only; no backend, database, schema, migration, secret, deployment, credential or live account changes.
+
+After PR #42 merges, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 32.

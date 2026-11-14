@@ -1,0 +1,238 @@
+.s-settings-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.85fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.s-settings-card {
+  min-width: 0;
+  padding: 24px;
+}
+
+.s-settings-card-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.s-settings-card-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 11px;
+  background: rgba(30, 58, 138, 0.1);
+  color: var(--d-primary);
+}
+
+.s-settings-card-heading h3 {
+  margin: 0;
+  color: var(--d-text);
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.s-settings-card-heading p {
+  margin: 4px 0 0;
+  color: var(--d-text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.s-settings-password-policy {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-bg);
+  color: var(--d-text-secondary);
+}
+
+.s-settings-password-policy svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: var(--d-primary);
+}
+
+.s-settings-password-policy p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.s-settings-password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.s-settings-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.s-settings-field-label {
+  color: var(--d-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.s-settings-input-wrap {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-bg);
+  transition: var(--d-transition);
+}
+
+.s-settings-input-wrap:focus-within {
+  border-color: var(--d-primary);
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+.s-settings-input {
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+  padding: 0 13px;
+  border: 0;
+  outline: 0;
+  border-radius: var(--d-radius-sm);
+  background: transparent;
+  color: var(--d-text);
+  font: inherit;
+  font-size: 14px;
+}
+
+.s-settings-password-toggle {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--d-text-secondary);
+  cursor: pointer;
+}
+
+.s-settings-password-toggle:hover {
+  color: var(--d-primary);
+  background: rgba(30, 58, 138, 0.06);
+}
+
+.s-settings-password-toggle:focus-visible,
+.s-settings-submit:focus-visible,
+.s-settings-retry:focus-visible {
+  outline: 3px solid var(--d-gold);
+  outline-offset: 2px;
+}
+
+.s-settings-field-error,
+.s-settings-form-error {
+  margin: 0;
+  color: var(--d-danger);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.s-settings-submit {
+  align-self: flex-start;
+  min-width: 170px;
+}
+
+.s-settings-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.s-settings-unavailable {
+  padding: 16px;
+  border-left: 3px solid var(--d-primary);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-bg);
+}
+
+.s-settings-unavailable h4 {
+  margin: 0 0 9px;
+  color: var(--d-text);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.s-settings-unavailable p {
+  margin: 0;
+  color: var(--d-text-secondary);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.s-settings-unavailable p + p {
+  margin-top: 9px;
+}
+
+.s-settings-session-error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+  color: var(--d-danger);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.s-settings-session-error p {
+  margin: 0;
+}
+
+.s-settings-session-status {
+  margin: 0 0 16px;
+  color: var(--d-text-secondary);
+  font-size: 12px;
+}
+
+.s-settings-retry {
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-surface);
+  color: var(--d-primary);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .s-settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .s-settings-card {
+    padding: 20px;
+  }
+
+  .s-settings-card-heading {
+    gap: 11px;
+  }
+
+  .s-settings-submit {
+    width: 100%;
+  }
+}
