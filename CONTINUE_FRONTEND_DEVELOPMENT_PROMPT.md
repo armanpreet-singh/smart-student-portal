@@ -387,7 +387,7 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - Added current/new/confirm inputs, visibility toggles, byte/length/difference validation, submitting/error/success states, mapped server field errors, post-change `refreshCurrentUser()` verification and 401 logout. Confirmation remains client-only; no password is persisted or logged.
 - Added retry for unavailable session verification, accessible unsupported-preferences notice and responsive `StudentSettings.css`; preserved `/dashboard/settings`, Student shell and theme.
 - PR #40 (initial stacked version) was closed without merge. PR #41 (clean main-based version) was also closed without merge because the intervening PR #39 squash merge caused conflicts in shared documentation/workflow files. PR #42 is the clean replacement based directly on the post-#39 `main` commit and can merge independently: https://github.com/armanpreet-singh/smart-student-portal/pull/42.
-- The earlier complete Student Settings source snapshot passed build run `43592220051`, and pre-replacement clean main-based handoff head passed run `43592349116`; final PR #42 CI is pending.
+- Earlier clean Student Settings source snapshots passed build runs `43592220051` and `43592349116`. The post-#39 clean replacement head `0fc8ad5caf70bed1d2f9750d917f5b4887c6a435` passed GitHub Actions main-target build run `43592988139` (`npm ci`, `npm run build`). The final documentation-inclusive head will be rechecked before merge.
 - Frontend only; no backend, database, schema, migration, secret, deployment, credential or live account changes.
 
 After PR #42 merges, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 32.
