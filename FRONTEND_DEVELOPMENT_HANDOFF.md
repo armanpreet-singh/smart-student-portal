@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/teacher-timetable-capability`
-Current pull requests: PR #31 (Chunk 24 Teacher Assignments catch-up) is open against `main` from `feat/teacher-students-api`: https://github.com/armanpreet-singh/smart-student-portal/pull/31. Chunk 25 Teacher Timetable PR #32 is open against `feat/teacher-students-api` from `feat/teacher-timetable-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/32. Merge PR #31 first, then retarget #32 to `main`. PR #29 (Chunk 23 Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30 (Chunk 24 Teacher Assignments) is closed/merged into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, not directly into `main`.
+Development branch: `feat/teacher-resources-capability`
+Current pull request: Phase II, Chunk 26 Teacher Learning Resources Capability Alignment PR #33 is open against `main` from `feat/teacher-resources-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/33. PR #31 (Teacher Assignments catch-up) merged into `main` at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 (Teacher Timetable) merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`. PR #29 (Teacher Students) merged into `main` at `04573f41327e09cfbb19225502002003de8105a3`; PR #30's initial merge was into the feature branch at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`, with its changes subsequently brought to `main` through PR #31.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit after Chunk 23 / PR #29 merge: `04573f41327e09cfbb19225502002003de8105a3`. It contains the Teacher Students API alignment from PR #29. Chunk 24 PR #30's merge commit `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34` is on `feat/teacher-students-api` and is not yet in `main`; bring it onto `main` before merging Chunk 25.
+Latest verified `main` commit after Chunk 25 / PR #32 merge: `06c7846d09585d3d11ef17529116a8e799308665`. It includes PR #29 Teacher Students, PR #31's catch-up of Chunk 24 Teacher Assignments and PR #32 Teacher Timetable. PR #31 merged at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 merged at `06c7846d09585d3d11ef17529116a8e799308665`.
 
 ## Working scope and rules
 
@@ -84,7 +84,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Teacher | Students | Authenticated Teacher selects one active assigned subject; the page loads that subject's active roster and displays returned student full name and username with local search. Includes subject/roster loading, error/retry and empty states. | **API-integrated in Chunk 23 PR #29; live Teacher-account/data validation remains outstanding.** | The roster endpoint returns only student id, fullName and username. Roll number, attendance percentage, CGPA and global Teacher student directory are not supported. |
 | Teacher | Announcements | Accessible capability-unavailable state; mock feed, dashboard count/shortcut and unsupported unread-notification indicator removed. | **Not supported by backend main** — no Announcement/Notification model or Teacher read/publish route. | Backend announcement audience, publishing, authorization and read-state contract required. |
 | Teacher | Timetable | Accessible capability-unavailable state; no mock weekday sessions, lecture times, rooms or lecture/lab labels are displayed. | **Not supported by backend main** — no timetable/schedule/session model or Teacher timetable endpoint exists. | Backend timetable/session model and authorized Teacher read endpoint required. |
-| Teacher | Learning Resources | Static cards and decorative upload area. | **Needs improvement** — no learning-resource upload/list API exists. | Backend resource authorization, metadata, upload constraints and storage contract required. |
+| Teacher | Learning Resources | Accessible capability-unavailable state; no sample resource cards or upload/dropzone controls are displayed. | **Not supported by backend main** — no Resource/learning-material model or Teacher resource listing/upload endpoint exists. | Backend resource metadata, file storage/access, sharing scope and authorized Teacher list/upload contracts required. |
 | Teacher | Academic Calendar | Accessible capability-unavailable state; no sample events are displayed. | **Not supported by backend main** — no calendar/event model or Teacher calendar route. | Backend event/calendar model, authorized Teacher read API and date/time-zone semantics required. |
 | Teacher | Profile | Hardcoded employee ID, contact details, experience and specialization. | **Needs improvement** — `/api/auth/me` supplies only basic account identity/role/class fields. | Bind known account fields and specify any additional staff profile model/contract before displaying values as authoritative. |
 | Teacher | Settings | Form submits to console.log. | **Needs improvement** — backend password-change route exists; profile/system settings mutations do not. | Implement password change using API; separate unsupported preferences from account data. |
@@ -824,32 +824,41 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ## Completed frontend chunk — Phase II, Chunk 24: Teacher Assignments Capability Alignment
 
 - Branch: `feat/teacher-assignments-capability`, stacked on PR #29 / `feat/teacher-students-api` at `00cd0f68574d90816b5349a33c4f7e2544867f2e`.
-- PR #30: https://github.com/armanpreet-singh/smart-student-portal/pull/30 is closed/merged into `feat/teacher-students-api` at merge commit `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`. Its base was `feat/teacher-students-api`, so this merge did not update `main`; follow-up PR #31 is open against `main` to carry these already-implemented changes: https://github.com/armanpreet-singh/smart-student-portal/pull/31.
+- PR #30 initially merged into `feat/teacher-students-api` at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34`. Because its base was the feature branch, follow-up PR #31 carried those changes into `main`; PR #31 merged at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`.
 - Reverified backend-main `prisma/schema.prisma`, `src/routes/teacher-routes.js`, `src/routes/admin-routes.js`, `src/routes/student-routes.js`, `src/services` and `src/app.js`. Schema models are User, Class, Subject, TeacherSubject and Attendance; no Assignment/Submission model exists. Teacher routes expose only assigned-subject lookup, subject roster and attendance marking; no assignment, submission, grading or results endpoint exists.
-- Replaced fixture-backed Teacher Assignments UI with an accessible capability-unavailable state. The page no longer imports or renders `teacherAssignmentsData`, mock assignment titles, subject/section labels, due dates, submission totals, grading states or completion percentages.
+- Replaced fixture-backed Teacher Assignments UI with an accessible capability-unavailable state. Removed mock assignment titles, subject/section labels, due dates, submission totals, grading states and completion percentages.
 - Removed fake status filters and the inert Create Assignment button. Added working links to existing My Classes and Students pages.
-- Added responsive `src/features/teacher/pages/TeacherAssignments.css`; preserved existing `/teacher/assignments` route and shared Teacher shell. Added `feat/teacher-assignments-capability` to GitHub Actions push filters and `feat/teacher-students-api` to pull-request base filters for this stacked PR.
+- Added responsive `src/features/teacher/pages/TeacherAssignments.css`; preserved existing `/teacher/assignments` route and shared Teacher shell. Added CI branch filters for the feature branch.
 - No backend, database, schema, migration, secret or deployment changes were made. No live Teacher account or academic records were modified.
-- Implementation commit: `78a88a2504702f123312d96c4850b6fc581cdbd7`; implementation-plus-handoff head `5a779eb67e41bbe0071bf601bf5730953e1b061f` passed GitHub Actions push run `43579617820` (`npm ci`, `npm run build`) and Cloudflare Pages check `132401455069`. GitHub did not schedule a PR-triggered run for this stacked base branch; PR #31 is the catch-up PR targeting `main`; the stacked Chunk 25 PR will target `feat/teacher-students-api` until PR #31 merges. The subsequent follow-up commit only updates these handoff records; source is unchanged.
+- Chunk 24 implementation build run `43579617820` passed; catch-up PR #31's push and PR builds also passed on its final head `5c704170e3fad2421cf7efdbbe5627507324fc9f` (runs `43581573236` and `43581578108`). PR #31 merge commit `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a` is part of main.
 
 ## Completed frontend chunk — Phase II, Chunk 25: Teacher Timetable Capability Alignment
 
-- Branch: `feat/teacher-timetable-capability`, stacked on `feat/teacher-students-api` at parent head `5c704170e3fad2421cf7efdbbe5627507324fc9f`. The parent includes PR #29's merged Teacher Students work and PR #30's Assignment capability changes.
-- PR #31 (Chunk 24 catch-up) is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/31. PR #32 (this Chunk 25 work) is open against `feat/teacher-students-api`: https://github.com/armanpreet-singh/smart-student-portal/pull/32. Merge #31 first, then retarget #32 to `main`.
+- Branch: `feat/teacher-timetable-capability`, initially stacked on `feat/teacher-students-api` to retain the Chunk 24 Assignment changes.
+- PR #32: https://github.com/armanpreet-singh/smart-student-portal/pull/32 merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`, after catch-up PR #31 merged first.
 - Reverified backend-main `prisma/schema.prisma`, `src/routes/teacher-routes.js` and `src/app.js`: Prisma models are User, Class, Subject, TeacherSubject and Attendance only; Teacher routes expose assigned-subject lookup, subject roster and attendance marking. No timetable/schedule/session model or Teacher timetable endpoint exists.
-- Replaced the sample Teacher weekly timetable with an accessible capability-unavailable state. Removed fabricated weekday sessions, subject/lecture/lab labels, times and room assignments; the page explains that official schedule data cannot be verified.
-- Removed the page-local `timetableData` and the now-unused `teacherScheduleData` export from `src/features/teacher/data/mockTeacherData.js`. Repository search confirmed the export had no remaining consumers.
-- Added responsive `src/features/teacher/pages/TeacherTimetable.css`; preserved the existing `/teacher/timetable` route, Teacher shell and shared page components.
-- Added `feat/teacher-timetable-capability` to GitHub Actions push filters and `feat/teacher-students-api` to pull-request base filters so the stacked PR can run CI.
-- Frontend only. No backend, database, schema, migration, secret, deployment, Teacher account or academic record changes were made.
-- PR #32 is open against `feat/teacher-students-api` at head `5d75aeaba183c7d44dcb52af103380b938d6c585`; after PR #31 merges, retarget #32 to `main`.
-- GitHub Actions push build run `43582171318` passed on the current PR head `aaaef97d24f63bbdf53914589e456fa314e4a0f2`, including `npm ci` and `npm run build`. GitHub did not schedule a separate pull-request event while PR #32 targets a feature branch; retargeting to `main` after PR #31 merges will enable the main-target PR check.
+- Replaced the sample Teacher weekly timetable with an accessible capability-unavailable state. Removed fabricated weekday sessions, subject/lecture/lab labels, times and room assignments.
+- Removed the page-local `timetableData` and unused `teacherScheduleData` export from `src/features/teacher/data/mockTeacherData.js` after repository search confirmed there were no consumers.
+- Added responsive `src/features/teacher/pages/TeacherTimetable.css`; preserved the existing `/teacher/timetable` route and Teacher shell.
+- PR #32 head `a4994fc726e762f51cff721e24d9055ff3c87620` passed push build run `43582354115` (`npm ci`, `npm run build`). The main-target PR check was not separately scheduled before merge; the merged main head then passed build run `43582733557`.
+- No backend, database, schema, migration, secret, deployment, Teacher account or academic record changes were made.
 
-## Exact next frontend task — Phase II, Chunk 26 (proposed): Teacher Learning Resources Capability Alignment
+## Completed frontend chunk — Phase II, Chunk 26: Teacher Learning Resources Capability Alignment
 
-1. Audit the mock Teacher Learning Resources page against backend-main Prisma models, route files and mounted endpoints.
-2. Backend main currently contains no Resource model and no Teacher resource list/upload endpoint; replace unsupported sample resource cards and the inert upload/dropzone affordance with an accessible capability-unavailable state.
-3. Remove fabricated resource titles, types, courses, file sizes and unsupported upload actions; preserve the Teacher resources route and shared shell.
-4. Do not imply that files were stored, shared, downloadable or assigned to a class without a backend contract.
+- Branch: `feat/teacher-resources-capability`, based on `main` at `06c7846d09585d3d11ef17529116a8e799308665`, after PRs #31 and #32 merged.
+- Reverified backend-main `prisma/schema.prisma`, the Teacher/Student/Admin route files, `src/app.js` and the backend repository tree. Only User, Class, Subject, TeacherSubject and Attendance models exist; no Resource/learning-material model, Teacher resource-list route or upload endpoint is present.
+- Replaced inline mock Teacher resource cards with an accessible capability-unavailable notice. Removed sample resource titles, types, course labels and file sizes.
+- Removed the inert upload/dropzone affordance; the page no longer implies that files can be selected, uploaded, stored, shared or assigned.
+- Added responsive `src/features/teacher/pages/TeacherResources.css`; preserved the existing `/teacher/resources` route and shared Teacher shell/components.
+- Added `feat/teacher-resources-capability` to GitHub Actions push filters. Frontend only; no backend, database, schema, migration, storage, secret, deployment or live academic record changes.
+- PR #33: https://github.com/armanpreet-singh/smart-student-portal/pull/33 is open against `main`.
+- GitHub Actions push build run `43583068296` passed on the handoff-inclusive head `b2d92112d0b82cf50ecc28ac1b4ea888334ef7c5` (`npm ci`, `npm run build`). An earlier overlapping build on commit `2c49b45a1929cf9ba7bb89955270404d3127371f` failed because the page referenced `TeacherResources.css` before its creation commit had landed; the subsequent complete-tree build passed. PR #33 head `8fc33de2be63e2abbea4056e1e438fd8e59c5c47` passed push build run `43583245784` and main-target PR build run `43583249857`; both completed `npm ci` and `npm run build` successfully. The follow-up handoff metadata commit does not change source implementation.
+
+## Exact next frontend task — Phase II, Chunk 27 (proposed): Teacher Profile Capability Alignment
+
+1. Audit Teacher Profile fields and actions against backend-main `GET /api/auth/me` and any supported profile endpoints.
+2. Remove fabricated employee ID, department, designation, experience, phone and other unsupported profile values or mutations.
+3. Display only verified authenticated account fields; use an accessible notice for unsupported staff profile data.
+4. Preserve the Teacher Profile route, shared shell, theme and responsive behavior.
 5. Update both handoff documents, verify CI and stop.
 

@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-14: `main` is `04573f41327e09cfbb19225502002003de8105a3` after PR #29 merged. PR #30 is closed/merged at `99573c1d41bb2d4f070bbc6124f8ff3b1ee2cb34` into `feat/teacher-students-api`, not `main`. Follow-up PR #31 is open against `main` to carry the Assignment capability alignment onto main: https://github.com/armanpreet-singh/smart-student-portal/pull/31. Chunk 25 Teacher Timetable PR #32 is open from `feat/teacher-timetable-capability` against `feat/teacher-students-api`: https://github.com/armanpreet-singh/smart-student-portal/pull/32. Merge #31 first, then retarget #32 to `main`.
+3. Live verification on 2026-11-14: PR #31 (Teacher Assignments catch-up) merged into `main` at `2dc2cca9f1c16ecc4ff526149af0a0a03ca3421a`; PR #32 (Teacher Timetable) merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665`. Current Chunk 26 development branch is `feat/teacher-resources-capability`, based on that updated `main`.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -321,4 +321,24 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - GitHub Actions push build run `43582171318` passed on PR #32 head `aaaef97d24f63bbdf53914589e456fa314e4a0f2`, including `npm ci` and `npm run build`. GitHub did not schedule a separate pull-request event for the stacked feature-branch target; retargeting to `main` after #31 merges will enable the PR-targeted check.
 - Frontend-only; no backend/database/deployment or live academic data changes.
 
-Continue with Phase II, Chunk 26 (Teacher Learning Resources Capability Alignment) as specified above. Verify backend-main contracts before editing, finish one chunk, update both handoff files, verify CI and stop.
+## Completed Phase II, Chunk 25 — Teacher Timetable Capability Alignment
+
+- PR #32 merged into `main` at `06c7846d09585d3d11ef17529116a8e799308665` after PR #31 merged the Teacher Assignments capability changes.
+- Backend main has no timetable/schedule/session model or Teacher timetable endpoint.
+- Replaced the mock weekly Teacher timetable with an accessible capability-unavailable notice; removed sample weekdays, times, rooms and lecture/lab schedule labels.
+- Removed unused `teacherScheduleData` from `mockTeacherData.js` after repository search confirmed there were no consumers.
+- Added responsive `TeacherTimetable.css`; preserved the `/teacher/timetable` route and shared shell.
+- GitHub Actions push run `43582354115` passed on the final PR #32 head; merged main head passed run `43582733557`.
+
+## Completed Phase II, Chunk 26 — Teacher Learning Resources Capability Alignment
+
+- Branch: `feat/teacher-resources-capability`, based on `main` at `06c7846d09585d3d11ef17529116a8e799308665`.
+- Backend main has no Resource/learning-material model or Teacher resource listing/upload endpoint.
+- Replaced the mock Teacher resource list with an accessible capability-unavailable notice; removed sample titles, file types, courses and file sizes.
+- Removed the decorative upload/dropzone UI because no file upload contract or storage endpoint exists.
+- Added responsive `TeacherResources.css`; preserved the `/teacher/resources` route and shared Teacher shell.
+- PR #33 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/33.
+- GitHub Actions push build run `43583068296` passed on head `b2d92112d0b82cf50ecc28ac1b4ea888334ef7c5`, including `npm ci` and `npm run build`. An earlier overlapping build failed because the stylesheet commit had not yet landed; the final complete-tree build passed. PR #33 head `8fc33de2be63e2abbea4056e1e438fd8e59c5c47` passed push build run `43583245784` and main-target PR build run `43583249857`; both ran `npm ci` and `npm run build` successfully. The final documentation-only update does not alter source.
+- Frontend-only; no backend/database/storage/deployment changes.
+
+Continue with Phase II, Chunk 27 (Teacher Profile Capability Alignment) as specified above. Verify backend-main contracts, finish one chunk, update both handoff files, verify CI and stop.
