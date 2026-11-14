@@ -3,8 +3,8 @@
 Last updated: 2026-11-14
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/admin-announcements-capability`
-Current pull requests: Phase II, Chunk 14 PR #20 (Departments) is open against `main` on `feat/admin-departments-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/20. Phase II, Chunk 15 PR #21 (Announcements) is stacked on PR #20 with base `feat/admin-departments-capability`; merge #20 first, then retarget #21 to `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/21. Phase II, Chunk 13 PR #19 merged into `main` at `641540bbd547eb6b295f746c4048be542651ce5e`; Chunk 12 PR #18 merged at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`; Chunk 11 PR #17 and earlier completed PRs are merged.
+Development branch: `feat/admin-calendar-capability`
+Current pull requests: Phase II, Chunk 16 PR #22 (Admin Academic Calendar) is open against `main` on `feat/admin-calendar-capability`: https://github.com/armanpreet-singh/smart-student-portal/pull/22. Phase II, Chunk 15 PR #21 (Announcements) merged into `main` at `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`; Phase II, Chunk 14 PR #20 (Departments) merged at `010e99ef2474f5f63e1dfeda0b383e4b4ec159d4`. Phase II, Chunk 13 PR #19 merged at `641540bbd547eb6b295f746c4048be542651ce5e`; Chunk 12 PR #18 merged at `a188f41af7218ae3a181dd51b5d3a08f7e1a436d`; Chunk 11 PR #17 and earlier completed PRs are merged.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
 Phase II, Chunk 5 Admin Teacher Directory PR #11 merged into `main`: `e2bbf343fffd11b714a7ad692e400174c20ee65b`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified `main` commit after Chunk 13 merge: `641540bbd547eb6b295f746c4048be542651ce5e`. PR #20 (Chunk 14) is based on this main head; PR #21 (Chunk 15) is stacked on PR #20 and contains only the announcement page plus shared workflow/handoff changes relative to that base.
+Latest verified `main` commit after Chunk 15 merge: `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`. PR #22 (Chunk 16) is based directly on this commit.
 
 ## Working scope and rules
 
@@ -95,7 +95,7 @@ No existing role page met the full Ready standard at audit time. The page shells
 | Admin | Departments | Mock department/HOD/student/faculty counts. | **Needs improvement** — no Department model/API exists. | Backend department structure and authorized management/read API required. |
 | Admin | Attendance Overview | Calls backend-main `GET /api/admin/attendance`; overall metrics, status counts, subject chart and class/subject table are derived from report aggregates. Date, class and subject filters use backend-supported query fields and directory data. | **Needs improvement** — integration is implemented; verify with a provisioned Admin account and real class/subject/attendance records. | Validate report filters and empty/zero-denominator cases with live university data; no department-level aggregation exists. |
 | Admin | Announcements | Explicit capability-unavailable state; sample notices, sent/scheduled labels and inert publish action removed. | **Implemented in Chunk 15 PR #21; pending merge** — backend main has no Announcement/Notification model or announcement routes. | Requires backend announcement model, audience/targeting semantics, publication and schedule endpoints, and authorized read/publish contracts. |
-| Admin | Academic Calendar | Static fixed events. | **Needs improvement** — no calendar/event API/model exists. | Backend event/calendar contract required. |
+| Admin | Academic Calendar | Accessible capability-unavailable state; no sample events are shown. | **Not supported by backend main** — no calendar/event model or Admin calendar routes. | Backend event/calendar model, authorized API, date/time-zone semantics and event lifecycle required. |
 | Admin | Reports & Analytics | Uses backend-main `GET /api/admin/attendance` via shared authenticated report UI, with date/class/subject filters, overall status aggregates and per-subject results. | **Implemented in Chunk 13 PR #19; pending merge and post-rebase CI** — mock metrics are no longer presented as university data. | Verify after merged chunks #12 and #13 with a provisioned Admin and real attendance records; add growth/department/enrollment/trends only when backend sources exist. |
 | Admin | Profile | Hardcoded admin details and contact information. | **Needs improvement** — `/api/auth/me` returns limited identity data. | Bind known user identity; remove fabricated contact/last-login details until API supports them. |
 | Admin | System Settings | Form logs values to console; no persistence. | **Needs improvement** — no system configuration API/model exists. | Backend settings contract and administrative audit rules required. |
@@ -714,28 +714,37 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 ## Completed frontend chunk — Phase II, Chunk 14: Admin Departments Capability Alignment
 
 - Branch: `feat/admin-departments-capability`, based on `main` at `641540bbd547eb6b295f746c4048be542651ce5e`.
-- PR #20: https://github.com/armanpreet-singh/smart-student-portal/pull/20 remains open and unmerged.
+- PR #20: https://github.com/armanpreet-singh/smart-student-portal/pull/20 merged into `main` at `010e99ef2474f5f63e1dfeda0b383e4b4ec159d4`.
 - Backend-main Prisma schema has no Department model or department/faculty fields; Admin routes expose no department read endpoint; academic services and validators contain no department contract.
 - Replaced the mock department cards with an accessible capability-unavailable notice. Department names, HODs and student/faculty totals are not displayed as university data.
 - DepartmentsPage no longer imports `departmentsData`; shared `mockAdminData.js` remains unchanged for unrelated legacy screens.
-- GitHub Actions runs `43563316264` (PR) and `43563311740` (push) passed on PR #20 head `467c58aee195f7a32460589783e15bd62afc97d6`.
+- GitHub Actions PR run `43563316264` and push run `43563311740` passed on PR #20 head `467c58aee195f7a32460589783e15bd62afc97d6`; post-merge main build `43566113320` also passed.
 - No backend, database, schema, migration, secret, deployment or live data changes were made.
 
 ## Completed frontend chunk — Phase II, Chunk 15: Admin Announcements Capability Alignment
 
-- Branch: `feat/admin-announcements-capability`, stacked on PR #20 / `feat/admin-departments-capability` at `467c58aee195f7a32460589783e15bd62afc97d6` (whose base is `main` at `641540bbd547eb6b295f746c4048be542651ce5e`).
-- PR #21: https://github.com/armanpreet-singh/smart-student-portal/pull/21 (open against `feat/admin-departments-capability`; merge PR #20 first, then retarget #21 to `main`).
+- Branch: `feat/admin-announcements-capability`, originally stacked on PR #20; PR #21 was retargeted to `main` after PR #20 merged.
+- PR #21: https://github.com/armanpreet-singh/smart-student-portal/pull/21 merged into `main` at `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`.
 - Reverified backend-main `prisma/schema.prisma`: no Announcement or Notification model. Admin, Student and Teacher route files contain no announcement/notification endpoints; the app mounts only the existing auth/admin/teacher/student route groups.
 - The previous Admin page had two hard-coded sample messages with unverified audience/date/status values and an inert New Announcement button. Replaced the content with an accessible capability-unavailable notice; sample messages, fake sent/scheduled states and unsupported publishing controls are no longer displayed.
-- Added responsive `AnnouncementsPage.css` and a workflow trigger for `feat/admin-announcements-capability`. The workflow also retains the separate open Chunk 14 branch trigger.
+- Added responsive `AnnouncementsPage.css` and a workflow trigger for `feat/admin-announcements-capability`.
+- GitHub Actions push run `43565264008` passed on final head `f92835bead0cd0d689df5c4f196fc46a6aa591cd`; the final head's `build` and Cloudflare Pages checks passed. Post-merge main build `43566205135` also passed.
 - No backend, database, schema, migration, secret, deployment or live announcement changes were made.
-- GitHub Actions push run `43564993391` passed on final stacked code head `78c6d53f674e16d3c06419094fc2bdff25cf7c11` (`npm ci`, `npm run build`). The pull-request workflow is configured for `main` targets and will run when PR #20 merges and PR #21 is retargeted to `main`.
 
-## Exact next frontend task — Phase II, Chunk 16 (proposed): Admin Academic Calendar Capability Alignment
+## Completed frontend chunk — Phase II, Chunk 16: Admin Academic Calendar Capability Alignment
 
-1. Reverify backend-main for an Academic Calendar/Event model, authorized Admin routes, schemas and read/create/update operations.
-2. Audit the Admin Calendar page for fixed sample events, dates or inert event-management controls.
-3. Do not present hard-coded events as the university calendar or imply unsupported event publishing/management is functional.
-4. If no API exists, replace mock calendar content with a clear unavailable state; do not add backend functionality in this frontend-only workflow.
-5. Build, verify, update both handoff documents and stop. Do not merge/deploy unless explicitly requested.
+- Branch: `feat/admin-calendar-capability`, based on `main` at `2a15c4a9179d99a558a43a4c6a9affb6a06b0d9e`.
+- PR #22: https://github.com/armanpreet-singh/smart-student-portal/pull/22 is open against `main`.
+- Reverified backend-main `prisma/schema.prisma`: no Calendar, AcademicCalendar or Event model. Admin, Student and Teacher route files expose no calendar/event endpoints; Admin academic services and validators have no event contract.
+- The Admin Calendar page previously rendered two hard-coded events (“University Convocation” and “Diwali Holidays Begin”) with fixed 2023 dates. Replaced them with an accessible capability-unavailable notice; no unsupported event creation, editing or publishing controls were added.
+- Added responsive `CalendarPage.css` and the `feat/admin-calendar-capability` workflow branch trigger. The existing Admin `/calendar` route and dashboard layout are preserved.
+- Final source read-back and GitHub Actions verification are recorded below after the build completes.
+- No backend, database, schema, migration, secret, deployment or live calendar changes were made.
 
+## Exact next frontend task — Phase II, Chunk 17 (proposed): Teacher Academic Calendar Capability Alignment
+
+1. Reverify backend-main for calendar/event models and Teacher calendar endpoints.
+2. Audit the Teacher Calendar screen for fixed sample events or unsupported event claims.
+3. If no supported endpoint exists, replace sample calendar data with an accessible capability-unavailable state.
+4. Preserve the existing Teacher layout and route; do not add backend functionality.
+5. Verify the build, update both handoff documents and stop.
