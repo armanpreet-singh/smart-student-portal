@@ -157,7 +157,8 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 - Backend-main provides Teacher assigned-subject lookup, active subject rosters and attendance marking; authenticated `GET /api/auth/me` returns `fullName` but no designation, department, employee ID or semester. There are no Teacher timetable, dashboard aggregate, assignment, grading, results or insights endpoints/models.
 - Replaced mock Teacher identity/profile fields, fabricated stats, hard-coded daily schedule, insight alerts and inert quick actions with an accessible capability-unavailable state. The page displays only verified `user.fullName` from `AuthContext` when available.
 - Added a working link to the supported Teacher Attendance workflow. Added responsive `TeacherHome.css`; preserved route and shared layout. Unrelated Teacher fixtures/pages were not changed.
-- No backend, database, schema, migration, secret or deployment changes were made. CI verification will be documented after completion.
+- Implementation-plus-handoff head `29abbfbcc4742ecef9fbec3a684550ab71369f74` passed GitHub Actions push run `43573775688` and PR run `43573848697` (`npm ci`, `npm run build`); Cloudflare Pages check `132383569842` passed. The follow-up commit only records these results in the handoff files; dashboard source is unchanged.
+- No backend, database, schema, migration, secret or deployment changes were made.
 
 ## Exact next task — Phase II, Chunk 22 (proposed): Teacher My Classes API Alignment
 

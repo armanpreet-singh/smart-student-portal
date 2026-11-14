@@ -793,7 +793,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Added a working link to the existing Teacher Attendance workflow, which is supported by assigned-subject, roster and attendance-marking endpoints.
 - Added responsive `src/features/teacher/pages/TeacherHome.css`; preserved the Teacher dashboard route and shared page/card components. Other Teacher mock data and pages were left unchanged.
 - Added `feat/teacher-dashboard-capability` to the frontend build workflow push filters.
-- No backend, database, schema, migration, secret or deployment changes were made. CI results will be recorded after verification completes.
+- Final implementation-plus-handoff head `29abbfbcc4742ecef9fbec3a684550ab71369f74` passed GitHub Actions push run `43573775688` and PR run `43573848697`, each including `npm ci` and `npm run build`; Cloudflare Pages check `132383569842` also passed. The follow-up commit only records these verification results in the handoff documents; Teacher dashboard source is unchanged.
 
 ## Exact next frontend task — Phase II, Chunk 22 (proposed): Teacher My Classes API Alignment
 
