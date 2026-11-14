@@ -781,7 +781,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Removed the mock Announcements count from `teacherStatsData`, the inert Send Announcement shortcut from `TeacherHome.jsx`, and the Teacher top-bar unread-notification dot/icon because no Notification contract exists.
 - Added responsive `src/features/teacher/pages/TeacherAnnouncements.css`; preserved the Teacher announcements route, page shell and shared dashboard components. Only the announcement-specific entry in `mockTeacherData.js` was removed; unrelated fixture data remains unchanged.
 - Added `feat/teacher-announcements-capability` to the frontend build workflow push filters.
-- Final code and documentation head / CI results will be recorded after the branch build completes.
+- Implementation plus handoff head `539cfe9b3c4c4f18aae134fe70d37b82f5aff91a` passed GitHub Actions push run `43571889223` (`npm ci`, `npm run build`) and Cloudflare Pages check `132377919336`. The PR-specific workflow is not triggered while PR #26 targets the feature branch `feat/student-announcements-capability`; after PR #25 merges, retarget PR #26 to `main` to run the PR-targeted workflow.
 - No backend, database, schema, migration, secret, deployment or live announcement/notification changes were made.
 
 ## Exact next frontend task — Phase II, Chunk 21 (proposed): Teacher Dashboard Capability Alignment
