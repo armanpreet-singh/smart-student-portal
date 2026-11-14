@@ -121,7 +121,7 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 - Backend-main has no Calendar/AcademicCalendar/Event Prisma model and no calendar/event routes for Teacher. Teacher routes expose assigned subjects, subject rosters and attendance marking only.
 - Removed four hard-coded 2023 Teacher Calendar events (mid-semester results, faculty meeting, DBMS viva and Diwali holidays). The page now shows an accessible capability-unavailable notice with no unsupported calendar controls.
 - Added responsive `TeacherCalendar.css`; preserved the Teacher calendar route, dashboard layout and shared components.
-- Final branch head, source read-back and GitHub Actions build results will be recorded after CI verification.
+- Source read-back covered the Teacher Calendar page, stylesheet, workflow and both handoff files. GitHub Actions push run `43567687578` completed successfully on code commit `cd780e1da888663537c5c1053ccd681decc60ae4`; `npm ci` and `npm run build` passed.
 - No backend, database, schema, migration, secret, deployment or live calendar changes were made.
 
 ## Exact next task — Phase II, Chunk 18 (proposed): Student Academic Calendar Capability Alignment

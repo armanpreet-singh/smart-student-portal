@@ -748,7 +748,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 - Reverified backend-main Prisma schema and Teacher route: no Calendar/AcademicCalendar/Event model or Teacher calendar/event endpoint. The Teacher router currently exposes assigned subjects, subject rosters and attendance marking only.
 - The previous Teacher Calendar displayed four hard-coded 2023 entries (mid-semester results, faculty meeting, DBMS viva and Diwali holidays). Replaced them with an accessible capability-unavailable notice; no fixed dates, sample event labels or unsupported event management controls remain.
 - Added responsive `TeacherCalendar.css`; preserved the existing Teacher calendar page, route and shared dashboard components.
-- Source read-back and final GitHub Actions results will be recorded after the branch head is finalized.
+- Source read-back covered the Teacher Calendar page, stylesheet, workflow and both handoff files. GitHub Actions push run `43567687578` completed successfully on code commit `cd780e1da888663537c5c1053ccd681decc60ae4`; `npm ci` and `npm run build` passed.
 - No backend, database, schema, migration, secret, deployment or live calendar changes were made.
 
 ## Exact next frontend task — Phase II, Chunk 18 (proposed): Student Academic Calendar Capability Alignment
