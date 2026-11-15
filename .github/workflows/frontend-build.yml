@@ -41,6 +41,7 @@ on:
       - "feat/student-profile-capability"
       - "feat/student-settings-capability-main-sync"
       - "feat/admin-dashboard-live-overview"
+      - "feat/student-dashboard-live-overview"
   pull_request:
     branches:
       - main
