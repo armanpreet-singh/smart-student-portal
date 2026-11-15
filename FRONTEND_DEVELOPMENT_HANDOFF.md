@@ -3,7 +3,7 @@
 Last updated: 2026-11-15
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/student-attendance-api-contract-tests` (Phase II, Chunk 42 Student Attendance API Contract Tests; PR #53 open against `main`; based on `5d63c279958d1e32e65e72340a301727d60c49ba`)
+Development branch: `feat/teacher-subjects-api-contract-tests` (Phase II, Chunk 43 Teacher Assigned Subjects & Roster API Contract Tests; PR #54 open against `main`; based on `eb5e21a779d8557225d5b2d5e9d478b1d846c267`)
 Phase II, Chunk 26 Teacher Learning Resources PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. Phase II, Chunk 27 Teacher Profile replacement PR #35 merged at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`; PR #34 was closed without merge. Phase II, Chunk 28 Teacher Settings PR #36 merged at `96ad2fe3a635797f388c65ee8189563da2851262`. Original stacked Admin Profile PR #37 was closed without merge; clean replacement PR #38 merged into `main` at `cc018e17c36a0a0dbd7ec830f61746d96738d44d`. Phase II, Chunk 30 Student Profile PR #39 merged into `main` at `6325413178f297eea9fc730fb26b2cbe540715d7`: https://github.com/armanpreet-singh/smart-student-portal/pull/39. Phase II, Chunk 31 Student Settings PR #42 merged into `main` at `682fc53abd8ee282bd38c9947b558f85f64be518`: https://github.com/armanpreet-singh/smart-student-portal/pull/42. Initial stacked/replacement Student Settings PRs #40 and #41 were closed without merge. Phase II, Chunk 32 Admin Dashboard Live Directory Overview PR #43 merged into `main` at `a73a5a8ec044a403a8ee10d8cba8b22d0bdc6fb5`: https://github.com/armanpreet-singh/smart-student-portal/pull/43. Chunk 33 PR #44 was merged into the feature branch `feat/admin-dashboard-live-overview` at `4412d7d5199dab1d625f2f81f02b0d52a3c51a3b`, not into `main`; its Student Dashboard implementation was carried forward to PR #45. PR #45 merged into `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`; PR #46 (Chunk 35 Student Timetable) originally merged into `feat/student-courses-capability-main-sync` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`; clean-main PR #51 / Chunk 40 merged the existing implementation into `main` at `44b24aa0285fd5be501ddbeed1697e2f6d8429ab`. PR #31, #32 and #29 history remains as documented below.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified frontend `main` commit after PR #52: `5d63c279958d1e32e65e72340a301727d60c49ba` (includes PRs #47 / Chunk 36, #48 / Chunk 37, #49 / Chunk 38, #50 / Chunk 39, #51 / Chunk 40 and #52 / Chunk 41).
+Latest verified frontend `main` commit after PR #53: `eb5e21a779d8557225d5b2d5e9d478b1d846c267` (includes PRs #47 / Chunk 36, #48 / Chunk 37, #49 / Chunk 38, #50 / Chunk 39, #51 / Chunk 40, #52 / Chunk 41 and #53 / Chunk 42).
 
 ## Working scope and rules
 
@@ -909,7 +909,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 
 ## Next frontend work
 
-After Chunk 42 is merged, continue the screen-by-screen audit and select Chunk 43. Reverify frontend and backend main before choosing the next workflow. Do not recreate existing API integrations or substitute mocked tests for live-account validation. Prioritize one cohesive, backend-supported workflow or quality improvement at a time.
+After Chunk 43 is merged, continue the screen-by-screen audit and select Chunk 44. Reverify frontend and backend main before choosing the next workflow. Do not recreate existing API integrations or substitute mocked tests for live-account validation. Prioritize one cohesive, backend-supported workflow or quality improvement at a time.
 
 ## Completed frontend chunk — Phase II, Chunk 32: Admin Dashboard Live Directory Overview
 
@@ -1002,11 +1002,20 @@ After Chunk 42 is merged, continue the screen-by-screen audit and select Chunk 4
 - PR #52 merged into `main` at `5d63c279958d1e32e65e72340a301727d60c49ba`: https://github.com/armanpreet-singh/smart-student-portal/pull/52. Final head `2cdaea7100edc19a8c734741e97b7cac0a004aac` passed push run #437 (`43718963437`) and PR run #438 (`43718989436`); both executed `npm ci`, `npm test` and `npm run build` successfully.
 - Tests use mocked fetch responses only; no production API calls, account mutations, backend, database, secrets or deployment changes.
 
-## Current implementation — Phase II, Chunk 42: Student Attendance API Contract Tests
+## Completed frontend chunk — Phase II, Chunk 42: Student Attendance API Contract Tests
 
 - Branch `feat/student-attendance-api-contract-tests` was created directly from frontend `main` at `5d63c279958d1e32e65e72340a301727d60c49ba`.
 - Backend main `armanpreet-singh/ltsu-backend` at `19d34e577000411520ebb66cbea9eb6833fa4824` exposes Student-authorized, self-scoped `GET /api/student/attendance` with optional `fromDate` and `toDate` filters. Backend statuses are PRESENT, ABSENT, LATE and EXCUSED; EXCUSED does not count toward eligible sessions, and the percentage is null when there are no eligible sessions.
 - Added 12 Node built-in tests in `tests/student-attendance-api.test.js` for Bearer authorization, optional and one-sided date filters, empty subject results, all supported statuses, backend summary semantics, nullable percentage, missing token, 401/403/409/5xx responses, malformed data, network failure and timeout handling.
 - Added an explicit `.js` module specifier to the Student Attendance API helper so Node ESM can import it directly. The existing `npm test` command and CI test step from Chunk 41 are reused; no dependency was added.
-- PR #53 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/53. Final handoff-inclusive head and CI results are verified after the documentation commit.
+- PR #53 merged into `main` at `eb5e21a779d8557225d5b2d5e9d478b1d846c267`: https://github.com/armanpreet-singh/smart-student-portal/pull/53. Final head `0d70d712de6dfc534950431be86c62dd4ae1af80` passed push run #442 (`43719396094`) and PR run #443 (`43719426047`); both ran `npm ci`, `npm test` and `npm run build` successfully.
 - Tests stub `fetch` and use synthetic fixtures only; no live Student account, production API, attendance record or backend data was accessed or changed.
+
+## Current implementation — Phase II, Chunk 43: Teacher Assigned Subjects & Roster API Contract Tests
+
+- Branch `feat/teacher-subjects-api-contract-tests` was created directly from frontend `main` at `eb5e21a779d8557225d5b2d5e9d478b1d846c267`.
+- Backend main `armanpreet-singh/ltsu-backend` at `19d34e577000411520ebb66cbea9eb6833fa4824` exposes Teacher-authorized `GET /api/teacher/subjects` and `GET /api/teacher/subjects/:subjectId/roster`. The roster service only returns active assigned subjects and their active Student roster.
+- Added 12 Node built-in tests in `tests/teacher-subjects-api.test.js` for assigned-subject authorization and projections, empty assignments, roster path encoding and subject/class binding, duplicate/malformed roster entries, missing tokens, 401/403/404/5xx handling, network errors and timeouts.
+- Added an explicit `.js` module specifier to `teacherSubjectsApi.js` so Node ESM can import it directly. Reuses the `npm test` script and CI step; no dependency added.
+- PR #54 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/54. Final handoff-inclusive head and CI results are verified after the documentation commit.
+- Tests stub `fetch` and use synthetic records only; no live Teacher account, roster, production API, backend or database was accessed or changed.

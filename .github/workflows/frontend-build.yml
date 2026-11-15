@@ -47,6 +47,7 @@ on:
       - "feat/student-timetable-main-sync"
       - "feat/admin-academic-catalogue-contract-tests"
       - "feat/student-attendance-api-contract-tests"
+      - "feat/teacher-subjects-api-contract-tests"
       - "feat/student-assignments-capability-main-sync"
       - "feat/student-results-capability-main-sync"
       - "feat/student-resources-capability-main-sync"
