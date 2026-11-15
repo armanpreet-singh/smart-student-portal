@@ -564,8 +564,8 @@ Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first; this update supersedes older backe
 ## Completed Phase II, Chunk 46 — Official Student roll-number integration
 
 - Frontend feature branch: `feat/frontend-roll-number-integration`, from `main` base `e289d5a1a9e302890025c5bb378b2f11a4df0407`.
-- Draft PR #57: https://github.com/armanpreet-singh/smart-student-portal/pull/57. Not merged or deployed.
-- CI run `43736235914` passed on implementation commit `92f0d87d0b2884f8c58a78c3af9417ffbd35e92a`: locked dependency install, all Node API contract tests and `vite build`.
+- PR #57 is open and ready for review: https://github.com/armanpreet-singh/smart-student-portal/pull/57. Not merged or deployed.
+- CI run `43736235914` passed on implementation commit `92f0d87d0b2884f8c58a78c3af9417ffbd35e92a`; the handoff-inclusive follow-up run `43736348435` also passed on `d0ce34386e2d499761ca79f8cd75bd2300be54b4`: locked dependency install, all Node API contract tests and `vite build`.
 - Admin Student provisioning sends optional trimmed `rollNumber`; blank omitted, leading zeroes retained, backend uppercases. Client validation mirrors 1–40 characters and permitted-character/initial-character rules.
 - Admin Student directory validates nullable rollNumber and shows it; Student Profile displays the verified authenticated `user.rollNumber` only when present.
 - Teacher roster validation accepts nullable rollNumber and rejects malformed/duplicate values. Teacher Students and Teacher Attendance display official values.
