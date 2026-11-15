@@ -416,10 +416,15 @@ function SubjectEditorDialog({ subjectRecord, classOptions, submitting, error, o
           ) : (
             <div className="a-subject-parent-summary">
               <span>Parent class (fixed)</span>
-              <strong>{subjectRecord.class.code} — {subjectRecord.class.name}</strong>
+              <strong>
+                {subjectRecord.class?.code || "Class unavailable"}
+                {subjectRecord.class?.name ? ` — ${subjectRecord.class.name}` : ""}
+              </strong>
               <small>
-                {subjectRecord.class.academicYear}
-                {subjectRecord.class.isActive ? " · Active" : " · Inactive"}
+                {subjectRecord.class?.academicYear || "Academic year unavailable"}
+                {subjectRecord.class
+                  ? subjectRecord.class.isActive ? " · Active" : " · Inactive"
+                  : ""}
               </small>
               <p>The backend does not support moving an existing subject to another class.</p>
             </div>
@@ -495,7 +500,8 @@ function SubjectEditorDialog({ subjectRecord, classOptions, submitting, error, o
 
 function SubjectStatusDialog({ subjectRecord, targetActive, submitting, error, onClose, onConfirm }) {
   const actionLabel = targetActive ? "Reactivate" : "Archive";
-  const canReactivate = !targetActive || subjectRecord.class.isActive;
+  const canReactivate =
+    !targetActive || subjectRecord.class?.isActive === true;
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -536,7 +542,8 @@ function SubjectStatusDialog({ subjectRecord, targetActive, submitting, error, o
         <div className="a-class-status-summary">
           <strong>{subjectRecord.name}</strong>
           <span>
-            {subjectRecord.code} · {subjectRecord.class.code} — {subjectRecord.class.name}
+            {subjectRecord.code} · {subjectRecord.class?.code || "Class unavailable"}
+            {subjectRecord.class?.name ? ` — ${subjectRecord.class.name}` : ""}
           </span>
           <p>
             {targetActive
@@ -767,10 +774,24 @@ const CoursesPage = () => {
 
   const changeTab = (tab) => {
     if (tab === activeTab) return;
+
+    // The Classes and Subjects tabs share the rows state. Clear the previous
+    // tab's rows before rendering the new table, rather than waiting for the
+    // fetch effect (which runs after render) to clear them.
+    setRows([]);
+    setRequestStatus("loading");
+    setRequestError("");
+    setPagination({
+      page: 1,
+      pageSize,
+      total: 0,
+      totalPages: 0,
+    });
     setActiveTab(tab);
     setPage(1);
     setFilterError("");
     setClassMutationSuccess("");
+    setSubjectMutationSuccess("");
   };
 
 
@@ -941,7 +962,7 @@ const CoursesPage = () => {
     if (!subjectStatusAction || subjectMutationStatus !== "idle") return;
     if (
       subjectStatusAction.targetActive &&
-      !subjectStatusAction.record.class.isActive
+      subjectStatusAction.record.class?.isActive !== true
     ) {
       setSubjectStatusError(
         "Reactivate the parent class before reactivating this subject.",
@@ -1229,10 +1250,10 @@ const CoursesPage = () => {
                     <td><strong>{item.name}</strong></td>
                     <td className="a-catalogue-code">{item.code}</td>
                     <td>
-                      <strong>{item.class.code}</strong>
-                      <span>{item.class.name}</span>
+                      <strong>{item.class?.code || "Class unavailable"}</strong>
+                      <span>{item.class?.name || "Parent class details unavailable"}</span>
                     </td>
-                    <td>{item.class.academicYear}</td>
+                    <td>{item.class?.academicYear || "—"}</td>
                     <td className="a-catalogue-description">{item.description || "—"}</td>
                     <td><ActiveBadge isActive={item.isActive} /></td>
                     <td>
