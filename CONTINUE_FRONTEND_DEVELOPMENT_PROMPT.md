@@ -412,4 +412,5 @@ After Chunk 33, re-audit remaining Student/Teacher/Admin screens against backend
 - The overall percentage sums backend subject `attendedSessions` and `eligibleSessions` values and preserves the backend policy: Present and Late count as attended; Absent is in the denominator; Excused is excluded. Null is preserved when no eligible sessions exist.
 - Removed all mock-data imports from `DashboardHome.jsx`; did not delete shared fixtures because other dashboard screens may still use them.
 - Added responsive `DashboardHome.css` and the feature branch to frontend build CI. Live Student account validation remains outstanding.
+- Implementation and handoff-inclusive PR head `161fee5ddf985fb5ddec178cf151ffc8f3c11666` passed GitHub Actions run `43707397499` (run #379), including `npm ci` and `npm run build`.
 - No backend, database, schema, migration, secrets, deployment, credential or production data changes.
