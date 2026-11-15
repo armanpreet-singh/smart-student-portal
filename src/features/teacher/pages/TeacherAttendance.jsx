@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import {
   AlertCircle,
   ClipboardCheck,
+  Copy,
   LoaderCircle,
   RefreshCw,
   Users,
@@ -13,6 +14,10 @@ import DashboardCard from "../../../features/dashboard/components/DashboardCard/
 import StatCard from "../../../features/dashboard/components/StatCard/StatCard";
 import { useAuth } from "../../auth/context/AuthContext";
 import { getApiBaseUrl } from "../../auth/api/authApi";
+import {
+  getOfficialRollNumbersForStatus,
+  getStudentsMissingRollNumberForStatus,
+} from "../utils/attendanceClipboard";
 import {
   demoTeacherAttendanceSubjects,
   readDemoAttendance,
@@ -222,7 +227,7 @@ const TeacherAttendance = memo(() => {
     if (!query) return roster;
 
     return roster.filter((student) =>
-      [student.fullName, student.username].some((value) =>
+      [student.fullName, student.username, student.rollNumber || ""].some((value) =>
         String(value || "").toLocaleLowerCase().includes(query),
       ),
     );
@@ -240,6 +245,48 @@ const TeacherAttendance = memo(() => {
       ),
     [roster, records],
   );
+
+  const absentRollNumbers = useMemo(
+    () => getOfficialRollNumbersForStatus(roster, records, "ABSENT"),
+    [roster, records],
+  );
+  const presentRollNumbers = useMemo(
+    () => getOfficialRollNumbersForStatus(roster, records, "PRESENT"),
+    [roster, records],
+  );
+  const absentMissingRollNumbers = getStudentsMissingRollNumberForStatus(
+    roster,
+    records,
+    "ABSENT",
+  );
+  const presentMissingRollNumbers = getStudentsMissingRollNumberForStatus(
+    roster,
+    records,
+    "PRESENT",
+  );
+
+  const copyRollNumbers = async (status) => {
+    const rollNumbers =
+      status === "ABSENT" ? absentRollNumbers : presentRollNumbers;
+    if (rollNumbers.length === 0) {
+      toast.error("No official roll numbers are available for this attendance status.");
+      return;
+    }
+
+    if (!navigator.clipboard?.writeText) {
+      toast.error("Clipboard access is unavailable. Use a secure browser context and allow clipboard permission.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(rollNumbers.join("\n"));
+      toast.success(
+        `Copied ${rollNumbers.length} official roll number${rollNumbers.length === 1 ? "" : "s"}.`,
+      );
+    } catch {
+      toast.error("The browser did not allow clipboard access. Check clipboard permission and try again.");
+    }
+  };
 
   const updateStatus = (studentId, status) => {
     setRecords((current) => ({ ...current, [studentId]: status }));
@@ -454,6 +501,24 @@ const TeacherAttendance = memo(() => {
             >
               All absent
             </button>
+            <button
+              type="button"
+              onClick={() => copyRollNumbers("ABSENT")}
+              disabled={!absentRollNumbers.length || loadingRoster || loading}
+              aria-label={`Copy ${absentRollNumbers.length} absent student roll numbers`}
+            >
+              <Copy size={14} />
+              Copy Absentees ({absentRollNumbers.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => copyRollNumbers("PRESENT")}
+              disabled={!presentRollNumbers.length || loadingRoster || loading}
+              aria-label={`Copy ${presentRollNumbers.length} present student roll numbers`}
+            >
+              <Copy size={14} />
+              Copy Presentees ({presentRollNumbers.length})
+            </button>
           </div>
         </div>
 
@@ -495,6 +560,9 @@ const TeacherAttendance = memo(() => {
                   <div>
                     <strong>{student.fullName}</strong>
                     <span>{student.username}</span>
+                    <small className="teacher-attendance-roll-number">
+                      {student.rollNumber || "Official roll number not assigned"}
+                    </small>
                   </div>
                 </div>
 
@@ -558,10 +626,12 @@ const TeacherAttendance = memo(() => {
       <div className="teacher-attendance-integration-note">
         <AlertCircle size={16} />
         <p>
-          The current backend roster returns student IDs, names, and usernames,
-          but no rollNumber. Copy Absentees / Copy Presentees therefore remain
-          unavailable: usernames and database IDs are not substitutes for
-          official roll numbers.
+          Clipboard output contains only official roll numbers, one per line.
+          LATE and EXCUSED records are not included. Students without an
+          official roll number are excluded
+          {absentMissingRollNumbers + presentMissingRollNumbers > 0
+            ? ` (${absentMissingRollNumbers + presentMissingRollNumbers} currently marked students do not have one).`
+            : "."}
         </p>
       </div>
 
