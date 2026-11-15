@@ -308,7 +308,7 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 ## Audit and future work
 
-Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Broad categories still mock-backed include timetable, assignments, results, resources, announcements, academic calendar, departments and dashboard analytics. Admin also needs a dedicated teacher-subject assignment UI; Student duty-proof UI is dependent on backend draft PR #1 being approved/merged/deployed. Most existing pages need API loading/error/empty states and correct data/permission mapping before they can be marked Ready.
+Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Backend-main blockers still include assignments, results, timetable, resources, announcements, academic calendar and departments. Advanced institutional analytics (enrollment trends, department aggregates, staffing/workload and approvals) remain unsupported; the Admin home now displays only verified directory totals. The Admin Teaching Assignments UI already exists and creates links through the backend POST endpoint, but backend main has no assignment-list/read endpoint. Student duty-proof UI remains dependent on backend draft PR #1 being approved, merged and deployed. Live-account validation is still required for the integrated workflows.
 
 ## Completed Phase II, Chunk 25 — Teacher Timetable Capability Alignment
 
@@ -390,4 +390,15 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - Final handoff-inclusive head `1d9a712c7d4474c160ec0fcbb2602c188d16b0e8` passed GitHub Actions main-target build run `43593117161` (`npm ci`, `npm run build`). PR #42 merged into `main` at `682fc53abd8ee282bd38c9947b558f85f64be518`.
 - Frontend only; no backend, database, schema, migration, secret, deployment, credential or live account changes.
 
-After Chunk 31, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 32.
+After Chunk 32, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 33.
+
+## Completed Phase II, Chunk 32 — Admin Dashboard Live Directory Overview
+
+- Branch `feat/admin-dashboard-live-overview` was created from frontend `main` at `dd4071c8f6c4108edf9e8bbe41c56f6e7835287e`; open PR #43 targets `main` and is not merged.
+- Reverified backend-main commit `19d34e577000411520ebb66cbea9eb6833fa4824`. The Admin user, class and subject directory endpoints return authoritative `pagination.total` values. Admin home requests page 1 with page size 1 for Student accounts, Teacher accounts, Classes and Subjects, then displays those totals; active and inactive records are included.
+- Replaced fabricated Admin profile name, fake totals/department/approval/insight claims and nonfunctional quick actions. The heading now uses verified `AuthContext.user.fullName`; cards display only the four supported directory counts.
+- Added loading skeletons, error/retry handling, refreshed-at timestamp, explanatory data-scope note, responsive/dark-theme-compatible CSS, and direct navigation to supported Admin workflows.
+- Corrected the audit: `/admin/teacher-subject-assignments` is already implemented and routed. Backend main has assignment creation but no assignment-list read endpoint; do not invent a listing.
+- Added `feat/admin-dashboard-live-overview` to `.github/workflows/frontend-build.yml`.
+- Implementation snapshot before handoff refresh: `9565e821d264ff7fe049620237bfcaa2cbaa2bb5`; final CI verification will be recorded after the handoff-inclusive branch head is built.
+- Live Admin-account/API validation remains outstanding. No live credentials, account mutations, backend/database/schema/migration/secrets/deployment or production data were changed.
