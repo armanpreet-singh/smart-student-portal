@@ -6,8 +6,8 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-15: PR #45 (Student Dashboard carry-forward + Courses capability alignment) merged into frontend `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`. PR #46 (Student Timetable capability alignment) merged into `main` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`. Chunks 33–35 are delivered; do not repeat them.
-4. Live state after the handoff snapshot: PR #45 merged into `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`; PR #46 merged into `main` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`. Chunks 33–35 are delivered. Continue with Chunk 36 (Student Assignments Capability Alignment) on `feat/student-assignments-capability-main-sync`; do not repeat Dashboard, Courses or Timetable work.
+3. Live verification on 2026-11-15: PR #45 (Student Dashboard carry-forward + Courses capability alignment) merged into frontend `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`. PR #46 (Student Timetable capability alignment) merged into `feat/student-courses-capability-main-sync` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`, not into `main`; preserve that implementation and do not repeat it.
+4. PR #47 (Chunk 36 — Student Assignments) is open against `main`; its final head is `0f5ab46db1f774b7abde18eebbb0e50c94c404b4`. Continue with Chunk 37 (Student Results Capability Alignment) on `feat/student-results-capability-main-sync`, stacked on PR #47. Do not repeat the Dashboard, Courses, Timetable or Assignments work.
 
 ## Scope and rules
 
@@ -424,9 +424,15 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - PR #45 merged into frontend `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`; PR #46 then merged into `main` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`.
 - Student Timetable is already aligned: sample weekly sessions/times/rooms removed, accessible capability-unavailable state added, attendance history distinguished from a future timetable. Preserve this implementation; do not redo it.
 
-## Phase II, Chunk 36 — Student Assignments Capability Alignment
+## Completed Phase II, Chunk 36 — Student Assignments Capability Alignment
 
 - Audit existing Student Assignments page against backend-main before changing it. Backend main at `19d34e577000411520ebb66cbea9eb6833fa4824` exposes only Student `GET /api/student/attendance`; Prisma has no Assignment/Submission model.
 - Replace fabricated Student assignment cards and local pending/overdue labels with an accessible capability-unavailable state. Preserve `/dashboard/assignments`, shell, navigation and theme.
 - Do not modify shared mock fixtures unless a repository-wide consumer search proves a fixture is unused. Update both handoff documents, read back changed files, verify CI and stop.
-- Implementation is in PR #47: https://github.com/armanpreet-singh/smart-student-portal/pull/47. PR head `ca96ba3cc1eed2462ead7c8244a752bc83b5ac6a` passed GitHub Actions PR run `43712699008` (run #406), including `npm ci` and `npm run build`.
+- Implementation is in PR #47: https://github.com/armanpreet-singh/smart-student-portal/pull/47. Final handoff-inclusive head `0f5ab46db1f774b7abde18eebbb0e50c94c404b4` passed GitHub Actions PR run `43712823621` (run #408), including `npm ci` and `npm run build`.
+
+## Phase II, Chunk 37 — Student Results Capability Alignment
+
+- Verify backend main has no grade/result model or Student results endpoint. Preserve `/dashboard/results`, Student shell, navigation and theme.
+- Remove mock semester SGPA/credit rows and replace them with an accessible capability-unavailable state. Keep shared mock fixtures unchanged.
+- Stack this branch on PR #47 (`feat/student-assignments-capability-main-sync`) so the next PR includes the earlier assignment work in merge order. Update both handoff files, read back every changed file, verify CI and stop.
