@@ -7,7 +7,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
 3. Live verification: PR #45 merged into `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`; PR #46 (Student Timetable / Chunk 35) merged into `feat/student-courses-capability-main-sync` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`, not `main`; PR #47 (Student Assignments / Chunk 36) merged into `main` at `9dffca04e1c1fd7098688e65304e2d15943ea422`; PR #48 (Student Results / Chunk 37) merged into `main` at `6484e6bcd889092aee78cd1dc9547b8ea312eaea`.
-4. Continue with Chunk 38 — Student Learning Resources Capability Alignment on `feat/student-resources-capability-main-sync`, based on verified `main` at `6484e6bcd889092aee78cd1dc9547b8ea312eaea`. Chunks 36 and 37 are merged. Do not repeat earlier Student screens.
+4. Chunk 38 / PR #49 (Student Learning Resources) is open against `main` on `feat/student-resources-capability-main-sync`. Finalize CI and merge when green; Chunks 36 and 37 are already merged. Do not repeat earlier Student screens.
 
 ## Scope and rules
 
@@ -461,9 +461,10 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - Removed fixture-backed semester SGPA and credit rows. Added accessible unavailable state; preserved `/dashboard/results`, Student shell, navigation and theme. Shared mock fixtures were not changed.
 - PR #48 merged into frontend `main` at `6484e6bcd889092aee78cd1dc9547b8ea312eaea`. Final handoff-inclusive head `23270dd0cfbf206dd1544a2ffdd27086610ae2f8` passed GitHub Actions PR run `43714521436` (run #413) and push run `43714513171` (run #412); `npm ci` and `npm run build` succeeded.
 
-## Phase II, Chunk 38 — Student Learning Resources Capability Alignment
+## Completed Phase II, Chunk 38 — Student Learning Resources Capability Alignment
 
 - Backend main `19d34e577000411520ebb66cbea9eb6833fa4824` has no Resource/learning-material model, Student resource listing route, file metadata API or protected download endpoint. Student router only exposes `GET /api/student/attendance`.
 - Replace fabricated Student resource cards and client-side category tabs with an accessible capability-unavailable state. Remove the inert Download action from this screen.
 - Preserve `/dashboard/resources`, lazy loading, Student shell, navigation and LTSU theme. Leave shared `mockDashboardData.js` unchanged because it contains many page fixtures.
-- Update both handoff files, read back all changed files, verify build/CI and stop.
+- Implementation is in PR #49: https://github.com/armanpreet-singh/smart-student-portal/pull/49. Push run #415 (`43715105191`) succeeded with `npm ci` and `npm run build`; PR run #416 (`43715201814`) was still running at the first handoff snapshot.
+- Update both handoff files, read back all changed files, verify final CI and stop.
