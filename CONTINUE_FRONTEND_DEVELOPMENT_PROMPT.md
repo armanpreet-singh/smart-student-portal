@@ -400,5 +400,5 @@ After Chunk 32, re-audit remaining Student/Teacher/Admin screens against backend
 - Added loading skeletons, error/retry handling, refreshed-at timestamp, explanatory data-scope note, responsive/dark-theme-compatible CSS, and direct navigation to supported Admin workflows.
 - Corrected the audit: `/admin/teacher-subject-assignments` is already implemented and routed. Backend main has assignment creation but no assignment-list read endpoint; do not invent a listing.
 - Added `feat/admin-dashboard-live-overview` to `.github/workflows/frontend-build.yml`.
-- Implementation snapshot before handoff refresh: `9565e821d264ff7fe049620237bfcaa2cbaa2bb5`; final CI verification will be recorded after the handoff-inclusive branch head is built.
+- Final handoff-inclusive PR head `2b4a8322f399ca4cfbf8cc18ff8809166397b09c` passed GitHub Actions PR workflow run `43706117724` (run #368), including successful `npm ci` and `npm run build` steps.
 - Live Admin-account/API validation remains outstanding. No live credentials, account mutations, backend/database/schema/migration/secrets/deployment or production data were changed.
