@@ -1,5 +1,5 @@
-import { getApiBaseUrl } from "../../auth/api/authApi";
-import { fetchAdminClasses } from "./adminCatalogueApi";
+import { getApiBaseUrl } from "../../auth/api/authApi.js";
+import { fetchAdminClasses } from "./adminCatalogueApi.js";
 
 const REQUEST_TIMEOUT_MS = 12000;
 const CLASS_PAGE_SIZE = 100;
@@ -14,6 +14,18 @@ function createApiError(message, status = 0, details = []) {
 
 function utf8ByteLength(value) {
   return new TextEncoder().encode(value).length;
+}
+
+export function getRollNumberInputError(value) {
+  const rollNumber = typeof value === "string" ? value.trim() : "";
+  if (!rollNumber) return "";
+  if (
+    rollNumber.length > 40 ||
+    !/^[a-zA-Z0-9][a-zA-Z0-9./_-]*$/.test(rollNumber)
+  ) {
+    return "Use 1–40 characters beginning with a letter or number; dots, slashes, underscores and hyphens are also allowed.";
+  }
+  return "";
 }
 
 function validateStudentInput(input) {
@@ -36,6 +48,9 @@ function validateStudentInput(input) {
     errors.username =
       "Username must be 3–40 characters and use only letters, numbers, dots, underscores or hyphens.";
   }
+  const rollNumberError = getRollNumberInputError(input.rollNumber);
+  if (rollNumberError) errors.rollNumber = rollNumberError;
+
   if (
     email &&
     (email.length > 254 ||
@@ -64,6 +79,7 @@ function isStudentRecord(user) {
     typeof user.fullName === "string" &&
     typeof user.username === "string" &&
     (user.email === null || typeof user.email === "string") &&
+    (user.rollNumber === null || typeof user.rollNumber === "string") &&
     user.role === "STUDENT" &&
     (user.classId === null || typeof user.classId === "string") &&
     typeof user.mustChangePassword === "boolean" &&
@@ -137,6 +153,10 @@ export async function createAdminStudent(accessToken, input) {
 
   if (input.email.trim()) {
     body.email = input.email.trim().toLowerCase();
+  }
+  const rollNumber = typeof input.rollNumber === "string" ? input.rollNumber.trim() : "";
+  if (rollNumber) {
+    body.rollNumber = rollNumber;
   }
   if (input.classId) {
     body.classId = input.classId;
