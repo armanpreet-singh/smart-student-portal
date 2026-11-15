@@ -1,4 +1,4 @@
-const COPYABLE_STATUSES = new Set(["PRESENT", "ABSENT"]);
+const COPYABLE_STATUSES = new Set(["PRESENT", "ABSENT", "ON_DUTY_REVIEW"]);
 
 export function getOfficialRollNumbersForStatus(roster, records, status) {
   if (!Array.isArray(roster) || !COPYABLE_STATUSES.has(status)) return [];

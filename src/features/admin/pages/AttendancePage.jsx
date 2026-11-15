@@ -31,9 +31,8 @@ import "./AttendancePage.css";
 
 const STATUS_META = {
   PRESENT: { label: "Present", className: "present" },
-  LATE: { label: "Late", className: "late" },
   ABSENT: { label: "Absent", className: "absent" },
-  EXCUSED: { label: "Excused", className: "excused" },
+  ON_DUTY_REVIEW: { label: "On-duty review", className: "on-duty-review" },
 };
 
 function isValidDateKey(value) {
@@ -271,8 +270,8 @@ const AttendancePage = ({
           tone: "gold",
         },
         {
-          title: "Excused records",
-          value: summary.EXCUSED.toLocaleString(),
+          title: "Duty reviews pending",
+          value: summary.ON_DUTY_REVIEW.toLocaleString(),
           icon: Clock3,
           tone: "muted",
         },
@@ -660,9 +659,9 @@ const AttendancePage = ({
                     ))}
                   </div>
                   <p className="a-attendance-breakdown-note">
-                    Backend attendance percentage counts Present and Late as
-                    attended. Absent is included in eligible sessions; Excused
-                    is excluded from the percentage denominator.
+                    Only PRESENT counts as attended. ABSENT and ON_DUTY_REVIEW
+                    are included in eligible sessions; ON_DUTY_REVIEW remains
+                    not present until the Student submits proof successfully.
                   </p>
                 </DashboardCard>
 
