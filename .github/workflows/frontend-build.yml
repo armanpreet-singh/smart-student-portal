@@ -45,6 +45,7 @@ on:
       - "feat/admin-dashboard-live-overview"
       - "feat/student-courses-capability-main-sync"
       - "feat/student-timetable-main-sync"
+      - "feat/admin-academic-catalogue-contract-tests"
       - "feat/student-assignments-capability-main-sync"
       - "feat/student-results-capability-main-sync"
       - "feat/student-resources-capability-main-sync"
@@ -70,5 +71,7 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
+      - name: Run frontend API contract tests
+        run: npm test
       - name: Build frontend
         run: npm run build
