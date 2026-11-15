@@ -401,4 +401,5 @@ After Chunk 32, re-audit remaining Student/Teacher/Admin screens against backend
 - Corrected the audit: `/admin/teacher-subject-assignments` is already implemented and routed. Backend main has assignment creation but no assignment-list read endpoint; do not invent a listing.
 - Added `feat/admin-dashboard-live-overview` to `.github/workflows/frontend-build.yml`.
 - Final handoff-inclusive PR head `2b4a8322f399ca4cfbf8cc18ff8809166397b09c` passed GitHub Actions PR workflow run `43706117724` (run #368), including successful `npm ci` and `npm run build` steps.
-- Live Admin-account/API validation remains outstanding. No live credentials, account mutations, backend/database/schema/migration/secrets/deployment or production data were changed.
+- Final handoff-inclusive branch head `004780a84d1eebf78e7d453e1e947cd5a6fc55f4` also passed GitHub Actions run `43706330530` (run #372): `npm ci` and `npm run build` succeeded.
+- Live Admin-account/API validation remains outstanding. No live credentials, account mutations, backend/database/schema/migration/secrets or production data were changed. Existing PR automation posted a Cloudflare Pages preview (not a production deployment): [PR preview](https://05bb7103.smart-student-portal.pages.dev).
