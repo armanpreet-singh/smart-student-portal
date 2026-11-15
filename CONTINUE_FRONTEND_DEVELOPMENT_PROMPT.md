@@ -6,8 +6,8 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-15: PR #45 (Student Dashboard carry-forward + Courses capability alignment) merged into frontend `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`. PR #46 (Student Timetable capability alignment) merged into `feat/student-courses-capability-main-sync` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`, not into `main`; preserve that implementation and do not repeat it.
-4. PR #47 (Chunk 36 — Student Assignments) is open against `main`; its final head is `0f5ab46db1f774b7abde18eebbb0e50c94c404b4`. Continue with Chunk 37 (Student Results Capability Alignment) on `feat/student-results-capability-main-sync`, stacked on PR #47. Do not repeat the Dashboard, Courses, Timetable or Assignments work.
+3. Live verification on 2026-11-15: PR #45 (Student Dashboard carry-forward + Courses capability alignment) merged into frontend `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`. PR #46 (Student Timetable capability alignment) merged into `feat/student-courses-capability-main-sync` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`, not into `main`; preserve that implementation and do not repeat it. PR #47 (Student Assignments / Chunk 36) merged into `main` at `9dffca04e1c1fd7098688e65304e2d15943ea422`.
+4. PR #48 (Chunk 37 — Student Results) is open against `main` on `feat/student-results-capability-main-sync`; PR #47 is merged. After completing/merging PR #48, continue with Chunk 38 (Student Learning Resources Capability Alignment). Do not repeat earlier Student screens.
 
 ## Scope and rules
 
@@ -431,11 +431,13 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - Do not modify shared mock fixtures unless a repository-wide consumer search proves a fixture is unused. Update both handoff documents, read back changed files, verify CI and stop.
 - Implementation is in PR #47: https://github.com/armanpreet-singh/smart-student-portal/pull/47. Final handoff-inclusive head `0f5ab46db1f774b7abde18eebbb0e50c94c404b4` passed GitHub Actions PR run `43712823621` (run #408), including `npm ci` and `npm run build`.
 
-## Phase II, Chunk 37 — Student Results Capability Alignment
+## Completed Phase II, Chunk 37 — Student Results Capability Alignment
 
 - Verify backend main has no grade/result model or Student results endpoint. Preserve `/dashboard/results`, Student shell, navigation and theme.
 - Remove mock semester SGPA/credit rows and replace them with an accessible capability-unavailable state. Keep shared mock fixtures unchanged.
-- Stack this branch on PR #47 (`feat/student-assignments-capability-main-sync`) so the next PR includes the earlier assignment work in merge order. Update both handoff files, read back every changed file, verify CI and stop.
+- PR #48 is now retargeted to `main` after PR #47 merged at `9dffca04e1c1fd7098688e65304e2d15943ea422`. Verify the post-retarget CI before merging.
+- Implementation commit `5374c21282d1a49f6773fc74da432fe544725d62` passed GitHub Actions push run `43713846373` (run #409), including `npm ci` and `npm run build`.
+- Student Resources is the next focused Chunk 38; reverify its backend contract.
 
 
 ## Completed Phase II, Chunk 37 — Student Results Capability Alignment
@@ -445,3 +447,10 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - PR #48: https://github.com/armanpreet-singh/smart-student-portal/pull/48. It targets `feat/student-assignments-capability-main-sync`; merge PR #47 into `main` before merging this child PR.
 - Implementation commit `5374c21282d1a49f6773fc74da432fe544725d62` passed GitHub Actions push run `43713846373` (run #409), including `npm ci` and `npm run build`.
 - Student Resources is proposed next as Chunk 38 after verifying the backend Resource model and Student resource route remain absent.
+
+
+## Merge state — 2026-11-15
+
+- PR #47 / Chunk 36 merged into `main` at `9dffca04e1c1fd7098688e65304e2d15943ea422`.
+- PR #48 / Chunk 37 retargeted to `main` and remains open pending final CI verification/merge.
+- After PR #48 merges, proceed to Chunk 38 — Student Learning Resources Capability Alignment.
