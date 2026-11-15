@@ -460,3 +460,8 @@
   font-size: 12px;
   line-height: 1.6;
 }
+
+
+.a-attendance-dot.on-duty-review {
+  background: #D4AF37;
+}

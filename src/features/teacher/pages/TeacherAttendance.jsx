@@ -29,8 +29,7 @@ const API_BASE_URL = getApiBaseUrl();
 const STATUS_OPTIONS = [
   { value: "PRESENT", label: "Present" },
   { value: "ABSENT", label: "Absent" },
-  { value: "LATE", label: "Late" },
-  { value: "EXCUSED", label: "Excused" },
+  { value: "ON_DUTY_REVIEW", label: "On-duty review" },
 ];
 
 function getLocalDate() {
@@ -123,11 +122,14 @@ const TeacherAttendance = memo(() => {
     }
 
     const saved = readDemoAttendance()[`${subjectId}:${date}`];
-    const initialRecords =
-      saved?.records ||
-      Object.fromEntries(
-        subject.students.map((student) => [student.id, "PRESENT"]),
-      );
+    const savedRecords = saved?.records || {};
+    const allowedStatuses = new Set(STATUS_OPTIONS.map((option) => option.value));
+    const initialRecords = Object.fromEntries(
+      subject.students.map((student) => [
+        student.id,
+        allowedStatuses.has(savedRecords[student.id]) ? savedRecords[student.id] : "PRESENT",
+      ]),
+    );
 
     setRoster(subject.students);
     setRecords(initialRecords);
@@ -241,7 +243,7 @@ const TeacherAttendance = memo(() => {
           summary[status] = (summary[status] || 0) + 1;
           return summary;
         },
-        { PRESENT: 0, ABSENT: 0, LATE: 0, EXCUSED: 0 },
+        { PRESENT: 0, ABSENT: 0, ON_DUTY_REVIEW: 0 },
       ),
     [roster, records],
   );
@@ -264,10 +266,18 @@ const TeacherAttendance = memo(() => {
     records,
     "PRESENT",
   );
+  const dutyReviewRollNumbers = useMemo(
+    () => getOfficialRollNumbersForStatus(roster, records, "ON_DUTY_REVIEW"),
+    [roster, records],
+  );
+  const dutyReviewMissingRollNumbers = getStudentsMissingRollNumberForStatus(
+    roster,
+    records,
+    "ON_DUTY_REVIEW",
+  );
 
   const copyRollNumbers = async (status) => {
-    const rollNumbers =
-      status === "ABSENT" ? absentRollNumbers : presentRollNumbers;
+    const rollNumbers = getOfficialRollNumbersForStatus(roster, records, status);
     if (rollNumbers.length === 0) {
       toast.error("No official roll numbers are available for this attendance status.");
       return;
@@ -369,8 +379,8 @@ const TeacherAttendance = memo(() => {
     },
     {
       id: "absent",
-      title: "Absent / Excused",
-      value: totals.ABSENT + totals.EXCUSED,
+      title: "Absent / Duty Review",
+      value: totals.ABSENT + totals.ON_DUTY_REVIEW,
       icon: "AlertCircle",
       trend: "Current register",
       color: "#DC2626",
@@ -427,7 +437,7 @@ const TeacherAttendance = memo(() => {
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search by name or username"
+              placeholder="Search by name, username or roll number"
             />
           </label>
         </div>
@@ -442,12 +452,8 @@ const TeacherAttendance = memo(() => {
             <strong>{totals.ABSENT}</strong>
           </div>
           <div>
-            <span>Late</span>
-            <strong>{totals.LATE}</strong>
-          </div>
-          <div>
-            <span>Excused</span>
-            <strong>{totals.EXCUSED}</strong>
+            <span>On-duty review</span>
+            <strong>{totals.ON_DUTY_REVIEW}</strong>
           </div>
         </div>
 
@@ -503,6 +509,13 @@ const TeacherAttendance = memo(() => {
             </button>
             <button
               type="button"
+              onClick={() => setAllStatuses("ON_DUTY_REVIEW")}
+              disabled={!roster.length || isMarked || loading}
+            >
+              All on-duty review
+            </button>
+            <button
+              type="button"
               onClick={() => copyRollNumbers("ABSENT")}
               disabled={!absentRollNumbers.length || loadingRoster || loading}
               aria-label={`Copy ${absentRollNumbers.length} absent student roll numbers`}
@@ -518,6 +531,15 @@ const TeacherAttendance = memo(() => {
             >
               <Copy size={14} />
               Copy Presentees ({presentRollNumbers.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => copyRollNumbers("ON_DUTY_REVIEW")}
+              disabled={!dutyReviewRollNumbers.length || loadingRoster || loading}
+              aria-label={`Copy ${dutyReviewRollNumbers.length} on-duty review student roll numbers`}
+            >
+              <Copy size={14} />
+              Copy Duty Reviews ({dutyReviewRollNumbers.length})
             </button>
           </div>
         </div>
@@ -626,25 +648,23 @@ const TeacherAttendance = memo(() => {
       <div className="teacher-attendance-integration-note">
         <AlertCircle size={16} />
         <p>
-          Clipboard output contains only official roll numbers, one per line.
-          LATE and EXCUSED records are not included. Students without an
+          Clipboard output contains only official roll numbers, one per line,
+          grouped by PRESENT, ABSENT or ON_DUTY_REVIEW. Students without an
           official roll number are excluded
-          {absentMissingRollNumbers + presentMissingRollNumbers > 0
-            ? ` (${absentMissingRollNumbers + presentMissingRollNumbers} currently marked students do not have one).`
+          {absentMissingRollNumbers + presentMissingRollNumbers + dutyReviewMissingRollNumbers > 0
+            ? ` (${absentMissingRollNumbers + presentMissingRollNumbers + dutyReviewMissingRollNumbers} currently marked students do not have one).`
             : "."}
         </p>
       </div>
 
-      {!isDemo && (
-        <div className="teacher-attendance-integration-note">
-          <AlertCircle size={16} />
-          <p>
-            This screen follows the currently deployed API statuses (PRESENT,
-            ABSENT, LATE, EXCUSED). The separately confirmed ON_DUTY_REVIEW
-            policy is not yet implemented on backend main.
-          </p>
-        </div>
-      )}
+      <div className="teacher-attendance-integration-note">
+        <AlertCircle size={16} />
+        <p>
+          ON_DUTY_REVIEW is counted as not present until the Student submits
+          proof successfully. A successful proof submission changes that
+          Student's attendance record to PRESENT.
+        </p>
+      </div>
 
       {isDemo && (
         <p className="teacher-attendance-demo-note">

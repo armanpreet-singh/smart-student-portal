@@ -18,7 +18,7 @@ function isCount(value) {
 function isAttendanceSummary(summary) {
   return (
     summary &&
-    ["PRESENT", "ABSENT", "LATE", "EXCUSED", "totalRecords", "eligibleSessions", "attendedSessions"]
+    ["PRESENT", "ABSENT", "ON_DUTY_REVIEW", "totalRecords", "eligibleSessions", "attendedSessions"]
       .every((key) => isCount(summary[key])) &&
     (summary.attendancePercentage === null ||
       (Number.isFinite(summary.attendancePercentage) &&

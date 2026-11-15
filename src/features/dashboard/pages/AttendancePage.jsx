@@ -10,21 +10,24 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { CalendarDays, CheckCircle, Clock3, RotateCw, UserCheck, XCircle } from "lucide-react";
+import { CalendarDays, CheckCircle, Clock3, FileDown, FileUp, RotateCw, UserCheck, XCircle } from "lucide-react";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import DashboardCard from "../components/DashboardCard/DashboardCard";
 import ProgressCard from "../components/ProgressCard/ProgressCard";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
-import { fetchStudentAttendance } from "../api/studentAttendanceApi";
+import {
+  fetchStudentAttendance,
+  getStudentDutyProofDownloadUrl,
+  submitStudentDutyProof,
+} from "../api/studentAttendanceApi";
 
 import "./AttendancePage.css";
 
 const STATUS_META = {
   PRESENT: { label: "Present", className: "present" },
-  LATE: { label: "Late", className: "late" },
   ABSENT: { label: "Absent", className: "absent" },
-  EXCUSED: { label: "Excused", className: "excused" },
+  ON_DUTY_REVIEW: { label: "On-duty review", className: "on-duty-review" },
 };
 
 function toLocalDateKey(date) {
@@ -89,17 +92,20 @@ function buildWeeklyChart(records) {
       key,
       day: new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date),
       present: 0,
-      late: 0,
       absent: 0,
+      onDutyReview: 0,
     };
   });
 
   const dayByKey = new Map(days.map((day) => [day.key, day]));
   records.forEach((record) => {
     const day = dayByKey.get(record.date);
-    if (day && Object.hasOwn(day, record.status.toLowerCase())) {
-      day[record.status.toLowerCase()] += 1;
-    }
+    const chartKey = {
+      PRESENT: "present",
+      ABSENT: "absent",
+      ON_DUTY_REVIEW: "onDutyReview",
+    }[record.status];
+    if (day && chartKey) day[chartKey] += 1;
   });
 
   return days;
@@ -118,8 +124,8 @@ function buildMonthlyChart(records) {
         year: "2-digit",
       }).format(date),
       PRESENT: 0,
-      LATE: 0,
       ABSENT: 0,
+      ON_DUTY_REVIEW: 0,
     };
   });
 
@@ -132,12 +138,12 @@ function buildMonthlyChart(records) {
   });
 
   return months.map((month) => {
-    const eligible = month.PRESENT + month.LATE + month.ABSENT;
-    const attended = month.PRESENT + month.LATE;
+    const eligible = month.PRESENT + month.ABSENT + month.ON_DUTY_REVIEW;
+    const attended = month.PRESENT;
     return {
       month: month.month,
       attendance: eligible
-        ? Math.round((attended / eligible) * 1000) / 10
+        ? Math.round((attended / eligible) * 10000) / 100
         : null,
       eligible,
     };
@@ -177,6 +183,9 @@ const AttendancePage = () => {
   const [draftFilters, setDraftFilters] = useState({ fromDate: "", toDate: "" });
   const [filters, setFilters] = useState({ fromDate: "", toDate: "" });
   const [filterError, setFilterError] = useState("");
+  const [proofFiles, setProofFiles] = useState({});
+  const [proofBusyId, setProofBusyId] = useState("");
+  const [proofErrors, setProofErrors] = useState({});
 
   useEffect(() => {
     let active = true;
@@ -228,9 +237,8 @@ const AttendancePage = () => {
   const totals = useMemo(() => {
     const counts = {
       PRESENT: 0,
-      LATE: 0,
       ABSENT: 0,
-      EXCUSED: 0,
+      ON_DUTY_REVIEW: 0,
     };
 
     subjects.forEach((item) => {
@@ -239,19 +247,19 @@ const AttendancePage = () => {
       });
     });
 
-    const eligible = counts.PRESENT + counts.LATE + counts.ABSENT;
-    const attended = counts.PRESENT + counts.LATE;
+    const eligible = counts.PRESENT + counts.ABSENT + counts.ON_DUTY_REVIEW;
+    const attended = counts.PRESENT;
 
     return {
       ...counts,
       eligible,
       attended,
-      missed: counts.ABSENT,
+      missed: counts.ABSENT + counts.ON_DUTY_REVIEW,
       attendancePercentage: eligible
-        ? Math.round((attended / eligible) * 1000) / 10
+        ? Math.round((attended / eligible) * 10000) / 100
         : null,
       totalRecords:
-        counts.PRESENT + counts.LATE + counts.ABSENT + counts.EXCUSED,
+        counts.PRESENT + counts.ABSENT + counts.ON_DUTY_REVIEW,
     };
   }, [subjects]);
 
@@ -272,7 +280,7 @@ const AttendancePage = () => {
   );
 
   const recentWeeklyRecords = weeklyData.some(
-    (day) => day.present + day.late + day.absent > 0,
+    (day) => day.present + day.absent + day.onDutyReview > 0,
   );
   const recentMonthlyRecords = monthlyData.some(
     (month) => month.eligible > 0,
@@ -310,6 +318,59 @@ const AttendancePage = () => {
     setFilterError("");
   };
 
+  const handleProofFileChange = (attendanceId, file) => {
+    setProofFiles((current) => ({ ...current, [attendanceId]: file || null }));
+    setProofErrors((current) => ({ ...current, [attendanceId]: "" }));
+  };
+
+  const submitDutyProof = async (record) => {
+    const file = proofFiles[record.id];
+    if (!file) {
+      setProofErrors((current) => ({
+        ...current,
+        [record.id]: "Choose a PDF, JPEG or PNG file first.",
+      }));
+      return;
+    }
+
+    setProofBusyId(record.id);
+    setProofErrors((current) => ({ ...current, [record.id]: "" }));
+    try {
+      await submitStudentDutyProof(accessToken, record.id, file);
+      setProofFiles((current) => {
+        const next = { ...current };
+        delete next[record.id];
+        return next;
+      });
+      setRetryCount((count) => count + 1);
+    } catch (error) {
+      if (error?.status === 401) await refreshCurrentUser();
+      setProofErrors((current) => ({
+        ...current,
+        [record.id]: error?.message || "Unable to submit duty proof.",
+      }));
+    } finally {
+      setProofBusyId("");
+    }
+  };
+
+  const downloadDutyProof = async (record) => {
+    setProofBusyId(record.id);
+    setProofErrors((current) => ({ ...current, [record.id]: "" }));
+    try {
+      const proof = await getStudentDutyProofDownloadUrl(accessToken, record.id);
+      window.location.assign(proof.url);
+    } catch (error) {
+      if (error?.status === 401) await refreshCurrentUser();
+      setProofErrors((current) => ({
+        ...current,
+        [record.id]: error?.message || "Unable to open the duty proof.",
+      }));
+    } finally {
+      setProofBusyId("");
+    }
+  };
+
   const summaryCards = [
     {
       title: "Overall Attendance",
@@ -318,20 +379,20 @@ const AttendancePage = () => {
       tone: "primary",
     },
     {
-      title: "Sessions Attended",
+      title: "Sessions Present",
       value: totals.attended,
       icon: CheckCircle,
       tone: "success",
     },
     {
-      title: "Sessions Missed",
+      title: "Not Present (incl. duty review)",
       value: totals.missed,
       icon: XCircle,
       tone: "danger",
     },
     {
-      title: "Excused Records",
-      value: totals.EXCUSED,
+      title: "Duty Reviews Pending",
+      value: totals.ON_DUTY_REVIEW,
       icon: Clock3,
       tone: "gold",
     },
@@ -449,7 +510,7 @@ const AttendancePage = () => {
                 <div className="p-4 d-attendance-card-heading">
                   <SectionHeader
                     title="Attendance by day"
-                    subtitle="Present, late and absent records in the last seven days"
+                    subtitle="Present, absent and pending duty-review records in the last seven days"
                   />
                 </div>
                 <div className="d-chart-wrapper p-4">
@@ -461,8 +522,8 @@ const AttendancePage = () => {
                         <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{ fill: "var(--d-text-secondary)", fontSize: 12 }} />
                         <Tooltip content={<CustomTooltip />} />
                         <Bar dataKey="present" name="Present" fill="#1E3A8A" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="late" name="Late" fill="#D4AF37" radius={[4, 4, 0, 0]} />
                         <Bar dataKey="absent" name="Absent" fill="#DC2626" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="onDutyReview" name="On-duty review" fill="#D4AF37" radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   ) : (
@@ -475,7 +536,7 @@ const AttendancePage = () => {
                 <div className="p-4 d-attendance-card-heading">
                   <SectionHeader
                     title="Monthly attendance trend"
-                    subtitle="Calculated from eligible attendance records; excused records are excluded"
+                    subtitle="Present sessions divided by all eligible records; duty review remains not present until proof is submitted"
                   />
                 </div>
                 <div className="d-chart-wrapper p-4">
@@ -561,7 +622,7 @@ const AttendancePage = () => {
                   ))}
                 </div>
                 <p className="d-attendance-breakdown-note">
-                  Attendance percentage counts Present and Late as attended, and Absent as missed. Excused records are excluded from the eligible-session denominator.
+                  Only PRESENT counts as attended. ABSENT and ON_DUTY_REVIEW are included in the eligible-session denominator; a duty-review record remains not present until your proof is submitted successfully.
                 </p>
               </DashboardCard>
 
@@ -576,9 +637,50 @@ const AttendancePage = () => {
                           <span>{formatDate(record.date, { day: "numeric", month: "short" })}</span>
                           {record.remarks && <small>{record.remarks}</small>}
                         </div>
-                        <span className={`d-attendance-status-badge ${STATUS_META[record.status].className}`}>
-                          {statusLabel(record.status)}
-                        </span>
+                        <div className="d-attendance-record-actions">
+                          <span className={`d-attendance-status-badge ${STATUS_META[record.status].className}`}>
+                            {statusLabel(record.status)}
+                          </span>
+                          {record.status === "ON_DUTY_REVIEW" && (
+                            <div className="d-attendance-proof-actions">
+                              <label>
+                                <span>Proof file · PDF/JPEG/PNG · max 5 MB</span>
+                                <input
+                                  type="file"
+                                  accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                                  onChange={(event) => handleProofFileChange(record.id, event.target.files?.[0] || null)}
+                                  disabled={proofBusyId === record.id}
+                                />
+                              </label>
+                              <button
+                                type="button"
+                                className="d-btn-primary"
+                                onClick={() => submitDutyProof(record)}
+                                disabled={proofBusyId === record.id || requestStatus === "loading" || !proofFiles[record.id]}
+                              >
+                                <FileUp size={14} />
+                                {proofBusyId === record.id ? "Submitting…" : "Submit proof"}
+                              </button>
+                            </div>
+                          )}
+                          {record.dutyProof && (
+                            <div className="d-attendance-proof-actions">
+                              <small>Proof submitted · {record.dutyProof.fileName}</small>
+                              <button
+                                type="button"
+                                className="d-attendance-proof-download"
+                                onClick={() => downloadDutyProof(record)}
+                                disabled={proofBusyId === record.id}
+                              >
+                                <FileDown size={14} />
+                                {proofBusyId === record.id ? "Preparing…" : "Download proof"}
+                              </button>
+                            </div>
+                          )}
+                          {proofErrors[record.id] && (
+                            <p className="d-attendance-proof-error" role="alert">{proofErrors[record.id]}</p>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>

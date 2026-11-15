@@ -171,6 +171,7 @@ describe("Teacher attendance clipboard selectors", () => {
     { id: "three", rollNumber: null },
     { id: "four", rollNumber: "" },
     { id: "five", username: "not-a-roll-number" },
+    { id: "six", rollNumber: "0003" },
   ];
   const records = {
     one: "PRESENT",
@@ -178,9 +179,10 @@ describe("Teacher attendance clipboard selectors", () => {
     three: "ABSENT",
     four: "PRESENT",
     five: "LATE",
+    six: "ON_DUTY_REVIEW",
   };
 
-  it("copies only explicit PRESENT or ABSENT official roll numbers", () => {
+  it("copies only explicit PRESENT, ABSENT or ON_DUTY_REVIEW official roll numbers", () => {
     assert.deepEqual(
       getOfficialRollNumbersForStatus(roster, records, "PRESENT"),
       ["0001"],
@@ -193,6 +195,10 @@ describe("Teacher attendance clipboard selectors", () => {
       getOfficialRollNumbersForStatus(roster, records, "LATE"),
       [],
     );
+    assert.deepEqual(
+      getOfficialRollNumbersForStatus(roster, records, "ON_DUTY_REVIEW"),
+      ["0003"],
+    );
   });
 
   it("builds a plain roll-number-only clipboard payload", () => {
@@ -203,6 +209,10 @@ describe("Teacher attendance clipboard selectors", () => {
     assert.equal(
       buildOfficialRollNumberClipboardText(roster, records, "ABSENT"),
       "0002",
+    );
+    assert.equal(
+      buildOfficialRollNumberClipboardText(roster, records, "ON_DUTY_REVIEW"),
+      "0003",
     );
   });
 

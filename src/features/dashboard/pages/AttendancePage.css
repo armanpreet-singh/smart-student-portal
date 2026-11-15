@@ -386,3 +386,73 @@
     animation: none;
   }
 }
+
+
+.d-attendance-status-dot.on-duty-review {
+  background: #D4AF37;
+}
+
+.d-attendance-status-badge.on-duty-review {
+  background: rgba(212, 175, 55, 0.16);
+  color: #95720B;
+}
+
+.d-attendance-record-actions {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.d-attendance-proof-actions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.d-attendance-proof-actions label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--d-text-secondary);
+  font-size: 10px;
+}
+
+.d-attendance-proof-actions input {
+  max-width: 220px;
+  color: var(--d-text-secondary);
+  font-size: 10px;
+}
+
+.d-attendance-proof-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  padding: 6px 10px;
+  background: var(--d-surface);
+  color: var(--d-primary);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.d-attendance-proof-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.d-attendance-proof-error {
+  margin: 0;
+  color: var(--d-danger);
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: right;
+}

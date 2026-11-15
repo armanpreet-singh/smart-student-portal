@@ -7,13 +7,12 @@ const API_BASE = "https://ltsu-smart-portal-api-0i8h.onrender.com";
 
 const summary = (overrides = {}) => ({
   PRESENT: 1,
-  ABSENT: 1,
-  LATE: 1,
-  EXCUSED: 1,
+  ABSENT: 2,
+  ON_DUTY_REVIEW: 1,
   totalRecords: 4,
-  eligibleSessions: 3,
-  attendedSessions: 2,
-  attendancePercentage: 66.67,
+  eligibleSessions: 4,
+  attendedSessions: 1,
+  attendancePercentage: 25,
   ...overrides,
 });
 
@@ -38,6 +37,12 @@ const subjectResult = (overrides = {}) => ({
       status: "PRESENT",
       remarks: null,
       recordedAt: "2026-11-14T08:30:00.000Z",
+      dutyProof: {
+        fileName: "duty-note.pdf",
+        format: "pdf",
+        bytes: 1024,
+        submittedAt: "2026-11-14T08:45:00.000Z",
+      },
     },
     {
       id: "attendance-2",
@@ -49,16 +54,18 @@ const subjectResult = (overrides = {}) => ({
     {
       id: "attendance-3",
       date: "2026-11-12",
-      status: "LATE",
-      remarks: null,
+      status: "ON_DUTY_REVIEW",
+      remarks: "Awaiting duty proof",
       recordedAt: "2026-11-12T08:30:00.000Z",
+      dutyProof: null,
     },
     {
       id: "attendance-4",
       date: "2026-11-11",
-      status: "EXCUSED",
-      remarks: "Approved leave",
+      status: "ABSENT",
+      remarks: "Not present",
       recordedAt: "2026-11-11T08:30:00.000Z",
+      dutyProof: null,
     },
   ],
   ...overrides,
@@ -167,7 +174,7 @@ describe("Student attendance API contracts", () => {
     assert.deepEqual(result.subjects, []);
   });
 
-  it("accepts all four backend statuses and the backend's excused-excluded summary", async () => {
+  it("accepts the three backend statuses and validated duty-proof metadata", async () => {
     const resultData = {
       period: { fromDate: null, toDate: null },
       subjects: [subjectResult()],
@@ -178,12 +185,13 @@ describe("Student attendance API contracts", () => {
 
     assert.deepEqual(
       result.subjects[0].records.map((record) => record.status),
-      ["PRESENT", "ABSENT", "LATE", "EXCUSED"],
+      ["PRESENT", "ABSENT", "ON_DUTY_REVIEW", "ABSENT"],
     );
     assert.equal(result.subjects[0].summary.totalRecords, 4);
-    assert.equal(result.subjects[0].summary.eligibleSessions, 3);
-    assert.equal(result.subjects[0].summary.attendedSessions, 2);
-    assert.equal(result.subjects[0].summary.attendancePercentage, 66.67);
+    assert.equal(result.subjects[0].summary.eligibleSessions, 4);
+    assert.equal(result.subjects[0].summary.attendedSessions, 1);
+    assert.equal(result.subjects[0].summary.attendancePercentage, 25);
+    assert.equal(result.subjects[0].records[0].dutyProof.fileName, "duty-note.pdf");
   });
 
   it("accepts an empty subject list for a Student with no catalogue subjects", async () => {
@@ -198,34 +206,18 @@ describe("Student attendance API contracts", () => {
     assert.deepEqual(result, data);
   });
 
-  it("accepts a null attendance percentage when there are no eligible sessions", async () => {
+  it("accepts a null attendance percentage when there are no attendance records", async () => {
     const emptyEligibility = subjectResult({
       summary: summary({
         PRESENT: 0,
         ABSENT: 0,
-        LATE: 0,
-        EXCUSED: 2,
-        totalRecords: 2,
+        ON_DUTY_REVIEW: 0,
+        totalRecords: 0,
         eligibleSessions: 0,
         attendedSessions: 0,
         attendancePercentage: null,
       }),
-      records: [
-        {
-          id: "attendance-excused-1",
-          date: "2026-11-14",
-          status: "EXCUSED",
-          remarks: null,
-          recordedAt: "2026-11-14T08:30:00.000Z",
-        },
-        {
-          id: "attendance-excused-2",
-          date: "2026-11-13",
-          status: "EXCUSED",
-          remarks: "Approved leave",
-          recordedAt: "2026-11-13T08:30:00.000Z",
-        },
-      ],
+      records: [],
     });
     success({
       period: { fromDate: null, toDate: null },
@@ -299,7 +291,7 @@ describe("Student attendance API contracts", () => {
         {
           id: "attendance-invalid",
           date: "2026-02-30",
-          status: "ON_DUTY_REVIEW",
+          status: "LATE",
           remarks: null,
         },
       ],
