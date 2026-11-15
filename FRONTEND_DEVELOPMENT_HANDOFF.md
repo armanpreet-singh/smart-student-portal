@@ -1089,3 +1089,44 @@ Implement rollNumber integration against backend main `c62760b9d7fb0384448d4deda
 - Keep frontend `ON_DUTY_REVIEW` and duty-proof upload/download workflows deferred. The corresponding backend migration `cf299d60-31f1-422d-a00d-207236461ff8` has not been approved/applied to primary Neon, and Cloudinary runtime credentials are not configured.
 - The next safe frontend delivery can proceed against the released `rollNumber` contract: Admin Student provisioning input, authenticated Student profile display, Teacher roster/attendance display and roll-number-only copy workflow, plus API contract tests. Do not couple that work to the unreleased duty-review schema.
 - No frontend PR was merged or changed during this status recheck.
+
+
+## Completed Phase II — Chunk 46: Official Student roll-number integration
+
+- Branch: `feat/frontend-roll-number-integration`, created from frontend `main` at `e289d5a1a9e302890025c5bb378b2f11a4df0407`.
+- PR #57: https://github.com/armanpreet-singh/smart-student-portal/pull/57 (opened as draft; not merged or deployed).
+- Implementation commit/head tested by GitHub Actions: `92f0d87d0b2884f8c58a78c3af9417ffbd35e92a`.
+- CI run `43736235914` completed successfully. The job passed dependency installation (`npm ci`), frontend API contract tests (`npm test`) and production build (`npm run build`). This is a PR implementation CI result; no live university-account end-to-end test is claimed.
+
+### Delivered
+
+1. Admin Student provisioning now accepts an optional official roll number. Client validation matches the backend contract: 1–40 characters, first character alphanumeric, subsequent characters limited to letters, numbers, dot, slash, underscore and hyphen. Blank input is omitted. The request trims surrounding whitespace but preserves leading zeroes; the backend remains responsible for uppercase normalization.
+2. Admin Student create-response and directory validators now require the backend's nullable `rollNumber` field. The directory shows populated official values or "Not assigned", and search guidance includes roll-number search.
+3. Student Profile shows `user.rollNumber` from the verified authenticated profile when it is a non-empty string. The stale statement that roll numbers are not available has been removed; unavailable program/semester/batch/contact attributes remain unclaimed.
+4. Teacher roster API validation now accepts nullable official roll numbers, rejects malformed values and duplicate official roll numbers, and Teacher Students displays/searches the official roll number.
+5. Teacher Attendance displays official roll numbers and adds **Copy Absentees** / **Copy Presentees** actions. Clipboard output is only the official roll numbers, one per line, for explicit `ABSENT` or `PRESENT` records. Missing values are excluded; no username or database ID fallback is used; `LATE` and `EXCUSED` are not included.
+6. Added focused tests for optional/invalid Student roll numbers, request serialization, leading-zero preservation, authenticated profile pass-through, directory/roster nullable response contracts, duplicate/malformed roster values and clipboard filtering.
+
+### Files changed
+
+- `src/features/admin/api/adminStudentProvisioningApi.js`
+- `src/features/admin/api/adminStudentsApi.js`
+- `src/features/admin/pages/StudentsPage.jsx`
+- `src/features/admin/pages/StudentsPage.css`
+- `src/features/dashboard/pages/ProfilePage.jsx`
+- `src/features/teacher/api/teacherSubjectsApi.js`
+- `src/features/teacher/pages/TeacherAttendance.jsx`
+- `src/features/teacher/pages/TeacherStudents.jsx`
+- `src/features/teacher/pages/TeacherStudents.css`
+- `src/features/teacher/styles/teacherAttendance.css`
+- `src/features/teacher/utils/attendanceClipboard.js`
+- `tests/admin-user-directories-api.test.js`
+- `tests/teacher-subjects-api.test.js`
+- `tests/roll-number-integration.test.js`
+
+### Scope and remaining validation
+
+- This chunk changes only the frontend repository. No backend source, Neon database, GitHub secrets, Render environment or production deployment was changed.
+- Automated tests cover API contracts and the pure clipboard selectors. Browser clipboard permission and live Admin/Student/Teacher account workflows still require manual end-to-end validation.
+- Duty-review / `ON_DUTY_REVIEW` / proof-upload UI remains deferred until backend PR #1 has been reconciled, its separate primary migration approved and applied, Cloudinary configured, and backend safely deployed.
+- Next delivery chunk: backend PR #1 reconciliation and CI (Chunk 47), preserving the merged `rollNumber` and `markedAt` contract.
