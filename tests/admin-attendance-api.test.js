@@ -11,12 +11,11 @@ const API_BASE = "https://ltsu-smart-portal-api-0i8h.onrender.com";
 const summary = (overrides = {}) => ({
   PRESENT: 8,
   ABSENT: 2,
-  LATE: 1,
-  EXCUSED: 3,
-  totalRecords: 14,
-  eligibleSessions: 11,
-  attendedSessions: 9,
-  attendancePercentage: 81.82,
+  ON_DUTY_REVIEW: 3,
+  totalRecords: 13,
+  eligibleSessions: 13,
+  attendedSessions: 8,
+  attendancePercentage: 61.54,
   ...overrides,
 });
 
@@ -167,8 +166,7 @@ describe("Admin attendance reporting API contracts", () => {
       summary: summary({
         PRESENT: 0,
         ABSENT: 0,
-        LATE: 0,
-        EXCUSED: 0,
+        ON_DUTY_REVIEW: 0,
         totalRecords: 0,
         eligibleSessions: 0,
         attendedSessions: 0,
@@ -185,7 +183,7 @@ describe("Admin attendance reporting API contracts", () => {
     assert.equal(result.summary.attendancePercentage, null);
   });
 
-  it("accepts all four current backend statuses and the excused-excluded summary fields", async () => {
+  it("accepts the three current backend statuses and duty-review summary fields", async () => {
     const data = report();
     setResponder(() => jsonResponse(200, { status: "ok", data }));
 
@@ -193,11 +191,10 @@ describe("Admin attendance reporting API contracts", () => {
 
     assert.equal(result.summary.PRESENT, 8);
     assert.equal(result.summary.ABSENT, 2);
-    assert.equal(result.summary.LATE, 1);
-    assert.equal(result.summary.EXCUSED, 3);
-    assert.equal(result.summary.eligibleSessions, 11);
-    assert.equal(result.summary.attendedSessions, 9);
-    assert.equal(result.subjects[0].summary.attendancePercentage, 81.82);
+    assert.equal(result.summary.ON_DUTY_REVIEW, 3);
+    assert.equal(result.summary.eligibleSessions, 13);
+    assert.equal(result.summary.attendedSessions, 8);
+    assert.equal(result.subjects[0].summary.attendancePercentage, 61.54);
   });
 
   it("rejects summaries with out-of-range percentages or negative counts", async () => {
