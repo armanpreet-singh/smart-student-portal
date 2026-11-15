@@ -1,4 +1,4 @@
-import { getApiBaseUrl } from "../../auth/api/authApi";
+import { getApiBaseUrl } from "../../auth/api/authApi.js";
 
 const REQUEST_TIMEOUT_MS = 12000;
 const VALID_STATUSES = new Set(["PRESENT", "ABSENT", "LATE", "EXCUSED"]);
