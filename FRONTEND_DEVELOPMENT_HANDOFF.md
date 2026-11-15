@@ -1080,3 +1080,12 @@ The following UI paths have not yet been updated to consume the newly merged bac
 ### Exact next frontend action
 
 Implement rollNumber integration against backend main `c62760b9d7fb0384448d4dedaa3c8c939460532e`: Student provisioning field, authenticated Student Profile projection, Teacher roster/attendance display and roll-number-only copy flow, plus API contract tests. Keep the duty-review/proof workflow out of the frontend until backend PR #1 is safely released. After the implementation, run `npm test` and `npm run build`, update this handoff and the continuation prompt, and verify the final main head.
+
+
+## Cross-repository status revalidated — 2026-11-15
+
+- Frontend `main` at the start of this recheck was `dc17ef80b4e4f408a458e28fde0bf0fdf5108ef6`. There are **zero open pull requests** in `armanpreet-singh/smart-student-portal`; PR #56 is already merged.
+- Backend PR #2 (official Student roll-number contract) is merged and live on Render. The only open backend PR is PR #1, duty-review/proof, which remains draft and unmergeable. Its branch is 31 commits ahead and 3 behind backend main and needs reconciliation preserving the merged `rollNumber` and `markedAt` APIs.
+- Keep frontend `ON_DUTY_REVIEW` and duty-proof upload/download workflows deferred. The corresponding backend migration `cf299d60-31f1-422d-a00d-207236461ff8` has not been approved/applied to primary Neon, and Cloudinary runtime credentials are not configured.
+- The next safe frontend delivery can proceed against the released `rollNumber` contract: Admin Student provisioning input, authenticated Student profile display, Teacher roster/attendance display and roll-number-only copy workflow, plus API contract tests. Do not couple that work to the unreleased duty-review schema.
+- No frontend PR was merged or changed during this status recheck.
