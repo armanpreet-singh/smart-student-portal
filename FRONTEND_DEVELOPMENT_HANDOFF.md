@@ -1158,3 +1158,13 @@ This section supersedes earlier status notes in this document where they conflic
 2. Open a PR from `feat/duty-review-attendance-ui` to `main`; verify PR head SHA and CI results.
 3. Update both handoff documents again with the final PR/CI/merge state.
 4. Only merge when CI is green and GitHub reports the PR mergeable. Preserve Cloudinary as a clearly disclosed operational prerequisite.
+
+
+## Completed Phase II — Duty-review attendance and Student proof UI (PR #58)
+
+- PR #58: https://github.com/armanpreet-singh/smart-student-portal/pull/58 merged into `main` by squash at `fea685cf122581840a98f7f45929a19502dfb493`.
+- Feature branch head before merge: `cfc849e551eb4eb1a8c0858bba8c07d144a35494`; PR compared cleanly with `main` (5 commits ahead, 0 behind; 15 files changed including the two handoff updates).
+- GitHub Actions PR workflow run `43742778600` (run #472) completed successfully on the exact PR head. Locked dependency installation (`npm ci`), all frontend API contract tests (`npm test`) and production Vite build (`npm run build`) passed.
+- Student attendance UI and API helpers support `PRESENT`, `ABSENT`, `ON_DUTY_REVIEW`, duty-proof submission/download requests, file type/size checks and explicit HTTP 503 messaging while Cloudinary storage is unconfigured. Teacher and Admin attendance surfaces use the three released statuses. Official roll-number clipboard behavior remains roll-number-only.
+- Backend duty-review migration is applied and Render reports the backend deployment live. Cloudinary runtime credentials remain unconfigured; proof upload/download will remain unavailable (HTTP 503) until private Render configuration is completed and verified with an end-to-end upload/download test.
+- CI uses mocked API responses. No live Student/Teacher/Admin account workflow, browser clipboard permission, or production proof upload/download was tested. No frontend deployment was performed by this PR.
