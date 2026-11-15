@@ -6,8 +6,8 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification: PR #45 and PRs #47–#49 are merged into `main`; PR #49 / Chunk 38 merged at `0044c46e288314290eef06c75a7fd16923e1a217`. PR #46 / Chunk 35 Student Timetable remains merged only into `feat/student-courses-capability-main-sync`, not `main`; preserve the existing implementation and do not recreate it.
-4. Current work is Phase II, Chunk 39 — Admin System Settings Capability Alignment. Branch `feat/admin-system-settings-capability-main-sync` is based directly on current `main` at `0044c46e288314290eef06c75a7fd16923e1a217`; PR #50 is open against `main`. Do not repeat completed Chunks 33–38 or other completed screens.
+3. Live verification: PR #45 and PRs #47–#50 are merged into `main`; PR #50 / Chunk 39 merged at `e117084677fdb711ad88dc1096fd553f1daed1e3`. PR #46 / Chunk 35 originally merged into a feature branch; its exact completed implementation is carried to clean `main` in PR #51 / Chunk 40.
+4. Current work is Phase II, Chunk 40 — Student Timetable clean-main carry-forward. Branch `feat/student-timetable-main-sync` is based directly on current `main` at `e117084677fdb711ad88dc1096fd553f1daed1e3`; PR #51 is open against `main`. This carries forward the existing PR #46 code verbatim; do not reimplement it or repeat completed Chunks 33–39.
 
 ## Scope and rules
 
@@ -454,8 +454,10 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - PR #47 / Chunk 36 merged into `main` at `9dffca04e1c1fd7098688e65304e2d15943ea422`.
 - PR #48 / Chunk 37 merged into `main` at `6484e6bcd889092aee78cd1dc9547b8ea312eaea`.
 - PR #49 / Chunk 38 merged into `main` at `0044c46e288314290eef06c75a7fd16923e1a217`.
-- PR #50 / Chunk 39 is open against `main` on `feat/admin-system-settings-capability-main-sync`.
-- After Chunk 39 is merged, continue the audit and select Chunk 40. Preserve the existing Chunk 35 timetable work; do not recreate it.
+- PR #50 / Chunk 39 merged into `main` at `e117084677fdb711ad88dc1096fd553f1daed1e3`.
+- PR #51 / Chunk 40 is open against `main` on `feat/student-timetable-main-sync`; it carries forward the existing PR #46 timetable changes only.
+- After Chunk 40 is merged, continue the audit and select Chunk 41.
+
 
 ## Completed Phase II, Chunk 37 — Student Results Capability Alignment
 
@@ -468,10 +470,19 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - Replaced fabricated Student resource cards, category tabs and inert Download controls with an accessible capability-unavailable state. Preserved `/dashboard/resources`, lazy loading, Student shell, navigation and LTSU theme. Shared `mockDashboardData.js` and reusable `ResourceCard` remain unchanged.
 - PR #49 merged into frontend `main` at `0044c46e288314290eef06c75a7fd16923e1a217`. Final head `6cb8f7364cfc9c2dee51091054e5bfd64540eeed` passed push run #419 (`43715463771`) and PR run #420 (`43715468469`); `npm ci` and `npm run build` succeeded in both.
 
-## Current Phase II, Chunk 39 — Admin System Settings Capability Alignment
+## Completed Phase II, Chunk 39 — Admin System Settings Capability Alignment
 
 - Frontend `main` base: `0044c46e288314290eef06c75a7fd16923e1a217`. Branch: `feat/admin-system-settings-capability-main-sync`.
 - Backend main `19d34e577000411520ebb66cbea9eb6833fa4824` has no portal/system configuration model and no Admin settings read/update endpoint. The old page's Save handler only logged form values to the browser console.
 - Removed the sample University Name/Admin Email form and console-only Save action. Added an accessible unavailable state and responsive `SettingsPage.css`; preserved the existing `/admin/settings` route, Admin shell, navigation and theme.
-- PR #50: https://github.com/armanpreet-singh/smart-student-portal/pull/50. Final handoff-inclusive head and CI results are verified after the documentation update.
+- PR #50 merged into `main` at `e117084677fdb711ad88dc1096fd553f1daed1e3`: https://github.com/armanpreet-singh/smart-student-portal/pull/50. Final head `874aa9b9a80289fe909070b2d67c43deb5c9ced5` passed push run #426 and PR run #427.
 - Frontend only; no backend, database, schema, migration, secrets, deployment or production data changes.
+
+## Current Phase II, Chunk 40 — Student Timetable Clean-Main Carry-Forward
+
+- New branch `feat/student-timetable-main-sync` is based directly on post-PR #50 frontend `main` at `e117084677fdb711ad88dc1096fd553f1daed1e3`.
+- PR #46 / Chunk 35 already implemented the Student Timetable capability-unavailable state, but its original base was `feat/student-courses-capability-main-sync`. That PR was merged only into the feature branch, not `main`.
+- Carry forward only the two exact reviewed screen files from the PR #46 head branch: `src/features/dashboard/pages/TimetablePage.jsx` and `src/features/dashboard/pages/TimetablePage.css`. Do not reimplement or alter their behavior.
+- `DashboardRoutes.jsx` on main already preserves the lazy `/dashboard/timetable` route. Add only the clean-main feature branch to frontend build CI and update this handoff.
+- PR #51: https://github.com/armanpreet-singh/smart-student-portal/pull/51. Final handoff-inclusive head and CI runs are recorded after verification.
+- No backend, database, schema, migration, secret, deployment or production data changes.
