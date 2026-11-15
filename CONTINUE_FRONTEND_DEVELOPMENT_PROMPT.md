@@ -308,7 +308,7 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 ## Audit and future work
 
-Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Backend-main blockers still include assignments, results, timetable, resources, announcements, academic calendar and departments. Advanced institutional analytics (enrollment trends, department aggregates, staffing/workload and approvals) remain unsupported; the Admin home now displays only verified directory totals. The Admin Teaching Assignments UI already exists and creates links through the backend POST endpoint, but backend main has no assignment-list/read endpoint. Student duty-proof UI remains dependent on backend draft PR #1 being approved, merged and deployed. Live-account validation is still required for the integrated workflows.
+Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Student Dashboard Home now shows the authenticated identity and a live attendance summary from the self-only Student attendance endpoint; it does not add a new backend dashboard aggregate. Backend-main blockers still include assignments, results, timetable, resources, announcements, academic calendar and departments. Advanced institutional analytics (enrollment trends, department aggregates, staffing/workload and approvals) remain unsupported; the Admin home displays only verified directory totals. The Admin Teaching Assignments UI exists and creates links through the backend POST endpoint, but backend main has no assignment-list/read endpoint. Student duty-proof UI remains dependent on backend draft PR #1 being approved, merged and deployed. Live-account validation is still required for integrated workflows.
 
 ## Completed Phase II, Chunk 25 — Teacher Timetable Capability Alignment
 
@@ -390,7 +390,7 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - Final handoff-inclusive head `1d9a712c7d4474c160ec0fcbb2602c188d16b0e8` passed GitHub Actions main-target build run `43593117161` (`npm ci`, `npm run build`). PR #42 merged into `main` at `682fc53abd8ee282bd38c9947b558f85f64be518`.
 - Frontend only; no backend, database, schema, migration, secret, deployment, credential or live account changes.
 
-After Chunk 32, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 33.
+After Chunk 33, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 34.
 
 ## Completed Phase II, Chunk 32 — Admin Dashboard Live Directory Overview
 
@@ -403,3 +403,13 @@ After Chunk 32, re-audit remaining Student/Teacher/Admin screens against backend
 - Final handoff-inclusive PR head `2b4a8322f399ca4cfbf8cc18ff8809166397b09c` passed GitHub Actions PR workflow run `43706117724` (run #368), including successful `npm ci` and `npm run build` steps.
 - Final handoff-inclusive branch head `004780a84d1eebf78e7d453e1e947cd5a6fc55f4` also passed GitHub Actions run `43706330530` (run #372): `npm ci` and `npm run build` succeeded.
 - Live Admin-account/API validation remains outstanding. No live credentials, account mutations, backend/database/schema/migration/secrets or production data were changed. Existing PR automation posted a Cloudflare Pages preview (not a production deployment): [PR preview](https://05bb7103.smart-student-portal.pages.dev).
+
+## Completed Phase II, Chunk 33 — Student Dashboard Live Attendance Overview
+
+- Branch `feat/student-dashboard-live-overview` is stacked on the final PR #43 branch head `dae4c9d710c5fed155925a04522332c0db2f9593`; PR #44 targets `feat/admin-dashboard-live-overview`, not `main`. PR #43 must merge first; neither PR is merged by this chunk.
+- Reverified backend-main commit `19d34e577000411520ebb66cbea9eb6833fa4824`. Authenticated `GET /api/student/attendance` is Student-role-only and self-scoped; it returns per-subject PRESENT/ABSENT/LATE/EXCUSED counts, eligible/attended totals, percentages and date/status records.
+- Replaced mock Student dashboard sections with authenticated identity, attendance snapshot, subject-level summaries, latest five attendance records, loading/error/retry/empty states and supported Attendance/Profile/Settings navigation.
+- The overall percentage sums backend subject `attendedSessions` and `eligibleSessions` values and preserves the backend policy: Present and Late count as attended; Absent is in the denominator; Excused is excluded. Null is preserved when no eligible sessions exist.
+- Removed all mock-data imports from `DashboardHome.jsx`; did not delete shared fixtures because other dashboard screens may still use them.
+- Added responsive `DashboardHome.css` and the feature branch to frontend build CI. Live Student account validation remains outstanding.
+- No backend, database, schema, migration, secrets, deployment, credential or production data changes.
