@@ -546,10 +546,10 @@ Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first; this update supersedes older backe
 - Frontend main is `9924fb07820d89119fafb4b8e45c430568ff8621`. PR #56 has merged; there were no open frontend PRs at last verification (52 merged, 4 closed without merge).
 - Backend main is now `c62760b9d7fb0384448d4dedaa3c8c939460532e`; backend PR #2 added official nullable `rollNumber` to Student provisioning, authenticated profiles, Admin directory/search and Teacher roster, and added server-generated `markedAt` to bulk attendance-mark responses. Its rollNumber migration is already applied to primary Neon and its Render deployment is live.
 - `markedAt` is the register-submission time, not a scheduled class-start time. No timetable/session API exists.
-- Frontend main still needs to add the optional official rollNumber input to Admin Student provisioning, display non-null rollNumber in the authenticated Student Profile, and expose/consume rollNumber in Teacher Attendance roster/roll-number-only clipboard workflow. Null roll numbers must be omitted; never substitute username or DB ID. Add API contract tests for these cases.
+- Completed in Chunk 46 on `feat/frontend-roll-number-integration`, PR #57: Admin Student provisioning accepts an optional official roll number; Student Profile displays the verified non-null value; Teacher rosters and attendance display it; status-based clipboard actions copy official roll numbers only. The feature is tested and awaiting review, not merged.
 - Backend PR #1 (duty-review/proof) remains open/draft/unmerged/un-deployed. Its ON_DUTY_REVIEW schema and proof endpoints are not part of backend main. Its separate Neon migration is unapproved/unapplied; Cloudinary secrets are not configured. Do not wire those draft contracts into the frontend.
 - Frontend `package.json` has `npm test`; CI runs `npm ci`, `npm test`, `npm run build`. The 59 contract tests added across Chunks 41–45 use mocked fetch and do not prove live account integration.
-- Exact next task: implement the rollNumber frontend integration described above, add/update contract tests, run test and build, and update/read back both frontend handoff documents. Keep duty-review UI deferred until its backend migration/configuration/deployment gates are completed.
+- Exact next task: Chunk 47, reconcile backend branch `attendance-duty-proof` with backend `main`, preserve the merged `rollNumber` and `markedAt` APIs, resolve schema/service overlap and rerun CI. Keep duty-review frontend work deferred until the separate primary Neon migration is approved/applied, Cloudinary is configured, and backend is deployed.
 
 
 ## Cross-repository status revalidated — 2026-11-15
@@ -557,7 +557,7 @@ Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first; this update supersedes older backe
 - Frontend `main` at the start of this recheck was `dc17ef80b4e4f408a458e28fde0bf0fdf5108ef6`. There are **zero open pull requests** in `armanpreet-singh/smart-student-portal`; PR #56 is already merged.
 - Backend PR #2 (official Student roll-number contract) is merged and live on Render. The only open backend PR is PR #1, duty-review/proof, which remains draft and unmergeable. Its branch is 31 commits ahead and 3 behind backend main and needs reconciliation preserving the merged `rollNumber` and `markedAt` APIs.
 - Keep frontend `ON_DUTY_REVIEW` and duty-proof upload/download workflows deferred. The corresponding backend migration `cf299d60-31f1-422d-a00d-207236461ff8` has not been approved/applied to primary Neon, and Cloudinary runtime credentials are not configured.
-- The next safe frontend delivery can proceed against the released `rollNumber` contract: Admin Student provisioning input, authenticated Student profile display, Teacher roster/attendance display and roll-number-only copy workflow, plus API contract tests. Do not couple that work to the unreleased duty-review schema.
+- This pre-Chunk-46 next-step note is superseded by Chunk 46 below, which delivered the rollNumber frontend integration in PR #57. Keep the duty-review UI decoupled from the unreleased backend contract.
 - No frontend PR was merged or changed during this status recheck.
 
 
