@@ -1130,3 +1130,31 @@ Chunk 46 has delivered the rollNumber frontend integration on feature branch `fe
 - Automated tests cover API contracts and the pure clipboard selectors. Browser clipboard permission and live Admin/Student/Teacher account workflows still require manual end-to-end validation.
 - Duty-review / `ON_DUTY_REVIEW` / proof-upload UI remains deferred until backend PR #1 has been reconciled, its separate primary migration approved and applied, Cloudinary configured, and backend safely deployed.
 - Next delivery chunk: backend PR #1 reconciliation and CI (Chunk 47), preserving the merged `rollNumber` and `markedAt` contract.
+
+
+## Authoritative continuation update — 2026-11-15 (duty-review UI release readiness)
+
+This section supersedes earlier status notes in this document where they conflict.
+
+### Cross-repository backend release state
+- Backend repository: `armanpreet-singh/ltsu-backend`.
+- Duty-review backend PR #1 is merged into backend `main` at squash commit `ef4c0ca273c806c0e746ff682840dfa7d7cf22d0`. A later documentation-only backend-main commit is `4748a5eba4b90fb6e0f2b9591cef1eabe153781f`.
+- The user approved migration `cf299d60-31f1-422d-a00d-207236461ff8`. Primary Neon project `holy-darkness-25378856`, database `ltsu`, branch `br-twilight-lake-aovy1aeb`: migration `20261113111000_on_duty_review_and_duty_proof` is applied. The `AttendanceStatus` enum and six duty-proof columns were verified, and the `_prisma_migrations` ledger row has a finished timestamp and five applied steps.
+- Render service `ltsu-smart-portal-api-0i8h` reports its latest deployment `dep-dbsuigp5efls73f6v5ug` as `live`, on backend-main commit `4748a5eba4b90fb6e0f2b9591cef1eabe153781f`. This is deployment status only; do not claim an independently verified readiness endpoint or end-to-end account flow.
+- Cloudinary runtime credentials remain unconfigured in Render. Duty-proof upload/download endpoints return HTTP 503 until the three Cloudinary settings are configured privately. Do not ask for or commit secret values. Do not claim proof storage works end-to-end until configuration and a real upload/download test succeed.
+- Backend main also includes official nullable Student `rollNumber` and server-generated `markedAt`; preserve these contracts. `markedAt` is submission time, not a scheduled class start.
+
+### Current frontend duty-review work
+- Frontend main at the start of this chunk: `fcd79cf08ba442d03f32054c1134e2e764183a95`. PR #57 (official roll-number integration) is merged into main at that commit.
+- Duty-review branch: `feat/duty-review-attendance-ui`, head `c12c368ac1e3aa7c6651a3e6cc0ab0fb8af09cb0`; compare to main is 3 commits ahead, 0 behind, 13 files changed.
+- This branch implements Student duty-proof API helpers and Student/Teacher/Admin attendance UI updates for `PRESENT`, `ABSENT`, and `ON_DUTY_REVIEW`; includes mocked API contract tests and preserves official roll-number-only clipboard behavior. Student-facing UI must explain the HTTP 503 storage-not-configured state without implying attendance was changed.
+- At this point, no PR exists for this branch and no CI run is associated with its head. `npm ci`, `npm test`, and `npm run build` have not yet been verified on this branch. Open a PR to `main` to trigger the configured PR workflow, then fix any failures before merge.
+- The workflow's push branch allow-list does not include `feat/duty-review-attendance-ui`; its `pull_request` trigger targets `main`, so PR creation is the expected CI trigger.
+- Do not merge unless the PR is mergeable and all required CI checks pass. Do not deploy frontend manually as part of this chunk.
+- No live Student, Teacher or Admin browser session has been tested. API tests stub `fetch`; they are contract tests, not production end-to-end verification.
+
+### Next actions
+1. Run or trigger the frontend CI checks on the exact branch head and resolve any issues.
+2. Open a PR from `feat/duty-review-attendance-ui` to `main`; verify PR head SHA and CI results.
+3. Update both handoff documents again with the final PR/CI/merge state.
+4. Only merge when CI is green and GitHub reports the PR mergeable. Preserve Cloudinary as a clearly disclosed operational prerequisite.
