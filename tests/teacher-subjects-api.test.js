@@ -37,8 +37,8 @@ const roster = (overrides = {}) => ({
     },
   },
   students: [
-    { id: "student-1", fullName: "Student One", username: "student.one" },
-    { id: "student-2", fullName: "Student Two", username: "student.two" },
+    { id: "student-1", fullName: "Student One", username: "student.one", rollNumber: "000123" },
+    { id: "student-2", fullName: "Student Two", username: "student.two", rollNumber: null },
   ],
   ...overrides,
 });
@@ -200,6 +200,44 @@ describe("Teacher assigned-subject and roster API contracts", () => {
     assert.equal(calls[0].options.method, "GET");
     assert.equal(calls[0].options.headers.Authorization, "Bearer teacher-token");
     assert.deepEqual(result, data);
+  });
+
+  it("preserves populated and null official roll numbers in the authenticated roster", async () => {
+    const data = roster();
+    success(data);
+
+    const result = await fetchTeacherSubjectRoster(
+      "teacher-token",
+      "subject-1",
+      "class-1",
+    );
+
+    assert.equal(result.students[0].rollNumber, "000123");
+    assert.equal(result.students[1].rollNumber, null);
+  });
+
+  it("rejects malformed or duplicate official roll numbers in a roster", async () => {
+    success(roster({
+      students: [
+        { id: "student-1", fullName: "Student One", username: "student.one", rollNumber: "000123" },
+        { id: "student-2", fullName: "Student Two", username: "student.two", rollNumber: 123 },
+      ],
+    }));
+    await assert.rejects(
+      fetchTeacherSubjectRoster("teacher-token", "subject-1", "class-1"),
+      (error) => error.status === 502 && /roster in an unexpected format/i.test(error.message),
+    );
+
+    success(roster({
+      students: [
+        { id: "student-1", fullName: "Student One", username: "student.one", rollNumber: "000123" },
+        { id: "student-2", fullName: "Student Two", username: "student.two", rollNumber: "000123" },
+      ],
+    }));
+    await assert.rejects(
+      fetchTeacherSubjectRoster("teacher-token", "subject-1", "class-1"),
+      (error) => error.status === 502 && /roster in an unexpected format/i.test(error.message),
+    );
   });
 
   it("rejects invalid subject and class identifiers before making a request", async () => {
