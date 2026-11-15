@@ -70,5 +70,7 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
+      - name: Run frontend API contract tests
+        run: npm test
       - name: Build frontend
         run: npm run build
