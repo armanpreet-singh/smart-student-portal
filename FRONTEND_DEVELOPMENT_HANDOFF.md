@@ -909,7 +909,7 @@ Successful response shape is `{ status: "ok", data: { accessToken, tokenType: "B
 
 ## Next frontend work
 
-After Chunk 36, continue the screen-by-screen audit of remaining Student/Teacher/Admin screens against backend-main and select Chunk 37. Do not reimplement already merged Chunks 33–35. Continue one supported workflow at a time; do not add editable UI for fields or operations that lack an authoritative backend contract.
+After Chunk 36, continue the screen-by-screen audit of remaining Student/Teacher/Admin screens against backend-main and select Chunk 37. Student Results remains mock-backed and has no backend contract; it is the proposed next focused capability-alignment chunk. Do not reimplement already merged Chunks 33–35 or completed Chunk 36. Continue one supported workflow at a time; do not add editable UI for fields or operations that lack an authoritative backend contract.
 
 
 ## Completed frontend chunk — Phase II, Chunk 32: Admin Dashboard Live Directory Overview
@@ -955,5 +955,7 @@ After Chunk 36, continue the screen-by-screen audit of remaining Student/Teacher
 - Replaced fixture-backed Student assignment cards and local pending/overdue statuses with an accessible capability-unavailable state explaining that assignment titles, instructions, due dates, attachments, submissions and grading cannot be verified. Preserved the existing lazy-loaded `/dashboard/assignments` route and shared dashboard shell.
 - Added responsive `src/features/dashboard/pages/AssignmentsPage.css`. Shared `mockDashboardData.js` was intentionally left unchanged because its exports are used by other screens; only this page's imports were removed.
 - Added `feat/student-assignments-capability-main-sync` to frontend build workflow in this chunk.
+- PR #47 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/47. The PR head `ca96ba3cc1eed2462ead7c8244a752bc83b5ac6a` is 3 commits ahead of `main` and 0 behind.
+- GitHub Actions pull-request workflow run `43712699008` (run #406) passed on that exact head; `npm ci` and `npm run build` both succeeded.
 - No backend, database, schema, migration, credentials, secrets, deployment, live account or production data changes.
 

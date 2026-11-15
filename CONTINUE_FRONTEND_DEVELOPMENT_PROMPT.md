@@ -429,3 +429,4 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - Audit existing Student Assignments page against backend-main before changing it. Backend main at `19d34e577000411520ebb66cbea9eb6833fa4824` exposes only Student `GET /api/student/attendance`; Prisma has no Assignment/Submission model.
 - Replace fabricated Student assignment cards and local pending/overdue labels with an accessible capability-unavailable state. Preserve `/dashboard/assignments`, shell, navigation and theme.
 - Do not modify shared mock fixtures unless a repository-wide consumer search proves a fixture is unused. Update both handoff documents, read back changed files, verify CI and stop.
+- Implementation is in PR #47: https://github.com/armanpreet-singh/smart-student-portal/pull/47. PR head `ca96ba3cc1eed2462ead7c8244a752bc83b5ac6a` passed GitHub Actions PR run `43712699008` (run #406), including `npm ci` and `npm run build`.
