@@ -204,7 +204,7 @@
 .t-students-table-header,
 .t-students-table-row {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(150px, 1fr);
+  grid-template-columns: minmax(0, 1.5fr) minmax(120px, 1fr) minmax(110px, 0.9fr);
   gap: 16px;
   align-items: center;
   padding: 13px 20px;
@@ -263,7 +263,7 @@
 
   .t-students-table-header,
   .t-students-table-row {
-    grid-template-columns: minmax(0, 1.2fr) minmax(110px, 1fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(90px, 0.9fr) minmax(90px, 0.8fr);
     gap: 10px;
     padding-right: 14px;
     padding-left: 14px;
