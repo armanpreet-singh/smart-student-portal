@@ -49,6 +49,7 @@ on:
       - "feat/student-attendance-api-contract-tests"
       - "feat/teacher-subjects-api-contract-tests"
       - "feat/admin-attendance-report-api-contract-tests"
+      - "feat/admin-user-directory-api-contract-tests"
       - "feat/student-assignments-capability-main-sync"
       - "feat/student-results-capability-main-sync"
       - "feat/student-resources-capability-main-sync"
