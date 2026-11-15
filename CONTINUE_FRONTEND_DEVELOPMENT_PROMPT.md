@@ -550,3 +550,12 @@ Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first; this update supersedes older backe
 - Backend PR #1 (duty-review/proof) remains open/draft/unmerged/un-deployed. Its ON_DUTY_REVIEW schema and proof endpoints are not part of backend main. Its separate Neon migration is unapproved/unapplied; Cloudinary secrets are not configured. Do not wire those draft contracts into the frontend.
 - Frontend `package.json` has `npm test`; CI runs `npm ci`, `npm test`, `npm run build`. The 59 contract tests added across Chunks 41–45 use mocked fetch and do not prove live account integration.
 - Exact next task: implement the rollNumber frontend integration described above, add/update contract tests, run test and build, and update/read back both frontend handoff documents. Keep duty-review UI deferred until its backend migration/configuration/deployment gates are completed.
+
+
+## Cross-repository status revalidated — 2026-11-15
+
+- Frontend `main` at the start of this recheck was `dc17ef80b4e4f408a458e28fde0bf0fdf5108ef6`. There are **zero open pull requests** in `armanpreet-singh/smart-student-portal`; PR #56 is already merged.
+- Backend PR #2 (official Student roll-number contract) is merged and live on Render. The only open backend PR is PR #1, duty-review/proof, which remains draft and unmergeable. Its branch is 31 commits ahead and 3 behind backend main and needs reconciliation preserving the merged `rollNumber` and `markedAt` APIs.
+- Keep frontend `ON_DUTY_REVIEW` and duty-proof upload/download workflows deferred. The corresponding backend migration `cf299d60-31f1-422d-a00d-207236461ff8` has not been approved/applied to primary Neon, and Cloudinary runtime credentials are not configured.
+- The next safe frontend delivery can proceed against the released `rollNumber` contract: Admin Student provisioning input, authenticated Student profile display, Teacher roster/attendance display and roll-number-only copy workflow, plus API contract tests. Do not couple that work to the unreleased duty-review schema.
+- No frontend PR was merged or changed during this status recheck.
