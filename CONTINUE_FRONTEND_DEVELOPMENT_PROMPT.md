@@ -421,7 +421,7 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 
 ## Completed Phase II, Chunk 35 — Student Timetable Capability Alignment
 
-- PR #45 merged into frontend `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`; PR #46 then merged into `main` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`.
+- PR #45 merged into frontend `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`; PR #46 merged into `feat/student-courses-capability-main-sync` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`, not into `main`.
 - Student Timetable is already aligned: sample weekly sessions/times/rooms removed, accessible capability-unavailable state added, attendance history distinguished from a future timetable. Preserve this implementation; do not redo it.
 
 ## Completed Phase II, Chunk 36 — Student Assignments Capability Alignment
@@ -436,3 +436,12 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - Verify backend main has no grade/result model or Student results endpoint. Preserve `/dashboard/results`, Student shell, navigation and theme.
 - Remove mock semester SGPA/credit rows and replace them with an accessible capability-unavailable state. Keep shared mock fixtures unchanged.
 - Stack this branch on PR #47 (`feat/student-assignments-capability-main-sync`) so the next PR includes the earlier assignment work in merge order. Update both handoff files, read back every changed file, verify CI and stop.
+
+
+## Completed Phase II, Chunk 37 — Student Results Capability Alignment
+
+- Results page now uses an accessible capability-unavailable state instead of mock semester SGPA and credit rows. Existing `/dashboard/results` lazy route, Student shell, navigation and theme are preserved.
+- Backend main has no exam/result/grade/transcript model or Student results endpoint. Shared `mockDashboardData.js` was not changed.
+- PR #48: https://github.com/armanpreet-singh/smart-student-portal/pull/48. It targets `feat/student-assignments-capability-main-sync`; merge PR #47 into `main` before merging this child PR.
+- Implementation commit `5374c21282d1a49f6773fc74da432fe544725d62` passed GitHub Actions push run `43713846373` (run #409), including `npm ci` and `npm run build`.
+- Student Resources is proposed next as Chunk 38 after verifying the backend Resource model and Student resource route remain absent.
