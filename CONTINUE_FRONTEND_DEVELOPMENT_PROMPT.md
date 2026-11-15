@@ -416,4 +416,5 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - Replaced the static mock CourseCard list, fake Semester 5 label, instructor names, progress and enrollment claims with an accessible unavailable-state explanation and a working link to `/dashboard/attendance`, where subject context currently appears as part of attendance.
 - Added responsive `CoursesPage.css`; kept `/dashboard/courses` and existing Student navigation intact. Shared mock fixtures remain because other pages still use other exports from the same file.
 - Carried the Chunk 33 dashboard home implementation and styles forward from PR #44 into PR #45 because PR #44's merge target was a feature branch, not `main`.
-- Added `feat/student-courses-capability-main-sync` to frontend build CI. Live Student-account validation remains outstanding; no backend, database, migration, secrets, deployment or production data changed.
+- Added `feat/student-courses-capability-main-sync` to frontend build CI. PR #45 head `9cee52e74b83a749ddcea8762896958d544c943b` passed GitHub Actions run `43709333776` (run #387), including `npm ci` and `npm run build`.
+- Live Student-account validation remains outstanding; no backend, database, migration, secrets, deployment or production data changed.
