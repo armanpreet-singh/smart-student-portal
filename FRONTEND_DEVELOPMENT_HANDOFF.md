@@ -1061,7 +1061,7 @@ The following UI paths have not yet been updated to consume the newly merged bac
 - Student Profile: show the verified `user.rollNumber` from the authenticated session when non-null; do not reintroduce fabricated program/semester/department fields.
 - Teacher Attendance and roster: validate/retain each returned student's nullable `rollNumber`; support the agreed roll-number-only copy/list workflow only from non-null official roll numbers. Never substitute usernames or database IDs. Use the API's `markedAt` only as attendance-submission time, not lecture start time.
 - Update frontend API contract tests with nullable and populated rollNumber response cases, Student-create request serialization, and clipboard/list filtering behavior.
-- The existing frontend Student Profile explanatory text and Teacher Attendance notice still say rollNumber is unavailable; those statements are now stale relative to backend main and should be revised when the UI integration is implemented.
+- Resolved in Chunk 46: Student Profile now shows the verified nullable rollNumber, and Teacher Attendance displays the official roll number and provides status-based copy controls.
 
 ### Backend duty-review PR remains unreleased
 
@@ -1073,13 +1073,13 @@ The following UI paths have not yet been updated to consume the newly merged bac
 ### Frontend PR state and validation
 
 - Frontend PR #56 (Phase II, Chunk 45 Admin Student & Teacher Directory API Contract Tests) is merged. Merge commit / frontend main head at last verification: `9924fb07820d89119fafb4b8e45c430568ff8621`.
-- There are no open frontend PRs at last verification. The PR search reported 52 merged and 4 closed without merge (56 total).
+- Before Chunk 46, there were no open frontend PRs (52 merged, 4 closed without merge). Chunk 46 subsequently opened PR #57, now ready for review and not merged.
 - The current frontend has the Node built-in `npm test` suite and CI runs `npm ci`, `npm test` and `npm run build`. The latest five API-contract chunks add 59 Node tests in total; tests use mocked `fetch` and do not substitute for live university-account validation.
 - The frontend UI has not yet been validated against provisioned Student/Teacher accounts and populated university data.
 
 ### Exact next frontend action
 
-Implement rollNumber integration against backend main `c62760b9d7fb0384448d4dedaa3c8c939460532e`: Student provisioning field, authenticated Student Profile projection, Teacher roster/attendance display and roll-number-only copy flow, plus API contract tests. Keep the duty-review/proof workflow out of the frontend until backend PR #1 is safely released. After the implementation, run `npm test` and `npm run build`, update this handoff and the continuation prompt, and verify the final main head.
+Chunk 46 has delivered the rollNumber frontend integration on feature branch `feat/frontend-roll-number-integration`, PR #57 (open and ready for review). CI passed dependency installation, `npm test` and `npm run build`; live-account and browser clipboard checks remain. Next delivery is Chunk 47: reconcile backend PR #1 with backend `main`, preserving the merged rollNumber/markedAt contracts and keeping its separate migration and Cloudinary release gates intact.
 
 
 ## Cross-repository status revalidated — 2026-11-15
@@ -1096,7 +1096,7 @@ Implement rollNumber integration against backend main `c62760b9d7fb0384448d4deda
 - Branch: `feat/frontend-roll-number-integration`, created from frontend `main` at `e289d5a1a9e302890025c5bb378b2f11a4df0407`.
 - PR #57: https://github.com/armanpreet-singh/smart-student-portal/pull/57 (opened as draft, now ready for review; not merged or deployed).
 - Implementation commit/head tested by GitHub Actions: `92f0d87d0b2884f8c58a78c3af9417ffbd35e92a`.
-- CI run `43736235914` passed on implementation head `92f0d87d0b2884f8c58a78c3af9417ffbd35e92a`; the handoff-inclusive follow-up run `43736348435` also passed on `d0ce34386e2d499761ca79f8cd75bd2300be54b4`. Both passed dependency installation (`npm ci`), frontend API contract tests (`npm test`) and production build (`npm run build`). No live university-account end-to-end test is claimed.
+- CI runs `43736235914` and `43736348435` passed on implementation/handoff commits; the final handoff review run `43736648785` also passed on `2321eefb7edf4cd52fe6a1509ce48c2a618eada6`. Each completed dependency installation (`npm ci`), frontend API contract tests (`npm test`) and production build (`npm run build`). No live university-account end-to-end test is claimed.
 
 ### Delivered
 
