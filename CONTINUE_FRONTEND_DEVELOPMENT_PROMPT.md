@@ -6,8 +6,8 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification: PR #45 and PRs #47–#50 are merged into `main`; PR #50 / Chunk 39 merged at `e117084677fdb711ad88dc1096fd553f1daed1e3`. PR #46 / Chunk 35 originally merged into a feature branch; its exact completed implementation is carried to clean `main` in PR #51 / Chunk 40.
-4. Current work is Phase II, Chunk 40 — Student Timetable clean-main carry-forward. Branch `feat/student-timetable-main-sync` is based directly on current `main` at `e117084677fdb711ad88dc1096fd553f1daed1e3`; PR #51 is open against `main`. This carries forward the existing PR #46 code verbatim; do not reimplement it or repeat completed Chunks 33–39.
+3. Live verification: PRs #45 and #47–#51 are merged into `main`; PR #51 / Chunk 40 merged at `44b24aa0285fd5be501ddbeed1697e2f6d8429ab`. PR #46 originally merged into a feature branch; its existing implementation is now included in clean `main`.
+4. Current work is Phase II, Chunk 41 — Admin Academic Catalogue API Contract Tests. Branch `feat/admin-academic-catalogue-contract-tests` is based directly on current `main` at `44b24aa0285fd5be501ddbeed1697e2f6d8429ab`; PR #52 is open against `main`. Do not recreate the Admin Class/Subject management UI from Chunks 11 and 12.
 
 ## Scope and rules
 
@@ -455,8 +455,9 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - PR #48 / Chunk 37 merged into `main` at `6484e6bcd889092aee78cd1dc9547b8ea312eaea`.
 - PR #49 / Chunk 38 merged into `main` at `0044c46e288314290eef06c75a7fd16923e1a217`.
 - PR #50 / Chunk 39 merged into `main` at `e117084677fdb711ad88dc1096fd553f1daed1e3`.
-- PR #51 / Chunk 40 is open against `main` on `feat/student-timetable-main-sync`; it carries forward the existing PR #46 timetable changes only.
-- After Chunk 40 is merged, continue the audit and select Chunk 41.
+- PR #51 / Chunk 40 merged into `main` at `44b24aa0285fd5be501ddbeed1697e2f6d8429ab`.
+- PR #52 / Chunk 41 is open against `main` on `feat/admin-academic-catalogue-contract-tests`.
+- After Chunk 41 is merged, continue the audit and select Chunk 42.
 
 
 ## Completed Phase II, Chunk 37 — Student Results Capability Alignment
@@ -478,11 +479,20 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - PR #50 merged into `main` at `e117084677fdb711ad88dc1096fd553f1daed1e3`: https://github.com/armanpreet-singh/smart-student-portal/pull/50. Final head `874aa9b9a80289fe909070b2d67c43deb5c9ced5` passed push run #426 and PR run #427.
 - Frontend only; no backend, database, schema, migration, secrets, deployment or production data changes.
 
-## Current Phase II, Chunk 40 — Student Timetable Clean-Main Carry-Forward
+## Completed Phase II, Chunk 40 — Student Timetable Clean-Main Carry-Forward
 
 - New branch `feat/student-timetable-main-sync` is based directly on post-PR #50 frontend `main` at `e117084677fdb711ad88dc1096fd553f1daed1e3`.
 - PR #46 / Chunk 35 already implemented the Student Timetable capability-unavailable state, but its original base was `feat/student-courses-capability-main-sync`. That PR was merged only into the feature branch, not `main`.
 - Carry forward only the two exact reviewed screen files from the PR #46 head branch: `src/features/dashboard/pages/TimetablePage.jsx` and `src/features/dashboard/pages/TimetablePage.css`. Do not reimplement or alter their behavior.
 - `DashboardRoutes.jsx` on main already preserves the lazy `/dashboard/timetable` route. Add only the clean-main feature branch to frontend build CI and update this handoff.
-- PR #51: https://github.com/armanpreet-singh/smart-student-portal/pull/51. Final handoff-inclusive head and CI runs are recorded after verification.
+- PR #51 merged into `main` at `44b24aa0285fd5be501ddbeed1697e2f6d8429ab`: https://github.com/armanpreet-singh/smart-student-portal/pull/51. Final head `b69fd46453d3e5fad09e3d282aca7d002bfe3456` passed push run #431 and PR run #432.
 - No backend, database, schema, migration, secret, deployment or production data changes.
+
+## Current Phase II, Chunk 41 — Admin Academic Catalogue API Contract Tests
+
+- Branch `feat/admin-academic-catalogue-contract-tests` is based directly on frontend `main` at `44b24aa0285fd5be501ddbeed1697e2f6d8429ab`.
+- The Admin Class & Subject page already includes the backend-supported CRUD/status operations implemented in Chunks 11 and 12. Keep that UI; this chunk adds regression coverage for its API layer.
+- Added 11 Node built-in tests covering Admin class/subject pagination and filters, all-page class choices, class/subject POST/PATCH payloads, normalization, strict field allowlists, 409 conflicts, malformed success responses and missing tokens.
+- Added the `npm test` script and frontend CI test step. No test dependency added.
+- PR #52: https://github.com/armanpreet-singh/smart-student-portal/pull/52. Final handoff-inclusive head and CI results are verified after the documentation commit.
+- All test API responses are locally mocked; no live university account or production data was used or changed.
