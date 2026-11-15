@@ -48,14 +48,6 @@ const subjectRecord = (overrides = {}) => ({
   ...overrides,
 });
 
-const page = (rows, { pageNumber = 1, pageSize = 20, total = rows.length, totalPages = 1 } = {}) => ({
-  status: "ok",
-  data: {
-    [rows[0]?.classId ? "subjects" : "classes"]: rows,
-    pagination: { page: pageNumber, pageSize, total, totalPages },
-  },
-});
-
 let originalFetch;
 let originalWindow;
 let calls;
