@@ -31,9 +31,7 @@ on:
       - "feat/teacher-announcements-capability"
       - "feat/teacher-dashboard-capability"
       - "feat/teacher-students-api"
-      - "feat/teacher-students-api"
       - "feat/teacher-classes-api"
-      - "feat/teacher-students-api"
       - "feat/teacher-assignments-capability"
       - "feat/teacher-timetable-capability"
       - "feat/teacher-resources-capability"
@@ -42,6 +40,7 @@ on:
       - "feat/admin-profile-capability-clean"
       - "feat/student-profile-capability"
       - "feat/student-settings-capability-main-sync"
+      - "feat/admin-dashboard-live-overview"
   pull_request:
     branches:
       - main
