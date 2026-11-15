@@ -42,6 +42,7 @@ on:
       - "feat/student-settings-capability-main-sync"
       - "feat/admin-dashboard-live-overview"
       - "feat/student-courses-capability-main-sync"
+      - "feat/student-timetable-capability-main-sync"
   pull_request:
     branches:
       - main

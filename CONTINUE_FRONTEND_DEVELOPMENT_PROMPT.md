@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-15: PR #43 (Admin dashboard directory overview) merged into frontend `main` at `a73a5a8ec044a403a8ee10d8cba8b22d0bdc6fb5`. PR #44 (Student dashboard attendance overview) was merged into `feat/admin-dashboard-live-overview` at `4412d7d5199dab1d625f2f81f02b0d52a3c51a3b`, not into `main`; its changes are carried forward to clean-main PR #45. Chunk 34 is delivered in PR #45 and remains unmerged.
+3. Live verification on 2026-11-15: PR #43 (Admin dashboard directory overview) merged into frontend `main` at `a73a5a8ec044a403a8ee10d8cba8b22d0bdc6fb5`. PR #44 (Student dashboard attendance overview) was merged into `feat/admin-dashboard-live-overview` at `4412d7d5199dab1d625f2f81f02b0d52a3c51a3b`, not into `main`; its changes are carried forward to clean-main PR #45. PR #45 carries Chunks 33 and 34 and remains open; Chunk 35 PR #46 is stacked on PR #45.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -308,7 +308,7 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 ## Audit and future work
 
-Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Student Dashboard Home now uses the authenticated identity and self-only attendance summaries, and the Courses page explicitly states that a Student catalogue endpoint is not available. Backend-main blockers still include assignments, results, timetable, resources, announcements, academic calendar and departments. Advanced institutional analytics (enrollment trends, department aggregates, staffing/workload and approvals) remain unsupported; the Admin home displays only verified directory totals. The Admin Teaching Assignments UI exists and creates links through the backend POST endpoint, but backend main has no assignment-list/read endpoint. Student duty-proof UI remains dependent on backend draft PR #1 being approved, merged and deployed. Live-account validation is still required for integrated workflows.
+Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Student Dashboard Home uses authenticated identity and self-only attendance summaries; the Courses page and Timetable page now show capability-unavailable states instead of fabricated records. The backend-main gaps still include a dedicated Student course list, timetable, assignments, results, resources, announcements, academic calendar and departments. Advanced institutional analytics remain unsupported; Admin home shows only verified directory totals. Admin Teaching Assignments exists and creates links through the backend POST endpoint, but backend main has no assignment-list/read endpoint. Student duty-proof UI remains dependent on backend draft PR #1. Live-account validation is still required for integrated workflows.
 
 ## Completed Phase II, Chunk 25 — Teacher Timetable Capability Alignment
 
@@ -390,7 +390,7 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - Final handoff-inclusive head `1d9a712c7d4474c160ec0fcbb2602c188d16b0e8` passed GitHub Actions main-target build run `43593117161` (`npm ci`, `npm run build`). PR #42 merged into `main` at `682fc53abd8ee282bd38c9947b558f85f64be518`.
 - Frontend only; no backend, database, schema, migration, secret, deployment, credential or live account changes.
 
-After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 35.
+After Chunk 35, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 36.
 
 ## Completed Phase II, Chunk 32 — Admin Dashboard Live Directory Overview
 
@@ -418,3 +418,12 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - Carried the Chunk 33 dashboard home implementation and styles forward from PR #44 into PR #45 because PR #44's merge target was a feature branch, not `main`.
 - Added `feat/student-courses-capability-main-sync` to frontend build CI. PR #45 implementation head `9cee52e74b83a749ddcea8762896958d544c943b` passed run `43709333776` (run #387); later handoff-inclusive head `e630fea84a6b08154229aaf695373193a2ee6778` passed PR run `43709518916` (run #391) and push run `43709514376` (run #390), both including successful `npm ci` and `npm run build`.
 - Live Student-account validation remains outstanding; no backend, database, migration, secrets, deployment or production data changed.
+## Completed Phase II, Chunk 35 — Student Timetable Capability Alignment
+
+- Branch `feat/student-timetable-capability-main-sync` is stacked on `feat/student-courses-capability-main-sync` at PR #45 head `911d5959dfdc2358f7bdc16e2a732e402a64d69e`. PR #46 targets the Chunk 34 branch, not `main`; parent PR #45 must merge first.
+- Rechecked backend-main `19d34e577000411520ebb66cbea9eb6833fa4824`: Student routes expose only `GET /api/student/attendance`; Prisma models are `User`, `Class`, `Subject`, `TeacherSubject` and `Attendance`. No timetable/session model or Student schedule API exists.
+- Replaced repeated fixture classes, fabricated weekday schedule entries, sample start times and room values with a capability-unavailable state. The page states that class days, start times, durations, rooms and lab assignments cannot be verified.
+- Clarified that attendance history is past marked sessions only and does not supply future class meeting times. Linked the attendance page without presenting it as a timetable.
+- Added responsive `TimetablePage.css`, preserved `/dashboard/timetable` and navigation, and included the branch in frontend build CI.
+- PR #46 final handoff-inclusive head `dcdfdfe78079e162292bc2c821fa48eb199c39b1` passed GitHub Actions run `43710982949` (run #398), including successful `npm ci` and `npm run build`.
+- Live Student-account validation remains outstanding; no backend, database, migration, credential, secret, deployment or production data changes.
