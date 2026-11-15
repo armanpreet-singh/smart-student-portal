@@ -6,8 +6,8 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification: PR #45 merged into `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`; PR #46 (Student Timetable / Chunk 35) merged into `feat/student-courses-capability-main-sync` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`, not `main`; PR #47 (Student Assignments / Chunk 36) merged into `main` at `9dffca04e1c1fd7098688e65304e2d15943ea422`; PR #48 (Student Results / Chunk 37) merged into `main` at `6484e6bcd889092aee78cd1dc9547b8ea312eaea`.
-4. Chunk 38 / PR #49 (Student Learning Resources) is open against `main` on `feat/student-resources-capability-main-sync`. Finalize CI and merge when green; Chunks 36 and 37 are already merged. Do not repeat earlier Student screens.
+3. Live verification: PR #45 and PRs #47–#49 are merged into `main`; PR #49 / Chunk 38 merged at `0044c46e288314290eef06c75a7fd16923e1a217`. PR #46 / Chunk 35 Student Timetable remains merged only into `feat/student-courses-capability-main-sync`, not `main`; preserve the existing implementation and do not recreate it.
+4. Current work is Phase II, Chunk 39 — Admin System Settings Capability Alignment. Branch `feat/admin-system-settings-capability-main-sync` is based directly on current `main` at `0044c46e288314290eef06c75a7fd16923e1a217`; PR #50 is open against `main`. Do not repeat completed Chunks 33–38 or other completed screens.
 
 ## Scope and rules
 
@@ -452,9 +452,10 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 ## Merge state — 2026-11-15
 
 - PR #47 / Chunk 36 merged into `main` at `9dffca04e1c1fd7098688e65304e2d15943ea422`.
-- PR #48 / Chunk 37 retargeted to `main` and remains open pending final CI verification/merge.
-- After PR #48 merges, proceed to Chunk 38 — Student Learning Resources Capability Alignment.
-
+- PR #48 / Chunk 37 merged into `main` at `6484e6bcd889092aee78cd1dc9547b8ea312eaea`.
+- PR #49 / Chunk 38 merged into `main` at `0044c46e288314290eef06c75a7fd16923e1a217`.
+- PR #50 / Chunk 39 is open against `main` on `feat/admin-system-settings-capability-main-sync`.
+- After Chunk 39 is merged, continue the audit and select Chunk 40. Preserve the existing Chunk 35 timetable work; do not recreate it.
 
 ## Completed Phase II, Chunk 37 — Student Results Capability Alignment
 
@@ -464,7 +465,13 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 ## Completed Phase II, Chunk 38 — Student Learning Resources Capability Alignment
 
 - Backend main `19d34e577000411520ebb66cbea9eb6833fa4824` has no Resource/learning-material model, Student resource listing route, file metadata API or protected download endpoint. Student router only exposes `GET /api/student/attendance`.
-- Replace fabricated Student resource cards and client-side category tabs with an accessible capability-unavailable state. Remove the inert Download action from this screen.
-- Preserve `/dashboard/resources`, lazy loading, Student shell, navigation and LTSU theme. Leave shared `mockDashboardData.js` unchanged because it contains many page fixtures.
-- Implementation is in PR #49: https://github.com/armanpreet-singh/smart-student-portal/pull/49. Final implementation-and-handoff head `7f535e32f3984d2d621d30bac895be62576ac58d` passed push run #417 (`43715340247`) and PR run #418 (`43715343548`); `npm ci` and `npm run build` succeeded in both.
-- Update both handoff files, read back all changed files, verify final CI and stop.
+- Replaced fabricated Student resource cards, category tabs and inert Download controls with an accessible capability-unavailable state. Preserved `/dashboard/resources`, lazy loading, Student shell, navigation and LTSU theme. Shared `mockDashboardData.js` and reusable `ResourceCard` remain unchanged.
+- PR #49 merged into frontend `main` at `0044c46e288314290eef06c75a7fd16923e1a217`. Final head `6cb8f7364cfc9c2dee51091054e5bfd64540eeed` passed push run #419 (`43715463771`) and PR run #420 (`43715468469`); `npm ci` and `npm run build` succeeded in both.
+
+## Current Phase II, Chunk 39 — Admin System Settings Capability Alignment
+
+- Frontend `main` base: `0044c46e288314290eef06c75a7fd16923e1a217`. Branch: `feat/admin-system-settings-capability-main-sync`.
+- Backend main `19d34e577000411520ebb66cbea9eb6833fa4824` has no portal/system configuration model and no Admin settings read/update endpoint. The old page's Save handler only logged form values to the browser console.
+- Removed the sample University Name/Admin Email form and console-only Save action. Added an accessible unavailable state and responsive `SettingsPage.css`; preserved the existing `/admin/settings` route, Admin shell, navigation and theme.
+- PR #50: https://github.com/armanpreet-singh/smart-student-portal/pull/50. Final handoff-inclusive head and CI results are verified after the documentation update.
+- Frontend only; no backend, database, schema, migration, secrets, deployment or production data changes.
