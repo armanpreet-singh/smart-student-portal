@@ -172,7 +172,9 @@ function isRosterStudent(student) {
     student &&
     isNonEmptyString(student.id) &&
     isNonEmptyString(student.fullName) &&
-    isNonEmptyString(student.username)
+    isNonEmptyString(student.username) &&
+    (student.rollNumber === null ||
+      (isNonEmptyString(student.rollNumber) && student.rollNumber.trim().length <= 40))
   );
 }
 
@@ -200,7 +202,9 @@ export async function fetchTeacherSubjectRoster(
     !Array.isArray(data.students) ||
     !data.students.every(isRosterStudent) ||
     new Set(data.students.map((student) => student.id)).size !==
-      data.students.length
+      data.students.length ||
+    new Set(data.students.map((student) => student.rollNumber).filter(Boolean)).size !==
+      data.students.filter((student) => student.rollNumber).length
   ) {
     throw createApiError(
       "The Teacher service returned a roster in an unexpected format.",
