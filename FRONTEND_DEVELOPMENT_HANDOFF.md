@@ -1094,9 +1094,9 @@ Implement rollNumber integration against backend main `c62760b9d7fb0384448d4deda
 ## Completed Phase II — Chunk 46: Official Student roll-number integration
 
 - Branch: `feat/frontend-roll-number-integration`, created from frontend `main` at `e289d5a1a9e302890025c5bb378b2f11a4df0407`.
-- PR #57: https://github.com/armanpreet-singh/smart-student-portal/pull/57 (opened as draft; not merged or deployed).
+- PR #57: https://github.com/armanpreet-singh/smart-student-portal/pull/57 (opened as draft, now ready for review; not merged or deployed).
 - Implementation commit/head tested by GitHub Actions: `92f0d87d0b2884f8c58a78c3af9417ffbd35e92a`.
-- CI run `43736235914` completed successfully. The job passed dependency installation (`npm ci`), frontend API contract tests (`npm test`) and production build (`npm run build`). This is a PR implementation CI result; no live university-account end-to-end test is claimed.
+- CI run `43736235914` passed on implementation head `92f0d87d0b2884f8c58a78c3af9417ffbd35e92a`; the handoff-inclusive follow-up run `43736348435` also passed on `d0ce34386e2d499761ca79f8cd75bd2300be54b4`. Both passed dependency installation (`npm ci`), frontend API contract tests (`npm test`) and production build (`npm run build`). No live university-account end-to-end test is claimed.
 
 ### Delivered
 
