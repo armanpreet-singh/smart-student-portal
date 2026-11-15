@@ -6,8 +6,8 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-15: PR #43 (Admin dashboard directory overview) merged into frontend `main` at `a73a5a8ec044a403a8ee10d8cba8b22d0bdc6fb5`. PR #44 (Student dashboard attendance overview) was merged into `feat/admin-dashboard-live-overview` at `4412d7d5199dab1d625f2f81f02b0d52a3c51a3b`, not into `main`; its changes are carried forward to clean-main PR #45. Chunk 34 is delivered in PR #45 and remains unmerged.
-4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
+3. Live verification on 2026-11-15: PR #45 (Student Dashboard carry-forward + Courses capability alignment) merged into frontend `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`. PR #46 (Student Timetable capability alignment) merged into `main` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`. Chunks 33–35 are delivered; do not repeat them.
+4. Live state after the handoff snapshot: PR #45 merged into `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`; PR #46 merged into `main` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`. Chunks 33–35 are delivered. Continue with Chunk 36 (Student Assignments Capability Alignment) on `feat/student-assignments-capability-main-sync`; do not repeat Dashboard, Courses or Timetable work.
 
 ## Scope and rules
 
@@ -418,3 +418,15 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - Carried the Chunk 33 dashboard home implementation and styles forward from PR #44 into PR #45 because PR #44's merge target was a feature branch, not `main`.
 - Added `feat/student-courses-capability-main-sync` to frontend build CI. PR #45 implementation head `9cee52e74b83a749ddcea8762896958d544c943b` passed run `43709333776` (run #387); later handoff-inclusive head `e630fea84a6b08154229aaf695373193a2ee6778` passed PR run `43709518916` (run #391) and push run `43709514376` (run #390), both including successful `npm ci` and `npm run build`.
 - Live Student-account validation remains outstanding; no backend, database, migration, secrets, deployment or production data changed.
+
+## Completed Phase II, Chunk 35 — Student Timetable Capability Alignment
+
+- PR #45 merged into frontend `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`; PR #46 then merged into `main` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`.
+- Student Timetable is already aligned: sample weekly sessions/times/rooms removed, accessible capability-unavailable state added, attendance history distinguished from a future timetable. Preserve this implementation; do not redo it.
+
+## Phase II, Chunk 36 — Student Assignments Capability Alignment
+
+- Audit existing Student Assignments page against backend-main before changing it. Backend main at `19d34e577000411520ebb66cbea9eb6833fa4824` exposes only Student `GET /api/student/attendance`; Prisma has no Assignment/Submission model.
+- Replace fabricated Student assignment cards and local pending/overdue labels with an accessible capability-unavailable state. Preserve `/dashboard/assignments`, shell, navigation and theme.
+- Do not modify shared mock fixtures unless a repository-wide consumer search proves a fixture is unused. Update both handoff documents, read back changed files, verify CI and stop.
+- Implementation is in PR #47: https://github.com/armanpreet-singh/smart-student-portal/pull/47. PR head `ca96ba3cc1eed2462ead7c8244a752bc83b5ac6a` passed GitHub Actions PR run `43712699008` (run #406), including `npm ci` and `npm run build`.
