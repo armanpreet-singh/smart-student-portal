@@ -168,7 +168,7 @@ const TeacherStudents = memo(() => {
     if (!query) return roster;
 
     return roster.filter((student) =>
-      [student.fullName, student.username].some((value) =>
+      [student.fullName, student.username, student.rollNumber || ""].some((value) =>
         value.toLocaleLowerCase().includes(query),
       ),
     );
@@ -344,6 +344,7 @@ const TeacherStudents = memo(() => {
                 <div className="t-students-table-header" role="row">
                   <span role="columnheader">Student name</span>
                   <span role="columnheader">Username</span>
+                  <span role="columnheader">Official roll number</span>
                 </div>
 
                 {visibleStudents.length === 0 ? (
@@ -359,6 +360,9 @@ const TeacherStudents = memo(() => {
                     >
                       <strong role="cell">{student.fullName}</strong>
                       <span role="cell">{student.username}</span>
+                      <span role="cell" className="t-students-roll-number">
+                        {student.rollNumber || "Not assigned"}
+                      </span>
                     </div>
                   ))
                 )}

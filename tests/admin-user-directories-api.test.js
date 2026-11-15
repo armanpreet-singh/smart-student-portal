@@ -11,6 +11,7 @@ const studentRecord = (overrides = {}) => ({
   fullName: "Student One",
   username: "student.one",
   email: "student.one@ltsu.ac.in",
+  rollNumber: null,
   role: "STUDENT",
   classId: "class-1",
   mustChangePassword: false,
@@ -168,7 +169,7 @@ describe("Admin Student and Teacher directory API contracts", () => {
     );
   });
 
-  it("accepts empty results and nullable user class/email fields", async () => {
+  it("accepts empty results and nullable user class/email/roll-number fields", async () => {
     const noStudents = directoryResponse([]);
     setResponder(() => jsonResponse(200, noStudents));
 
@@ -189,6 +190,28 @@ describe("Admin Student and Teacher directory API contracts", () => {
     assert.equal(teacherResult.users[0].email, null);
     assert.equal(teacherResult.users[0].class, null);
     assert.equal(teacherResult.users[0].classId, null);
+  });
+
+  it("preserves populated official roll numbers and rejects malformed roll-number values", async () => {
+    const officialStudent = studentRecord({ rollNumber: "000CSE/0123" });
+    setResponder(() =>
+      jsonResponse(200, directoryResponse([officialStudent])),
+    );
+
+    const result = await fetchAdminStudents("admin-token");
+    assert.equal(result.users[0].rollNumber, "000CSE/0123");
+
+    setResponder(() =>
+      jsonResponse(
+        200,
+        directoryResponse([studentRecord({ rollNumber: 123 })]),
+      ),
+    );
+
+    await assert.rejects(
+      fetchAdminStudents("admin-token"),
+      (error) => error.status === 502 && /unexpected format/i.test(error.message),
+    );
   });
 
   it("rejects invalid Student page, pageSize, search and status filters before fetch", async () => {

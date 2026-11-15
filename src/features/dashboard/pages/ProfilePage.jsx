@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import {
   CalendarDays,
+  Hash,
   Info,
   Mail,
   ShieldCheck,
@@ -36,6 +37,10 @@ const ProfilePage = memo(() => {
   const email =
     typeof user?.email === "string" && user.email.trim()
       ? user.email.trim()
+      : null;
+  const rollNumber =
+    typeof user?.rollNumber === "string" && user.rollNumber.trim()
+      ? user.rollNumber
       : null;
 
   return (
@@ -102,6 +107,15 @@ const ProfilePage = memo(() => {
                   </dt>
                   <dd>{username || "Not provided by the account service"}</dd>
                 </div>
+                {rollNumber && (
+                  <div className="s-profile-detail">
+                    <dt>
+                      <Hash size={16} aria-hidden="true" />
+                      Official roll number
+                    </dt>
+                    <dd>{rollNumber}</dd>
+                  </div>
+                )}
                 <div className="s-profile-detail">
                   <dt>
                     <Mail size={16} aria-hidden="true" />
@@ -144,10 +158,11 @@ const ProfilePage = memo(() => {
                   Additional academic and contact details are not available yet
                 </h3>
                 <p>
-                  The current backend does not expose a Student profile endpoint
-                  or verified fields for roll number, program, semester, batch,
-                  telephone, residential address or academic advisor. The
-                  available class ID is not a human-readable academic profile.
+                  The current backend does not expose verified fields for
+                  program, semester, batch, telephone, residential address or
+                  academic advisor. The official roll number is shown above
+                  when it is present in your authenticated account response.
+                  The available class ID is not a human-readable academic profile.
                 </p>
                 <p>
                   These details are intentionally omitted until the university

@@ -10,6 +10,7 @@ import AccountPasswordResetControl from "../components/AccountPasswordResetContr
 import {
   createAdminStudent,
   fetchActiveStudentClassOptions,
+  getRollNumberInputError,
 } from "../api/adminStudentProvisioningApi";
 
 import "./StudentsPage.css";
@@ -109,6 +110,7 @@ const StudentsPage = () => {
     username: "",
     email: "",
     classId: "",
+    rollNumber: "",
     temporaryPassword: "",
     confirmPassword: "",
   });
@@ -249,6 +251,7 @@ const StudentsPage = () => {
     const fullName = createForm.fullName.trim();
     const username = createForm.username.trim();
     const email = createForm.email.trim();
+    const rollNumber = createForm.rollNumber.trim();
     const passwordBytes = new TextEncoder().encode(
       createForm.temporaryPassword,
     ).length;
@@ -271,6 +274,8 @@ const StudentsPage = () => {
     ) {
       errors.email = "Enter a valid email address (254 characters or fewer).";
     }
+    const rollNumberError = getRollNumberInputError(rollNumber);
+    if (rollNumberError) errors.rollNumber = rollNumberError;
     if (createForm.temporaryPassword.length < 12) {
       errors.temporaryPassword =
         "Temporary password must be at least 12 characters.";
@@ -395,7 +400,7 @@ const StudentsPage = () => {
                   type="search"
                   value={draftSearch}
                   maxLength={80}
-                  placeholder="Search by name, username or email"
+                  placeholder="Search by name, username, email or roll number"
                   onChange={(event) => {
                     setDraftSearch(event.target.value);
                     setFilterError("");
@@ -485,6 +490,7 @@ const StudentsPage = () => {
               <thead>
                 <tr>
                   <th>Student</th>
+                  <th>Official roll number</th>
                   <th>Email</th>
                   <th>Class</th>
                   <th>Account</th>
@@ -500,6 +506,13 @@ const StudentsPage = () => {
                       <span className="a-students-username">
                         {student.username}
                       </span>
+                    </td>
+                    <td>
+                      {student.rollNumber ? (
+                        <strong className="a-students-roll-number">{student.rollNumber}</strong>
+                      ) : (
+                        <span className="a-students-muted">Not assigned</span>
+                      )}
                     </td>
                     <td>
                       {student.email ? (
@@ -684,6 +697,25 @@ const StudentsPage = () => {
                   />
                   {createFieldErrors.email && (
                     <small role="alert">{createFieldErrors.email}</small>
+                  )}
+                </label>
+
+                <label className="a-student-create-field">
+                  <span>Official roll number <em>Optional</em></span>
+                  <input
+                    type="text"
+                    autoComplete="off"
+                    maxLength={40}
+                    value={createForm.rollNumber}
+                    onChange={(event) =>
+                      updateCreateField("rollNumber", event.target.value)
+                    }
+                    aria-invalid={Boolean(createFieldErrors.rollNumber)}
+                    placeholder="e.g. 00CSE/0123"
+                  />
+                  <small>Use the university-issued value. Leading zeroes are preserved; the service stores it in uppercase.</small>
+                  {createFieldErrors.rollNumber && (
+                    <small role="alert">{createFieldErrors.rollNumber}</small>
                   )}
                 </label>
 

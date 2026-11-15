@@ -546,10 +546,10 @@ Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first; this update supersedes older backe
 - Frontend main is `9924fb07820d89119fafb4b8e45c430568ff8621`. PR #56 has merged; there were no open frontend PRs at last verification (52 merged, 4 closed without merge).
 - Backend main is now `c62760b9d7fb0384448d4dedaa3c8c939460532e`; backend PR #2 added official nullable `rollNumber` to Student provisioning, authenticated profiles, Admin directory/search and Teacher roster, and added server-generated `markedAt` to bulk attendance-mark responses. Its rollNumber migration is already applied to primary Neon and its Render deployment is live.
 - `markedAt` is the register-submission time, not a scheduled class-start time. No timetable/session API exists.
-- Frontend main still needs to add the optional official rollNumber input to Admin Student provisioning, display non-null rollNumber in the authenticated Student Profile, and expose/consume rollNumber in Teacher Attendance roster/roll-number-only clipboard workflow. Null roll numbers must be omitted; never substitute username or DB ID. Add API contract tests for these cases.
+- Completed in Chunk 46 on `feat/frontend-roll-number-integration`, PR #57: Admin Student provisioning accepts an optional official roll number; Student Profile displays the verified non-null value; Teacher rosters and attendance display it; status-based clipboard actions copy official roll numbers only. The feature is tested and awaiting review, not merged.
 - Backend PR #1 (duty-review/proof) remains open/draft/unmerged/un-deployed. Its ON_DUTY_REVIEW schema and proof endpoints are not part of backend main. Its separate Neon migration is unapproved/unapplied; Cloudinary secrets are not configured. Do not wire those draft contracts into the frontend.
 - Frontend `package.json` has `npm test`; CI runs `npm ci`, `npm test`, `npm run build`. The 59 contract tests added across Chunks 41–45 use mocked fetch and do not prove live account integration.
-- Exact next task: implement the rollNumber frontend integration described above, add/update contract tests, run test and build, and update/read back both frontend handoff documents. Keep duty-review UI deferred until its backend migration/configuration/deployment gates are completed.
+- Exact next task: Chunk 47, reconcile backend branch `attendance-duty-proof` with backend `main`, preserve the merged `rollNumber` and `markedAt` APIs, resolve schema/service overlap and rerun CI. Keep duty-review frontend work deferred until the separate primary Neon migration is approved/applied, Cloudinary is configured, and backend is deployed.
 
 
 ## Cross-repository status revalidated — 2026-11-15
@@ -557,5 +557,23 @@ Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first; this update supersedes older backe
 - Frontend `main` at the start of this recheck was `dc17ef80b4e4f408a458e28fde0bf0fdf5108ef6`. There are **zero open pull requests** in `armanpreet-singh/smart-student-portal`; PR #56 is already merged.
 - Backend PR #2 (official Student roll-number contract) is merged and live on Render. The only open backend PR is PR #1, duty-review/proof, which remains draft and unmergeable. Its branch is 31 commits ahead and 3 behind backend main and needs reconciliation preserving the merged `rollNumber` and `markedAt` APIs.
 - Keep frontend `ON_DUTY_REVIEW` and duty-proof upload/download workflows deferred. The corresponding backend migration `cf299d60-31f1-422d-a00d-207236461ff8` has not been approved/applied to primary Neon, and Cloudinary runtime credentials are not configured.
-- The next safe frontend delivery can proceed against the released `rollNumber` contract: Admin Student provisioning input, authenticated Student profile display, Teacher roster/attendance display and roll-number-only copy workflow, plus API contract tests. Do not couple that work to the unreleased duty-review schema.
+- This pre-Chunk-46 next-step note is superseded by Chunk 46 below, which delivered the rollNumber frontend integration in PR #57. Keep the duty-review UI decoupled from the unreleased backend contract.
 - No frontend PR was merged or changed during this status recheck.
+
+
+## Completed Phase II, Chunk 46 — Official Student roll-number integration
+
+- Frontend feature branch: `feat/frontend-roll-number-integration`, from `main` base `e289d5a1a9e302890025c5bb378b2f11a4df0407`.
+- PR #57 is open and ready for review: https://github.com/armanpreet-singh/smart-student-portal/pull/57. Not merged or deployed.
+- CI run `43736235914` passed on implementation commit `92f0d87d0b2884f8c58a78c3af9417ffbd35e92a`; the handoff-inclusive follow-up run `43736348435` also passed on `d0ce34386e2d499761ca79f8cd75bd2300be54b4`: locked dependency install, all Node API contract tests and `vite build`.
+- Admin Student provisioning sends optional trimmed `rollNumber`; blank omitted, leading zeroes retained, backend uppercases. Client validation mirrors 1–40 characters and permitted-character/initial-character rules.
+- Admin Student directory validates nullable rollNumber and shows it; Student Profile displays the verified authenticated `user.rollNumber` only when present.
+- Teacher roster validation accepts nullable rollNumber and rejects malformed/duplicate values. Teacher Students and Teacher Attendance display official values.
+- Teacher Attendance includes Copy Absentees / Copy Presentees. Output is official roll numbers only, newline-separated; only exact ABSENT or PRESENT statuses qualify. Missing roll numbers are skipped; no username/DB ID fallback; LATE/EXCUSED excluded.
+- Added contract tests for create request/response, optional/null/malformed roll-number fields, leading-zero preservation, profile pass-through, Teacher roster validation and clipboard filtering.
+- This is frontend-only. No Neon, backend, Render environment, secret, or production deployment was touched. Browser clipboard permission and real account E2E remain unverified.
+- Keep duty-review frontend integration deferred until backend PR #1's schema migration, Cloudinary setup and deployment gates are complete.
+
+### Next chunk — Phase II, Chunk 47
+
+Reconcile backend branch `attendance-duty-proof` with current backend `main`, preserving the merged `rollNumber` and `markedAt` contracts. Resolve schema/service overlap and rerun backend CI. Do not apply the separate duty-review Neon migration without approval for its exact migration ID; do not merge while Render auto-deploy would target an unmigrated primary database or unconfigured Cloudinary storage.

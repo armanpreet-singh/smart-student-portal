@@ -30,6 +30,7 @@ function isStudentRecord(user) {
     typeof user.fullName === "string" &&
     typeof user.username === "string" &&
     isNullableString(user.email) &&
+    isNullableString(user.rollNumber) &&
     user.role === "STUDENT" &&
     isNullableString(user.classId) &&
     typeof user.mustChangePassword === "boolean" &&
