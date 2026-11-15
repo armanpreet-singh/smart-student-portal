@@ -45,6 +45,7 @@ on:
       - "feat/student-courses-capability-main-sync"
       - "feat/student-assignments-capability-main-sync"
       - "feat/student-results-capability-main-sync"
+      - "feat/student-resources-capability-main-sync"
   pull_request:
     branches:
       - main
