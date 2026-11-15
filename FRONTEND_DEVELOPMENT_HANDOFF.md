@@ -3,7 +3,7 @@
 Last updated: 2026-11-15
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
-Development branch: `feat/admin-user-directory-api-contract-tests` (Phase II, Chunk 45 Admin Student & Teacher Directory API Contract Tests; PR #56 open against `main`; based on `c7572a396eb7aa19bb5c55a0eafa2349e7b176b7`)
+Development branch: `main` (Phase II, Chunk 45 Admin Student & Teacher Directory API Contract Tests; PR #56 merged into `main` at `9924fb07820d89119fafb4b8e45c430568ff8621`; no open frontend PRs at last verification).
 Phase II, Chunk 26 Teacher Learning Resources PR #33 merged into `main` at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`. Phase II, Chunk 27 Teacher Profile replacement PR #35 merged at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`; PR #34 was closed without merge. Phase II, Chunk 28 Teacher Settings PR #36 merged at `96ad2fe3a635797f388c65ee8189563da2851262`. Original stacked Admin Profile PR #37 was closed without merge; clean replacement PR #38 merged into `main` at `cc018e17c36a0a0dbd7ec830f61746d96738d44d`. Phase II, Chunk 30 Student Profile PR #39 merged into `main` at `6325413178f297eea9fc730fb26b2cbe540715d7`: https://github.com/armanpreet-singh/smart-student-portal/pull/39. Phase II, Chunk 31 Student Settings PR #42 merged into `main` at `682fc53abd8ee282bd38c9947b558f85f64be518`: https://github.com/armanpreet-singh/smart-student-portal/pull/42. Initial stacked/replacement Student Settings PRs #40 and #41 were closed without merge. Phase II, Chunk 32 Admin Dashboard Live Directory Overview PR #43 merged into `main` at `a73a5a8ec044a403a8ee10d8cba8b22d0bdc6fb5`: https://github.com/armanpreet-singh/smart-student-portal/pull/43. Chunk 33 PR #44 was merged into the feature branch `feat/admin-dashboard-live-overview` at `4412d7d5199dab1d625f2f81f02b0d52a3c51a3b`, not into `main`; its Student Dashboard implementation was carried forward to PR #45. PR #45 merged into `main` at `415848c8817437b4e8abebb1148971c4c107eb7a`; PR #46 (Chunk 35 Student Timetable) originally merged into `feat/student-courses-capability-main-sync` at `ba6862c361bb1e2eafec56bfbe7029201ca2b203`; clean-main PR #51 / Chunk 40 merged the existing implementation into `main` at `44b24aa0285fd5be501ddbeed1697e2f6d8429ab`. PR #31, #32 and #29 history remains as documented below.
 Phase II, Chunk 3 Admin Class and Subject Catalogue PR #9 merged into `main`: `d00fc61b54456b0fb313294c72aecedd62c9bd65`.
 Phase II, Chunk 4 Admin Student Directory PR #10 merged into `main`: `a32bfa04d132f2866938b7364eccb426bfb1e519`.
@@ -14,7 +14,7 @@ Phase II, Chunk 8 Admin Managed Account Status Controls PR #14 merged into `main
 Phase II, Chunk 1 Student Attendance PR #7 merged into `main`: `49d42d4b750f213debfb7e354c98c31f1b7ae5d4`
 Phase II, Chunk 2 Admin Attendance PR #8 merged into `main`: `db07903ce1003073f2e9b3902c295321c3427f3c`
 Phase I PRs #2–#6 (Teacher Attendance and Authentication) are also merged into `main`.
-Latest verified frontend `main` commit after PR #55: `c7572a396eb7aa19bb5c55a0eafa2349e7b176b7` (includes PRs #47 / Chunk 36 through #55 / Chunk 44).
+Latest verified frontend `main` commit after PR #56: `9924fb07820d89119fafb4b8e45c430568ff8621` (includes PRs #47 / Chunk 36 through #56 / Chunk 45).
 
 ## Working scope and rules
 
@@ -1038,3 +1038,45 @@ After Chunk 45 is merged, continue the screen-by-screen audit and select Chunk 4
 - Reuses `npm test` and frontend CI from Chunk 41; no dependency added.
 - PR #56 is open against `main`: https://github.com/armanpreet-singh/smart-student-portal/pull/56. Final handoff-inclusive head and CI results are verified after the documentation commit.
 - Tests stub `fetch`; no live Admin account, real user directory, account mutation, production API, backend or database was accessed or changed.
+
+
+## Authoritative backend contract and PR update — 2026-11-15
+
+This section supersedes older backend-integration statements in this handoff wherever they differ.
+
+### Current backend main
+
+- Backend repository: `armanpreet-singh/ltsu-backend`.
+- Current backend main commit: `c62760b9d7fb0384448d4dedaa3c8c939460532e`.
+- Backend PR #2 (**Expose official student roll numbers for attendance workflows**) was merged on 2026-11-15 and Render auto-deployed it successfully. Render deployment `dep-dbstb4tckfvc73e0qq80` is `live`; backend readiness status is `success`.
+- Backend main now exposes nullable official `rollNumber` in authenticated user/profile projections, Admin user directory/search and Teacher subject roster. ADMIN-managed Student creation accepts the optional `rollNumber` field. The frontend must preserve leading zeroes and display the official value as supplied; do not replace null values with username or database ID.
+- Bulk Teacher attendance marking returns server-generated `markedAt`. This is the time the register was submitted, not the scheduled lecture start. There is no backend timetable/session or scheduled class-start-time contract.
+- Primary Neon already has the nullable `User.rollNumber TEXT` column and unique index; the matching migration-history row has been verified. Current primary dataset still has one ADMIN and zero Student accounts.
+
+### Frontend implementation gap following the released contract
+
+The following UI paths have not yet been updated to consume the newly merged backend fields; treat this as the next frontend integration task, not completed functionality:
+
+- Admin Student provisioning: add an optional official roll-number field to the create-Student form and pass it through the existing API helper. Keep the field out of Teacher provisioning.
+- Student Profile: show the verified `user.rollNumber` from the authenticated session when non-null; do not reintroduce fabricated program/semester/department fields.
+- Teacher Attendance and roster: validate/retain each returned student's nullable `rollNumber`; support the agreed roll-number-only copy/list workflow only from non-null official roll numbers. Never substitute usernames or database IDs. Use the API's `markedAt` only as attendance-submission time, not lecture start time.
+- Update frontend API contract tests with nullable and populated rollNumber response cases, Student-create request serialization, and clipboard/list filtering behavior.
+- The existing frontend Student Profile explanatory text and Teacher Attendance notice still say rollNumber is unavailable; those statements are now stale relative to backend main and should be revised when the UI integration is implemented.
+
+### Backend duty-review PR remains unreleased
+
+- Backend PR #1 remains open/draft/unmerged: https://github.com/armanpreet-singh/ltsu-backend/pull/1.
+- Its `ON_DUTY_REVIEW`, proof-upload, signed-download and teacher-correction contracts are not part of backend main and are not deployed.
+- Its separate primary Neon migration `cf299d60-31f1-422d-a00d-207236461ff8` has only been tested on a temporary branch and has not been approved/applied to primary. Cloudinary runtime secrets are also not configured.
+- Do not wire duty-proof submission, ON_DUTY_REVIEW status, or teacher correction UI until the backend branch is reconciled with current main, migration is approved/applied, Cloudinary is configured, and the new backend is deployed.
+
+### Frontend PR state and validation
+
+- Frontend PR #56 (Phase II, Chunk 45 Admin Student & Teacher Directory API Contract Tests) is merged. Merge commit / frontend main head at last verification: `9924fb07820d89119fafb4b8e45c430568ff8621`.
+- There are no open frontend PRs at last verification. The PR search reported 52 merged and 4 closed without merge (56 total).
+- The current frontend has the Node built-in `npm test` suite and CI runs `npm ci`, `npm test` and `npm run build`. The latest five API-contract chunks add 59 Node tests in total; tests use mocked `fetch` and do not substitute for live university-account validation.
+- The frontend UI has not yet been validated against provisioned Student/Teacher accounts and populated university data.
+
+### Exact next frontend action
+
+Implement rollNumber integration against backend main `c62760b9d7fb0384448d4dedaa3c8c939460532e`: Student provisioning field, authenticated Student Profile projection, Teacher roster/attendance display and roll-number-only copy flow, plus API contract tests. Keep the duty-review/proof workflow out of the frontend until backend PR #1 is safely released. After the implementation, run `npm test` and `npm run build`, update this handoff and the continuation prompt, and verify the final main head.
