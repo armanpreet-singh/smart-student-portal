@@ -6,7 +6,7 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification on 2026-11-14: PR #33 (Teacher Learning Resources) merged at `8d7850c8f89b6a6270b94067c1c4f55810e6d21f`; PR #35 (Teacher Profile replacement) merged at `c7923704bd392bd2888fb5cc1d75bdd1bf5e9d37`; PR #36 (Teacher Settings) merged at `96ad2fe3a635797f388c65ee8189563da2851262`; PR #38 (Admin Profile) merged at `cc018e17c36a0a0dbd7ec830f61746d96738d44d`; PR #39 (Student Profile) merged at `6325413178f297eea9fc730fb26b2cbe540715d7`; PR #42 (Student Settings) merged at `682fc53abd8ee282bd38c9947b558f85f64be518`. Original stacked/replacement PRs #34, #37, #40 and #41 were closed without merge. PR #42 is the clean main-based replacement for Student Settings.
+3. Live verification on 2026-11-15: PR #43 (Admin dashboard directory overview) merged into frontend `main` at `a73a5a8ec044a403a8ee10d8cba8b22d0bdc6fb5`. PR #44 (Student dashboard attendance overview) was merged into `feat/admin-dashboard-live-overview` at `4412d7d5199dab1d625f2f81f02b0d52a3c51a3b`, not into `main`; its changes are carried forward to clean-main PR #45. Chunk 34 is delivered in PR #45 and remains unmerged.
 4. Continue the exact next task in the latest handoff. Do not repeat the completed Teacher Attendance chunk.
 
 ## Scope and rules
@@ -308,7 +308,7 @@ Teacher Attendance implementation PR #2 was merged into main at `76b7f1a4806c400
 
 ## Audit and future work
 
-Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Backend-main blockers still include assignments, results, timetable, resources, announcements, academic calendar and departments. Advanced institutional analytics (enrollment trends, department aggregates, staffing/workload and approvals) remain unsupported; the Admin home now displays only verified directory totals. The Admin Teaching Assignments UI already exists and creates links through the backend POST endpoint, but backend main has no assignment-list/read endpoint. Student duty-proof UI remains dependent on backend draft PR #1 being approved, merged and deployed. Live-account validation is still required for the integrated workflows.
+Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOPMENT_HANDOFF.md`. Student Dashboard Home now uses the authenticated identity and self-only attendance summaries, and the Courses page explicitly states that a Student catalogue endpoint is not available. Backend-main blockers still include assignments, results, timetable, resources, announcements, academic calendar and departments. Advanced institutional analytics (enrollment trends, department aggregates, staffing/workload and approvals) remain unsupported; the Admin home displays only verified directory totals. The Admin Teaching Assignments UI exists and creates links through the backend POST endpoint, but backend main has no assignment-list/read endpoint. Student duty-proof UI remains dependent on backend draft PR #1 being approved, merged and deployed. Live-account validation is still required for integrated workflows.
 
 ## Completed Phase II, Chunk 25 — Teacher Timetable Capability Alignment
 
@@ -390,11 +390,11 @@ Read the full screen-by-screen audit and integration gaps from `FRONTEND_DEVELOP
 - Final handoff-inclusive head `1d9a712c7d4474c160ec0fcbb2602c188d16b0e8` passed GitHub Actions main-target build run `43593117161` (`npm ci`, `npm run build`). PR #42 merged into `main` at `682fc53abd8ee282bd38c9947b558f85f64be518`.
 - Frontend only; no backend, database, schema, migration, secret, deployment, credential or live account changes.
 
-After Chunk 32, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 33.
+After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend-main and select Chunk 35.
 
 ## Completed Phase II, Chunk 32 — Admin Dashboard Live Directory Overview
 
-- Branch `feat/admin-dashboard-live-overview` was created from frontend `main` at `dd4071c8f6c4108edf9e8bbe41c56f6e7835287e`; open PR #43 targets `main` and is not merged.
+- Branch `feat/admin-dashboard-live-overview` was created from frontend `main` at `dd4071c8f6c4108edf9e8bbe41c56f6e7835287e`; PR #43 merged into `main` at `a73a5a8ec044a403a8ee10d8cba8b22d0bdc6fb5`.
 - Reverified backend-main commit `19d34e577000411520ebb66cbea9eb6833fa4824`. The Admin user, class and subject directory endpoints return authoritative `pagination.total` values. Admin home requests page 1 with page size 1 for Student accounts, Teacher accounts, Classes and Subjects, then displays those totals; active and inactive records are included.
 - Replaced fabricated Admin profile name, fake totals/department/approval/insight claims and nonfunctional quick actions. The heading now uses verified `AuthContext.user.fullName`; cards display only the four supported directory counts.
 - Added loading skeletons, error/retry handling, refreshed-at timestamp, explanatory data-scope note, responsive/dark-theme-compatible CSS, and direct navigation to supported Admin workflows.
@@ -403,3 +403,17 @@ After Chunk 32, re-audit remaining Student/Teacher/Admin screens against backend
 - Final handoff-inclusive PR head `2b4a8322f399ca4cfbf8cc18ff8809166397b09c` passed GitHub Actions PR workflow run `43706117724` (run #368), including successful `npm ci` and `npm run build` steps.
 - Final handoff-inclusive branch head `004780a84d1eebf78e7d453e1e947cd5a6fc55f4` also passed GitHub Actions run `43706330530` (run #372): `npm ci` and `npm run build` succeeded.
 - Live Admin-account/API validation remains outstanding. No live credentials, account mutations, backend/database/schema/migration/secrets or production data were changed. Existing PR automation posted a Cloudflare Pages preview (not a production deployment): [PR preview](https://05bb7103.smart-student-portal.pages.dev).
+
+## Chunk 33 integration correction
+
+- PR #44 was merged into the feature-branch base `feat/admin-dashboard-live-overview` at `4412d7d5199dab1d625f2f81f02b0d52a3c51a3b`, not into frontend `main`. The Student Dashboard Home implementation and CSS were therefore copied forward from that branch into clean-main PR #45.
+- PR #45 includes the carried-forward Chunk 33 Student dashboard implementation together with Chunk 34 Courses capability alignment so both reach `main` through one clean PR.
+
+## Completed Phase II, Chunk 34 — Student Courses Capability Alignment
+
+- Clean branch `feat/student-courses-capability-main-sync` was created from frontend `main` at `a73a5a8ec044a403a8ee10d8cba8b22d0bdc6fb5`; PR #45 targets `main` and is not merged.
+- Backend-main commit `19d34e577000411520ebb66cbea9eb6833fa4824` has only the Student attendance route in `src/routes/student-routes.js`; it has no authorized Student course/subject listing endpoint. Admin Class/Subject catalogue routes are ADMIN-only.
+- Replaced the static mock CourseCard list, fake Semester 5 label, instructor names, progress and enrollment claims with an accessible unavailable-state explanation and a working link to `/dashboard/attendance`, where subject context currently appears as part of attendance.
+- Added responsive `CoursesPage.css`; kept `/dashboard/courses` and existing Student navigation intact. Shared mock fixtures remain because other pages still use other exports from the same file.
+- Carried the Chunk 33 dashboard home implementation and styles forward from PR #44 into PR #45 because PR #44's merge target was a feature branch, not `main`.
+- Added `feat/student-courses-capability-main-sync` to frontend build CI. Live Student-account validation remains outstanding; no backend, database, migration, secrets, deployment or production data changed.
