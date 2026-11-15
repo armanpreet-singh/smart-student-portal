@@ -6,8 +6,8 @@ You are continuing work on the existing frontend in https://github.com/armanpree
 
 1. Read the latest `FRONTEND_DEVELOPMENT_HANDOFF.md` and this prompt from the frontend repository before changing files.
 2. Verify live branch heads, pull requests and the current file contents. Do not assume the commit hashes below remain the latest.
-3. Live verification: PRs #45 and #47–#54 are merged into `main`; PR #54 / Chunk 43 merged at `60b76d2b568673708e5c5f8ff63250af284f6bd7`. PR #46 originally merged into a feature branch; its existing Student Timetable implementation is now carried into clean `main` by PR #51.
-4. Current work is Phase II, Chunk 44 — Admin Attendance Reporting API Contract Tests. Branch `feat/admin-attendance-report-api-contract-tests` is based directly on current `main` at `60b76d2b568673708e5c5f8ff63250af284f6bd7`; PR #55 is open against `main`. Do not recreate the Admin Attendance or Reports pages; both already consume the reporting API.
+3. Live verification: PRs #45 and #47–#55 are merged into `main`; PR #55 / Chunk 44 merged at `c7572a396eb7aa19bb5c55a0eafa2349e7b176b7`. PR #46 originally merged into a feature branch; its existing Student Timetable implementation is now carried into clean `main` by PR #51.
+4. Current work is Phase II, Chunk 45 — Admin Student & Teacher Directory API Contract Tests. Branch `feat/admin-user-directory-api-contract-tests` is based directly on current `main` at `c7572a396eb7aa19bb5c55a0eafa2349e7b176b7`; PR #56 is open against `main`. Do not recreate the Admin Student or Teacher directory screens.
 
 ## Scope and rules
 
@@ -459,8 +459,9 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - PR #52 / Chunk 41 merged into `main` at `5d63c279958d1e32e65e72340a301727d60c49ba`.
 - PR #53 / Chunk 42 merged into `main` at `eb5e21a779d8557225d5b2d5e9d478b1d846c267`.
 - PR #54 / Chunk 43 merged into `main` at `60b76d2b568673708e5c5f8ff63250af284f6bd7`.
-- PR #55 / Chunk 44 is open against `main` on `feat/admin-attendance-report-api-contract-tests`.
-- After Chunk 44 is merged, continue the audit and select Chunk 45.
+- PR #55 / Chunk 44 merged into `main` at `c7572a396eb7aa19bb5c55a0eafa2349e7b176b7`.
+- PR #56 / Chunk 45 is open against `main` on `feat/admin-user-directory-api-contract-tests`.
+- After Chunk 45 is merged, continue the audit and select Chunk 46.
 
 
 ## Completed Phase II, Chunk 37 — Student Results Capability Alignment
@@ -518,11 +519,21 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - PR #54 merged into `main` at `60b76d2b568673708e5c5f8ff63250af284f6bd7`: https://github.com/armanpreet-singh/smart-student-portal/pull/54. Final head `b88dffa8b6da9968e52ba70376bab63582704b37` passed push run #447 (`npm ci`, `npm test`, `npm run build`); Cloudflare Pages branch preview also succeeded.
 - Tests use mocked `fetch` responses; no live Teacher account, roster, production API or database changes.
 
-## Current Phase II, Chunk 44 — Admin Attendance Reporting API Contract Tests
+## Completed Phase II, Chunk 44 — Admin Attendance Reporting API Contract Tests
 
 - Branch `feat/admin-attendance-report-api-contract-tests` is based directly on frontend `main` at `60b76d2b568673708e5c5f8ff63250af284f6bd7`.
 - The Admin Attendance Overview and Reports pages already use `GET /api/admin/attendance`; keep the existing page integrations and report semantics.
 - Added 12 Node built-in tests for report filter serialization, blank filter omission, empty results, current attendance aggregates, zero-eligible/null percentages, summary and subject validation, all-page class/subject filter choices, invalid directory rows, missing token, HTTP errors, network failures and timeouts.
 - Reuse `npm test` and the CI test step introduced in Chunk 41. No test dependency added. The Admin attendance API helper now has an explicit `.js` ESM import.
-- PR #55: https://github.com/armanpreet-singh/smart-student-portal/pull/55. Final handoff-inclusive head and CI results are verified after the documentation commit.
+- PR #55 merged into `main` at `c7572a396eb7aa19bb5c55a0eafa2349e7b176b7`: https://github.com/armanpreet-singh/smart-student-portal/pull/55. Final head `c7a67c8e70a37effff7adb2c1401dffb002a95ed` passed push run #452 and PR run #453 (`npm ci`, `npm test`, `npm run build`).
 - Tests stub `fetch`; no live Admin account, attendance reports, production API or real university data was accessed or changed.
+
+## Current Phase II, Chunk 45 — Admin Student & Teacher Directory API Contract Tests
+
+- Branch `feat/admin-user-directory-api-contract-tests` is based directly on frontend `main` at `c7572a396eb7aa19bb5c55a0eafa2349e7b176b7`.
+- Admin Student and Teacher directories already use backend-main `GET /api/admin/users` with role-scoped pagination, search and active-status filters. Keep the existing directory UIs.
+- Added 12 Node built-in tests covering role-specific query construction, Bearer auth, pagination, empty results, nullable class/email projections, invalid role and paging data, missing token, 401/403/5xx, network and timeout paths.
+- Fixed Student directory filter validation so `isActive` must be `all`, `true` or `false`, matching the existing Teacher directory validation. Added explicit `.js` imports to the Student and Teacher API modules for Node ESM.
+- Reuse `npm test` and CI from Chunk 41; no test dependency added.
+- PR #56: https://github.com/armanpreet-singh/smart-student-portal/pull/56. Final handoff-inclusive head and CI results are verified after the documentation commit.
+- All tests use mocked `fetch`; no live Admin account, student or teacher account, user record or production endpoint was accessed or changed.

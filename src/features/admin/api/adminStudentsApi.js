@@ -1,4 +1,4 @@
-import { getApiBaseUrl } from "../../auth/api/authApi";
+import { getApiBaseUrl } from "../../auth/api/authApi.js";
 
 const REQUEST_TIMEOUT_MS = 12000;
 
@@ -78,7 +78,8 @@ export async function fetchAdminStudents(accessToken, filters = {}) {
     pageSize < 1 ||
     pageSize > 100 ||
     typeof search !== "string" ||
-    search.trim().length > 80
+    search.trim().length > 80 ||
+    !["all", "true", "false"].includes(isActive)
   ) {
     throw createApiError("The student directory filters are invalid.", 400);
   }
