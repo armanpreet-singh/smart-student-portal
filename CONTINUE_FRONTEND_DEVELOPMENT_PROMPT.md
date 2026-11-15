@@ -537,3 +537,16 @@ After Chunk 34, re-audit remaining Student/Teacher/Admin screens against backend
 - Reuse `npm test` and CI from Chunk 41; no test dependency added.
 - PR #56: https://github.com/armanpreet-singh/smart-student-portal/pull/56. Final handoff-inclusive head and CI results are verified after the documentation commit.
 - All tests use mocked `fetch`; no live Admin account, student or teacher account, user record or production endpoint was accessed or changed.
+
+
+## Latest authoritative continuation state — 2026-11-15 (post backend PR #2 merge)
+
+Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first; this update supersedes older backend contract snapshots above.
+
+- Frontend main is `9924fb07820d89119fafb4b8e45c430568ff8621`. PR #56 has merged; there were no open frontend PRs at last verification (52 merged, 4 closed without merge).
+- Backend main is now `c62760b9d7fb0384448d4dedaa3c8c939460532e`; backend PR #2 added official nullable `rollNumber` to Student provisioning, authenticated profiles, Admin directory/search and Teacher roster, and added server-generated `markedAt` to bulk attendance-mark responses. Its rollNumber migration is already applied to primary Neon and its Render deployment is live.
+- `markedAt` is the register-submission time, not a scheduled class-start time. No timetable/session API exists.
+- Frontend main still needs to add the optional official rollNumber input to Admin Student provisioning, display non-null rollNumber in the authenticated Student Profile, and expose/consume rollNumber in Teacher Attendance roster/roll-number-only clipboard workflow. Null roll numbers must be omitted; never substitute username or DB ID. Add API contract tests for these cases.
+- Backend PR #1 (duty-review/proof) remains open/draft/unmerged/un-deployed. Its ON_DUTY_REVIEW schema and proof endpoints are not part of backend main. Its separate Neon migration is unapproved/unapplied; Cloudinary secrets are not configured. Do not wire those draft contracts into the frontend.
+- Frontend `package.json` has `npm test`; CI runs `npm ci`, `npm test`, `npm run build`. The 59 contract tests added across Chunks 41–45 use mocked fetch and do not prove live account integration.
+- Exact next task: implement the rollNumber frontend integration described above, add/update contract tests, run test and build, and update/read back both frontend handoff documents. Keep duty-review UI deferred until its backend migration/configuration/deployment gates are completed.
