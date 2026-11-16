@@ -399,6 +399,10 @@ const TeacherAttendance = memo(() => {
   const changeSubject = (subjectId) => {
     setSelectedSubjectId(subjectId);
     setSearch("");
+    setRoster([]);
+    setRecords({});
+    setRecordMeta({});
+    setSavedRecords({});
   };
 
   const setAllStatuses = (status) => {
@@ -590,7 +594,7 @@ const TeacherAttendance = memo(() => {
             <select
               value={selectedSubjectId}
               onChange={(event) => changeSubject(event.target.value)}
-              disabled={loading || subjects.length === 0}
+              disabled={loading || loadingRoster || Boolean(savingStudentId) || subjects.length === 0}
             >
               {subjects.length === 0 && (
                 <option value="">No assigned subjects</option>
@@ -610,7 +614,14 @@ const TeacherAttendance = memo(() => {
               type="date"
               value={attendanceDate}
               max={getLocalDate()}
-              onChange={(event) => setAttendanceDate(event.target.value)}
+              onChange={(event) => {
+                setAttendanceDate(event.target.value);
+                setRoster([]);
+                setRecords({});
+                setRecordMeta({});
+                setSavedRecords({});
+              }}
+              disabled={loading || loadingRoster || Boolean(savingStudentId)}
             />
           </label>
 
@@ -724,7 +735,7 @@ const TeacherAttendance = memo(() => {
             <button
               type="button"
               onClick={() => copyRollNumbers("ABSENT")}
-              disabled={!absentRollNumbers.length || loadingRoster || loading}
+              disabled={!absentRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId)}
               aria-label={`Copy ${absentRollNumbers.length} absent student roll numbers`}
             >
               <Copy size={14} />
@@ -733,7 +744,7 @@ const TeacherAttendance = memo(() => {
             <button
               type="button"
               onClick={() => copyRollNumbers("PRESENT")}
-              disabled={!presentRollNumbers.length || loadingRoster || loading}
+              disabled={!presentRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId)}
               aria-label={`Copy ${presentRollNumbers.length} present student roll numbers`}
             >
               <Copy size={14} />
@@ -742,7 +753,7 @@ const TeacherAttendance = memo(() => {
             <button
               type="button"
               onClick={() => copyRollNumbers("ON_DUTY_REVIEW")}
-              disabled={!dutyReviewRollNumbers.length || loadingRoster || loading}
+              disabled={!dutyReviewRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId)}
               aria-label={`Copy ${dutyReviewRollNumbers.length} on-duty review student roll numbers`}
             >
               <Copy size={14} />
@@ -790,7 +801,7 @@ const TeacherAttendance = memo(() => {
                 metadata.markedByCurrentTeacher &&
                 !metadata.proofSubmitted &&
                 hasUnsavedCorrection &&
-                savingStudentId !== student.id;
+                !savingStudentId;
 
               return (
               <motion.div
@@ -827,7 +838,7 @@ const TeacherAttendance = memo(() => {
                         type="button"
                         className={`teacher-attendance-status ${selected ? "active" : ""}`}
                         onClick={() => updateStatus(student.id, option.value)}
-                        disabled={!canChangeStatus || loading || savingStudentId === student.id}
+                        disabled={!canChangeStatus || loading || Boolean(savingStudentId)}
                         aria-pressed={selected}
                       >
                         {option.label}
