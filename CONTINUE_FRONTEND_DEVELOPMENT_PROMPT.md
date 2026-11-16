@@ -615,3 +615,17 @@ This section supersedes earlier status notes in this document where they conflic
 - Student attendance UI and API helpers support `PRESENT`, `ABSENT`, `ON_DUTY_REVIEW`, duty-proof submission/download requests, file type/size checks and explicit HTTP 503 messaging while Cloudinary storage is unconfigured. Teacher and Admin attendance surfaces use the three released statuses. Official roll-number clipboard behavior remains roll-number-only.
 - Backend duty-review migration is applied and Render reports the backend deployment live. Cloudinary runtime credentials remain unconfigured; proof upload/download will remain unavailable (HTTP 503) until private Render configuration is completed and verified with an end-to-end upload/download test.
 - CI uses mocked API responses. No live Student/Teacher/Admin account workflow, browser clipboard permission, or production proof upload/download was tested. No frontend deployment was performed by this PR.
+
+
+## Authoritative continuation update — Phase III, Chunk 1 (2026-11-16)
+
+Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first. This section supersedes older continuation snapshots where they conflict.
+
+- Current frontend work: PR #61, https://github.com/armanpreet-singh/smart-student-portal/pull/61, branch `feat/student-course-catalogue`.
+- Implementation commit before handoff append: `72a923abb653b810c40f228aa9891d2499a4dede`; handoff append creates a new head commit.
+- Student Courses page now calls `GET /api/student/courses`, displays the class summary and active class subjects, supports local search and handles loading, errors, retry, unassigned class and no-subject cases. No fictitious enrollment, credit or semester information is shown.
+- New frontend helper `src/features/dashboard/api/studentCoursesApi.js` validates the response contract. Nine mocked API tests were added.
+- Frontend GitHub Actions run #480 / ID `43828943677` passed all 88 tests and Vite production build on implementation head.
+- Backend PR #4 in `armanpreet-singh/ltsu-backend` is a required dependency. Merge/deploy backend PR #4 before merging/deploying frontend PR #61.
+- No live production request was made with a Student token by CI. After ordered release, test the portal with an active Student account assigned to a class containing active subjects.
+- Next candidate: Teacher attendance correction UI using the existing 30-minute backend correction endpoint, without changing the server-side edit window or authorization rules.
