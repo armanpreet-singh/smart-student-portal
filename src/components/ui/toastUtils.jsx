@@ -10,7 +10,6 @@ export const showToast = (type, title, message, duration = DEFAULT_DURATION) => 
       title={title}
       message={message}
       toastId={currentToast.id}
-      visible={currentToast.visible}
       duration={duration}
     />
   ), {
