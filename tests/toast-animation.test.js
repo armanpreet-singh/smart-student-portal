@@ -73,3 +73,14 @@ test("the package manifest and lockfile both pin Sonner and remove React Hot Toa
   assert.equal(manifest.dependencies["react-hot-toast"], undefined);
   assert.equal(lock.packages["node_modules/react-hot-toast"], undefined);
 });
+
+
+test("toast uses a larger transparent seal without image enlargement filters", async () => {
+  const css = await source("components/ui/Toast.css");
+
+  assert.match(css, /\.toast-logo\s*\{[^}]*width: 60px;[^}]*height: 60px;[^}]*flex: 0 0 60px;[^}]*background: transparent;/s);
+  assert.match(css, /@media \(max-width: 480px\)[\s\S]*?\.toast-logo\s*\{[^}]*width: 48px;[^}]*height: 48px;/);
+  assert.match(css, /\.toast-logo img\s*\{[^}]*object-fit: contain;[^}]*transform: none;/s);
+  assert.doesNotMatch(css, /\.toast-logo\s*\{[^}]*background:\s*color-mix/s);
+  assert.doesNotMatch(css, /\.toast-logo img\s*\{[^}]*transform:\s*scale/s);
+});

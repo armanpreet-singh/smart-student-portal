@@ -1641,3 +1641,11 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Mounted one root Sonner `Toaster`, synchronized with the resolved portal theme, with four visible stacked notifications, 12px stack gap, top-right placement, swipe dismissal and the same 4.2-second default lifetime.
 - Updated `package.json`, `package-lock.json` and `tests/toast-animation.test.js`. No backend, API, database or migration changes.
 - CI/build and deployment are separate from real browser acceptance. Verify stacked notifications, theme switching, swipe/manual dismissal, screen-reader announcement and mobile layout in Student, Teacher and Admin sessions before sign-off.
+
+
+## Toast logo clarity adjustment — November 16, 2026
+
+- Removed the accent-tinted rounded square from the toast logo wrapper; the official LTSU seal now appears directly on the toast surface.
+- Increased the displayed seal from 43px to 60px on desktop and from 38px to 48px on small screens.
+- Removed the previous `scale(1.25)` image transform so the source asset is rendered at the intended wrapper size without extra raster enlargement. The existing 600×600 WebP brand asset remains unchanged and is shared by other portal surfaces.
+- Added regression coverage for transparent wrapper styling, responsive logo dimensions and removal of the enlargement transform. No backend, API, database or shared brand asset changes.
