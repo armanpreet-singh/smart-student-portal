@@ -572,3 +572,55 @@
     animation-duration: 2.5s;
   }
 }
+
+.t-assignments-attachment-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 13px 14px;
+  border: 1px dashed var(--d-border);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-bg);
+}
+
+.t-assignments-attachment-field input[type="file"] {
+  min-height: 42px;
+  padding: 7px;
+  background: var(--d-surface);
+  cursor: pointer;
+}
+
+.t-assignments-file-note,
+.t-assignments-attached-file {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--d-text-secondary);
+  font-size: 11px;
+}
+
+.t-assignments-file-note svg,
+.t-assignments-attached-file svg {
+  flex: 0 0 auto;
+  color: var(--d-primary);
+}
+
+.t-assignments-file-note > span,
+.t-assignments-attached-file > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.t-assignments-attached-file {
+  justify-content: flex-start;
+  padding: 10px 12px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-bg);
+}
+
+.t-assignments-attached-file > span {
+  flex: 1 1 120px;
+  font-weight: 650;
+}
