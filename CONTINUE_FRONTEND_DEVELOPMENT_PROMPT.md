@@ -909,3 +909,12 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 ### Remaining live acceptance
 - Real Faculty/Student browser testing is outstanding. Upload an actual PDF and image with a Faculty account, publish each, open as a Student in the assigned Class, and confirm a Student from another Class cannot retrieve the file. Verify the displayed assignment and last-submission dates and confirm submissions after the deadline are rejected.
 - CI and deployment success do not verify the live Cloudinary credentials or a real browser upload/download. Timetable remains deferred.
+
+
+## Current implementation — Announcements workflow (November 16, 2026)
+- Shared authenticated announcement API + manager/feed components live under `src/features/shared/announcements/`.
+- Admin: create announcement drafts targeted to Everyone, Students or Teachers; edit/publish/delete drafts; inspect all notices and status/timestamps.
+- Teacher: create class-targeted drafts only against active assigned subjects; edit/publish/delete own drafts; see published Admin notices directed to Teachers or everyone.
+- Student: read-only published feed for Everyone, Students and the Student's active current Class. Backend performs audience/class filtering.
+- Draft editing and deletion controls are hidden for published notices and for Teacher drafts not authored by the current Teacher. No push/email/SMS delivery, only feed refresh. No file attachments in announcements.
+- Verify live across Admin, Teacher, Student same class and Student different class before treating this feature as accepted. Keep timetable deferred.
