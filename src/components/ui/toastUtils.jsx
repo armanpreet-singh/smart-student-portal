@@ -1,54 +1,42 @@
 import toast from "react-hot-toast";
 import Toast from "./Toast";
 
-export const showSuccessToast = (title, message) => {
-  toast.custom((t) => (
-<Toast
-  type="success"
-  title={title}
-  message={message}
-  toastId={t.id}
-/>
-  ),{
-     duration: 4000,
-  });
-};
+const DEFAULT_DURATION = 4200;
 
-export const showErrorToast = (title, message) => {
-  toast.custom((t) => (
-<Toast
-  type="error"
-  title={title}
-  message={message}
-  toastId={t.id}
-/>
-  ),{
-     duration: 4000,
-  });
-};
-
-export const showWarningToast = (title, message) => {
-  toast.custom((t) => (
-<Toast
-  type="warning"
-  title={title}
-  message={message}
-  toastId={t.id}
-/>
-  ),{
-     duration: 4000,
-  });
-};
-
-export const showInfoToast = (title, message) => {
-  toast.custom((t) => (
+export const showToast = (type, title, message, duration = DEFAULT_DURATION) => {
+  const toastId = toast.custom((currentToast) => (
     <Toast
-      type="info"
+      type={type}
       title={title}
       message={message}
-  toastId={t.id}
+      toastId={currentToast.id}
+      duration={duration}
     />
-  ),{
-     duration: 4000,  
+  ), {
+    duration,
+    position: "top-right",
+    ariaProps: {
+      role: type === "error" ? "alert" : "status",
+      "aria-live": type === "error" ? "assertive" : "polite"
+    }
   });
+  return toastId;
 };
+
+export const showSuccessToast = (title, message, duration) =>
+  showToast("success", title, message, duration);
+
+export const showErrorToast = (title, message, duration) =>
+  showToast("error", title, message, duration);
+
+export const showWarningToast = (title, message, duration) =>
+  showToast("warning", title, message, duration);
+
+export const showInfoToast = (title, message, duration) =>
+  showToast("info", title, message, duration);
+
+export const showSuccessMessage = (message) =>
+  showSuccessToast("Success", message);
+
+export const showErrorMessage = (message) =>
+  showErrorToast("Something went wrong", message);

@@ -1,85 +1,58 @@
-import "./Toast.css";
 import toast from "react-hot-toast";
 import { X } from "lucide-react";
 import { ltsuLogo } from "../../assets/images/logo";
-import { motion } from "framer-motion";
-
-
+import "./Toast.css";
 
 const COLORS = {
   success: "#16A34A",
   error: "#DC2626",
   warning: "#D97706",
-  info: "#2563EB",
+  info: "#2563EB"
 };
 
 export default function Toast({
-  type,
+  type = "info",
   title,
   message,
   toastId,
+  duration = 4200
 }) {
-return (
-<motion.div
-  className="ltsu-toast"
-  style={{
-    "--accent": COLORS[type],
-  }}
-  initial={{
-    opacity: 0,
-    x: 60,
-    scale: 0.9,
-  }}
-  animate={{
-    opacity: 1,
-    x: 0,
-    scale: 1,
-  }}
-  transition={{
-    duration: 0.35,
-    ease: [0.22, 1, 0.36, 1],
-  }}
->
-    {/* Body */}
-    <div className="toast-body">
+  const isError = type === "error";
 
-      {/* Logo */}
-      <motion.div className="toast-logo">
-        <img
-          src={ltsuLogo}
-          alt="LTSU Logo"
-        />
-      </motion.div>
+  return (
+    <div
+      className="ltsu-toast"
+      role={isError ? "alert" : "status"}
+      aria-live={isError ? "assertive" : "polite"}
+      aria-atomic="true"
+      style={{
+        "--accent": COLORS[type] || COLORS.info,
+        "--toast-duration": `${duration}ms`
+      }}
+    >
+      <div className="toast-body">
+        <div className="toast-logo" aria-hidden="true">
+          <img src={ltsuLogo} alt="" />
+        </div>
 
-      {/* Content */}
-      <div className="toast-content">
-        <h4
-          style={{
-            color: COLORS[type],
-          }}
+        <div className="toast-content">
+          <h4>{title}</h4>
+          <p>{message}</p>
+        </div>
+
+        <button
+          className="toast-close"
+          type="button"
+          onClick={() => toast.dismiss(toastId)}
+          aria-label="Dismiss notification"
         >
-          {title}
-        </h4>
-
-        <p>{message}</p>
+          <X size={17} />
+        </button>
       </div>
 
-      {/* Close Button */}
-      <button
-        className="toast-close"
-        type="button"
-        onClick={() => toast.dismiss(toastId)}
-        aria-label="Close notification"
-      >
-        <X size={18} />
-      </button>
-
+      <div className="toast-progress" aria-hidden="true">
+        <div className="toast-progress-fill" />
+      </div>
     </div>
-
-    {/* Progress Bar */}
-    <div className="toast-progress">
-      <div className="toast-progress-fill" />
-    </div>
-  </motion.div>
-);
+  );
 }

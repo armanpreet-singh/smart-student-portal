@@ -9,7 +9,7 @@ import {
   RefreshCw,
   Users,
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { showSuccessMessage, showErrorMessage } from "../../../components/ui/toastUtils";
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
 import StatCard from "../../../features/dashboard/components/StatCard/StatCard";
@@ -386,7 +386,7 @@ const TeacherAttendance = memo(() => {
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
-    toast.success(`Prepared ${savedRegisterRows.length} saved attendance row${savedRegisterRows.length === 1 ? "" : "s"}.`);
+    showSuccessMessage(`Prepared ${savedRegisterRows.length} saved attendance row${savedRegisterRows.length === 1 ? "" : "s"}.`);
   };
 
   const absentRollNumbers = useMemo(
@@ -420,22 +420,20 @@ const TeacherAttendance = memo(() => {
   const copyRollNumbers = async (status) => {
     const rollNumbers = getOfficialRollNumbersForStatus(roster, recordsForClipboard, status);
     if (rollNumbers.length === 0) {
-      toast.error("No official roll numbers are available for this attendance status.");
+      showErrorMessage("No official roll numbers are available for this attendance status.");
       return;
     }
 
     if (!navigator.clipboard?.writeText) {
-      toast.error("Clipboard access is unavailable. Use a secure browser context and allow clipboard permission.");
+      showErrorMessage("Clipboard access is unavailable. Use a secure browser context and allow clipboard permission.");
       return;
     }
 
     try {
       await navigator.clipboard.writeText(rollNumbers.join("\n"));
-      toast.success(
-        `Copied ${rollNumbers.length} official roll number${rollNumbers.length === 1 ? "" : "s"}.`,
-      );
+      showSuccessMessage(`Copied ${rollNumbers.length} official roll number${rollNumbers.length === 1 ? "" : "s"}.`);
     } catch {
-      toast.error("The browser did not allow clipboard access. Check clipboard permission and try again.");
+      showErrorMessage("The browser did not allow clipboard access. Check clipboard permission and try again.");
     }
   };
 
@@ -491,10 +489,10 @@ const TeacherAttendance = memo(() => {
           editableUntil: updated.editableUntil,
         },
       }));
-      toast.success("Attendance correction saved.");
+      showSuccessMessage("Attendance correction saved.");
     } catch (cause) {
       setError(normalizeError(cause));
-      toast.error("Attendance correction was not saved.");
+      showErrorMessage("Attendance correction was not saved.");
       if (cause?.status === 409) {
         setAttendanceRefresh((value) => value + 1);
       }
@@ -525,10 +523,10 @@ const TeacherAttendance = memo(() => {
       try {
         saveDemoAttendance(selectedSubjectId, attendanceDate, records);
         setMarked((current) => ({ ...current, [markedKey]: true }));
-        toast.success("Demo attendance saved in this browser.");
+        showSuccessMessage("Demo attendance saved in this browser.");
       } catch {
         setError("This browser could not save demo attendance locally.");
-        toast.error("Demo attendance was not saved.");
+        showErrorMessage("Demo attendance was not saved.");
       } finally {
         setLoading(false);
       }
@@ -587,10 +585,10 @@ const TeacherAttendance = memo(() => {
       setRecordMeta(nextRecordMeta);
       setRecords(nextSavedRecords);
       setMarked((current) => ({ ...current, [markedKey]: true }));
-      toast.success("Attendance marked successfully. Eligible records can be corrected for 30 minutes.");
+      showSuccessMessage("Attendance marked successfully. Eligible records can be corrected for 30 minutes.");
     } catch (cause) {
       setError(normalizeError(cause));
-      toast.error("Attendance was not saved.");
+      showErrorMessage("Attendance was not saved.");
     } finally {
       setLoading(false);
     }

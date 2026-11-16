@@ -3,7 +3,7 @@ import {
   AlertCircle, BookOpen, CalendarClock, Download, FileText, FolderOpen,
   LoaderCircle, RefreshCw, Trash2, UploadCloud
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { showSuccessMessage, showErrorMessage } from "../../../components/ui/toastUtils";
 
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
@@ -156,14 +156,14 @@ const TeacherResources = memo(() => {
         description: form.description.trim(),
         file: form.file
       });
-      toast.success("Notes uploaded and shared with the selected class.");
+      showSuccessMessage("Notes uploaded and shared with the selected class.");
       setForm({ ...EMPTY_FORM, subjectId: form.subjectId });
       const input = document.getElementById("teacher-resource-file");
       if (input) input.value = "";
       await loadData();
     } catch (error) {
       setActionError(error?.message || "The notes file could not be uploaded.");
-      toast.error("Notes were not uploaded.");
+      showErrorMessage("Notes were not uploaded.");
     } finally {
       setSaving(false);
     }
@@ -191,7 +191,7 @@ const TeacherResources = memo(() => {
     setActionError("");
     try {
       await deleteTeacherLearningResource(accessToken, resource.id);
-      toast.success("Learning resource deleted.");
+      showSuccessMessage("Learning resource deleted.");
       await loadData();
     } catch (error) {
       setActionError(error?.message || "The learning resource could not be deleted.");
