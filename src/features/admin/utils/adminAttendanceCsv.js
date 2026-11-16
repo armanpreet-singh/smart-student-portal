@@ -18,11 +18,11 @@ const HEADERS = [
 function escapeCsvCell(value) {
   const text = value === null || value === undefined ? "" : String(value);
   // Prefix spreadsheet formula-leading text so names/codes cannot execute as formulas.
-  const safeText = /^[\\u0000-\\u0020]*[=+\\-@]/.test(text)
-    ? `'${text}`
+  const safeText = /^[\u0000-\u0020]*[=+\-@]/.test(text)
+    ? "'" + text
     : text;
 
-  return `"${safeText.replace(/"/g, '""')}"`;
+  return '"' + safeText.replace(/"/g, '""') + '"';
 }
 
 export function buildAdminAttendanceCsv(report) {
@@ -55,5 +55,5 @@ export function buildAdminAttendanceCsv(report) {
 
   return [HEADERS, ...rows]
     .map((row) => row.map(escapeCsvCell).join(","))
-    .join("\\r\\n");
+    .join("\r\n");
 }
