@@ -736,3 +736,12 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Teacher Dashboard uses the existing authenticated assigned-subject API and does not claim student headcounts, timetable, attendance percentage, grading or results.
 - Next chunk: Admin existing Teacher-to-Subject assignment directory. Backend currently supports create-only `POST /api/admin/teacher-subject-assignments`; add a role-protected paginated GET read endpoint over existing `TeacherSubject` records, then render it in the Admin page. Include current related teacher/subject/class active states, exact IDs filters and bounded search. Preserve historical/inactive links in results.
 - No database schema or migration is expected. Timetable work is explicitly deferred. Live Teacher/Admin account acceptance remains outstanding.
+
+
+## Phase III, Chunk 5 — Admin existing Teacher-to-Subject assignment directory UI (2026-11-16)
+
+- Backend PR #7 merged/deployed at `e1a89236ca38f9b8eacea2e71de16d787d834562`; Render deployment `dep-dbtdjgu7bikc7382dt6g` is live.
+- Backend GET endpoint is Admin-only, paginated and supports bounded search plus exact teacherId, subjectId and classId filters. It returns Teacher, Subject and Class details including related active-state flags.
+- Frontend branch `feat/admin-teacher-subject-assignment-directory` adds an authenticated API client, strict response validation, six API tests and a responsive Admin list with search, pagination and per-related-record active status.
+- Existing assignment creation UI is preserved and refreshes the directory after a successful create. No inactive assignment rows are hidden or modified.
+- Frontend CI and PR state must be checked on the current branch head. Live Admin-account/browser acceptance remains outstanding. No schema migration, DB write or timetable work.
