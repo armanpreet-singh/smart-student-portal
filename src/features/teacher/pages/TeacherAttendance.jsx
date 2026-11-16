@@ -4,6 +4,7 @@ import {
   AlertCircle,
   ClipboardCheck,
   Copy,
+  Download,
   LoaderCircle,
   RefreshCw,
   Users,
@@ -13,6 +14,11 @@ import SectionHeader from "../../../features/dashboard/components/SectionHeader/
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
 import StatCard from "../../../features/dashboard/components/StatCard/StatCard";
 import { useAuth } from "../../auth/context/AuthContext";
+import {
+  buildTeacherAttendanceRegisterCsv,
+  createTeacherAttendanceCsvFilename,
+  selectSavedAttendanceRows,
+} from "../utils/teacherAttendanceCsv.js";
 import { getApiBaseUrl } from "../../auth/api/authApi";
 import {
   getOfficialRollNumbersForStatus,
@@ -270,6 +276,8 @@ const TeacherAttendance = memo(() => {
               editableUntil: record.editableUntil,
               markedByCurrentTeacher: record.markedByCurrentTeacher,
               proofSubmitted: record.proofSubmitted,
+              remarks: record.remarks,
+              markedAt: record.markedAt,
             },
           ]),
         );
@@ -348,6 +356,38 @@ const TeacherAttendance = memo(() => {
         : records,
     [hasSavedRecords, recordMeta, savedRecords, records],
   );
+
+  const savedRegisterRows = useMemo(
+    () => selectSavedAttendanceRows(visibleRoster, savedRecords, recordMeta),
+    [visibleRoster, savedRecords, recordMeta],
+  );
+
+  const exportSavedRegister = () => {
+    if (isDemo || !selectedSubject || savedRegisterRows.length === 0) return;
+
+    const csv = buildTeacherAttendanceRegisterCsv({
+      subject: selectedSubject,
+      attendanceDate,
+      records: savedRegisterRows,
+    });
+    const blob = new Blob(["\uFEFF", csv], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = objectUrl;
+    link.download = createTeacherAttendanceCsvFilename(
+      selectedSubject.class?.code,
+      selectedSubject.code,
+      attendanceDate,
+    );
+    link.hidden = true;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+    toast.success(`Prepared ${savedRegisterRows.length} saved attendance row${savedRegisterRows.length === 1 ? "" : "s"}.`);
+  };
 
   const absentRollNumbers = useMemo(
     () => getOfficialRollNumbersForStatus(roster, recordsForClipboard, "ABSENT"),
@@ -538,6 +578,8 @@ const TeacherAttendance = memo(() => {
             editableUntil: record.editableUntil,
             markedByCurrentTeacher: true,
             proofSubmitted: false,
+            remarks: null,
+            markedAt: result.markedAt,
           },
         ]),
       );
@@ -684,7 +726,7 @@ const TeacherAttendance = memo(() => {
               {hasPendingCorrections && (
                 <span>
                   You have unsaved status changes. Save each correction before
-                  copying roll numbers; clipboard actions use the last saved register.
+                  exporting or copying; export and clipboard actions use only the last saved register.
                 </span>
               )}
             </div>
@@ -772,6 +814,19 @@ const TeacherAttendance = memo(() => {
               <Copy size={14} />
               Copy Duty Reviews ({dutyReviewRollNumbers.length})
             </button>
+            {mode === "api" && hasSavedRecords && savedRegisterRows.length > 0 && (
+              <button
+                type="button"
+                className="teacher-attendance-export"
+                onClick={exportSavedRegister}
+                disabled={loadingRoster || loading || Boolean(savingStudentId) || hasPendingCorrections}
+                aria-label={`Export ${savedRegisterRows.length} visible saved attendance rows to CSV`}
+                title={hasPendingCorrections ? "Save corrections or refresh before exporting the saved register." : "Export the visible saved attendance rows."}
+              >
+                <Download size={14} />
+                Export saved CSV ({savedRegisterRows.length})
+              </button>
+            )}
           </div>
         </div>
 
