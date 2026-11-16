@@ -1,25 +1,22 @@
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import Toast from "./Toast";
 
 const DEFAULT_DURATION = 4200;
 
 export const showToast = (type, title, message, duration = DEFAULT_DURATION) => {
-  const toastId = toast.custom((currentToast) => (
+  const toastId = toast.custom((currentToastId) => (
     <Toast
       type={type}
       title={title}
       message={message}
-      toastId={currentToast.id}
+      toastId={currentToastId}
       duration={duration}
     />
   ), {
     duration,
-    position: "top-right",
-    ariaProps: {
-      role: type === "error" ? "alert" : "status",
-      "aria-live": type === "error" ? "assertive" : "polite"
-    }
+    position: "top-right"
   });
+
   return toastId;
 };
 

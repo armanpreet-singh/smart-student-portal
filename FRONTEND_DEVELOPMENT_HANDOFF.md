@@ -1632,3 +1632,12 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Progress bar uses the same 4.2-second timeout as the toast, pauses on hover/focus, and uses reduced-motion-friendly styling. Toast card supports the portal's dark theme and responsive mobile width.
 - Error toasts use assertive alert semantics; other toast types use polite status semantics.
 - Regression coverage verifies the single animation owner, synchronized timer/progress configuration, dark/reduced-motion styles, and shared branded feedback at each migrated call site.
+
+
+## Sonner toast system migration — November 16, 2026
+
+- Replaced React Hot Toast with Sonner 2.0.8 as the single toast stack and animation engine. The shared helper at `src/components/ui/toastUtils.jsx` remains the application entry point, so existing Student, Teacher and Admin call sites retain their behavior.
+- Kept the LTSU-branded toast card, type-specific accent, logo, manual close control, accessibility roles, 4.2-second progress indicator, responsive width, dark-theme styling and reduced-motion support.
+- Mounted one root Sonner `Toaster`, synchronized with the resolved portal theme, with four visible stacked notifications, 12px stack gap, top-right placement, swipe dismissal and the same 4.2-second default lifetime.
+- Updated `package.json`, `package-lock.json` and `tests/toast-animation.test.js`. No backend, API, database or migration changes.
+- CI/build and deployment are separate from real browser acceptance. Verify stacked notifications, theme switching, swipe/manual dismissal, screen-reader announcement and mobile layout in Student, Teacher and Admin sessions before sign-off.
