@@ -21,12 +21,21 @@ function isAssignment(value) {
     value &&
     isString(value.id) &&
     isString(value.title) &&
-    isString(value.instructions) &&
+    typeof value.instructions === "string" &&
+    (value.instructions.trim().length > 0 || Boolean(value.attachment)) &&
+    isOptionalDate(value.assignmentDate) &&
     Number.isInteger(value.maxMarks) &&
     value.maxMarks > 0 &&
     isOptionalDate(value.dueAt) &&
     isOptionalDate(value.publishedAt) &&
     value.publishedAt &&
+    (value.attachment === null ||
+      (value.attachment &&
+        isString(value.attachment.fileName) &&
+        isString(value.attachment.mimeType) &&
+        isString(value.attachment.format) &&
+        Number.isInteger(value.attachment.bytes) &&
+        value.attachment.bytes >= 0)) &&
     value.subject &&
     isString(value.subject.code) &&
     isString(value.subject.name) &&
@@ -101,6 +110,24 @@ export async function fetchStudentAssignments(accessToken) {
     throw createApiError("The assignment service returned an invalid assignment list.", 502);
   }
   return data.assignments;
+}
+
+export async function fetchStudentAssignmentAttachment(accessToken, assignmentId) {
+  const data = await requestStudentAssignments(
+    accessToken,
+    `/api/student/assignments/${encodeURIComponent(assignmentId)}/attachment`
+  );
+  const attachment = data.attachment;
+  if (
+    !attachment ||
+    !isString(attachment.url) ||
+    !isOptionalDate(attachment.expiresAt) ||
+    !isString(attachment.fileName) ||
+    !isString(attachment.mimeType)
+  ) {
+    throw createApiError("The assignment service returned an invalid file link.", 502);
+  }
+  return attachment;
 }
 
 export async function submitStudentAssignment(accessToken, assignmentId, content) {
