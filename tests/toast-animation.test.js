@@ -93,15 +93,17 @@ test("toast uses compact type-specific status icons instead of the university lo
 });
 
 
-test("toast card uses a frosted-glass surface with light/dark support", async () => {
+test("toast uses transparent neutral glass instead of a dark navy surface", async () => {
   const css = await source("components/ui/Toast.css");
 
-  assert.match(css, /backdrop-filter: blur\(20px\) saturate\(175%\)/);
-  assert.match(css, /-webkit-backdrop-filter: blur\(20px\) saturate\(175%\)/);
-  assert.match(css, /linear-gradient\(132deg, rgba\(255, 255, 255, \.86\)/);
-  assert.match(css, /\[data-theme="dark"\] \.ltsu-toast[\s\S]*?rgba\(30, 41, 59, \.86\)/);
-  assert.match(css, /inset 0 1px 0 rgba\(255, 255, 255, \.88\)/);
-  assert.match(css, /\.ltsu-toast:hover/);
+  assert.match(css, /background: linear-gradient\(132deg, rgba\(255, 255, 255, \.46\), rgba\(248, 250, 252, \.24\)\)/);
+  assert.match(css, /backdrop-filter: blur\(24px\) saturate\(155%\)/);
+  assert.match(css, /-webkit-backdrop-filter: blur\(24px\) saturate\(155%\)/);
+  assert.match(css, /color: #172033/);
+  assert.match(css, /color: #475569/);
+  assert.match(css, /rgba\(255, 255, 255, \.3\)/);
   assert.match(css, /@supports not \(\(backdrop-filter:/);
+  assert.doesNotMatch(css, /rgba\(30, 41, 59, \.86\)|rgba\(15, 23, 42, \.78\)/);
+  assert.doesNotMatch(css, /\[data-theme="dark"\].*\.ltsu-toast|\.d-layout\.dark-mode \.ltsu-toast/);
   assert.match(css, /prefers-reduced-motion: reduce/);
 });
