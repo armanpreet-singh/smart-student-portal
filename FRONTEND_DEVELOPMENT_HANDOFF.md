@@ -1441,3 +1441,15 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Added `src/features/teacher/utils/teacherAttendanceCsv.js` and `tests/teacher-attendance-csv.test.js`; updated `TeacherAttendance.jsx` and `teacherAttendance.css`.
 - Frontend-only. Reuses existing authenticated Teacher roster/attendance reads; no backend/API, database, Prisma schema, migration or production data change. No backend deployment required.
 - Live Teacher browser acceptance and opening/inspection of the downloaded file in a spreadsheet remain outstanding for the user's planned testing. Timetable remains explicitly deferred.
+
+
+## Authoritative release — Phase III, Chunk 10: Student duty-proof concurrent action state (2026-11-16)
+
+- Frontend PR #70: https://github.com/armanpreet-singh/smart-student-portal/pull/70 — merged into `main` at `74307b0fe99838b703862f9147957140f7844ff7`.
+- PR CI #529 / ID `43861762531` passed **133/133 tests**, zero failures, and Vite production build (4.01s). Main CI #530 / ID `43861860987` passed **133/133 tests**, zero failures, and Vite production build (4.02s).
+- Cloudflare Pages production deployment `e86863f7-8c63-4e90-8a7d-7358af963254` completed successfully on the merge commit. Canonical app: https://smart-student-portal.pages.dev.
+- Fixed a Student duty-proof UI race caused by one shared busy record ID: simultaneous actions on different attendance records could overwrite the busy indicator and allow duplicate interaction.
+- The Student Attendance page now tracks upload/download state per attendance record. A synchronous per-record lock prevents duplicate requests for the same record, while unrelated records can proceed independently. Completion clears only that record's in-flight state.
+- Added `src/features/dashboard/utils/studentDutyProofState.js` and `tests/student-duty-proof-state.test.js`; updated `src/features/dashboard/pages/AttendancePage.jsx`.
+- Frontend-only. Existing authenticated duty-proof APIs, file type/size rules, and signed download behavior are unchanged. No backend/API, database, schema, migration or production data changes. No backend deployment required.
+- User's planned real-role acceptance testing remains outstanding; this change does not verify the external storage configuration or end-to-end duty-proof file availability. Timetable remains explicitly deferred.
