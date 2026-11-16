@@ -1453,3 +1453,16 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Added `src/features/dashboard/utils/studentDutyProofState.js` and `tests/student-duty-proof-state.test.js`; updated `src/features/dashboard/pages/AttendancePage.jsx`.
 - Frontend-only. Existing authenticated duty-proof APIs, file type/size rules, and signed download behavior are unchanged. No backend/API, database, schema, migration or production data changes. No backend deployment required.
 - User's planned real-role acceptance testing remains outstanding; this change does not verify the external storage configuration or end-to-end duty-proof file availability. Timetable remains explicitly deferred.
+
+
+## Authoritative release — Phase III, Chunk 11: selected portal role enforcement at login (2026-11-16)
+
+- Backend PR #8: https://github.com/armanpreet-singh/ltsu-backend/pull/8 — merged at `0a65452cc8c92c454464a46e7159e69b9b77fa1f`. Backend PR CI #129 passed **66/66 tests**, zero failures; main CI #130 passed. Render production deployment `dep-dbtf4ie417fc738ik0k0` is **live** on this backend commit.
+- Frontend PR #71: https://github.com/armanpreet-singh/smart-student-portal/pull/71 — merged at `59d1a22b11768d214711f43981863b2fe5735c2c`. Frontend PR CI #533 passed **136/136 tests** and Vite production build; main CI #534 passed. Cloudflare Pages production deployment `5ed2183f-1932-4229-8de6-089baa5fd5f1` completed successfully on the matching frontend commit. Canonical app: https://smart-student-portal.pages.dev.
+- Root cause: the login form previously treated the selected portal as a preference and intentionally redirected authenticated users to the portal for the role returned by the account. Thus, selecting Administrator and entering Student credentials opened Student.
+- Login now sends an explicit `requestedRole` value (`STUDENT`, `TEACHER`, or `ADMIN`). The backend schema requires this field. After confirming the account is active and the password is correct, the auth service compares the account's actual role with the requested role. A mismatch returns HTTP 403 before any access token is created.
+- The frontend now displays the role-mismatch response and does not establish a session or redirect to a different portal. It also validates the returned role before saving the session. Correctly matched credentials continue to their corresponding portal.
+- Added backend selected-role schema/service regression tests and frontend auth API tests for role submission, matched sign-in, mismatched responses and invalid selections.
+- This is an authentication/API contract change only. No Prisma schema, database migration, account record or production data was changed. Any other API client calling `POST /api/auth/login` must now include `requestedRole`.
+- Real Student/Faculty/Administrator account acceptance testing is still required: verify each correct role can sign in, and verify a valid account is rejected when a different portal is selected. CI and deployment success do not replace those live-account checks.
+- Timetable remains explicitly deferred. Next work should follow the role acceptance findings or another independently verified defect; do not add speculative features.
