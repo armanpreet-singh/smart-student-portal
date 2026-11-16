@@ -5,6 +5,8 @@ import {
   CalendarClock,
   CheckCircle2,
   ClipboardList,
+  FileText,
+  Image as ImageIcon,
   LoaderCircle,
   Plus,
   RefreshCw,
@@ -21,6 +23,7 @@ import { fetchTeacherAssignedSubjects } from "../api/teacherSubjectsApi";
 import {
   createTeacherAssignment,
   fetchTeacherAssignments,
+  fetchTeacherAssignmentAttachment,
   updateTeacherAssignment,
   publishTeacherAssignment,
   fetchTeacherAssignmentSubmissions,
@@ -34,8 +37,11 @@ const EMPTY_FORM = {
   subjectId: "",
   title: "",
   instructions: "",
+  assignmentDate: "",
   dueAt: "",
-  maxMarks: "100"
+  maxMarks: "100",
+  attachmentFile: null,
+  removeAttachment: false
 };
 
 function asLocalDateTime(value) {
@@ -44,6 +50,20 @@ function asLocalDateTime(value) {
   if (!Number.isFinite(date.getTime())) return "";
   const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
   return local.toISOString().slice(0, 16);
+}
+
+function asLocalDate(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "";
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function toLocalDateStartIso(value) {
+  return new Date(`${value}T00:00:00`).toISOString();
 }
 
 function formatDate(value, withTime = true) {
@@ -79,6 +99,7 @@ const TeacherAssignments = memo(() => {
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [busyAssignmentId, setBusyAssignmentId] = useState("");
+  const [busyAttachmentId, setBusyAttachmentId] = useState("");
   const [submissionView, setSubmissionView] = useState(null);
   const [submissionState, setSubmissionState] = useState("idle");
   const [submissionError, setSubmissionError] = useState("");
@@ -88,6 +109,10 @@ const TeacherAssignments = memo(() => {
   const selectedAssignment = useMemo(
     () => assignments.find((item) => item.id === submissionView?.assignmentId) || null,
     [assignments, submissionView]
+  );
+  const editingAssignment = useMemo(
+    () => assignments.find((item) => item.id === editingAssignmentId) || null,
+    [assignments, editingAssignmentId]
   );
 
   const visibleAssignments = useMemo(
@@ -142,11 +167,14 @@ const TeacherAssignments = memo(() => {
 
   const openCreateForm = () => {
     setEditingAssignmentId("");
+    const now = new Date();
     setForm({
       ...EMPTY_FORM,
       subjectId: selectedSubjectId !== "all"
         ? selectedSubjectId
-        : subjects[0]?.id || ""
+        : subjects[0]?.id || "",
+      assignmentDate: asLocalDate(now),
+      dueAt: asLocalDateTime(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000))
     });
     setFormOpen(true);
   };
@@ -158,8 +186,11 @@ const TeacherAssignments = memo(() => {
       subjectId: assignment.subject.id,
       title: assignment.title,
       instructions: assignment.instructions,
+      assignmentDate: asLocalDate(assignment.assignmentDate),
       dueAt: asLocalDateTime(assignment.dueAt),
-      maxMarks: String(assignment.maxMarks)
+      maxMarks: String(assignment.maxMarks),
+      attachmentFile: null,
+      removeAttachment: false
     });
     setFormOpen(true);
   };
@@ -177,15 +208,46 @@ const TeacherAssignments = memo(() => {
 
   const saveAssignment = async (event) => {
     event.preventDefault();
-    if (!form.subjectId || !form.title.trim() || !form.instructions.trim()) return;
+    const hasCurrentAttachment = Boolean(editingAssignment?.attachment && !form.removeAttachment);
+    if (
+      !form.subjectId ||
+      !form.title.trim() ||
+      (!form.instructions.trim() && !form.attachmentFile && !hasCurrentAttachment) ||
+      !form.assignmentDate ||
+      !form.dueAt
+    ) {
+      setError("Enter a title, assignment date and last submission date, and either write questions or attach a file.");
+      return;
+    }
+
+    if (form.attachmentFile) {
+      const allowedTypes = new Set(["application/pdf", "image/jpeg", "image/png"]);
+      if (
+        form.attachmentFile.size > 10 * 1024 * 1024 ||
+        (form.attachmentFile.type && !allowedTypes.has(form.attachmentFile.type))
+      ) {
+        setError("Choose a PDF, JPEG or PNG file that is 10 MB or smaller.");
+        return;
+      }
+    }
+
+    const assignmentDateIso = toLocalDateStartIso(form.assignmentDate);
+    const dueAtIso = new Date(form.dueAt).toISOString();
+    if (new Date(dueAtIso) <= new Date(assignmentDateIso)) {
+      setError("The last submission date must be after the assignment date.");
+      return;
+    }
 
     setSaving(true);
     setError("");
     const input = {
       title: form.title.trim(),
       instructions: form.instructions.trim(),
-      dueAt: form.dueAt ? new Date(form.dueAt).toISOString() : null,
-      maxMarks: Number(form.maxMarks)
+      assignmentDate: assignmentDateIso,
+      dueAt: dueAtIso,
+      maxMarks: Number(form.maxMarks),
+      attachmentFile: form.attachmentFile,
+      removeAttachment: form.removeAttachment
     };
 
     try {
@@ -208,6 +270,23 @@ const TeacherAssignments = memo(() => {
       toast.error("Assignment was not saved.");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const openAssignmentAttachment = async (assignment) => {
+    const previewWindow = window.open("about:blank", "_blank");
+    if (previewWindow) previewWindow.opener = null;
+    setBusyAttachmentId(assignment.id);
+    setError("");
+    try {
+      const attachment = await fetchTeacherAssignmentAttachment(accessToken, assignment.id);
+      if (previewWindow) previewWindow.location.href = attachment.url;
+      else window.location.assign(attachment.url);
+    } catch (cause) {
+      previewWindow?.close();
+      setError(cause?.message || "The assignment file could not be opened.");
+    } finally {
+      setBusyAttachmentId("");
     }
   };
 
@@ -442,23 +521,68 @@ const TeacherAssignments = memo(() => {
                       />
                     </label>
                     <label className="t-assignments-form-wide">
-                      <span>Instructions</span>
+                      <span>Questions / instructions (optional when a file is attached)</span>
                       <textarea
                         value={form.instructions}
                         onChange={(event) => updateForm("instructions", event.target.value)}
                         maxLength={20000}
                         rows={5}
+                        placeholder="Write the questions here, or attach a PDF/image below. You can also do both."
+                        disabled={saving}
+                      />
+                    </label>
+                    <div className="t-assignments-attachment-field t-assignments-form-wide">
+                      <label>
+                        <span>Attach assignment file (PDF, JPG or PNG · up to 10 MB)</span>
+                        <input
+                          type="file"
+                          accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                          onChange={(event) => setForm((current) => ({
+                            ...current,
+                            attachmentFile: event.target.files?.[0] || null,
+                            removeAttachment: false
+                          }))}
+                          disabled={saving}
+                        />
+                      </label>
+                      {form.attachmentFile && (
+                        <p className="t-assignments-file-note">
+                          <FileText size={15} /> Selected: {form.attachmentFile.name}
+                          <button type="button" className="t-assignments-text-button" onClick={() => updateForm("attachmentFile", null)} disabled={saving}>Clear</button>
+                        </p>
+                      )}
+                      {editingAssignment?.attachment && (
+                        <div className="t-assignments-file-note">
+                          {editingAssignment.attachment.mimeType === "application/pdf" ? <FileText size={15} /> : <ImageIcon size={15} />}
+                          <span>Current file: {editingAssignment.attachment.fileName}</span>
+                          <button
+                            type="button"
+                            className="t-assignments-text-button"
+                            onClick={() => updateForm("removeAttachment", !form.removeAttachment)}
+                            disabled={saving || Boolean(form.attachmentFile)}
+                          >
+                            {form.removeAttachment ? "Keep current file" : "Remove current file"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <label>
+                      <span>Assignment date</span>
+                      <input
+                        type="date"
+                        value={form.assignmentDate}
+                        onChange={(event) => updateForm("assignmentDate", event.target.value)}
                         required
-                        placeholder="Explain the task, expected answer and submission requirements."
                         disabled={saving}
                       />
                     </label>
                     <label>
-                      <span>Due date and time (optional)</span>
+                      <span>Last submission date and time</span>
                       <input
                         type="datetime-local"
                         value={form.dueAt}
                         onChange={(event) => updateForm("dueAt", event.target.value)}
+                        required
                         disabled={saving}
                       />
                     </label>
@@ -506,13 +630,28 @@ const TeacherAssignments = memo(() => {
                           <span className="t-assignment-subject">{assignment.subject.code} · {assignment.subject.name}</span>
                         </div>
                         <h3>{assignment.title}</h3>
-                        <p className="t-assignment-instructions">{assignment.instructions}</p>
+                        <p className="t-assignment-instructions">{assignment.instructions || "Questions are provided in the attached assignment file."}</p>
                         <div className="t-assignment-meta">
                           <span><Users size={15} /> {assignment.subject.class.name}</span>
-                          <span><CalendarClock size={15} /> {formatDate(assignment.dueAt)}</span>
+                          <span><CalendarClock size={15} /> Assignment date: {formatDate(assignment.assignmentDate, false)}</span>
+                          <span><CalendarClock size={15} /> Last submission: {formatDate(assignment.dueAt)}</span>
                           <span><ClipboardList size={15} /> {assignment.maxMarks} marks</span>
                           <span><CheckCircle2 size={15} /> {assignment.submissionCount} / {assignment.studentCount} submitted</span>
                         </div>
+                        {assignment.attachment && (
+                          <div className="t-assignments-attached-file">
+                            {assignment.attachment.mimeType === "application/pdf" ? <FileText size={15} /> : <ImageIcon size={15} />}
+                            <span>{assignment.attachment.fileName}</span>
+                            <button
+                              type="button"
+                              className="t-assignments-secondary-button"
+                              onClick={() => openAssignmentAttachment(assignment)}
+                              disabled={busyAttachmentId === assignment.id}
+                            >
+                              {busyAttachmentId === assignment.id ? "Opening…" : "Open file"}
+                            </button>
+                          </div>
+                        )}
                         <div className="t-assignment-actions">
                           {!assignment.publishedAt ? (
                             <>

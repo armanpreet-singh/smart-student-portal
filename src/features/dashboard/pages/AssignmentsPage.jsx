@@ -4,6 +4,8 @@ import {
   CalendarClock,
   CheckCircle2,
   ClipboardList,
+  FileText,
+  Image as ImageIcon,
   LoaderCircle,
   RefreshCw,
   Send
@@ -14,21 +16,21 @@ import SectionHeader from "../components/SectionHeader/SectionHeader";
 import { useAuth } from "../../auth/context/AuthContext";
 import {
   fetchStudentAssignments,
+  fetchStudentAssignmentAttachment,
   submitStudentAssignment
 } from "../api/studentAssignmentsApi";
 
 import "./AssignmentsPage.css";
 
-function formatDate(value) {
-  if (!value) return "No deadline";
+function formatDate(value, withTime = true) {
+  if (!value) return "Not specified";
   const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return "Deadline unavailable";
+  if (!Number.isFinite(date.getTime())) return "Date unavailable";
   return new Intl.DateTimeFormat("en-IN", {
     day: "2-digit",
     month: "short",
     year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
+    ...(withTime ? { hour: "2-digit", minute: "2-digit" } : {})
   }).format(date);
 }
 
@@ -44,6 +46,7 @@ const AssignmentsPage = () => {
   const [error, setError] = useState("");
   const [answers, setAnswers] = useState({});
   const [submittingId, setSubmittingId] = useState("");
+  const [busyAttachmentId, setBusyAttachmentId] = useState("");
   const [notice, setNotice] = useState("");
 
   const loadAssignments = useCallback(async () => {
@@ -132,6 +135,23 @@ const AssignmentsPage = () => {
     }
   };
 
+  const openAssignmentAttachment = async (assignment) => {
+    const previewWindow = window.open("about:blank", "_blank");
+    if (previewWindow) previewWindow.opener = null;
+    setBusyAttachmentId(assignment.id);
+    setError("");
+    try {
+      const attachment = await fetchStudentAssignmentAttachment(accessToken, assignment.id);
+      if (previewWindow) previewWindow.location.href = attachment.url;
+      else window.location.assign(attachment.url);
+    } catch (cause) {
+      previewWindow?.close();
+      setError(cause?.message || "The assignment file could not be opened.");
+    } finally {
+      setBusyAttachmentId("");
+    }
+  };
+
   return (
     <div className="d-page-container s-assignments-page">
       <SectionHeader
@@ -195,11 +215,31 @@ const AssignmentsPage = () => {
                     </div>
                     <h2>{assignment.title}</h2>
                     <p className="s-assignment-class">{assignment.subject.class.name}</p>
-                    <p className="s-assignment-instructions">{assignment.instructions}</p>
+                    <p className="s-assignment-instructions">
+                      {assignment.instructions || "Questions are provided in the attached assignment file."}
+                    </p>
                     <div className="s-assignment-meta">
-                      <span><CalendarClock size={15} /> Due: {formatDate(assignment.dueAt)}</span>
+                      <span><CalendarClock size={15} /> Assignment date: {formatDate(assignment.assignmentDate, false)}</span>
+                      <span><CalendarClock size={15} /> Last submission: {formatDate(assignment.dueAt)}</span>
                       <span><ClipboardList size={15} /> Maximum: {assignment.maxMarks} marks</span>
                     </div>
+                    {assignment.attachment && (
+                      <div className="s-assignments-attached-file">
+                        {assignment.attachment.mimeType === "application/pdf" ? <FileText size={16} /> : <ImageIcon size={16} />}
+                        <div>
+                          <strong>{assignment.attachment.fileName}</strong>
+                          <span>{assignment.attachment.format.toUpperCase()} · {(assignment.attachment.bytes / (1024 * 1024)).toFixed(2)} MB</span>
+                        </div>
+                        <button
+                          type="button"
+                          className="s-assignments-open-file"
+                          onClick={() => openAssignmentAttachment(assignment)}
+                          disabled={busyAttachmentId === assignment.id}
+                        >
+                          {busyAttachmentId === assignment.id ? "Opening…" : "Open file"}
+                        </button>
+                      </div>
+                    )}
 
                     <div className="s-assignment-submit-block">
                       <label>

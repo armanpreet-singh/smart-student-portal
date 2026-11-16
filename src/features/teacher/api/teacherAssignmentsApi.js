@@ -21,12 +21,21 @@ function isAssignment(value, includeCounts = false) {
     value &&
     isString(value.id) &&
     isString(value.title) &&
-    isString(value.instructions) &&
+    typeof value.instructions === "string" &&
+    (value.instructions.trim().length > 0 || Boolean(value.attachment)) &&
+    isOptionalDate(value.assignmentDate) &&
     Number.isInteger(value.maxMarks) &&
     value.maxMarks > 0 &&
     isOptionalDate(value.dueAt) &&
     isOptionalDate(value.publishedAt) &&
     isOptionalDate(value.createdAt) &&
+    (value.attachment === null ||
+      (value.attachment &&
+        isString(value.attachment.fileName) &&
+        isString(value.attachment.mimeType) &&
+        isString(value.attachment.format) &&
+        Number.isInteger(value.attachment.bytes) &&
+        value.attachment.bytes >= 0)) &&
     value.subject &&
     isString(value.subject.id) &&
     isString(value.subject.code) &&
@@ -71,7 +80,9 @@ async function requestTeacherAssignments(accessToken, path, options = {}) {
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...(options.body && !(typeof FormData !== "undefined" && options.body instanceof FormData)
+          ? { "Content-Type": "application/json" }
+          : {}),
         Authorization: `Bearer ${accessToken}`,
         ...options.headers
       }
@@ -113,6 +124,43 @@ function jsonRequest(method, body) {
   };
 }
 
+function multipartRequest(method, input) {
+  const body = new FormData();
+  for (const key of [
+    "subjectId",
+    "title",
+    "instructions",
+    "assignmentDate",
+    "dueAt",
+    "maxMarks"
+  ]) {
+    if (input[key] !== undefined && input[key] !== null) {
+      body.append(key, String(input[key]));
+    }
+  }
+  if (input.attachmentFile) {
+    body.append("attachment", input.attachmentFile);
+  }
+  if (input.removeAttachment) {
+    body.append("removeAttachment", "true");
+  }
+  return { method, body };
+}
+
+function validateAttachmentResponse(data) {
+  const attachment = data?.attachment;
+  if (
+    !attachment ||
+    !isString(attachment.url) ||
+    !isOptionalDate(attachment.expiresAt) ||
+    !isString(attachment.fileName) ||
+    !isString(attachment.mimeType)
+  ) {
+    throw createApiError("The assignment service returned an invalid file link.", 502);
+  }
+  return attachment;
+}
+
 export async function fetchTeacherAssignments(accessToken) {
   const data = await requestTeacherAssignments(accessToken, "/api/teacher/assignments");
   if (!Array.isArray(data.assignments) || !data.assignments.every((item) => isAssignment(item, true))) {
@@ -125,7 +173,7 @@ export async function createTeacherAssignment(accessToken, input) {
   const data = await requestTeacherAssignments(
     accessToken,
     "/api/teacher/assignments",
-    jsonRequest("POST", input)
+    multipartRequest("POST", input)
   );
   if (!isAssignment(data.assignment)) {
     throw createApiError("The assignment service did not confirm the new draft.", 502);
@@ -137,7 +185,7 @@ export async function updateTeacherAssignment(accessToken, assignmentId, input) 
   const data = await requestTeacherAssignments(
     accessToken,
     `/api/teacher/assignments/${encodeURIComponent(assignmentId)}`,
-    jsonRequest("PATCH", input)
+    multipartRequest("PATCH", input)
   );
   if (!isAssignment(data.assignment)) {
     throw createApiError("The assignment service did not confirm the draft update.", 502);
@@ -179,6 +227,14 @@ export async function fetchTeacherAssignmentSubmissions(accessToken, assignmentI
     throw createApiError("The assignment service returned invalid submission data.", 502);
   }
   return data;
+}
+
+export async function fetchTeacherAssignmentAttachment(accessToken, assignmentId) {
+  const data = await requestTeacherAssignments(
+    accessToken,
+    `/api/teacher/assignments/${encodeURIComponent(assignmentId)}/attachment`
+  );
+  return validateAttachmentResponse(data);
 }
 
 export async function gradeTeacherAssignmentSubmission(accessToken, submissionId, input) {

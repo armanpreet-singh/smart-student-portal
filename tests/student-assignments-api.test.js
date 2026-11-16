@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   fetchStudentAssignments,
+  fetchStudentAssignmentAttachment,
   submitStudentAssignment
 } from "../src/features/dashboard/api/studentAssignmentsApi.js";
 
@@ -10,6 +11,8 @@ const assignment = {
   id: "assignment-1",
   title: "Functions and arrays",
   instructions: "Submit your solution.",
+  assignmentDate: "2026-11-16T00:00:00.000Z",
+  attachment: null,
   dueAt: "2026-11-20T12:00:00.000Z",
   maxMarks: 50,
   publishedAt: "2026-11-16T12:00:00.000Z",
@@ -128,4 +131,25 @@ test("Student cannot submit blank answer text", async () => {
     );
   });
   assert.equal(calls, 0);
+});
+
+
+test("Student can request a temporary attachment link only through the authenticated API", async () => {
+  const attachment = {
+    url: "https://signed.example/questions.pdf",
+    expiresAt: "2026-11-16T12:05:00.000Z",
+    fileName: "questions.pdf",
+    mimeType: "application/pdf"
+  };
+  const result = await withMockedFetch(
+    async (url, options) => {
+      assert.ok(url.endsWith("/api/student/assignments/assignment-1/attachment"));
+      assert.equal(options.headers.Authorization, "Bearer student-token");
+      return jsonResponse({ attachment });
+    },
+    () => fetchStudentAssignmentAttachment("student-token", "assignment-1")
+  );
+
+  assert.equal(result.url, attachment.url);
+  assert.equal(result.fileName, attachment.fileName);
 });
