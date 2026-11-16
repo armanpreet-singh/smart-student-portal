@@ -34,7 +34,7 @@ test("toast timeout and progress bar share the same configured duration", async 
   assert.match(helpers, /const DEFAULT_DURATION = 4200/);
   assert.match(app, /duration=\{4200\}/);
   assert.match(component, /--toast-duration/);
-  assert.match(css, /animation: toastProgress var\(--toast-duration, 4000ms\) linear forwards/);
+  assert.match(css, /animation: toastProgress var\(--toast-duration, 4200ms\) linear forwards/);
   assert.match(css, /animation-play-state: paused/);
 });
 
