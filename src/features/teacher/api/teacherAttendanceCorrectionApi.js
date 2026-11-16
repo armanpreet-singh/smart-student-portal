@@ -13,6 +13,14 @@ function isNonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+function isValidDateKey(value) {
+  if (typeof value !== "string" || !/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) {
+    return false;
+  }
+  const parsed = new Date(value + "T00:00:00.000Z");
+  return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+}
+
 function mapError(status, payload) {
   if (status === 401) return "Your Teacher session is no longer valid. Please sign in again.";
   if (status === 403) return "Your account is not permitted to correct this attendance record.";
