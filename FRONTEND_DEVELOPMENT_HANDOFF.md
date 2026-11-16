@@ -1293,3 +1293,15 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 ### Current next-work direction
 - The user explicitly deferred timetable work. Do not start timetable model/API/UI work until the user reopens it.
 - Assess the next small chunk from existing backend-integrated features and documented frontend/backend gaps. Do not invent endpoints, policy, or data to fill placeholder pages.
+
+
+## Phase III, Chunk 4 — Teacher Dashboard assigned-subject overview (2026-11-16)
+
+- Replaces the Teacher homepage's generic unavailable notice with a live overview of active subject assignments from the existing authenticated `GET /api/teacher/subjects` contract.
+- Displays the number of active assigned subjects, the number of distinct active classes covered, and verified per-subject details: subject name/code, class name/code, academic year and assignment date.
+- Includes loading, retryable error, and no-assignment states. Quick links route to the existing Classes, Students and Attendance pages.
+- Uses the existing `fetchTeacherAssignedSubjects` client and a pure `summarizeTeacherAssignments` helper. Three unit tests cover distinct-class aggregation, empty assignments and malformed collections.
+- Does not fetch student rosters to infer headcount, expose timetable or assignment data, change backend/API behavior, or modify database schema/data.
+- Branch: `feat/teacher-dashboard-overview`. PR and CI/deployment status will be appended after validation.
+- Live Teacher-account browser acceptance remains outstanding; API contract tests are mocked, and this UI has not been verified with a real Teacher session.
+- Timetable work remains explicitly deferred by the user and is not included.
