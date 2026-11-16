@@ -319,45 +319,59 @@ const TeacherAttendance = memo(() => {
     () =>
       roster.reduce(
         (summary, student) => {
+          if (hasSavedRecords && !recordMeta[student.id]) return summary;
           const status = records[student.id] || "PRESENT";
           summary[status] = (summary[status] || 0) + 1;
           return summary;
         },
         { PRESENT: 0, ABSENT: 0, ON_DUTY_REVIEW: 0 },
       ),
-    [roster, records],
+    [roster, records, recordMeta, hasSavedRecords],
+  );
+
+  const recordsForClipboard = useMemo(
+    () =>
+      hasSavedRecords
+        ? Object.fromEntries(
+            Object.keys(recordMeta).map((studentId) => [
+              studentId,
+              records[studentId],
+            ]),
+          )
+        : records,
+    [hasSavedRecords, recordMeta, records],
   );
 
   const absentRollNumbers = useMemo(
-    () => getOfficialRollNumbersForStatus(roster, records, "ABSENT"),
+    () => getOfficialRollNumbersForStatus(roster, recordsForClipboard, "ABSENT"),
     [roster, records],
   );
   const presentRollNumbers = useMemo(
-    () => getOfficialRollNumbersForStatus(roster, records, "PRESENT"),
+    () => getOfficialRollNumbersForStatus(roster, recordsForClipboard, "PRESENT"),
     [roster, records],
   );
   const absentMissingRollNumbers = getStudentsMissingRollNumberForStatus(
     roster,
-    records,
+    recordsForClipboard,
     "ABSENT",
   );
   const presentMissingRollNumbers = getStudentsMissingRollNumberForStatus(
     roster,
-    records,
+    recordsForClipboard,
     "PRESENT",
   );
   const dutyReviewRollNumbers = useMemo(
-    () => getOfficialRollNumbersForStatus(roster, records, "ON_DUTY_REVIEW"),
+    () => getOfficialRollNumbersForStatus(roster, recordsForClipboard, "ON_DUTY_REVIEW"),
     [roster, records],
   );
   const dutyReviewMissingRollNumbers = getStudentsMissingRollNumberForStatus(
     roster,
-    records,
+    recordsForClipboard,
     "ON_DUTY_REVIEW",
   );
 
   const copyRollNumbers = async (status) => {
-    const rollNumbers = getOfficialRollNumbersForStatus(roster, records, status);
+    const rollNumbers = getOfficialRollNumbersForStatus(roster, recordsForClipboard, status);
     if (rollNumbers.length === 0) {
       toast.error("No official roll numbers are available for this attendance status.");
       return;
