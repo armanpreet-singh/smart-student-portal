@@ -1623,3 +1623,12 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - A user's explicit Sun/Moon topbar selection is persisted as `ltsu-theme-preference` and takes priority over later device changes. The same-tab custom event synchronizes the App shell and role-specific dashboard provider.
 - The previous `ltsu-theme` value is ignored because the prior App stored its initial resolved appearance automatically; it could not distinguish a user's explicit choice from a device-derived default.
 - No backend or database changes. Automated tests cover initial dark/light system preference, live OS theme changes, manual override persistence, synchronization between app/theme providers and legacy preference handling.
+
+
+## Toast feedback and animation consistency — November 16, 2026
+
+- Unified application success/error toast messages through `src/components/ui/toastUtils.jsx` and the branded `Toast.jsx` component. Announcement management, Teacher attendance, Teacher assignments and Teacher learning resources no longer bypass the shared toast design with raw `toast.success()` / `toast.error()` calls.
+- Removed the nested Framer Motion animation from the inner toast card. React Hot Toast owns the single entrance and dismissal transition; the custom component handles content, manual dismissal, and a duration-matched progress bar. This avoids competing transforms and double movement.
+- Progress bar uses the same 4.2-second timeout as the toast, pauses on hover/focus, and uses reduced-motion-friendly styling. Toast card supports the portal's dark theme and responsive mobile width.
+- Error toasts use assertive alert semantics; other toast types use polite status semantics.
+- Regression coverage verifies the single animation owner, synchronized timer/progress configuration, dark/reduced-motion styles, and shared branded feedback at each migrated call site.
