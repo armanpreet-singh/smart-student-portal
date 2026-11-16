@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
 
 import { injectGlobalStyles } from "./styles/GlobalStyles";
 import {
@@ -124,14 +124,28 @@ export default function App() {
         />
       </Routes>
 
-      {/* Global Toast Notifications */}
+      {/* Global Sonner notifications */}
       <Toaster
         position="top-right"
-        reverseOrder={false}
-        gutter={12}
-        containerStyle={{
-          top: 24,
-          right: 24,
+        theme={theme}
+        duration={4200}
+        visibleToasts={4}
+        gap={12}
+        expand={false}
+        closeButton={false}
+        swipeDirections={["right", "left"]}
+        offset={{ top: 24, right: 24 }}
+        mobileOffset={{ top: 16, left: 12, right: 12 }}
+        toastOptions={{
+          className: "ltsu-sonner-toast",
+          duration: 4200,
+          style: {
+            width: "min(380px, calc(100vw - 32px))",
+            padding: 0,
+            border: 0,
+            background: "transparent",
+            boxShadow: "none"
+          }
         }}
       />
     </AccessibilityProvider>
