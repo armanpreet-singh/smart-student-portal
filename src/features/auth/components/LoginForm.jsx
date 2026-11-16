@@ -85,7 +85,7 @@ const LoginForm = () => {
 
       if (result.user.role !== expectedRole) {
         throw new Error(
-          "These credentials do not belong to the selected portal. Choose the correct portal and try again.",
+          "Invalid credentials.",
         );
       }
 
