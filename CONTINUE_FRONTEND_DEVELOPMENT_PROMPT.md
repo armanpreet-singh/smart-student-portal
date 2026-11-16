@@ -808,3 +808,13 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Export is limited to persisted server-returned rows in the selected Teacher subject/date and the current search filter. It uses last-saved status/remarks, official roll number, register submission timestamp and proof-submitted flag. Missing rows are never filled in. Unsaved corrections disable export; demo-local attendance is excluded.
 - No backend/API/database/schema/migration changes. Live Teacher browser and downloaded spreadsheet acceptance remain pending.
 - Next change should be selected from actual user test feedback or another independently verified workflow gap. Do not infer timetable dates or new academic records; timetable remains deferred.
+
+
+## Authoritative continuation — Phase III, Chunk 10 released (2026-11-16)
+
+- Student duty-proof concurrent action race fix PR #70 merged at `74307b0fe99838b703862f9147957140f7844ff7`.
+- PR CI #529 and main CI #530 each passed **133/133 tests** and the Vite production build. Cloudflare Pages deployment `e86863f7-8c63-4e90-8a7d-7358af963254` succeeded.
+- Duty-proof upload/download progress is now keyed per attendance record; synchronous same-record locks prevent duplicate requests and completion of one record cannot clear another record's busy state.
+- Added `src/features/dashboard/utils/studentDutyProofState.js` and `tests/student-duty-proof-state.test.js`; changed `AttendancePage.jsx`.
+- No backend/API/database/schema/migration changes. Existing proof-upload/download runtime configuration and end-to-end file availability still require real Student-account testing.
+- Continue with actual user acceptance findings or another verified workflow defect; do not infer academic schedules. Timetable remains deferred.
