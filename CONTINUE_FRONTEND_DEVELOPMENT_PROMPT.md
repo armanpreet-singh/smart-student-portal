@@ -763,3 +763,13 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - New tests: `tests/admin-student-form-state.test.js`, covering full empty shape including `rollNumber: ""` and fresh independent objects.
 - Preserves optional value, input text and leading-zero behavior. Frontend-only; no backend/API/DB/schema changes. Timetable remains deferred.
 - PR/CI/deployment state must be checked directly. No live Admin browser acceptance is claimed.
+
+
+## Authoritative continuation — Phase III, Chunk 6 released (2026-11-16)
+
+- Frontend PR #66 merged at `55608f6b9d94994dd5a5d23ec0f8c10989a2aa08`.
+- PR CI run #510 / ID `43850380370`: **112/112 tests passed**, no failures; Vite production build succeeded.
+- Main CI run #511 / ID `43850494633` passed. Cloudflare Pages production deployment `f24ac945-f93e-4683-854f-02bd745a1e89` succeeded.
+- Student provisioning form uses the complete `createEmptyAdminStudentForm()` helper for initial state and Escape/Cancel/successful-create reset. Optional `rollNumber` is always restored as an empty string; leading-zero semantics remain unchanged. No backend or database change.
+- Parallel Teacher provisioning initial/reset fields were checked and found consistent.
+- Next review: Admin Class/Subject catalogue create/edit form state and validation after cancel/success/retry. Select a reproducible bug before implementing. Timetable remains deferred. Real Admin browser acceptance remains outstanding.
