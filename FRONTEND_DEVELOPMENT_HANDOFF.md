@@ -1656,3 +1656,10 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Success, error, warning and info notifications use dedicated Lucide status icons in subtle semantic-color containers. Title/message hierarchy, close target and 2px lifetime bar were refined.
 - Preserved Sonner's stack/enter-exit behavior, 4.2-second default, hover/focus progress pause, dark theme, mobile sizing and reduced-motion behavior.
 - Updated `tests/toast-animation.test.js` to prevent regression to the oversized logo presentation. Frontend-only; no API or database changes. Validate actual login toast visual placement in desktop/mobile browsers.
+
+
+## Latest visual refinement — frosted-glass toast notifications (November 16, 2026)
+- Updated compact Sonner status cards to a frosted-glass surface using translucent layered backgrounds, 20px backdrop blur with saturation, luminous inner highlights and softer multi-layer shadows.
+- Added a subtle per-type accent edge, glass status-icon tile, fine gradient progress line and restrained hover feedback. Added matching dark-theme glass surfaces and a solid-color fallback for browsers without backdrop-filter support.
+- Sonner remains the only stack/entry/exit animation owner. Accessibility roles, dismissal, swipe, responsive width, 4.2-second timeout, pause-on-hover/focus and reduced-motion behavior are preserved.
+- Tests: `tests/toast-animation.test.js`. Frontend-only; no API/database changes. Validate the translucent effect on both light and dark login/dashboard surfaces in a real browser.

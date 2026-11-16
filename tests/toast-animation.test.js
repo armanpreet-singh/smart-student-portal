@@ -91,3 +91,17 @@ test("toast uses compact type-specific status icons instead of the university lo
   assert.match(app, /width: "min\(340px, calc\(100vw - 32px\)\)"/);
   assert.doesNotMatch(css, /border-left:\s*4px/);
 });
+
+
+test("toast card uses a frosted-glass surface with light/dark support", async () => {
+  const css = await source("components/ui/Toast.css");
+
+  assert.match(css, /backdrop-filter: blur\(20px\) saturate\(175%\)/);
+  assert.match(css, /-webkit-backdrop-filter: blur\(20px\) saturate\(175%\)/);
+  assert.match(css, /linear-gradient\(132deg, rgba\(255, 255, 255, \.86\)/);
+  assert.match(css, /\[data-theme="dark"\] \.ltsu-toast[\s\S]*?rgba\(30, 41, 59, \.86\)/);
+  assert.match(css, /inset 0 1px 0 rgba\(255, 255, 255, \.88\)/);
+  assert.match(css, /\.ltsu-toast:hover/);
+  assert.match(css, /@supports not \(\(backdrop-filter:/);
+  assert.match(css, /prefers-reduced-motion: reduce/);
+});

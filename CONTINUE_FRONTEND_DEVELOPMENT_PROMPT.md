@@ -973,3 +973,7 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 
 ## Latest UI adjustment — toast notifications (2026-11-16)
 The toast presentation was revised to a compact status-card style. Do not reintroduce the university logo into transient toasts: use a small type-specific success/error/warning/info icon, concise title/message, accessible dismiss control, and thin progress bar. Keep Sonner as the single animation/stack owner, preserve light/dark theme behavior, mobile width, 4.2-second timeout, hover/focus pause and reduced-motion support. Source of truth: `src/components/ui/Toast.jsx`, `src/components/ui/Toast.css`, and `tests/toast-animation.test.js`.
+
+
+## Latest toast style — frosted glass (2026-11-16)
+Use the compact status-card layout with a translucent layered surface, backdrop blur, subtle glass highlight/border, soft depth, semantic accent rail/icon tile, and matching light/dark treatment. Preserve Sonner as the one animation/stack owner; do not add a competing inner entrance/exit animation. Keep screen-reader roles, dismiss and swipe, mobile sizing, 4.2-second timer, progress pause on hover/focus, and reduced-motion support. Source: `src/components/ui/Toast.css`, `src/components/ui/Toast.jsx`.
