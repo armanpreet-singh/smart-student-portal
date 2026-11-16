@@ -629,3 +629,25 @@ Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first. This section supersedes older cont
 - Backend PR #4 in `armanpreet-singh/ltsu-backend` is a required dependency. Merge/deploy backend PR #4 before merging/deploying frontend PR #61.
 - No live production request was made with a Student token by CI. After ordered release, test the portal with an active Student account assigned to a class containing active subjects.
 - Next candidate: Teacher attendance correction UI using the existing 30-minute backend correction endpoint, without changing the server-side edit window or authorization rules.
+
+
+## Authoritative continuation update — Phase III, Chunk 2 (2026-11-16)
+
+Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first.
+
+- Frontend PR #62: https://github.com/armanpreet-singh/smart-student-portal/pull/62, branch `feat/teacher-attendance-corrections`, implementation head `17a18a88787f28fd987e1dbe70ea3ff655a8d015` before this handoff append.
+- Teacher Attendance now loads the saved per-subject/date register and presents individual correction controls only where the API reports the original Teacher is within the 30-minute edit window and no proof has been submitted.
+- Row corrections are explicitly saved through the existing PATCH endpoint. The server remains authoritative for ownership, optimistic concurrency, edit window and proof-submission lock.
+- Existing/partial registers cannot be bulk re-submitted. Partial records are shown clearly and missing rows are excluded from totals and clipboard output. Date/subject changes clear previous record IDs immediately.
+- Eight new mocked API tests. GitHub Actions run #487 / ID `43833181082` passed all 96 frontend tests and Vite build.
+- Backend PR #5 in `armanpreet-singh/ltsu-backend` is a required release dependency. Merge/deploy backend first, then merge/deploy this frontend PR.
+- No live attendance data or production records were changed. Browser acceptance tests after deployment remain required.
+
+
+## Final verification — Phase III, Chunk 2 frontend (2026-11-16)
+
+- Latest source head before this handoff append: `aaa88bc35ffcffdf6ca6630e158e1ec3463f282d` on `feat/teacher-attendance-corrections`.
+- PR #62 remains open. Backend PR #5 is a prerequisite and must be deployed before frontend PR #62 is merged/deployed.
+- Final hardening clears stale IDs on subject/date switches, disables register selectors during loads/saves, serializes row updates, and prevents clipboard actions from copying staged/unsaved corrections.
+- GitHub Actions run #489 / ID `43833795105` passed all 96 tests and the Vite production build against that source head.
+- No merge or production deployment has occurred for this chunk.

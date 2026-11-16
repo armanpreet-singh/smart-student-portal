@@ -23,6 +23,10 @@ import {
   fetchTeacherSubjectRoster,
 } from "../api/teacherSubjectsApi";
 import {
+  fetchTeacherAttendanceForDate,
+  updateTeacherAttendanceRecord,
+} from "../api/teacherAttendanceCorrectionApi";
+import {
   demoTeacherAttendanceSubjects,
   readDemoAttendance,
   saveDemoAttendance,
@@ -49,6 +53,14 @@ function formatDate(value) {
     month: "short",
     year: "numeric",
   }).format(new Date(`${value}T00:00:00`));
+}
+
+function formatEditDeadline(value) {
+  if (!value || !Number.isFinite(Date.parse(value))) return "an unavailable time";
+  return new Intl.DateTimeFormat("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(value));
 }
 
 function normalizeError(error) {
@@ -103,6 +115,10 @@ const TeacherAttendance = memo(() => {
   const [attendanceDate, setAttendanceDate] = useState(getLocalDate);
   const [roster, setRoster] = useState([]);
   const [records, setRecords] = useState({});
+  const [recordMeta, setRecordMeta] = useState({});
+  const [savedRecords, setSavedRecords] = useState({});
+  const [attendanceRefresh, setAttendanceRefresh] = useState(0);
+  const [savingStudentId, setSavingStudentId] = useState("");
   const [marked, setMarked] = useState({});
   const [loading, setLoading] = useState(false);
   const [loadingRoster, setLoadingRoster] = useState(false);
@@ -113,7 +129,23 @@ const TeacherAttendance = memo(() => {
   const selectedSubject =
     subjects.find((subject) => subject.id === selectedSubjectId) || null;
   const markedKey = `${selectedSubjectId}:${attendanceDate}`;
-  const isMarked = Boolean(marked[markedKey]);
+  const hasSavedRecords = !isDemo && Object.keys(recordMeta).length > 0;
+  const hasPartialRecords =
+    hasSavedRecords &&
+    roster.length > 0 &&
+    roster.some((student) => !recordMeta[student.id]);
+  const isMarked = isDemo
+    ? Boolean(marked[markedKey])
+    : hasSavedRecords &&
+      roster.length > 0 &&
+      roster.every((student) => Boolean(recordMeta[student.id]));
+  const hasPendingCorrections =
+    hasSavedRecords &&
+    Object.keys(savedRecords).some(
+      (studentId) =>
+        Boolean(recordMeta[studentId]) &&
+        records[studentId] !== savedRecords[studentId],
+    );
 
   const hydrateDemoRoster = useCallback((subjectId, date) => {
     const subject = demoTeacherAttendanceSubjects.find(
@@ -196,6 +228,8 @@ const TeacherAttendance = memo(() => {
     if (!selectedSubject?.classId) {
       setRoster([]);
       setRecords({});
+      setRecordMeta({});
+      setSavedRecords({});
       setLoadingRoster(false);
       setError("The selected subject does not include a valid parent class.");
       return undefined;
@@ -205,20 +239,50 @@ const TeacherAttendance = memo(() => {
     setLoadingRoster(true);
     setRoster([]);
     setRecords({});
+    setRecordMeta({});
+    setSavedRecords({});
     setError("");
 
-    fetchTeacherSubjectRoster(
-      token,
-      selectedSubjectId,
-      selectedSubject.classId,
-    )
-      .then((result) => {
+    Promise.all([
+      fetchTeacherSubjectRoster(
+        token,
+        selectedSubjectId,
+        selectedSubject.classId,
+      ),
+      fetchTeacherAttendanceForDate(token, selectedSubjectId, attendanceDate),
+    ])
+      .then(([rosterResult, attendanceResult]) => {
         if (!active) return;
-        const nextRoster = result.students;
+
+        const nextRoster = rosterResult.students;
+        const nextSavedRecords = Object.fromEntries(
+          attendanceResult.records.map((record) => [
+            record.studentId,
+            record.status,
+          ]),
+        );
+        const nextRecordMeta = Object.fromEntries(
+          attendanceResult.records.map((record) => [
+            record.studentId,
+            {
+              id: record.id,
+              editable: record.editable,
+              editableUntil: record.editableUntil,
+              markedByCurrentTeacher: record.markedByCurrentTeacher,
+              proofSubmitted: record.proofSubmitted,
+            },
+          ]),
+        );
+
         setRoster(nextRoster);
+        setSavedRecords(nextSavedRecords);
+        setRecordMeta(nextRecordMeta);
         setRecords(
           Object.fromEntries(
-            nextRoster.map((student) => [student.id, "PRESENT"]),
+            nextRoster.map((student) => [
+              student.id,
+              nextSavedRecords[student.id] || "PRESENT",
+            ]),
           ),
         );
       })
@@ -232,7 +296,14 @@ const TeacherAttendance = memo(() => {
     return () => {
       active = false;
     };
-  }, [mode, selectedSubjectId, selectedSubject?.classId, token]);
+  }, [
+    mode,
+    selectedSubjectId,
+    selectedSubject?.classId,
+    attendanceDate,
+    attendanceRefresh,
+    token,
+  ]);
 
   useEffect(() => {
     if (mode === "demo" && selectedSubjectId) {
@@ -255,45 +326,59 @@ const TeacherAttendance = memo(() => {
     () =>
       roster.reduce(
         (summary, student) => {
+          if (hasSavedRecords && !recordMeta[student.id]) return summary;
           const status = records[student.id] || "PRESENT";
           summary[status] = (summary[status] || 0) + 1;
           return summary;
         },
         { PRESENT: 0, ABSENT: 0, ON_DUTY_REVIEW: 0 },
       ),
-    [roster, records],
+    [roster, records, recordMeta, hasSavedRecords],
+  );
+
+  const recordsForClipboard = useMemo(
+    () =>
+      hasSavedRecords
+        ? Object.fromEntries(
+            Object.keys(recordMeta).map((studentId) => [
+              studentId,
+              savedRecords[studentId],
+            ]),
+          )
+        : records,
+    [hasSavedRecords, recordMeta, savedRecords, records],
   );
 
   const absentRollNumbers = useMemo(
-    () => getOfficialRollNumbersForStatus(roster, records, "ABSENT"),
+    () => getOfficialRollNumbersForStatus(roster, recordsForClipboard, "ABSENT"),
     [roster, records],
   );
   const presentRollNumbers = useMemo(
-    () => getOfficialRollNumbersForStatus(roster, records, "PRESENT"),
+    () => getOfficialRollNumbersForStatus(roster, recordsForClipboard, "PRESENT"),
     [roster, records],
   );
   const absentMissingRollNumbers = getStudentsMissingRollNumberForStatus(
     roster,
-    records,
+    recordsForClipboard,
     "ABSENT",
   );
   const presentMissingRollNumbers = getStudentsMissingRollNumberForStatus(
     roster,
-    records,
+    recordsForClipboard,
     "PRESENT",
   );
   const dutyReviewRollNumbers = useMemo(
-    () => getOfficialRollNumbersForStatus(roster, records, "ON_DUTY_REVIEW"),
+    () => getOfficialRollNumbersForStatus(roster, recordsForClipboard, "ON_DUTY_REVIEW"),
     [roster, records],
   );
   const dutyReviewMissingRollNumbers = getStudentsMissingRollNumberForStatus(
     roster,
-    records,
+    recordsForClipboard,
     "ON_DUTY_REVIEW",
   );
 
   const copyRollNumbers = async (status) => {
-    const rollNumbers = getOfficialRollNumbersForStatus(roster, records, status);
+    const rollNumbers = getOfficialRollNumbersForStatus(roster, recordsForClipboard, status);
     if (rollNumbers.length === 0) {
       toast.error("No official roll numbers are available for this attendance status.");
       return;
@@ -321,16 +406,69 @@ const TeacherAttendance = memo(() => {
   const changeSubject = (subjectId) => {
     setSelectedSubjectId(subjectId);
     setSearch("");
+    setRoster([]);
+    setRecords({});
+    setRecordMeta({});
+    setSavedRecords({});
   };
 
   const setAllStatuses = (status) => {
+    if (hasSavedRecords) return;
     setRecords(
       Object.fromEntries(roster.map((student) => [student.id, status])),
     );
   };
 
+  const saveCorrection = async (studentId) => {
+    const metadata = recordMeta[studentId];
+    const nextStatus = records[studentId];
+    if (
+      !metadata?.editable ||
+      !metadata.markedByCurrentTeacher ||
+      metadata.proofSubmitted ||
+      !nextStatus ||
+      nextStatus === savedRecords[studentId] ||
+      !metadata.id
+    ) {
+      return;
+    }
+
+    setSavingStudentId(studentId);
+    setError("");
+    try {
+      const updated = await updateTeacherAttendanceRecord(
+        token,
+        metadata.id,
+        { status: nextStatus },
+      );
+      setRecords((current) => ({ ...current, [studentId]: updated.status }));
+      setSavedRecords((current) => ({ ...current, [studentId]: updated.status }));
+      setRecordMeta((current) => ({
+        ...current,
+        [studentId]: {
+          ...current[studentId],
+          editable: updated.editable,
+          editableUntil: updated.editableUntil,
+        },
+      }));
+      toast.success("Attendance correction saved.");
+    } catch (cause) {
+      setError(normalizeError(cause));
+      toast.error("Attendance correction was not saved.");
+      if (cause?.status === 409) {
+        setAttendanceRefresh((value) => value + 1);
+      }
+    } finally {
+      setSavingStudentId("");
+    }
+  };
+
+  const refreshRegister = () => {
+    setAttendanceRefresh((value) => value + 1);
+  };
+
   const submitAttendance = async () => {
-    if (!selectedSubject || roster.length === 0 || isMarked) return;
+    if (!selectedSubject || roster.length === 0 || isMarked || hasSavedRecords) return;
 
     setLoading(true);
     setError("");
@@ -358,7 +496,7 @@ const TeacherAttendance = memo(() => {
     }
 
     try {
-      await requestApi(
+      const result = await requestApi(
         `/api/teacher/subjects/${encodeURIComponent(selectedSubjectId)}/attendance`,
         token,
         {
@@ -366,8 +504,48 @@ const TeacherAttendance = memo(() => {
           body: JSON.stringify(requestBody),
         },
       );
+
+      if (
+        result?.subjectId !== selectedSubjectId ||
+        result?.attendanceDate !== attendanceDate ||
+        !Array.isArray(result.records) ||
+        result.records.length !== roster.length ||
+        !result.records.every(
+          (record) =>
+            typeof record.id === "string" &&
+            typeof record.studentId === "string" &&
+            STATUS_OPTIONS.some((option) => option.value === record.status) &&
+            typeof record.editable === "boolean" &&
+            typeof record.editableUntil === "string" &&
+            Number.isFinite(Date.parse(record.editableUntil)),
+        )
+      ) {
+        setAttendanceRefresh((value) => value + 1);
+        throw new Error(
+          "The server did not return a complete attendance confirmation. Refresh the register before making another submission.",
+        );
+      }
+
+      const nextSavedRecords = Object.fromEntries(
+        result.records.map((record) => [record.studentId, record.status]),
+      );
+      const nextRecordMeta = Object.fromEntries(
+        result.records.map((record) => [
+          record.studentId,
+          {
+            id: record.id,
+            editable: record.editable,
+            editableUntil: record.editableUntil,
+            markedByCurrentTeacher: true,
+            proofSubmitted: false,
+          },
+        ]),
+      );
+      setSavedRecords(nextSavedRecords);
+      setRecordMeta(nextRecordMeta);
+      setRecords(nextSavedRecords);
       setMarked((current) => ({ ...current, [markedKey]: true }));
-      toast.success("Attendance marked successfully.");
+      toast.success("Attendance marked successfully. Eligible records can be corrected for 30 minutes.");
     } catch (cause) {
       setError(normalizeError(cause));
       toast.error("Attendance was not saved.");
@@ -423,7 +601,7 @@ const TeacherAttendance = memo(() => {
             <select
               value={selectedSubjectId}
               onChange={(event) => changeSubject(event.target.value)}
-              disabled={loading || subjects.length === 0}
+              disabled={loading || loadingRoster || Boolean(savingStudentId) || subjects.length === 0}
             >
               {subjects.length === 0 && (
                 <option value="">No assigned subjects</option>
@@ -443,7 +621,14 @@ const TeacherAttendance = memo(() => {
               type="date"
               value={attendanceDate}
               max={getLocalDate()}
-              onChange={(event) => setAttendanceDate(event.target.value)}
+              onChange={(event) => {
+                setAttendanceDate(event.target.value);
+                setRoster([]);
+                setRecords({});
+                setRecordMeta({});
+                setSavedRecords({});
+              }}
+              disabled={loading || loadingRoster || Boolean(savingStudentId)}
             />
           </label>
 
@@ -480,6 +665,36 @@ const TeacherAttendance = memo(() => {
           </div>
         )}
 
+        {hasSavedRecords && (
+          <div className="teacher-attendance-correction-notice" role="status">
+            <div>
+              <strong>Existing attendance register loaded</strong>
+              <span>
+                Corrections are available only to the Teacher who originally
+                marked each record, for 30 minutes after submission. A record
+                is locked after duty proof is submitted.
+              </span>
+              {hasPartialRecords && (
+                <span>
+                  This register contains only some Student records. Existing
+                  records can be corrected when eligible; the missing records
+                  cannot be added to this already-submitted register.
+                </span>
+              )}
+              {hasPendingCorrections && (
+                <span>
+                  You have unsaved status changes. Save each correction before
+                  copying roll numbers; clipboard actions use the last saved register.
+                </span>
+              )}
+            </div>
+            <button type="button" onClick={refreshRegister} disabled={loading || loadingRoster}>
+              <RefreshCw size={14} />
+              Refresh register
+            </button>
+          </div>
+        )}
+
         {mode === "api-error" && (
           <div className="teacher-attendance-api-retry">
             <button
@@ -512,28 +727,28 @@ const TeacherAttendance = memo(() => {
             <button
               type="button"
               onClick={() => setAllStatuses("PRESENT")}
-              disabled={!roster.length || isMarked || loading}
+              disabled={!roster.length || hasSavedRecords || loading}
             >
               All present
             </button>
             <button
               type="button"
               onClick={() => setAllStatuses("ABSENT")}
-              disabled={!roster.length || isMarked || loading}
+              disabled={!roster.length || hasSavedRecords || loading}
             >
               All absent
             </button>
             <button
               type="button"
               onClick={() => setAllStatuses("ON_DUTY_REVIEW")}
-              disabled={!roster.length || isMarked || loading}
+              disabled={!roster.length || hasSavedRecords || loading}
             >
               All on-duty review
             </button>
             <button
               type="button"
               onClick={() => copyRollNumbers("ABSENT")}
-              disabled={!absentRollNumbers.length || loadingRoster || loading}
+              disabled={!absentRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId) || hasPendingCorrections}
               aria-label={`Copy ${absentRollNumbers.length} absent student roll numbers`}
             >
               <Copy size={14} />
@@ -542,7 +757,7 @@ const TeacherAttendance = memo(() => {
             <button
               type="button"
               onClick={() => copyRollNumbers("PRESENT")}
-              disabled={!presentRollNumbers.length || loadingRoster || loading}
+              disabled={!presentRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId) || hasPendingCorrections}
               aria-label={`Copy ${presentRollNumbers.length} present student roll numbers`}
             >
               <Copy size={14} />
@@ -551,7 +766,7 @@ const TeacherAttendance = memo(() => {
             <button
               type="button"
               onClick={() => copyRollNumbers("ON_DUTY_REVIEW")}
-              disabled={!dutyReviewRollNumbers.length || loadingRoster || loading}
+              disabled={!dutyReviewRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId) || hasPendingCorrections}
               aria-label={`Copy ${dutyReviewRollNumbers.length} on-duty review student roll numbers`}
             >
               <Copy size={14} />
@@ -583,7 +798,25 @@ const TeacherAttendance = memo(() => {
           </div>
         ) : (
           <div className="teacher-attendance-roster">
-            {visibleRoster.map((student, index) => (
+            {visibleRoster.map((student, index) => {
+              const metadata = recordMeta[student.id];
+              const canChangeStatus = isDemo
+                ? !isMarked
+                : hasSavedRecords
+                  ? Boolean(metadata?.editable)
+                  : true;
+              const hasUnsavedCorrection =
+                Boolean(metadata) &&
+                records[student.id] !== savedRecords[student.id];
+              const canSaveCorrection =
+                !isDemo &&
+                metadata?.editable &&
+                metadata.markedByCurrentTeacher &&
+                !metadata.proofSubmitted &&
+                hasUnsavedCorrection &&
+                !savingStudentId;
+
+              return (
               <motion.div
                 key={student.id}
                 className="teacher-attendance-student"
@@ -618,7 +851,7 @@ const TeacherAttendance = memo(() => {
                         type="button"
                         className={`teacher-attendance-status ${selected ? "active" : ""}`}
                         onClick={() => updateStatus(student.id, option.value)}
-                        disabled={isMarked || loading}
+                        disabled={!canChangeStatus || loading || Boolean(savingStudentId)}
                         aria-pressed={selected}
                       >
                         {option.label}
@@ -626,8 +859,40 @@ const TeacherAttendance = memo(() => {
                     );
                   })}
                 </div>
+
+                {metadata && (
+                  <div className="teacher-attendance-row-meta">
+                    {metadata.proofSubmitted ? (
+                      <span>Locked · duty proof submitted</span>
+                    ) : !metadata.markedByCurrentTeacher ? (
+                      <span>Read-only · marked by another Teacher</span>
+                    ) : metadata.editable ? (
+                      <>
+                        <span>Editable until {formatEditDeadline(metadata.editableUntil)}</span>
+                        {hasUnsavedCorrection && (
+                          <button
+                            type="button"
+                            className="teacher-attendance-save-correction"
+                            onClick={() => saveCorrection(student.id)}
+                            disabled={!canSaveCorrection || loading}
+                          >
+                            {savingStudentId === student.id ? (
+                              <LoaderCircle className="teacher-attendance-spinner" size={14} />
+                            ) : (
+                              <ClipboardCheck size={14} />
+                            )}
+                            Save correction
+                          </button>
+                        )}
+                      </>
+                    ) : (
+                      <span>Correction window expired</span>
+                    )}
+                  </div>
+                )}
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         )}
 
@@ -635,9 +900,11 @@ const TeacherAttendance = memo(() => {
           <div>
             <strong>{roster.length} students</strong>
             <span>
-              {isMarked
-                ? "Attendance submitted for this subject and date."
-                : "Review each status before submitting. Submission is final for the selected date."}
+              {hasSavedRecords
+                ? hasPartialRecords
+                  ? "A partial register already exists. Only eligible existing rows can be corrected."
+                  : "Attendance is submitted. Save individual corrections within the 30-minute window."
+                : "Review each status before submitting. Eligible records can be corrected for 30 minutes after submission."}
             </span>
           </div>
           <button
@@ -645,7 +912,7 @@ const TeacherAttendance = memo(() => {
             className="d-btn-primary"
             onClick={submitAttendance}
             disabled={
-              !roster.length || isMarked || loading || loadingRoster
+              !roster.length || isMarked || hasSavedRecords || loading || loadingRoster
             }
           >
             {loading ? (
@@ -656,7 +923,13 @@ const TeacherAttendance = memo(() => {
             ) : (
               <ClipboardCheck size={17} />
             )}
-            {isMarked ? "Attendance marked" : "Submit attendance"}
+            {isMarked
+              ? "Attendance marked"
+              : hasPartialRecords
+                ? "Partial register exists"
+                : hasSavedRecords
+                  ? "Attendance submitted"
+                  : "Submit attendance"}
           </button>
         </div>
       </DashboardCard>
