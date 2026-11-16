@@ -14,7 +14,7 @@ import {
   Send,
   Users
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { showSuccessMessage, showErrorMessage } from "../../../components/ui/toastUtils";
 
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
@@ -253,13 +253,13 @@ const TeacherAssignments = memo(() => {
     try {
       if (editingAssignmentId) {
         await updateTeacherAssignment(accessToken, editingAssignmentId, input);
-        toast.success("Draft updated.");
+        showSuccessMessage("Draft updated.");
       } else {
         await createTeacherAssignment(accessToken, {
           ...input,
           subjectId: form.subjectId
         });
-        toast.success("Assignment draft created.");
+        showSuccessMessage("Assignment draft created.");
       }
       setFormOpen(false);
       setEditingAssignmentId("");
@@ -267,7 +267,7 @@ const TeacherAssignments = memo(() => {
       await loadData();
     } catch (cause) {
       setError(cause?.message || "The assignment could not be saved.");
-      toast.error("Assignment was not saved.");
+      showErrorMessage("Assignment was not saved.");
     } finally {
       setSaving(false);
     }
@@ -295,11 +295,11 @@ const TeacherAssignments = memo(() => {
     setError("");
     try {
       await publishTeacherAssignment(accessToken, assignment.id);
-      toast.success("Assignment published to the selected class.");
+      showSuccessMessage("Assignment published to the selected class.");
       await loadData();
     } catch (cause) {
       setError(cause?.message || "The assignment could not be published.");
-      toast.error("Assignment was not published.");
+      showErrorMessage("Assignment was not published.");
     } finally {
       setBusyAssignmentId("");
     }
@@ -375,7 +375,7 @@ const TeacherAssignments = memo(() => {
         marksAwarded,
         feedback: draft.feedback.trim() || null
       });
-      toast.success("Grade saved. Publish the result when it is ready for the Student.");
+      showSuccessMessage("Grade saved. Publish the result when it is ready for the Student.");
       await refreshSubmissions();
     } catch (cause) {
       setSubmissionError(cause?.message || "The grade could not be saved.");
@@ -389,7 +389,7 @@ const TeacherAssignments = memo(() => {
     setSubmissionError("");
     try {
       await publishTeacherAssignmentResult(accessToken, submission.id);
-      toast.success("Grade published to the Student.");
+      showSuccessMessage("Grade published to the Student.");
       await refreshSubmissions();
     } catch (cause) {
       setSubmissionError(cause?.message || "The result could not be published.");
