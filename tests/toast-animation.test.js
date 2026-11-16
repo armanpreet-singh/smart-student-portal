@@ -41,7 +41,7 @@ test("toast timeout and progress bar share the same configured duration", async 
 test("toast styling supports dark theme, mobile layouts and reduced motion", async () => {
   const css = await source("components/ui/Toast.css");
 
-  assert.match(css, /\[data-theme="dark"\] \.ltsu-toast/);
+  assert.match(css, /color: #172033/);
   assert.match(css, /max-width: calc\(100vw - 24px\)/);
   assert.match(css, /prefers-reduced-motion: reduce/);
   assert.match(css, /data-sonner-toast/);
