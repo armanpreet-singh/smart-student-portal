@@ -29,6 +29,13 @@ function getLoginErrorMessage(status, payload) {
     return "The username or password is incorrect.";
   }
 
+  if (status === 403) {
+    return (
+      payload?.message ||
+      "These credentials do not belong to the selected portal. Choose the correct portal and try again."
+    );
+  }
+
   if (status === 429) {
     return "Too many sign-in attempts. Please try again in 15 minutes.";
   }
@@ -43,7 +50,11 @@ function getLoginErrorMessage(status, payload) {
   );
 }
 
-export async function loginWithUsername({ username, password }) {
+export async function loginWithUsername({ username, password, requestedRole }) {
+  if (!VALID_ROLES.has(requestedRole)) {
+    throw createApiError("Choose a valid LTSU portal before signing in.", 400);
+  }
+
   const controller = new AbortController();
   const timeoutId = window.setTimeout(
     () => controller.abort(),
@@ -62,6 +73,7 @@ export async function loginWithUsername({ username, password }) {
       body: JSON.stringify({
         username: String(username).trim(),
         password,
+        requestedRole,
       }),
       signal: controller.signal,
     });
@@ -104,6 +116,13 @@ export async function loginWithUsername({ username, password }) {
     throw createApiError(
       "The sign-in service returned an unexpected account response. Please contact support.",
       502,
+    );
+  }
+
+  if (result.user.role !== requestedRole) {
+    throw createApiError(
+      "These credentials do not belong to the selected portal. Choose the correct portal and try again.",
+      403,
     );
   }
 
