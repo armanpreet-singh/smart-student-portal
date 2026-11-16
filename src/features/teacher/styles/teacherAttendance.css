@@ -355,3 +355,99 @@
 .teacher-attendance-summary {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+
+
+.teacher-attendance-correction-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 13px 15px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-bg);
+  color: var(--d-text-secondary);
+}
+
+.teacher-attendance-correction-notice > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.teacher-attendance-correction-notice strong {
+  color: var(--d-text);
+  font-size: 12px;
+}
+
+.teacher-attendance-correction-notice span {
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.teacher-attendance-correction-notice button,
+.teacher-attendance-save-correction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-surface);
+  color: var(--d-primary);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.teacher-attendance-correction-notice button:disabled,
+.teacher-attendance-save-correction:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.teacher-attendance-row-meta {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-left: 46px;
+  color: var(--d-text-secondary);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.teacher-attendance-save-correction {
+  min-height: 31px;
+  padding: 5px 9px;
+}
+
+.teacher-attendance-save-correction:focus-visible,
+.teacher-attendance-correction-notice button:focus-visible {
+  outline: 3px solid var(--d-gold);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .teacher-attendance-correction-notice {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .teacher-attendance-correction-notice button {
+    width: 100%;
+  }
+
+  .teacher-attendance-row-meta {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-left: 0;
+  }
+}
