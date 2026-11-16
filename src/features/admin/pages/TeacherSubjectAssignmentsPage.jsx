@@ -7,6 +7,7 @@ import SectionHeader from "../../../features/dashboard/components/SectionHeader/
 import { fetchAdminTeachers } from "../api/adminTeachersApi";
 import { fetchAdminSubjects } from "../api/adminCatalogueApi";
 import { createTeacherSubjectAssignment } from "../api/adminTeacherSubjectAssignmentsApi";
+import TeacherSubjectAssignmentsDirectory from "../components/TeacherSubjectAssignmentsDirectory";
 
 import "./TeacherSubjectAssignmentsPage.css";
 
@@ -94,6 +95,7 @@ const TeacherSubjectAssignmentsPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [actionError, setActionError] = useState("");
   const [success, setSuccess] = useState(null);
+  const [directoryRefresh, setDirectoryRefresh] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -243,6 +245,7 @@ const TeacherSubjectAssignmentsPage = () => {
       setSelectedTeacherId("");
       setSelectedSubjectId("");
       setConfirmOpen(false);
+      setDirectoryRefresh((value) => value + 1);
     } catch (error) {
       if (error?.status === 401) {
         await refreshCurrentUser();
@@ -423,6 +426,8 @@ const TeacherSubjectAssignmentsPage = () => {
           </>
         )}
       </DashboardCard>
+
+      <TeacherSubjectAssignmentsDirectory refreshKey={directoryRefresh} />
 
       {confirmOpen && selectedTeacher && selectedSubject && (
         <div
