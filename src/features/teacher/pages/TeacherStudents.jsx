@@ -2,6 +2,7 @@ import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "
 import {
   AlertCircle,
   BookOpen,
+  Download,
   GraduationCap,
   LoaderCircle,
   RefreshCw,
@@ -12,6 +13,10 @@ import {
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
 import { useAuth } from "../../auth/context/AuthContext";
+import {
+  buildTeacherRosterCsv,
+  createTeacherRosterCsvFilename,
+} from "../utils/teacherRosterCsv.js";
 import {
   fetchTeacherAssignedSubjects,
   fetchTeacherSubjectRoster,
@@ -174,6 +179,26 @@ const TeacherStudents = memo(() => {
     );
   }, [roster, search]);
 
+  const handleExportRoster = () => {
+    if (!selectedAssignment || visibleStudents.length === 0) return;
+
+    const csv = buildTeacherRosterCsv(selectedAssignment, visibleStudents);
+    const blob = new Blob(["\\uFEFF", csv], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = objectUrl;
+    link.download = createTeacherRosterCsvFilename(
+      selectedAssignment.subject.code,
+    );
+    link.hidden = true;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+  };
+
   const handleSubjectChange = (event) => {
     setSelectedSubjectId(event.target.value);
     setSearch("");
@@ -335,9 +360,22 @@ const TeacherStudents = memo(() => {
                     {roster.length === 1 ? "student" : "students"}
                   </span>
                 </div>
-                <span className="t-students-visible-count" aria-live="polite">
-                  {visibleStudents.length} shown
-                </span>
+                <div className="t-students-list-actions">
+                  <span className="t-students-visible-count" aria-live="polite">
+                    {visibleStudents.length} shown
+                  </span>
+                  {visibleStudents.length > 0 && (
+                    <button
+                      type="button"
+                      className="t-students-export-button"
+                      onClick={handleExportRoster}
+                      aria-label={`Export ${visibleStudents.length} displayed students to CSV`}
+                    >
+                      <Download size={15} aria-hidden="true" />
+                      Export CSV
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="t-students-table" role="table" aria-label="Students in selected subject roster">
