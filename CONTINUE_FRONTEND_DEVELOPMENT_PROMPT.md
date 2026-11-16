@@ -969,3 +969,7 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Toast logo wrapper is transparent (no tinted rounded-square background).
 - Official 600×600 LTSU seal displays at 60px desktop / 48px mobile. Removed the old 1.25x CSS image transform to avoid avoidable raster softening; the shared logo asset itself is unchanged.
 - Regression coverage lives in `tests/toast-animation.test.js`. No backend or database changes.
+
+
+## Latest UI adjustment — toast notifications (2026-11-16)
+The toast presentation was revised to a compact status-card style. Do not reintroduce the university logo into transient toasts: use a small type-specific success/error/warning/info icon, concise title/message, accessible dismiss control, and thin progress bar. Keep Sonner as the single animation/stack owner, preserve light/dark theme behavior, mobile width, 4.2-second timeout, hover/focus pause and reduced-motion support. Source of truth: `src/components/ui/Toast.jsx`, `src/components/ui/Toast.css`, and `tests/toast-animation.test.js`.
