@@ -69,10 +69,35 @@ test("login rejects a successful response whose role differs from the selected p
       }),
     ),
     (error) => (
-      error.status === 403 &&
-      error.message === "These credentials do not belong to the selected portal. Choose the correct portal and try again."
+      error.status === 401 &&
+      error.message === "Invalid credentials."
     ),
   );
+});
+
+test("login always uses the generic Invalid credentials message for 401 and 403 responses", async () => {
+  for (const status of [401, 403]) {
+    await assert.rejects(
+      withMockedBrowserFetch(
+        async () => new Response(JSON.stringify({
+          status: "error",
+          message: "internal role-specific authentication detail",
+        }), {
+          status,
+          headers: { "Content-Type": "application/json" },
+        }),
+        () => loginWithUsername({
+          username: "student.one",
+          password: "wrong-password",
+          requestedRole: "ADMIN",
+        }),
+      ),
+      (error) => (
+        error.status === status &&
+        error.message === "Invalid credentials."
+      ),
+    );
+  }
 });
 
 test("login rejects an invalid portal selection before contacting the API", async () => {
