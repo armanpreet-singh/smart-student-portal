@@ -753,3 +753,13 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Frontend PR #65 merged at `16ab0f5076048b7bc7e8da2aa9baefa50c59a3ba`; Actions PR run #506 passed **110 tests** and Vite build; main run #507 passed. Pages deployment `203ecbcb-eba9-4503-9006-2d62a382d89c` succeeded.
 - Chunk 5 Admin assignment list is live alongside the existing create workflow. Real Admin account browser acceptance remains outstanding. No schema or migration. Timetable remains deferred.
 - Next Chunk 6: fix Admin Student provisioning form reset regression. Initial form state includes optional `rollNumber`, but Escape close, Cancel close and post-success reset omit it. Replace all duplicated reset objects with one canonical empty-form factory/constant and test its full shape/reset invariant. Preserve leading zeroes and optional roll number behavior. Frontend-only; no backend/API/DB changes.
+
+
+## Phase III, Chunk 6 — Admin Student provisioning form reset fix (2026-11-16)
+
+- Feature branch: `fix/admin-student-provisioning-form-reset`.
+- Initial Admin Student form state includes optional `rollNumber`; Escape close, Cancel close and successful-create reset objects omitted it, so the next open could call `.trim()` on `undefined`.
+- New helper: `src/features/admin/utils/adminStudentForm.js`, canonical `createEmptyAdminStudentForm()` used for initial state and all resets.
+- New tests: `tests/admin-student-form-state.test.js`, covering full empty shape including `rollNumber: ""` and fresh independent objects.
+- Preserves optional value, input text and leading-zero behavior. Frontend-only; no backend/API/DB/schema changes. Timetable remains deferred.
+- PR/CI/deployment state must be checked directly. No live Admin browser acceptance is claimed.
