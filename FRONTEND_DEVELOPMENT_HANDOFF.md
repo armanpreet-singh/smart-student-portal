@@ -1332,3 +1332,14 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Return verified teacher identity, subject and class details, assignment timestamp, and the current active/inactive state of the related teacher, subject and class. Do not remove stale/inactive assignments from the list; surface their current state.
 - Add focused backend service/schema tests and frontend response-contract tests, then add a searchable paginated list to the Admin Teaching Assignments page.
 - No new model or migration is expected. Preserve the existing Admin role gate and existing POST duplicate/eligibility behavior. Do not change existing assignments in this read/list chunk.
+
+
+### Backend dependency released; frontend directory UI implemented (2026-11-16)
+
+- Backend PR #7: https://github.com/armanpreet-singh/ltsu-backend/pull/7 — merged at `e1a89236ca38f9b8eacea2e71de16d787d834562`.
+- Backend main Actions run #116 / ID `43848485853` passed. Render deployment `dep-dbtdjgu7bikc7382dt6g` is `live` on the merge commit.
+- Live backend contract: Admin-only `GET /api/admin/teacher-subject-assignments`, with `search`, `teacherId`, `subjectId`, `classId`, `page`, and `pageSize` query parameters; paginated assignments return teacher/subject/class details and each related record's `isActive` state. Existing POST create behavior remains unchanged.
+- Frontend branch adds `fetchAdminTeacherSubjectAssignments`, strict response validation and six API tests. The Admin Teaching Assignments page now renders a searchable paginated directory, shows Teacher/Subject/Class active state separately, and refreshes the list after a successful create.
+- Existing create form, active-only creation choices and confirmation step are preserved. Inactive historical links remain visible in the list and are not modified.
+- Frontend PR/CI state will be appended after validation. No schema migration, database write or timetable work is included.
+- Real Admin-account browser acceptance remains outstanding.
