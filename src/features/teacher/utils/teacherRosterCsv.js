@@ -43,7 +43,7 @@ export function buildTeacherRosterCsv(assignment, students) {
 export function createTeacherRosterCsvFilename(subjectCode) {
   const safeSubjectCode = String(subjectCode ?? "")
     .trim()
-    .replace(/[^A-Za-z0-9._-]+/g, "-")
+    .replace(/[^A-Za-z0-9_-]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
 
