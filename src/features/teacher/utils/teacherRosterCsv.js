@@ -47,5 +47,5 @@ export function createTeacherRosterCsvFilename(subjectCode) {
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
 
-  return \`teacher-roster-\${safeSubjectCode || "subject"}.csv\`;
+  return "teacher-roster-" + (safeSubjectCode || "subject") + ".csv";
 }
