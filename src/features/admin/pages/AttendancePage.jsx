@@ -365,7 +365,7 @@ const AttendancePage = ({
     if (!report?.subjects?.length) return;
 
     const csv = buildAdminAttendanceCsv(report);
-    const blob = new Blob(["\\uFEFF", csv], {
+    const blob = new Blob(["\uFEFF", csv], {
       type: "text/csv;charset=utf-8",
     });
     const objectUrl = URL.createObjectURL(blob);
