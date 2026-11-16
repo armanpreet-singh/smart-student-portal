@@ -720,3 +720,10 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - No new backend endpoint, database/schema change, student headcount inference, timetable, assignment, grading or attendance aggregate is included.
 - PR/CI validation and production release state must be checked directly in GitHub/Cloudflare before continuation. Real Teacher-account browser validation remains outstanding.
 - Timetable work remains deferred by the user.
+
+
+### Chunk 4 PR and CI verification — 2026-11-16
+
+- PR #64: https://github.com/armanpreet-singh/smart-student-portal/pull/64 remains open and unmerged.
+- Actions run #498 / ID `43846567768` passed all **104 tests** and the Vite production build on validated source head `dfd5e349f1b8c41c9731400b66bd2146f66ff5f4`.
+- No production deployment has occurred for this chunk. Do not claim live Teacher-account browser validation.
