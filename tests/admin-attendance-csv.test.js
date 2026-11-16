@@ -39,7 +39,7 @@ describe("Admin attendance CSV export", () => {
       [
         '"Period from","Period through","Class code","Class name","Academic year","Subject code","Subject name","Present","Absent","On-duty review","Total records","Eligible sessions","Attended sessions","Attendance percentage"',
         '"2026-11-01","2026-11-15","CSE-2026","Computer Science","2026-2027","CSE-101","Programming Fundamentals","8","2","3","13","13","8","61.54"',
-      ].join("\\r\\n"),
+      ].join("\r\n"),
     );
   });
 
@@ -49,7 +49,7 @@ describe("Admin attendance CSV export", () => {
         {
           subject: {
             code: "SCI-1",
-            name: 'Science, "Main"\\nCampus',
+            name: 'Science, "Main"\nCampus',
             class: {
               code: "SCI",
               name: "Science, Arts",
@@ -70,7 +70,7 @@ describe("Admin attendance CSV export", () => {
     }));
 
     assert.ok(csv.includes('"Science, Arts"'));
-    assert.ok(csv.includes('"Science, ""Main""\\nCampus"'));
+    assert.ok(csv.includes('"Science, ""Main""\nCampus"'));
   });
 
   it("neutralizes spreadsheet formula-leading class and subject text", () => {
@@ -78,7 +78,7 @@ describe("Admin attendance CSV export", () => {
       subjects: [
         {
           subject: {
-            code: "=HYPERLINK(\"https://bad.example\")",
+            code: '=HYPERLINK("https://bad.example")',
             name: "+SUM(1,1)",
             class: {
               code: "@SUM(A1:A2)",
@@ -99,17 +99,17 @@ describe("Admin attendance CSV export", () => {
       ],
     }));
 
-    assert.ok(csv.includes('"\'=HYPERLINK(""https://bad.example"")"'));
-    assert.ok(csv.includes('"'+SUM(1,1)"'));
-    assert.ok(csv.includes('"'+@SUM(A1:A2)"'));
-    assert.ok(csv.includes('"\'  -2+3"'));
+    assert.ok(csv.includes("'=HYPERLINK"));
+    assert.ok(csv.includes("'+SUM(1,1)"));
+    assert.ok(csv.includes("'@SUM(A1:A2)"));
+    assert.ok(csv.includes("'  -2+3"));
     assert.ok(csv.endsWith(',""'));
   });
 
   it("returns a valid header-only CSV when the report has no subjects", () => {
     const csv = buildAdminAttendanceCsv(makeReport({ subjects: [] }));
 
-    assert.equal(csv.split("\\r\\n").length, 1);
+    assert.equal(csv.split("\r\n").length, 1);
     assert.ok(csv.startsWith('"Period from","Period through"'));
   });
 
