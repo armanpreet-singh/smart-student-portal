@@ -790,3 +790,12 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 ### Next-work audit
 - Revisited the Admin Class/Subject editor state review. Both editor dialogs are conditionally mounted and unmounted on close; reopening initializes fresh state. No reproducible reset defect was found, so no speculative change was made.
 - No additional feature is selected by this release. Next bounded work should be based on the next verified workflow gap or real-role acceptance findings; do not invent timetable/configuration/announcement capabilities without an authoritative backend contract.
+
+
+## Authoritative continuation — Phase III, Chunk 8 released (2026-11-16)
+
+- Teacher Student roster CSV export PR #68 is merged at `c0931fa83f6fa3931717fe0356cffe376f2e0477`; PR CI #518 passed **122/122 tests** and the Vite build; main CI #519 passed.
+- Pages production deployment `e8855b70-1809-4b82-a4df-dabe94d7dbfa` succeeded on the merge commit.
+- Export is scoped to the selected active assigned subject and the currently visible (search-filtered) Teacher roster; it includes class/subject labels and student name/username/official roll number. CSV escaping, formula neutralization, UTF-8 BOM, safe filename, and leading-zero roll number handling are covered by tests.
+- No backend/API/database/schema/migration changes. Real Teacher browser download and spreadsheet acceptance remain outstanding; user plans to test shortly.
+- The next implementation should be driven by a concrete issue surfaced by acceptance testing or another verified workflow gap. Timetable remains deferred, and do not invent announcements/calendar contracts.
