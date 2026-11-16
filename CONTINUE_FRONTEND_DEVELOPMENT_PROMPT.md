@@ -956,3 +956,10 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Removed nested Framer Motion animation from the card. React Hot Toast supplies one entrance/dismissal transition; branded card supplies responsive dark-aware content, manual close and matching progress bar.
 - Toast lifetime/progress are both 4.2 seconds; progress pauses on hover/focus and respects reduced-motion preferences. Error messages use alert semantics.
 - Regression tests: `tests/toast-animation.test.js`. No backend or database changes.
+
+
+## Current implementation — Sonner toast system (November 16, 2026)
+- Root toast stack uses Sonner 2.0.8 with a single animation owner, while preserving the LTSU-branded card and the existing shared helper API.
+- Global Sonner configuration follows the resolved light/dark theme, shows up to four stacked toasts, supports swipe dismissal, and uses a 4.2-second duration shared with the progress indicator.
+- React Hot Toast was removed from the frontend dependencies and lockfile. No backend or database changes.
+- Tests: `tests/toast-animation.test.js`. Confirm real role-based browser behavior, stack layout, swipe/close handling, theme switching and reduced-motion behavior before acceptance.
