@@ -1272,3 +1272,24 @@ This section supersedes earlier status entries that describe frontend PR #62 as 
 - Source head checked by PR CI: `cfb1098b37c97b329698d18bb901049dc105bd82`.
 - GitHub Actions run #493 (ID `43836808520`) completed successfully: all **101 tests passed**, 0 failed, and `npm run build` completed successfully.
 - The PR is frontend-only and has no backend release dependency. It has not been merged or deployed; this update records validation only.
+
+
+## Authoritative release status — Phase III, Student Dashboard attendance alignment (2026-11-16)
+
+This section supersedes the earlier Chunk 3 entries that describe PR #63 as open, unmerged, or not deployed.
+
+### Released
+- Frontend PR #63 (Student Dashboard attendance status alignment): https://github.com/armanpreet-singh/smart-student-portal/pull/63 — merged into `main`.
+- Feature branch head: `e8d3720dc2a8f4c03a8ff933dbc06af6ed6d5ff5`.
+- Squash merge commit on `main`: `acc1e9c6c9e187fc1043a7f7ccc847d3a14f1f74`.
+- PR validation run #494 / ID `43837025823` passed all **101 frontend tests** and the Vite production build. Main-branch push run #495 / ID `43838368448` also completed successfully for the merge commit.
+- Cloudflare Pages production deployment `87fbd4f5-0957-4241-bcb9-7d0d5cc1dc16` deployed the merge commit successfully; every deployment stage, including build and deploy, reports success. Canonical app URL: https://smart-student-portal.pages.dev.
+- The dashboard uses only `PRESENT`, `ABSENT`, and `ON_DUTY_REVIEW`; aggregate percentage is recomputed from aggregate counts. Duty-review remains not-present until the backend confirms successful proof submission.
+- Frontend-only release. No backend/API, database/schema, migration, attendance-data, Render, or timetable change.
+
+### Validation boundary
+- Unit tests validate the pure attendance-summary helper and CI validates the frontend production build. A populated production Student-account browser acceptance test has not been performed and must not be represented as complete.
+
+### Current next-work direction
+- The user explicitly deferred timetable work. Do not start timetable model/API/UI work until the user reopens it.
+- Assess the next small chunk from existing backend-integrated features and documented frontend/backend gaps. Do not invent endpoints, policy, or data to fill placeholder pages.
