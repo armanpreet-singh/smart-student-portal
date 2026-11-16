@@ -153,3 +153,29 @@
   .toast-progress-fill { animation: none; transform: scaleX(1); }
   .toast-close { transition: none; }
 }
+
+
+/* Sonner owns the stack layout and enter/exit animation. Keep the
+   application card as the only visible surface inside its toast item. */
+[data-sonner-toast].ltsu-sonner-toast {
+  width: min(380px, calc(100vw - 32px)) !important;
+  max-width: calc(100vw - 24px) !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 14px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 480px) {
+  [data-sonner-toast].ltsu-sonner-toast {
+    width: calc(100vw - 24px) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sonner-toaster] [data-sonner-toast] {
+    animation: none !important;
+    transition: none !important;
+  }
+}
