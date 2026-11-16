@@ -1373,3 +1373,13 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Implement a single canonical empty-form factory/constant and reuse it for initial state and every reset. Preserve roll-number validation, optional semantics and leading-zero strings.
 - Add a focused pure unit test for the canonical form shape/reset invariant. Run complete frontend tests and Vite build, update handoffs, open a frontend PR.
 - Frontend-only; no backend API, account data, DB or schema changes. Timetable remains deferred.
+
+
+## Phase III, Chunk 6 — Admin Student provisioning form reset regression (2026-11-16)
+
+- The Admin Student create form initially contains optional `rollNumber`, but Escape-close, Cancel-close and post-success resets previously omitted that property. Reopening the form could leave `createForm.rollNumber` undefined while validation calls `.trim()`.
+- Added `src/features/admin/utils/adminStudentForm.js` with `createEmptyAdminStudentForm()` as the canonical complete empty state, including `rollNumber: ""`.
+- `StudentsPage.jsx` now uses the helper for initial state and all three reset paths (Escape, Cancel and successful create). The existing optional roll-number validation and exact string handling/leading-zero preservation are unchanged.
+- Added `tests/admin-student-form-state.test.js` to verify the complete reset shape and that each reset returns an independent fresh object.
+- Frontend-only. No backend/API/account data/DB/schema change, no provisioning policy change, no timetable work.
+- Branch: `fix/admin-student-provisioning-form-reset`. PR and CI status will be appended after validation.
