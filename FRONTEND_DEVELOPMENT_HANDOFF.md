@@ -1305,3 +1305,11 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Branch: `feat/teacher-dashboard-overview`. PR and CI/deployment status will be appended after validation.
 - Live Teacher-account browser acceptance remains outstanding; API contract tests are mocked, and this UI has not been verified with a real Teacher session.
 - Timetable work remains explicitly deferred by the user and is not included.
+
+
+### PR and CI verification — 2026-11-16
+
+- PR #64: https://github.com/armanpreet-singh/smart-student-portal/pull/64 — open and unmerged; frontend-only, no backend release dependency.
+- Source head validated by GitHub Actions run #498 / ID `43846567768`: `dfd5e349f1b8c41c9731400b66bd2146f66ff5f4`.
+- GitHub Actions run #498 completed successfully: all **104 tests passed**, 0 failed, and `npm run build` completed successfully (`✓ built in 3.99s`).
+- The PR has not been merged or deployed. No production records, backend services, or database resources were changed.
