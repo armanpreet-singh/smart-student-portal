@@ -942,3 +942,10 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Includes validation feedback, discard changes, save confirmation and last-updated Admin metadata.
 - Threshold defaults to 75% and is consumed by the backend Student low-attendance alert rule. Academic year is informational and existing class records are unchanged.
 - Confirm real Admin save/reload and a Student attendance alert at the configured threshold before sign-off. Keep timetable deferred.
+
+
+## Current implementation — device-aware theme (November 16, 2026)
+- Portal default follows the browser/OS `prefers-color-scheme` for landing, login and all Student/Teacher/Admin dashboards.
+- System changes update the page live until the user clicks the topbar theme button. A clicked Light/Dark choice persists in `ltsu-theme-preference` and overrides the OS setting.
+- Shared helper: `src/features/shared/theme/themePreference.js`. Legacy `ltsu-theme` is ignored because the old App wrote automatic appearance as if it were a manual preference.
+- Frontend-only change; no API or database changes. Validate dark/light first visit, live device setting changes and persistent manual override.
