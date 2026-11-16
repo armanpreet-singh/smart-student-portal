@@ -281,3 +281,36 @@
     align-items: flex-start;
   }
 }
+
+.t-students-list-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.t-students-export-button {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 7px 11px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-surface);
+  color: var(--d-primary);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.t-students-export-button:hover {
+  background: var(--d-bg);
+}
+
+.t-students-export-button:focus-visible {
+  outline: 2px solid var(--d-primary);
+  outline-offset: 2px;
+}
