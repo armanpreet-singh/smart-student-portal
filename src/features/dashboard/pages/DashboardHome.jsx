@@ -17,14 +17,14 @@ import DashboardCard from "../components/DashboardCard/DashboardCard";
 import SectionHeader from "../components/SectionHeader/SectionHeader";
 import { fetchStudentAttendance } from "../api/studentAttendanceApi";
 import { getGreeting } from "../utils/formatHelpers";
+import { getDashboardSummary } from "../utils/dashboardAttendanceSummary";
 
 import "./DashboardHome.css";
 
 const STATUS_META = {
   PRESENT: { label: "Present", className: "present" },
-  LATE: { label: "Late", className: "late" },
   ABSENT: { label: "Absent", className: "absent" },
-  EXCUSED: { label: "Excused", className: "excused" },
+  ON_DUTY_REVIEW: { label: "On-duty review", className: "on-duty-review" },
 };
 
 function formatCount(value) {
@@ -55,60 +55,6 @@ function formatDateTime(value) {
   }).format(new Date(value));
 }
 
-function getDashboardSummary(subjects) {
-  const totals = subjects.reduce(
-    (result, item) => {
-      const summary = item.summary;
-      result.PRESENT += summary.PRESENT;
-      result.LATE += summary.LATE;
-      result.ABSENT += summary.ABSENT;
-      result.EXCUSED += summary.EXCUSED;
-      result.totalRecords += summary.totalRecords;
-      result.eligibleSessions += summary.eligibleSessions;
-      result.attendedSessions += summary.attendedSessions;
-      return result;
-    },
-    {
-      PRESENT: 0,
-      LATE: 0,
-      ABSENT: 0,
-      EXCUSED: 0,
-      totalRecords: 0,
-      eligibleSessions: 0,
-      attendedSessions: 0,
-    },
-  );
-
-  const attendancePercentage =
-    totals.eligibleSessions === 0
-      ? null
-      : Math.round(
-          (totals.attendedSessions / totals.eligibleSessions) * 10000,
-        ) / 100;
-
-  const recentRecords = subjects
-    .flatMap((item) =>
-      item.records.map((record) => ({
-        ...record,
-        subjectName: item.subject.name,
-        subjectCode: item.subject.code,
-      })),
-    )
-    .sort((a, b) => {
-      const byDate = String(b.date || "").localeCompare(String(a.date || ""));
-      if (byDate !== 0) return byDate;
-      return (Date.parse(b.recordedAt || "") || 0) -
-        (Date.parse(a.recordedAt || "") || 0);
-    })
-    .slice(0, 5);
-
-  return {
-    ...totals,
-    attendancePercentage,
-    recentRecords,
-    subjectCount: subjects.length,
-  };
-}
 
 function LoadingState() {
   return (
@@ -307,14 +253,14 @@ const DashboardHome = () => {
             <MetricCard
               title="Sessions attended"
               value={formatCount(summary.attendedSessions)}
-              detail="Present and late records"
+              detail="Present records only"
               icon={CheckCircle2}
               tone="success"
             />
             <MetricCard
-              title="Sessions missed"
-              value={formatCount(summary.ABSENT)}
-              detail="Absent records"
+              title="Not yet confirmed present"
+              value={formatCount(summary.notYetPresentSessions)}
+              detail="Absent and duty-review records"
               icon={XCircle}
               tone="danger"
             />
@@ -328,9 +274,9 @@ const DashboardHome = () => {
           </div>
 
           <p className="s-dashboard-policy-note">
-            Attendance percentage counts Present and Late as attended.
-            Absent records are included in the eligible total; Excused records
-            are excluded from its denominator.
+            Attendance percentage counts PRESENT as attended. ABSENT and
+            ON_DUTY_REVIEW records remain in the eligible total; a duty-review
+            record is not counted as present until proof submission succeeds.
             {lastUpdated ? ` Updated ${formatDateTime(lastUpdated)}.` : ""}
           </p>
 
@@ -374,9 +320,8 @@ const DashboardHome = () => {
                       </div>
                       <div className="s-dashboard-subject-statuses">
                         <span>Present {subjectSummary.PRESENT}</span>
-                        <span>Late {subjectSummary.LATE}</span>
                         <span>Absent {subjectSummary.ABSENT}</span>
-                        <span>Excused {subjectSummary.EXCUSED}</span>
+                        <span>On-duty review {subjectSummary.ON_DUTY_REVIEW}</span>
                       </div>
                     </DashboardCard>
                   );
@@ -393,7 +338,10 @@ const DashboardHome = () => {
                 {summary.recentRecords.length > 0 ? (
                   <div className="s-dashboard-recent-list">
                     {summary.recentRecords.map((record) => {
-                      const status = STATUS_META[record.status];
+                      const status = STATUS_META[record.status] || {
+                        label: "Unknown",
+                        className: "unknown",
+                      };
                       return (
                         <div className="s-dashboard-recent-row" key={record.id}>
                           <div className="s-dashboard-recent-main">
