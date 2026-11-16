@@ -1214,3 +1214,15 @@ Phase III, Chunk 2: expose the existing 30-minute Teacher attendance correction 
 ### Validation boundary
 
 Mocked API tests do not replace live browser validation. After ordered deployment, use a Teacher test account to mark a register, reload the page, correct one row within 30 minutes, verify the changed status in Student/Admin views, confirm an expired record is read-only, and confirm a proof-submitted record cannot be changed.
+
+
+## Final verification — Teacher Attendance correction UI (2026-11-16)
+
+This update supersedes the earlier implementation-head/test snapshot above.
+
+- Final source branch head before this handoff append: `aaa88bc35ffcffdf6ca6630e158e1ec3463f282d`.
+- The final hardening ensures subject/date changes immediately clear old register IDs and saved state; subject/date controls are locked while a register loads or a correction saves.
+- Clipboard actions use the last persisted register snapshot and are disabled while one or more correction changes are staged but unsaved.
+- Latest source CI run #489 / ID `43833795105` passed all **96 tests** and the Vite production build.
+- The earlier run #487 passed the same suite/build before the final clipboard hardening; run #489 validates the final source head.
+- PR #62 remains open and unmerged. Backend PR #5 must be merged/deployed first.
