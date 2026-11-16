@@ -451,3 +451,17 @@
     margin-left: 0;
   }
 }
+
+.teacher-attendance-actions .teacher-attendance-export {
+  border-color: var(--d-primary);
+  color: var(--d-primary);
+}
+
+.teacher-attendance-actions .teacher-attendance-export:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--d-primary) 8%, var(--d-surface));
+}
+
+.teacher-attendance-actions .teacher-attendance-export:focus-visible {
+  outline: 3px solid var(--d-gold);
+  outline-offset: 2px;
+}
