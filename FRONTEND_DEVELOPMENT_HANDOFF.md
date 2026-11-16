@@ -1399,3 +1399,20 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - The parallel Teacher provisioning form was inspected: its current five-field initial and reset objects are aligned; no equivalent missing-field regression was found.
 - Next bounded review: audit the Admin Class/Subject catalogue create/edit form state and validation after cancel/success/retry. Implement only a reproducible issue; do not introduce schema/API or timetable work without an authoritative contract.
 - Timetable remains explicitly deferred by the user.
+
+
+
+## Authoritative release — Phase III, Chunk 7: Admin Attendance CSV export (2026-11-16)
+
+- Frontend PR #67: https://github.com/armanpreet-singh/smart-student-portal/pull/67 — merged into `main` at `162734bfef457ef342065d8534e11e6a3a528357`.
+- PR workflow run #514 / ID `43852877990` passed **117/117 tests**, zero failures, and the Vite production build (built in 4.02s). Main push workflow #515 / ID `43853337616` completed successfully.
+- Cloudflare Pages production deployment `4ddb473b-e6bb-442f-a7d6-9706851a5e29` completed all stages successfully for the merge commit. Canonical app: https://smart-student-portal.pages.dev.
+- Admin Attendance / Reports & Analytics now provides an Export CSV action when the currently loaded report contains subjects. It exports exactly the active report response: period, class and subject descriptors, PRESENT / ABSENT / ON_DUTY_REVIEW counts, total/eligible/attended sessions and backend-calculated percentage. One row per subject; null percentages remain blank.
+- CSV quoting covers commas, quotes and line breaks; formula-leading class/subject text is neutralized; UTF-8 BOM is included for spreadsheet compatibility. Export is aggregate-only: no student identities or individual attendance records are included.
+- Added `src/features/admin/utils/adminAttendanceCsv.js` and `tests/admin-attendance-csv.test.js`; updated `AttendancePage.jsx` and `AttendancePage.css`.
+- Frontend-only. No backend/API, database, Prisma schema, migration or production data changes. No backend release was required.
+- Real Admin browser acceptance and an actual downloaded-file check remain outstanding; CI tests are not a substitute for either. Timetable remains explicitly deferred.
+
+### Next-work audit
+- Revisited the Admin Class/Subject editor state review. Both editor dialogs are conditionally mounted and unmounted on close; reopening initializes fresh state. No reproducible reset defect was found, so no speculative change was made.
+- No additional feature is selected by this release. Next bounded work should be based on the next verified workflow gap or real-role acceptance findings; do not invent timetable/configuration/announcement capabilities without an authoritative backend contract.
