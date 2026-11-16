@@ -1264,3 +1264,11 @@ This section supersedes earlier status entries that describe frontend PR #62 as 
 
 - These tests cover the pure summary logic; they do not verify a real Student browser session or populated production attendance. Such live-account validation remains a separate acceptance test.
 - PR/CI/merge/deployment state is recorded below after validation.
+
+
+### Chunk 3 PR and CI verification — 2026-11-16
+
+- PR #63: https://github.com/armanpreet-singh/smart-student-portal/pull/63 — open and not merged; branch `fix/student-dashboard-duty-review-summary`.
+- Source head checked by PR CI: `cfb1098b37c97b329698d18bb901049dc105bd82`.
+- GitHub Actions run #493 (ID `43836808520`) completed successfully: all **101 tests passed**, 0 failed, and `npm run build` completed successfully.
+- The PR is frontend-only and has no backend release dependency. It has not been merged or deployed; this update records validation only.
