@@ -1565,3 +1565,23 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 ### Limitations and acceptance
 - First release is text-only. No PDF/image attachment, push notification, email or SMS delivery was added. Student notifications are feed-based, not real-time.
 - Verify live with Admin, Teacher, Student in the assigned class and Student outside that class. Confirm draft visibility only to managers, published notice visibility, and role separation. Automated tests/CI/deployment do not replace account-level acceptance. Timetable remains deferred.
+
+
+## Learning Resources — Teacher notes upload (November 16, 2026)
+
+### Teacher portal
+- Replaced the Learning Resources placeholder with an authenticated upload form.
+- Teacher selects an active assigned Subject/Class, enters a title and optional description, and attaches a PDF, Word, PowerPoint, TXT, JPEG or PNG file (maximum 20 MB).
+- Successful upload is immediately shared with Students assigned to that class. Teacher sees the file directory across currently assigned Subjects, can download those resources, and can delete only resources they uploaded.
+- Resource cards display subject/class, file name and type, size, uploader, description, and uploaded timestamp.
+
+### Student portal
+- Replaced the Learning Resources placeholder with the authenticated Student class feed.
+- Students can search and download notes uploaded to Subjects within their current active Class. Server-side authorization is applied on both list and download requests; the UI does not determine access based on local state.
+- Student sees title, description, subject, file name/type, size, uploader and upload time.
+
+### Storage and limitations
+- Upload goes through the authenticated backend. Files use authenticated/private Cloudinary storage; the frontend receives only short-lived signed download URLs (five minutes), not permanent public asset URLs or Cloudinary secrets.
+- Supported: PDF, DOC, DOCX, PPT, PPTX, TXT, JPEG and PNG; 20 MB maximum.
+- Uploads are shared immediately; there is no separate draft/publish step. No push/email notifications, upload progress percentage, or in-app file preview was added.
+- Real Teacher upload, Student download and cross-Class denial must still be accepted with real accounts. CI/build success does not prove the configured Cloudinary account can store and deliver each format. Timetable remains deferred.
