@@ -799,3 +799,12 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Export is scoped to the selected active assigned subject and the currently visible (search-filtered) Teacher roster; it includes class/subject labels and student name/username/official roll number. CSV escaping, formula neutralization, UTF-8 BOM, safe filename, and leading-zero roll number handling are covered by tests.
 - No backend/API/database/schema/migration changes. Real Teacher browser download and spreadsheet acceptance remain outstanding; user plans to test shortly.
 - The next implementation should be driven by a concrete issue surfaced by acceptance testing or another verified workflow gap. Timetable remains deferred, and do not invent announcements/calendar contracts.
+
+
+## Authoritative continuation — Phase III, Chunk 9 released (2026-11-16)
+
+- Teacher saved Attendance CSV export PR #69 merged at `16a20f6c2cc63f3dc312e501e5652372cf1a7199`; PR CI #525 passed **129/129 tests** and Vite production build; main CI #526 passed.
+- Cloudflare Pages production deployment `5a81eb3d-178f-4b7d-b5a2-6a284296d0a8` succeeded on the merge commit.
+- Export is limited to persisted server-returned rows in the selected Teacher subject/date and the current search filter. It uses last-saved status/remarks, official roll number, register submission timestamp and proof-submitted flag. Missing rows are never filled in. Unsaved corrections disable export; demo-local attendance is excluded.
+- No backend/API/database/schema/migration changes. Live Teacher browser and downloaded spreadsheet acceptance remain pending.
+- Next change should be selected from actual user test feedback or another independently verified workflow gap. Do not infer timetable dates or new academic records; timetable remains deferred.
