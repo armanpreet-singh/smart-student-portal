@@ -1663,3 +1663,10 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Added a subtle per-type accent edge, glass status-icon tile, fine gradient progress line and restrained hover feedback. Added matching dark-theme glass surfaces and a solid-color fallback for browsers without backdrop-filter support.
 - Sonner remains the only stack/entry/exit animation owner. Accessibility roles, dismissal, swipe, responsive width, 4.2-second timeout, pause-on-hover/focus and reduced-motion behavior are preserved.
 - Tests: `tests/toast-animation.test.js`. Frontend-only; no API/database changes. Validate the translucent effect on both light and dark login/dashboard surfaces in a real browser.
+
+
+## Transparency correction — toast glass background (November 16, 2026)
+- Removed the dark-mode navy toast surface that used highly opaque slate gradients and overpowered the page behind the notification.
+- Toast cards now use one neutral translucent white-glass surface in both portal themes: 46% / 24% gradient opacity, 24px backdrop blur, restrained white highlights, and dark readable text. The surface no longer changes to a solid blue/navy panel when the browser or portal is in dark mode.
+- Kept the semantic status icon, accent rail, dismiss button, 4.2-second progress line, Sonner stack/animation, responsive layout and reduced-motion handling. A nearly opaque neutral fallback remains only for browsers without backdrop-filter support.
+- Regression tests explicitly reject the previous navy background. Frontend-only; no API/backend/database changes.
