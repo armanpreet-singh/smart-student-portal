@@ -19,6 +19,10 @@ import {
   getStudentsMissingRollNumberForStatus,
 } from "../utils/attendanceClipboard";
 import {
+  fetchTeacherAssignedSubjects,
+  fetchTeacherSubjectRoster,
+} from "../api/teacherSubjectsApi";
+import {
   demoTeacherAttendanceSubjects,
   readDemoAttendance,
   saveDemoAttendance,
@@ -146,10 +150,11 @@ const TeacherAttendance = memo(() => {
     setLoading(true);
     setError("");
     try {
-      const result = await requestApi("/api/teacher/subjects", token);
-      const nextSubjects = Array.isArray(result.subjects)
-        ? result.subjects
-        : [];
+      // The API returns assignment records shaped as
+      // { assignedAt, subject: { id, code, name, classId, class } }.
+      // The attendance UI consumes the nested subject records.
+      const assignments = await fetchTeacherAssignedSubjects(token);
+      const nextSubjects = assignments.map((assignment) => assignment.subject);
       setSubjects(nextSubjects);
       setSelectedSubjectId((current) =>
         nextSubjects.some((subject) => subject.id === current)
@@ -188,17 +193,28 @@ const TeacherAttendance = memo(() => {
   useEffect(() => {
     if (mode !== "api" || !selectedSubjectId || !token) return undefined;
 
+    if (!selectedSubject?.classId) {
+      setRoster([]);
+      setRecords({});
+      setLoadingRoster(false);
+      setError("The selected subject does not include a valid parent class.");
+      return undefined;
+    }
+
     let active = true;
     setLoadingRoster(true);
+    setRoster([]);
+    setRecords({});
     setError("");
 
-    requestApi(
-      `/api/teacher/subjects/${encodeURIComponent(selectedSubjectId)}/roster`,
+    fetchTeacherSubjectRoster(
       token,
+      selectedSubjectId,
+      selectedSubject.classId,
     )
       .then((result) => {
         if (!active) return;
-        const nextRoster = Array.isArray(result.students) ? result.students : [];
+        const nextRoster = result.students;
         setRoster(nextRoster);
         setRecords(
           Object.fromEntries(
@@ -216,7 +232,7 @@ const TeacherAttendance = memo(() => {
     return () => {
       active = false;
     };
-  }, [mode, selectedSubjectId, token]);
+  }, [mode, selectedSubjectId, selectedSubject?.classId, token]);
 
   useEffect(() => {
     if (mode === "demo" && selectedSubjectId) {
