@@ -1512,3 +1512,35 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 ### Remaining acceptance
 - Verify with real Teacher and Student accounts: draft creation, publish to a real assigned class, Student visibility/submission, cross-class isolation, grading, grade publication, deadline rejection, and resubmission.
 - No real account/browser acceptance was performed during CI/deployment. Timetable remains deferred.
+
+
+## Phase III, Chunk 14 — Cloudinary assignment briefs and issue/deadline dates (2026-11-16)
+
+### Released and deployed
+- Frontend PR #74: https://github.com/armanpreet-singh/smart-student-portal/pull/74 — merged at `418247726e78a586732a7ce5e647f151219aabb6`.
+- Backend PR #12: https://github.com/armanpreet-singh/ltsu-backend/pull/12 — merged at `78ec1582bc978fb58bb1a2b7b598af628fa435ce`.
+- Frontend PR CI #554 passed **151/151 tests** and Vite build; main CI #555 passed. Backend PR CI #143 passed **82/82 tests**; backend main CI #144 passed.
+- Cloudflare Pages deployment `382ae77b-f34c-47e4-8a91-272dd545398b` is successful on the frontend merge commit. Render deployment `dep-dbtgdth5efls73frvdv0` is live; Render logs confirm the new date/attachment migration applied and the API is listening on port 10000.
+- Canonical frontend: https://smart-student-portal.pages.dev.
+
+### Teacher form — Assignments
+- The draft form now accepts written questions, one PDF/JPEG/PNG file (maximum 10 MB), or both together.
+- Written questions are optional when a file is attached. A draft with neither written questions nor a file cannot be saved.
+- The form shows the selected file, the existing file when editing, and actions to replace or remove it while the assignment is still a draft.
+- New required fields: **Assignment date** and **Last submission date and time**. The default assignment date is today; the default last submission date is seven days later. Both can be edited before saving.
+- Teacher assignment cards show the issue date, last submission date, and attached file. Teacher can open the file through a backend-authorized signed link.
+
+### Student view — Assignments
+- Student assignment cards show **Assignment date** and **Last submission date** explicitly.
+- When a brief is attached, the Student sees its filename and file type and can open it through a short-lived signed link. The backend checks the Student's current Class and assignment publication/availability before signing.
+- Existing text-answer submission and resubmission behavior remains. Server-side dueAt deadline checks remain authoritative.
+
+### Storage and security
+- Browser uploads are sent to the authenticated backend, which validates file signature and content type before uploading to the existing Cloudinary account using the existing backend Cloudinary environment configuration.
+- Files use Cloudinary authenticated delivery rather than public upload delivery. The browser never receives Cloudinary API credentials. Backend signed download links expire after five minutes.
+- Postgres stores Cloudinary asset identifiers and metadata only. Migration adds `assignmentDate` and attachment metadata; existing assignmentDate values are backfilled from `createdAt`.
+- The release supports PDF, JPEG and PNG only, one file per assignment, up to 10 MB. It does not add Student file submissions; Student answers remain text.
+
+### Remaining live acceptance
+- Real Faculty/Student browser testing is outstanding. Upload an actual PDF and image with a Faculty account, publish each, open as a Student in the assigned Class, and confirm a Student from another Class cannot retrieve the file. Verify the displayed assignment and last-submission dates and confirm submissions after the deadline are rejected.
+- CI and deployment success do not verify the live Cloudinary credentials or a real browser upload/download. Timetable remains deferred.
