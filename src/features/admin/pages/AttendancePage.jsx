@@ -13,6 +13,7 @@ import {
   CalendarDays,
   CheckCircle,
   Clock3,
+  Download,
   RotateCw,
   Users,
   XCircle,
@@ -26,6 +27,7 @@ import {
   fetchAdminAttendanceFilterOptions,
   fetchAdminAttendanceReport,
 } from "../api/adminAttendanceApi";
+import { buildAdminAttendanceCsv } from "../utils/adminAttendanceCsv.js";
 
 import "./AttendancePage.css";
 
@@ -359,6 +361,26 @@ const AttendancePage = ({
   const hasSubjects = Boolean(report?.subjects?.length);
   const hasRecords = Boolean(report?.summary?.totalRecords);
 
+  const exportCsv = () => {
+    if (!report?.subjects?.length) return;
+
+    const csv = buildAdminAttendanceCsv(report);
+    const blob = new Blob(["\\uFEFF", csv], {
+      type: "text/csv;charset=utf-8",
+    });
+    const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const fromDate = report.period.fromDate || "all-dates";
+    const toDate = report.period.toDate || "all-dates";
+
+    link.href = objectUrl;
+    link.download = `attendance-report-${fromDate}-to-${toDate}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+  };
+
   return (
     <div className="d-page-container">
       <SectionHeader title={title} subtitle={subtitle} />
@@ -519,6 +541,24 @@ const AttendancePage = ({
               <MetricCard key={metric.title} {...metric} />
             ))}
           </div>
+
+          {hasSubjects && (
+            <div className="a-attendance-export-bar">
+              <p>
+                Export the {report.subjects.length.toLocaleString()} subject
+                {report.subjects.length === 1 ? "" : "s"} in this report using
+                the currently applied date, class and subject filters.
+              </p>
+              <button
+                type="button"
+                className="d-btn-primary a-attendance-export-button"
+                onClick={exportCsv}
+              >
+                <Download size={16} aria-hidden="true" />
+                Export CSV
+              </button>
+            </div>
+          )}
 
           {!hasSubjects ? (
             <EmptyState
