@@ -139,6 +139,13 @@ const TeacherAttendance = memo(() => {
     : hasSavedRecords &&
       roster.length > 0 &&
       roster.every((student) => Boolean(recordMeta[student.id]));
+  const hasPendingCorrections =
+    hasSavedRecords &&
+    Object.keys(savedRecords).some(
+      (studentId) =>
+        Boolean(recordMeta[studentId]) &&
+        records[studentId] !== savedRecords[studentId],
+    );
 
   const hydrateDemoRoster = useCallback((subjectId, date) => {
     const subject = demoTeacherAttendanceSubjects.find(
@@ -335,11 +342,11 @@ const TeacherAttendance = memo(() => {
         ? Object.fromEntries(
             Object.keys(recordMeta).map((studentId) => [
               studentId,
-              records[studentId],
+              savedRecords[studentId],
             ]),
           )
         : records,
-    [hasSavedRecords, recordMeta, records],
+    [hasSavedRecords, recordMeta, savedRecords, records],
   );
 
   const absentRollNumbers = useMemo(
@@ -674,6 +681,12 @@ const TeacherAttendance = memo(() => {
                   cannot be added to this already-submitted register.
                 </span>
               )}
+              {hasPendingCorrections && (
+                <span>
+                  You have unsaved status changes. Save each correction before
+                  copying roll numbers; clipboard actions use the last saved register.
+                </span>
+              )}
             </div>
             <button type="button" onClick={refreshRegister} disabled={loading || loadingRoster}>
               <RefreshCw size={14} />
@@ -735,7 +748,7 @@ const TeacherAttendance = memo(() => {
             <button
               type="button"
               onClick={() => copyRollNumbers("ABSENT")}
-              disabled={!absentRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId)}
+              disabled={!absentRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId) || hasPendingCorrections}
               aria-label={`Copy ${absentRollNumbers.length} absent student roll numbers`}
             >
               <Copy size={14} />
@@ -744,7 +757,7 @@ const TeacherAttendance = memo(() => {
             <button
               type="button"
               onClick={() => copyRollNumbers("PRESENT")}
-              disabled={!presentRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId)}
+              disabled={!presentRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId) || hasPendingCorrections}
               aria-label={`Copy ${presentRollNumbers.length} present student roll numbers`}
             >
               <Copy size={14} />
@@ -753,7 +766,7 @@ const TeacherAttendance = memo(() => {
             <button
               type="button"
               onClick={() => copyRollNumbers("ON_DUTY_REVIEW")}
-              disabled={!dutyReviewRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId)}
+              disabled={!dutyReviewRollNumbers.length || loadingRoster || loading || Boolean(savingStudentId) || hasPendingCorrections}
               aria-label={`Copy ${dutyReviewRollNumbers.length} on-duty review student roll numbers`}
             >
               <Copy size={14} />
