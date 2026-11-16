@@ -39,20 +39,20 @@ describe("Teacher roster CSV export", () => {
         '"Class code","Class name","Academic year","Subject code","Subject name","Student name","Username","Official roll number"',
         '"CSE-2026","Computer Science","2026-2027","CSE-101","Programming Fundamentals","Student One","student.one","000123"',
         '"CSE-2026","Computer Science","2026-2027","CSE-101","Programming Fundamentals","Student Two","student.two",""',
-      ].join("\\r\\n"),
+      ].join("\r\n"),
     );
   });
 
   it("quotes commas, double quotes and embedded line breaks in roster text", () => {
     const csv = buildTeacherRosterCsv(assignment, [
       {
-        fullName: 'Student, "One"\\nSecond line',
+        fullName: 'Student, "One"\nSecond line',
         username: "student,one",
         rollNumber: "001",
       },
     ]);
 
-    assert.ok(csv.includes('"Student, ""One""\\nSecond line"'));
+    assert.ok(csv.includes('"Student, ""One""\nSecond line"'));
     assert.ok(csv.includes('"student,one"'));
   });
 
@@ -65,15 +65,15 @@ describe("Teacher roster CSV export", () => {
       },
     ]);
 
-    assert.ok(csv.includes('"\'=HYPERLINK(""https://bad.example"")"'));
-    assert.ok(csv.includes('"\'+SUM(1,1)"'));
-    assert.ok(csv.includes('"\'  @CMD"'));
+    assert.ok(csv.includes('"\\'=HYPERLINK(""https://bad.example"")"'));
+    assert.ok(csv.includes('"\\'+SUM(1,1)"'));
+    assert.ok(csv.includes('"\\'  @CMD"'));
   });
 
   it("returns a header-only file when the selected roster is empty", () => {
     const csv = buildTeacherRosterCsv(assignment, []);
 
-    assert.equal(csv.split("\\r\\n").length, 1);
+    assert.equal(csv.split("\r\n").length, 1);
     assert.ok(csv.startsWith('"Class code","Class name"'));
   });
 
