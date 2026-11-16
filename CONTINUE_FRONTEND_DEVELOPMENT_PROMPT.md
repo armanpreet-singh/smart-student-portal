@@ -651,3 +651,25 @@ Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first.
 - Final hardening clears stale IDs on subject/date switches, disables register selectors during loads/saves, serializes row updates, and prevents clipboard actions from copying staged/unsaved corrections.
 - GitHub Actions run #489 / ID `43833795105` passed all 96 tests and the Vite production build against that source head.
 - No merge or production deployment has occurred for this chunk.
+
+
+## Authoritative continuation — Phase III, Chunk 2 released (2026-11-16)
+
+This section supersedes earlier status entries that describe frontend PR #62 as open/unmerged or waiting for backend PR #5.
+
+### Released changes
+- Frontend PR #62 (Teacher attendance correction workflow) is merged into `main` at `e2ea847701e410243acd11d6cacf950787782cdf`.
+- Backend prerequisite PR #5 is merged at `efd749df9c7a535dfec26e4082574647beb5d30f`; runtime hotfix PR #6 is merged at `54486fdb16e014ed8cdb05eeac24cba297c228b0` and Render reports the hotfix deployment live.
+- Frontend Actions run #491 (ID `43834851692`) passed the frontend API contract suite and production build.
+- Cloudflare Pages production deployment `414694b7-acbe-4616-b436-60af71d1c4af` completed successfully for the merged frontend commit. Canonical app URL remains `https://smart-student-portal.pages.dev`.
+- UI fetches the saved subject/date register, tracks actual attendance record IDs, enables targeted correction only when server metadata allows it, and submits changes one row at a time through the existing PATCH API. It preserves partial-register, staged-change and clipboard safeguards.
+
+### Validation boundary
+- CI uses mocked API responses. A real Teacher browser acceptance test remains outstanding: mark a register, reload, perform a correction inside 30 minutes, and verify expired and proof-submitted records stay read-only. Do not represent mocked tests as production account E2E.
+- This release made no attendance-data, timetable or database-schema changes.
+
+### Next candidate — Phase III, Chunk 3: timetable contract
+- Student and Teacher timetable pages remain explicit unavailable placeholders. Backend `prisma/schema.prisma` has no timetable/session model, and Student/Teacher routes have no timetable read API.
+- Do not use attendance `markedAt` as a scheduled start time; it records register submission.
+- Agree on the authoritative schedule model before implementation: recurring weekly slots with validity dates, or individually dated sessions. The decision must cover holidays/one-off changes, timezone, room/location, teacher assignment, effective dates and overlap rules. Do not invent sample timetable rows or display unverified data.
+- No Chunk 3 schema migration or UI implementation has begun.
