@@ -949,3 +949,10 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - System changes update the page live until the user clicks the topbar theme button. A clicked Light/Dark choice persists in `ltsu-theme-preference` and overrides the OS setting.
 - Shared helper: `src/features/shared/theme/themePreference.js`. Legacy `ltsu-theme` is ignored because the old App wrote automatic appearance as if it were a manual preference.
 - Frontend-only change; no API or database changes. Validate dark/light first visit, live device setting changes and persistent manual override.
+
+
+## Current implementation — toast animation consistency (November 16, 2026)
+- All custom app toast messages now use the branded toast helper; announcement, Teacher attendance, Teacher assignment and Teacher resources success/errors no longer use the generic native toast methods.
+- Removed nested Framer Motion animation from the card. React Hot Toast supplies one entrance/dismissal transition; branded card supplies responsive dark-aware content, manual close and matching progress bar.
+- Toast lifetime/progress are both 4.2 seconds; progress pauses on hover/focus and respects reduced-motion preferences. Error messages use alert semantics.
+- Regression tests: `tests/toast-animation.test.js`. No backend or database changes.
