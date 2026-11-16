@@ -17,6 +17,7 @@ import { useAuth } from "../../auth/context/AuthContext";
 import {
   buildTeacherAttendanceRegisterCsv,
   createTeacherAttendanceCsvFilename,
+  selectSavedAttendanceRows,
 } from "../utils/teacherAttendanceCsv.js";
 import { getApiBaseUrl } from "../../auth/api/authApi";
 import {
@@ -357,22 +358,8 @@ const TeacherAttendance = memo(() => {
   );
 
   const savedRegisterRows = useMemo(
-    () =>
-      visibleRoster.flatMap((student) => {
-        const metadata = recordMeta[student.id];
-        if (!metadata || !Object.hasOwn(savedRecords, student.id)) return [];
-
-        return [{
-          student,
-          attendance: {
-            status: savedRecords[student.id],
-            remarks: metadata.remarks,
-            markedAt: metadata.markedAt,
-            proofSubmitted: metadata.proofSubmitted,
-          },
-        }];
-      }),
-    [visibleRoster, recordMeta, savedRecords],
+    () => selectSavedAttendanceRows(visibleRoster, savedRecords, recordMeta),
+    [visibleRoster, savedRecords, recordMeta],
   );
 
   const exportSavedRegister = () => {
@@ -383,7 +370,7 @@ const TeacherAttendance = memo(() => {
       attendanceDate,
       records: savedRegisterRows,
     });
-    const blob = new Blob(["\\uFEFF", csv], {
+    const blob = new Blob(["\uFEFF", csv], {
       type: "text/csv;charset=utf-8;",
     });
     const objectUrl = URL.createObjectURL(blob);
