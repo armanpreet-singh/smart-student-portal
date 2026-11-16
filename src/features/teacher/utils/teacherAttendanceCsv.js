@@ -1,3 +1,5 @@
+const VALID_STATUSES = new Set(["PRESENT", "ABSENT", "ON_DUTY_REVIEW"]);
+
 const HEADERS = [
   "Attendance date",
   "Class code",
@@ -22,6 +24,33 @@ function escapeCsvCell(value) {
     : text;
 
   return '"' + safeText.replace(/"/g, '""') + '"';
+}
+
+export function selectSavedAttendanceRows(roster, savedRecords, recordMeta) {
+  if (!Array.isArray(roster) || !savedRecords || !recordMeta) return [];
+
+  return roster.flatMap((student) => {
+    const metadata = recordMeta[student?.id];
+    const status = savedRecords[student?.id];
+    if (
+      !student?.id ||
+      !metadata ||
+      !Object.hasOwn(savedRecords, student.id) ||
+      !VALID_STATUSES.has(status)
+    ) {
+      return [];
+    }
+
+    return [{
+      student,
+      attendance: {
+        status,
+        remarks: metadata.remarks,
+        markedAt: metadata.markedAt,
+        proofSubmitted: metadata.proofSubmitted === true,
+      },
+    }];
+  });
 }
 
 export function buildTeacherAttendanceRegisterCsv({
