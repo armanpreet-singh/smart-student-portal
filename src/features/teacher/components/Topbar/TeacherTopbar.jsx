@@ -22,6 +22,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useDashboardTheme } from "../../../../features/dashboard/hooks/useDashboardTheme";
 import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySubmenu';
 import { useAuth } from "../../../auth/context/AuthContext";
+import NotificationBell from "../../../shared/notifications/NotificationBell";
 
 const TeacherTopbar = memo(({ onMenuClick }) => {
   const location = useLocation();
@@ -111,6 +112,7 @@ const TeacherTopbar = memo(({ onMenuClick }) => {
         >
           {isDark ? <Sun size={20} /> : <Moon size={20} />}
         </button>
+        <NotificationBell />
 
         <div className="d-avatar-wrapper" ref={dropdownRef}>
           <button
