@@ -1194,3 +1194,23 @@ This is the latest authoritative frontend delivery state.
 ### Next candidate
 
 Phase III, Chunk 2: expose the existing 30-minute Teacher attendance correction capability in the Teacher UI. Preserve server-side authorization and correction-window enforcement; add refresh-safe attendance record ID state and explicit correction feedback.
+
+
+## Phase III, Chunk 2 — Teacher attendance correction UI (2026-11-16)
+
+- Frontend PR #62: https://github.com/armanpreet-singh/smart-student-portal/pull/62 — open and unmerged.
+- Branch: `feat/teacher-attendance-corrections`.
+- Implementation head before this handoff append: `17a18a88787f28fd987e1dbe70ea3ff655a8d015`.
+- Added `src/features/teacher/api/teacherAttendanceCorrectionApi.js` for date-scoped register lookup and targeted PATCH correction. Response validation rejects invalid dates, duplicated row/student identities, invalid statuses, mismatched subjects/dates, and editability that contradicts ownership/proof lock.
+- Teacher Attendance now loads saved registers whenever the Teacher selects a subject/date, including after refresh. It maps each Student to the server attendance record ID/status/edit metadata.
+- Saved status changes are staged per Student and persisted only by the row's **Save correction** action through the existing PATCH API. UI shows the correction deadline or a read-only reason: proof already submitted, another Teacher marked it, or the correction window expired.
+- Bulk marking remains available only when no register exists. Existing/partial registers cannot be re-submitted, avoiding the backend's duplicate-record conflict. Unrecorded Student rows in a partial register are excluded from totals and clipboard output.
+- Subject/date changes clear previous register IDs and state before loading the new register; controls are locked while switching registers or saving a correction to avoid applying an old record ID to a different selected date.
+- Demo mode remains browser-local and retains its prior final-submit behavior; live API errors do not silently fall back to demo data.
+- Added 8 mocked frontend API contract tests. Frontend Actions run #487 (ID `43833181082`) passed the complete **96-test** suite and Vite production build.
+- Backend dependency: `armanpreet-singh/ltsu-backend` PR #5 adds the date-scoped read API. Backend PR #5 must be merged/deployed before merging/deploying frontend PR #62.
+- No production data, database schema, secrets, Render settings or deployment changed in this PR.
+
+### Validation boundary
+
+Mocked API tests do not replace live browser validation. After ordered deployment, use a Teacher test account to mark a register, reload the page, correct one row within 30 minutes, verify the changed status in Student/Admin views, confirm an expired record is read-only, and confirm a proof-submitted record cannot be changed.
