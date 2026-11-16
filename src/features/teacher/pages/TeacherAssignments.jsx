@@ -537,7 +537,11 @@ const TeacherAssignments = memo(() => {
                         <input
                           type="file"
                           accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
-                          onChange={(event) => updateForm("attachmentFile", event.target.files?.[0] || null)}
+                          onChange={(event) => setForm((current) => ({
+                            ...current,
+                            attachmentFile: event.target.files?.[0] || null,
+                            removeAttachment: false
+                          }))}
                           disabled={saving}
                         />
                       </label>
