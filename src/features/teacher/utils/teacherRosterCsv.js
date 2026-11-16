@@ -12,7 +12,7 @@ const HEADERS = [
 function escapeCsvCell(value) {
   const text = value === null || value === undefined ? "" : String(value);
   // Roster text is untrusted input; neutralize spreadsheet formula prefixes.
-  const safeText = /^[\\u0000-\\u0020]*[=+\\-@]/.test(text)
+  const safeText = /^[\u0000-\u0020]*[=+\-@]/.test(text)
     ? "'" + text
     : text;
 
@@ -37,7 +37,7 @@ export function buildTeacherRosterCsv(assignment, students) {
 
   return [HEADERS, ...rows]
     .map((row) => row.map(escapeCsvCell).join(","))
-    .join("\\r\\n");
+    .join("\r\n");
 }
 
 export function createTeacherRosterCsvFilename(subjectCode) {
@@ -47,5 +47,5 @@ export function createTeacherRosterCsvFilename(subjectCode) {
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
 
-  return `teacher-roster-${safeSubjectCode || "subject"}.csv`;
+  return \`teacher-roster-\${safeSubjectCode || "subject"}.csv\`;
 }
