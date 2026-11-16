@@ -66,7 +66,7 @@ describe("Teacher roster CSV export", () => {
     ]);
 
     assert.ok(csv.includes('"\'=HYPERLINK(""https://bad.example"")"'));
-    assert.ok(csv.includes('"'+SUM(1,1)"'));
+    assert.ok(csv.includes(String.fromCharCode(34, 39) + "+SUM(1,1)" + String.fromCharCode(34)));
     assert.ok(csv.includes('"\'  @CMD"'));
   });
 
