@@ -151,7 +151,7 @@ describe("Teacher attendance correction API contracts", () => {
       (error) => error.status === 400,
     );
     await assert.rejects(
-      fetchTeacherAttendanceForDate("teacher-token", "subject-1", "2026-11-16"),
+      fetchTeacherAttendanceForDate("", "subject-1", "2026-11-16"),
       (error) => error.status === 401,
     );
     assert.equal(calls.length, 0);
