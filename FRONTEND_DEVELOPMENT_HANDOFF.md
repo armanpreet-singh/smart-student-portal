@@ -1466,3 +1466,14 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - This is an authentication/API contract change only. No Prisma schema, database migration, account record or production data was changed. Any other API client calling `POST /api/auth/login` must now include `requestedRole`.
 - Real Student/Faculty/Administrator account acceptance testing is still required: verify each correct role can sign in, and verify a valid account is rejected when a different portal is selected. CI and deployment success do not replace those live-account checks.
 - Timetable remains explicitly deferred. Next work should follow the role acceptance findings or another independently verified defect; do not add speculative features.
+
+
+## Authoritative release — Phase III, Chunk 12: generic login failure message (2026-11-16)
+
+- Backend PR #9: https://github.com/armanpreet-singh/ltsu-backend/pull/9 — merged at `a0d4e9b347e077bbed8e05612bc99491bbae29de`. Backend PR CI #133 passed **66/66 tests**; main CI #134 passed. Render production deployment `dep-dbtfb62jnfac73db9ftg` is **live** on the generic-response backend commit.
+- Frontend PR #72: https://github.com/armanpreet-singh/smart-student-portal/pull/72 — merged at `ea666a86a04f4bad41f57aa01bd052b0e47212e1`. Frontend PR CI #537 passed **137/137 tests** and the Vite production build; main CI #538 passed. Cloudflare Pages production deployment `9d05e190-1228-473f-b0ab-7847831b74ba` completed successfully. Canonical app: https://smart-student-portal.pages.dev.
+- The login failure message is now exactly **`Invalid credentials.`** for incorrect passwords, unknown/inactive accounts, and selected-portal role mismatches. The UI ignores role-specific response text for HTTP 401/403. The backend also returns the same generic message and HTTP 401 for role mismatches, before creating an access token.
+- The role enforcement from Chunk 11 is unchanged: credentials authenticate only when the selected portal matches the account role. Only the wording/status classification of failed authentication changed.
+- Added frontend regression coverage proving 401 and 403 responses both display the generic message even when the API body contains role-specific detail. Backend selected-role tests now assert generic HTTP 401 behavior.
+- No account, password, Prisma schema, database migration or production data was changed.
+- Real Student/Faculty/Administrator acceptance testing remains outstanding; verify correct-role login works and mismatched-role login shows only **Invalid credentials.** Timetable remains deferred.
