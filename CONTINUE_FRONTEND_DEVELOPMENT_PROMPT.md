@@ -842,3 +842,38 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Added frontend regression coverage proving 401 and 403 responses both display the generic message even when the API body contains role-specific detail. Backend selected-role tests now assert generic HTTP 401 behavior.
 - No account, password, Prisma schema, database migration or production data was changed.
 - Real Student/Faculty/Administrator acceptance testing remains outstanding; verify correct-role login works and mismatched-role login shows only **Invalid credentials.** Timetable remains deferred.
+
+
+## Phase III, Chunk 13 — Functional Teacher and Student Assignments (2026-11-16)
+
+### Delivered and deployed
+- Frontend PR #73: https://github.com/armanpreet-singh/smart-student-portal/pull/73 — merged at `f91ae6f375a5a8b71cafc61dd9d830bf80548471`.
+- Frontend PR CI #549 passed **148/148 tests** and Vite production build; main CI #550 passed.
+- Cloudflare Pages production deployment `f638583f-15c6-4ae7-a15d-047c534db355` succeeded on the frontend merge commit. Canonical URL: https://smart-student-portal.pages.dev.
+- Backend assignment PR #10 merged at `9a071b4dd1f53073232f57b4ae29d54b1a742bee`; backend startup hotfix PR #11 merged at `f69e76cff9356164c9c6e5af670e9afdc64d1f57`. Backend PR CI #137 passed **76/76**, hotfix PR CI #139 passed **77/77**, and main CI #140 passed.
+- Initial Render deployment failed after applying the migration because Student routes used `validateBody` without importing it. The hotfix imports it and adds a Student/Teacher route-module import regression test. Render deployment `dep-dbtfpvtbedkc73d8tgc0` is now **live**; Render logs show the server listening on port 10000 and no pending migrations.
+
+### Teacher portal — Assignments
+- Replaced the unavailable placeholder with a real API-backed workspace.
+- Create assignment drafts for an active subject assigned to the signed-in Teacher; enter title, instructions, optional deadline, and maximum marks.
+- Edit drafts before publishing. Publish coursework to the class associated with the selected Subject.
+- See assignment state, class, deadline, maximum marks, submission counts, and active class size.
+- Open submission management to review each active Student, identify missing submissions, read submitted text, save marks/feedback, and publish each result.
+- Results remain private until the Teacher publishes them.
+
+### Student portal — Assignments
+- Replaced the unavailable placeholder with a real API-backed list of assignments published for the authenticated Student's active Class.
+- Submit and resubmit text answers before the deadline. The server rejects late submissions.
+- Resubmitting replaces the prior answer and resets the previous grade. The UI warns that a previously published grade is withdrawn until the new answer is graded and published.
+- View marks and Teacher feedback only after the result is published.
+- Includes loading, empty, error, retry, deadline, submitted, and result states. No mock assignment titles or browser-local assignment state is used.
+
+### API/data contract
+- Added authenticated API clients in `src/features/teacher/api/teacherAssignmentsApi.js` and `src/features/dashboard/api/studentAssignmentsApi.js`.
+- Backend access rules rely on server-side TeacherSubject and Student class relationships; the client cannot widen access by changing a Subject or Student identifier.
+- The new persisted lifecycle is documented in backend handoff: `Assignment` and `AssignmentSubmission` models, migration `20261116130000_add_assignments`.
+- Current release is text-only. It does not claim to support file attachments.
+
+### Remaining acceptance
+- Verify with real Teacher and Student accounts: draft creation, publish to a real assigned class, Student visibility/submission, cross-class isolation, grading, grade publication, deadline rejection, and resubmission.
+- No real account/browser acceptance was performed during CI/deployment. Timetable remains deferred.
