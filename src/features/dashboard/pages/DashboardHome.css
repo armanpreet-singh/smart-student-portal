@@ -411,17 +411,17 @@
   color: var(--d-success);
 }
 
-.s-dashboard-status.late {
-  background: rgba(212, 175, 55, 0.16);
-  color: #9a7410;
-}
-
 .s-dashboard-status.absent {
   background: rgba(220, 38, 38, 0.1);
   color: var(--d-danger);
 }
 
-.s-dashboard-status.excused {
+.s-dashboard-status.on-duty-review {
+  background: rgba(212, 175, 55, 0.16);
+  color: #9a7410;
+}
+
+.s-dashboard-status.unknown {
   background: rgba(107, 114, 128, 0.12);
   color: var(--d-text-secondary);
 }
