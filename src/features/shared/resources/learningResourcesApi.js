@@ -133,7 +133,7 @@ export async function fetchLearningResources(accessToken, role) {
 }
 
 export async function uploadTeacherLearningResource(accessToken, input) {
-  if (!input || !(input.file instanceof File)) {
+  if (!input || typeof File === "undefined" || !(input.file instanceof File)) {
     throw createApiError("Choose a notes file to upload.", 400);
   }
   const body = new FormData();
