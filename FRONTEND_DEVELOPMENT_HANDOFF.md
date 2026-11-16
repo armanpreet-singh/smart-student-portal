@@ -1670,3 +1670,12 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Toast cards now use one neutral translucent white-glass surface in both portal themes: 46% / 24% gradient opacity, 24px backdrop blur, restrained white highlights, and dark readable text. The surface no longer changes to a solid blue/navy panel when the browser or portal is in dark mode.
 - Kept the semantic status icon, accent rail, dismiss button, 4.2-second progress line, Sonner stack/animation, responsive layout and reduced-motion handling. A nearly opaque neutral fallback remains only for browsers without backdrop-filter support.
 - Regression tests explicitly reject the previous navy background. Frontend-only; no API/backend/database changes.
+
+
+## Layered notification experience — November 16, 2026
+- The shared role-aware notification bell now provides All / Unread filters, sorted feed entries, preserved unread counts, mark-one-read / mark-all-read actions, direct route navigation, and quiet refresh every 45 seconds.
+- Unread `ATTENDANCE_LOW` and `ASSIGNMENT_DEADLINE` notifications surface as a dismissible page-level priority banner across Student, Teacher and Admin dashboards. Dismissing the banner leaves the item unread in the notification centre; opening it marks it read and follows its in-app destination.
+- Added a reusable accessible in-app `ConfirmDialog` and replaced browser `window.confirm` calls for Teacher resource deletion, announcement draft deletion, and announcement publishing. The dialog supports Escape/backdrop cancellation, focus restoration, busy state, and primary/danger variants.
+- Existing form-level inline validation/error regions and Sonner glass toasts remain separate layers: inline for field/page context, toast for immediate action feedback, notification centre for persistent updates, banner for unread high-priority items, confirmation dialog for consequential actions.
+- No API, backend, database or migration changes. Existing role-scoped notification endpoints and 45-second polling remain unchanged. Browser push/email/SMS delivery is not added in this change.
+- Regression coverage: `tests/notification-experience.test.js`, plus existing notification API and toast tests. CI/build and deployment do not replace Student/Teacher/Admin browser acceptance testing.
