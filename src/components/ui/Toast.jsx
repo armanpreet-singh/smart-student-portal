@@ -1,6 +1,11 @@
 import { toast } from "sonner";
-import { X } from "lucide-react";
-import { ltsuLogo } from "../../assets/images/logo";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Info,
+  X,
+  XCircle
+} from "lucide-react";
 import "./Toast.css";
 
 const COLORS = {
@@ -8,6 +13,13 @@ const COLORS = {
   error: "#DC2626",
   warning: "#D97706",
   info: "#2563EB"
+};
+
+const STATUS_ICONS = {
+  success: CheckCircle2,
+  error: XCircle,
+  warning: AlertTriangle,
+  info: Info
 };
 
 export default function Toast({
@@ -18,6 +30,7 @@ export default function Toast({
   duration = 4200
 }) {
   const isError = type === "error";
+  const StatusIcon = STATUS_ICONS[type] || STATUS_ICONS.info;
 
   return (
     <div
@@ -31,9 +44,9 @@ export default function Toast({
       }}
     >
       <div className="toast-body">
-        <div className="toast-logo" aria-hidden="true">
-          <img src={ltsuLogo} alt="" />
-        </div>
+        <span className="toast-status-icon" aria-hidden="true">
+          <StatusIcon size={18} strokeWidth={2.2} />
+        </span>
 
         <div className="toast-content">
           <h4>{title}</h4>
@@ -46,7 +59,7 @@ export default function Toast({
           onClick={() => toast.dismiss(toastId)}
           aria-label="Dismiss notification"
         >
-          <X size={17} />
+          <X size={16} />
         </button>
       </div>
 
