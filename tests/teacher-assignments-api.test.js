@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   fetchTeacherAssignments,
   createTeacherAssignment,
+  fetchTeacherAssignmentAttachment,
   fetchTeacherAssignmentSubmissions,
   gradeTeacherAssignmentSubmission,
   publishTeacherAssignment
@@ -13,6 +14,8 @@ const assignment = {
   id: "assignment-1",
   title: "Functions and arrays",
   instructions: "Submit your solution.",
+  assignmentDate: "2026-11-16T00:00:00.000Z",
+  attachment: null,
   dueAt: "2026-11-20T12:00:00.000Z",
   maxMarks: 50,
   publishedAt: null,
@@ -77,13 +80,17 @@ test("Teacher creates draft with explicit due date and maximum marks", async () 
     subjectId: "subject-1",
     title: assignment.title,
     instructions: assignment.instructions,
+    assignmentDate: assignment.assignmentDate,
     dueAt: assignment.dueAt,
     maxMarks: 50
   }));
 
-  assert.equal(body.subjectId, "subject-1");
-  assert.equal(body.maxMarks, 50);
-  assert.equal(body.publishedAt, undefined);
+  assert.ok(body instanceof FormData);
+  assert.equal(body.get("subjectId"), "subject-1");
+  assert.equal(body.get("assignmentDate"), assignment.assignmentDate);
+  assert.equal(body.get("dueAt"), assignment.dueAt);
+  assert.equal(body.get("maxMarks"), "50");
+  assert.equal(body.get("publishedAt"), null);
 });
 
 test("Teacher can review the complete class roster and persisted submissions", async () => {
@@ -159,4 +166,59 @@ test("Teacher API reports server validation errors without pretending a save suc
       );
     }
   );
+});
+
+
+test("Teacher draft upload sends an attached PDF as multipart data", async () => {
+  let formData;
+  const attachment = new File(["%PDF-1.7"], "questions.pdf", { type: "application/pdf" });
+  const responseAssignment = {
+    ...assignment,
+    instructions: "",
+    attachment: {
+      fileName: "questions.pdf",
+      mimeType: "application/pdf",
+      format: "pdf",
+      bytes: 8
+    }
+  };
+
+  const result = await withMockedFetch(async (_url, options) => {
+    formData = options.body;
+    assert.equal(options.headers["Content-Type"], undefined);
+    return jsonResponse({ assignment: responseAssignment });
+  }, () => createTeacherAssignment("teacher-token", {
+    subjectId: "subject-1",
+    title: "Questions PDF",
+    instructions: "",
+    assignmentDate: assignment.assignmentDate,
+    dueAt: assignment.dueAt,
+    maxMarks: 50,
+    attachmentFile: attachment
+  }));
+
+  assert.ok(formData instanceof FormData);
+  assert.equal(formData.get("attachment").name, "questions.pdf");
+  assert.equal(formData.get("instructions"), "");
+  assert.equal(result.attachment.fileName, "questions.pdf");
+});
+
+test("Teacher can request a temporary attachment link for an owned assignment", async () => {
+  const attachment = {
+    url: "https://signed.example/questions.pdf",
+    expiresAt: "2026-11-16T12:05:00.000Z",
+    fileName: "questions.pdf",
+    mimeType: "application/pdf"
+  };
+  const result = await withMockedFetch(
+    async (url, options) => {
+      assert.ok(url.endsWith("/api/teacher/assignments/assignment-1/attachment"));
+      assert.equal(options.headers.Authorization, "Bearer teacher-token");
+      return jsonResponse({ attachment });
+    },
+    () => fetchTeacherAssignmentAttachment("teacher-token", "assignment-1")
+  );
+
+  assert.equal(result.url, attachment.url);
+  assert.equal(result.fileName, attachment.fileName);
 });
