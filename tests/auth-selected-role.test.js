@@ -69,8 +69,8 @@ test("login rejects a successful response whose role differs from the selected p
       }),
     ),
     (error) => (
-      error.status === 403 &&
-      error.message === "These credentials do not belong to the selected portal. Choose the correct portal and try again."
+      error.status === 401 &&
+      error.message === "Invalid credentials."
     ),
   );
 });
