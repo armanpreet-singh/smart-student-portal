@@ -926,3 +926,11 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Student Learning Resources is a read-only class-scoped list with search and protected download actions.
 - Supports PDF, DOC, DOCX, PPT, PPTX, TXT, JPEG and PNG up to 20 MB. Uploaded notes are immediately visible to the selected Class. No push/email notifications or in-app preview.
 - Backend performs subject assignment, Student class, upload ownership and download authorization. Use actual account testing to verify Cloudinary operations and cross-Class denial before release acceptance. Timetable remains deferred.
+
+
+## Current implementation — Role-based notifications (November 16, 2026)
+- Shared NotificationBell is mounted in Admin, Teacher and Student topbars. Teacher bell was added; Student/Admin decorative bells now use persisted server data.
+- API uses `/api/{role}/notifications`, `PATCH /:id/read` and `POST /read-all`; links stay within the matching portal.
+- Dropdown displays unread count, notification list, loading/error/empty states, read/unread status, mark one and mark all.
+- Feed polls every 45 seconds while visible and refreshes on focus/visibility return. No browser push, email, SMS or mobile push.
+- Verify live event timing for low attendance (<75%), assignments, deadline reminders, announcements, class notes, student submissions, released results and duty-proof submissions across all roles. Timetable remains deferred.
