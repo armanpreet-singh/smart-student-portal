@@ -25,15 +25,8 @@ function createApiError(message, status = 0, details = []) {
 }
 
 function getLoginErrorMessage(status, payload) {
-  if (status === 401) {
-    return "The username or password is incorrect.";
-  }
-
-  if (status === 403) {
-    return (
-      payload?.message ||
-      "These credentials do not belong to the selected portal. Choose the correct portal and try again."
-    );
+  if (status === 401 || status === 403) {
+    return "Invalid credentials.";
   }
 
   if (status === 429) {
@@ -121,8 +114,8 @@ export async function loginWithUsername({ username, password, requestedRole }) {
 
   if (result.user.role !== requestedRole) {
     throw createApiError(
-      "These credentials do not belong to the selected portal. Choose the correct portal and try again.",
-      403,
+      "Invalid credentials.",
+      401,
     );
   }
 
