@@ -1585,3 +1585,22 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Supported: PDF, DOC, DOCX, PPT, PPTX, TXT, JPEG and PNG; 20 MB maximum.
 - Uploads are shared immediately; there is no separate draft/publish step. No push/email notifications, upload progress percentage, or in-app file preview was added.
 - Real Teacher upload, Student download and cross-Class denial must still be accepted with real accounts. CI/build success does not prove the configured Cloudinary account can store and deliver each format. Timetable remains deferred.
+
+
+## Notifications — all three portal roles (November 16, 2026)
+
+### Shared notification centre
+- Replaced the decorative Student/Admin bell controls with a working shared notification dropdown and added the missing bell to the Teacher topbar.
+- Shared component lives at `src/features/shared/notifications/NotificationBell.jsx`; API contract lives at `notificationsApi.js`.
+- All three roles see their server-scoped notification feed, unread count, read/unread styling, Mark all read, click-to-open portal links, loading/error/empty states and refresh.
+- Feed fetches on authentication, on opening the dropdown, every 45 seconds while the tab is visible, and when the browser window/tab becomes active again.
+
+### Role events surfaced
+- Student: low attendance (<75%) by subject, new assignments, 24-hour and 1-hour due reminders, class/university announcements, uploaded class notes and published assignment results.
+- Teacher: student assignment submissions, duty-proof uploads for assigned subjects, new subject assignments and Admin notices for Teachers/Everyone.
+- Admin: Teacher-published announcements/assignments/resources and duty-proof submissions, plus other Admin-audience platform notices.
+
+### Delivery limitations
+- This is an in-portal notification centre, not a push notification system. No browser push permission, email, SMS or mobile push was added. The portal must be open or revisited to refresh the feed; visible tabs poll every 45 seconds.
+- Notification API only displays server-created records for the signed-in role/account. Clicking a notification marks it read and follows its same-portal link.
+- Test real Admin, Teacher and Student accounts for event receipt, correct links, unread count, mark-one/all-read, attendance threshold and recovery, and assignment deadline timing. Timetable remains deferred.

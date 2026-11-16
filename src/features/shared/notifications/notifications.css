@@ -1,0 +1,36 @@
+.d-notification-wrapper { position: relative; display: flex; align-items: center; }
+.d-notification-trigger { flex: 0 0 auto; }
+.d-notification-count { position: absolute; top: 1px; right: -1px; display: flex; min-width: 17px; height: 17px; align-items: center; justify-content: center; padding: 0 4px; border: 2px solid var(--d-bg); border-radius: 999px; background: var(--d-danger); color: #fff; font-size: 9px; font-weight: 800; line-height: 1; }
+.d-notification-panel { position: absolute; top: calc(100% + 13px); right: -45px; z-index: 1100; display: flex; width: min(390px, calc(100vw - 24px)); max-height: min(620px, calc(100vh - 110px)); flex-direction: column; overflow: hidden; border: 1px solid var(--d-border); border-radius: 14px; background: var(--d-surface); box-shadow: 0 22px 55px rgba(15, 23, 42, .2); color: var(--d-text); }
+.d-notification-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 17px 13px; border-bottom: 1px solid var(--d-border); }
+.d-notification-panel-header h2 { margin: 0; font-size: 15px; font-weight: 800; }
+.d-notification-panel-header > div:first-child span { display: block; margin-top: 4px; color: var(--d-text-secondary); font-size: 10px; }
+.d-notification-panel-actions { display: flex; align-items: center; gap: 9px; }
+.d-notification-panel-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 6px 7px; border: 0; border-radius: 7px; background: transparent; color: var(--d-primary); font: inherit; font-size: 10px; font-weight: 700; cursor: pointer; }
+.d-notification-panel-actions button:disabled { cursor: wait; opacity: .6; }
+.d-notification-panel-actions .d-notification-close { width: 28px; height: 28px; color: var(--d-text-secondary); }
+.d-notification-list { overflow-y: auto; overscroll-behavior: contain; }
+.d-notification-item { display: flex; width: 100%; align-items: flex-start; gap: 11px; padding: 13px 15px; border: 0; border-bottom: 1px solid var(--d-border); background: transparent; color: var(--d-text); text-align: left; cursor: pointer; transition: background .15s ease; }
+.d-notification-item:hover { background: var(--d-bg); }
+.d-notification-item.is-unread { background: color-mix(in srgb, var(--d-primary) 5%, var(--d-surface)); }
+.d-notification-item:disabled { cursor: wait; opacity: .7; }
+.d-notification-item-icon { display: grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; border-radius: 10px; background: var(--d-bg); color: var(--d-primary); }
+.d-notification-item-icon.type-attendance_low { background: rgba(220, 38, 38, .09); color: #c13939; }
+.d-notification-item-icon.type-assignment_deadline { background: rgba(217, 119, 6, .1); color: #b36b12; }
+.d-notification-item-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 4px; }
+.d-notification-item-copy strong { color: var(--d-text); font-size: 11px; font-weight: 800; line-height: 1.4; }
+.d-notification-item-copy > span { color: var(--d-text-secondary); font-size: 10px; line-height: 1.5; overflow-wrap: anywhere; }
+.d-notification-item-copy small { color: var(--d-text-secondary); font-size: 9px; }
+.d-notification-unread-indicator { width: 7px; height: 7px; flex: 0 0 auto; margin-top: 5px; border-radius: 50%; background: var(--d-primary); }
+.d-notification-read-check { flex: 0 0 auto; margin-top: 4px; color: var(--d-text-secondary); opacity: .6; }
+.d-notification-state { display: flex; min-height: 105px; flex-direction: column; align-items: center; justify-content: center; gap: 9px; padding: 20px; color: var(--d-text-secondary); font-size: 11px; text-align: center; }
+.d-notification-state button { padding: 5px 10px; border: 1px solid var(--d-border); border-radius: 7px; background: var(--d-bg); color: var(--d-primary); font: inherit; font-weight: 700; cursor: pointer; }
+.d-notification-empty strong { color: var(--d-text); font-size: 12px; }
+.d-notification-empty span { max-width: 230px; line-height: 1.5; }
+.d-notification-error { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: #fff7f7; color: #a52b2b; font-size: 10px; }
+.d-notification-error span { flex: 1; }
+.d-notification-error button { display: grid; width: 25px; height: 25px; place-items: center; border: 0; background: transparent; color: inherit; cursor: pointer; }
+.d-notification-panel-footer { padding: 10px 15px; border-top: 1px solid var(--d-border); color: var(--d-text-secondary); font-size: 9px; text-align: center; }
+.d-notification-spin { animation: d-notification-rotate 1s linear infinite; }
+@keyframes d-notification-rotate { to { transform: rotate(360deg); } }
+@media (max-width: 520px) { .d-notification-panel { position: fixed; top: 76px; right: 10px; width: calc(100vw - 20px); max-height: calc(100vh - 90px); } }
