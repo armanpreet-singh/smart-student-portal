@@ -934,3 +934,11 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Dropdown displays unread count, notification list, loading/error/empty states, read/unread status, mark one and mark all.
 - Feed polls every 45 seconds while visible and refreshes on focus/visibility return. No browser push, email, SMS or mobile push.
 - Verify live event timing for low attendance (<75%), assignments, deadline reminders, announcements, class notes, student submissions, released results and duty-proof submissions across all roles. Timetable remains deferred.
+
+
+## Current implementation — Admin System Settings (November 16, 2026)
+- Admin Settings now loads and saves persisted values through `/api/admin/system-settings`.
+- Editable values: university name/short name, support email, support phone, HTTPS website, academic year label and attendance threshold percentage.
+- Includes validation feedback, discard changes, save confirmation and last-updated Admin metadata.
+- Threshold defaults to 75% and is consumed by the backend Student low-attendance alert rule. Academic year is informational and existing class records are unchanged.
+- Confirm real Admin save/reload and a Student attendance alert at the configured threshold before sign-off. Keep timetable deferred.

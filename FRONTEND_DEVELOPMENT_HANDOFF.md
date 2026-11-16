@@ -1604,3 +1604,13 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - This is an in-portal notification centre, not a push notification system. No browser push permission, email, SMS or mobile push was added. The portal must be open or revisited to refresh the feed; visible tabs poll every 45 seconds.
 - Notification API only displays server-created records for the signed-in role/account. Clicking a notification marks it read and follows its same-portal link.
 - Test real Admin, Teacher and Student accounts for event receipt, correct links, unread count, mark-one/all-read, attendance threshold and recovery, and assignment deadline timing. Timetable remains deferred.
+
+
+## Admin System Settings — November 16, 2026
+
+- Replaced the Settings-page unavailable placeholder with an authenticated, persisted settings form using `src/features/admin/api/adminSystemSettingsApi.js`.
+- Admin can read and save university name and short name, support email, support phone, HTTPS website, academic year label and minimum attendance alert threshold (1–100; default 75%).
+- Save action shows server validation and success/error states, supports discarding unsaved changes, and displays last-updated timestamp and Admin attribution.
+- Settings are loaded from and saved to Admin-only backend endpoints. The academic year field is informational; it does not alter existing classes. Contact details are stored but not yet automatically displayed on other portals.
+- No passwords, tokens, Cloudinary keys, database connection strings, security configuration or maintenance-mode toggles are shown.
+- Verify with a real Admin account that save, refresh/reload and invalid input handling work. Backend threshold integration is tested separately; a Student below the configured value should receive the corresponding attendance notification.
