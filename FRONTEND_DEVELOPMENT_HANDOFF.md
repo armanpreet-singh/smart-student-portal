@@ -1383,3 +1383,19 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Added `tests/admin-student-form-state.test.js` to verify the complete reset shape and that each reset returns an independent fresh object.
 - Frontend-only. No backend/API/account data/DB/schema change, no provisioning policy change, no timetable work.
 - Branch: `fix/admin-student-provisioning-form-reset`. PR and CI status will be appended after validation.
+
+
+## Authoritative release — Phase III, Chunk 6: Admin Student provisioning form reset (2026-11-16)
+
+- Frontend PR #66: https://github.com/armanpreet-singh/smart-student-portal/pull/66 — merged into `main` at `55608f6b9d94994dd5a5d23ec0f8c10989a2aa08`.
+- PR Actions run #510 / ID `43850380370` passed **112/112 tests**, 0 failures, and the Vite production build (`✓ built in 4.80s`).
+- Main push run #511 / ID `43850494633` completed successfully for the merge commit.
+- Cloudflare Pages production deployment `f24ac945-f93e-4683-854f-02bd745a1e89` completed all stages successfully for the merge commit. Canonical app: https://smart-student-portal.pages.dev.
+- The Admin Student creation form now uses `createEmptyAdminStudentForm()` for initial state, Escape close, Cancel close and successful-create reset. The optional `rollNumber` field always returns to `""`, so subsequent submissions do not call `.trim()` on `undefined`.
+- Added two unit tests for the complete empty-state shape and independent fresh objects. Existing optional roll number and leading-zero behavior is unchanged.
+- Frontend-only. No backend/API/account data/DB/schema/migration changes. Live Admin browser acceptance remains outstanding.
+
+### Next-work audit
+- The parallel Teacher provisioning form was inspected: its current five-field initial and reset objects are aligned; no equivalent missing-field regression was found.
+- Next bounded review: audit the Admin Class/Subject catalogue create/edit form state and validation after cancel/success/retry. Implement only a reproducible issue; do not introduce schema/API or timetable work without an authoritative contract.
+- Timetable remains explicitly deferred by the user.
