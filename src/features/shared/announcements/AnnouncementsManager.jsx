@@ -13,7 +13,7 @@ import {
   Trash2,
   Users
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { showSuccessMessage, showErrorMessage } from "../../../components/ui/toastUtils";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import { fetchTeacherAssignedSubjects } from "../../teacher/api/teacherSubjectsApi";
@@ -150,19 +150,19 @@ export default function AnnouncementsManager({ role }) {
           title: form.title.trim(),
           message: form.message.trim()
         });
-        toast.success("Announcement draft updated.");
+        showSuccessMessage("Announcement draft updated.");
       } else {
         const input = role === "admin"
           ? { title: form.title.trim(), message: form.message.trim(), audience: form.audience }
           : { subjectId: form.subjectId, title: form.title.trim(), message: form.message.trim() };
         await createAnnouncement(accessToken, role, input);
-        toast.success("Announcement draft saved.");
+        showSuccessMessage("Announcement draft saved.");
       }
       closeForm();
       await loadData();
     } catch (error) {
       setActionError(error?.message || "The announcement could not be saved.");
-      toast.error("Announcement was not saved.");
+      showErrorMessage("Announcement was not saved.");
     } finally {
       setSaving(false);
     }
@@ -173,7 +173,7 @@ export default function AnnouncementsManager({ role }) {
     setActionError("");
     try {
       await publishAnnouncement(accessToken, role, item.id);
-      toast.success("Announcement published.");
+      showSuccessMessage("Announcement published.");
       await loadData();
     } catch (error) {
       setActionError(error?.message || "The announcement could not be published.");
@@ -188,7 +188,7 @@ export default function AnnouncementsManager({ role }) {
     setActionError("");
     try {
       await deleteAnnouncement(accessToken, role, item.id);
-      toast.success("Announcement draft deleted.");
+      showSuccessMessage("Announcement draft deleted.");
       await loadData();
     } catch (error) {
       setActionError(error?.message || "The announcement draft could not be deleted.");
