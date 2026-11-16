@@ -75,13 +75,19 @@ export function subscribeToThemeChanges(onChange) {
   };
 
   window.addEventListener(THEME_CHANGE_EVENT, update);
-  media?.addEventListener?.("change", update);
-  media?.addListener?.(update);
+  if (typeof media?.addEventListener === "function") {
+    media.addEventListener("change", update);
+  } else {
+    media?.addListener?.(update);
+  }
   update();
 
   return () => {
     window.removeEventListener(THEME_CHANGE_EVENT, update);
-    media?.removeEventListener?.("change", update);
-    media?.removeListener?.(update);
+    if (typeof media?.removeEventListener === "function") {
+      media.removeEventListener("change", update);
+    } else {
+      media?.removeListener?.(update);
+    }
   };
 }
