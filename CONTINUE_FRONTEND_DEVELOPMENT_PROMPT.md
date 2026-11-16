@@ -709,3 +709,21 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Cloudflare Pages production deployment `87fbd4f5-0957-4241-bcb9-7d0d5cc1dc16` succeeded for the merge commit. Canonical app: https://smart-student-portal.pages.dev.
 - No backend, API, schema, migration, database, attendance-data, or timetable changes. Live Student-account browser acceptance remains outstanding.
 - Timetable work is explicitly deferred by the user. Do not resume it. Select the next bounded chunk from current backend-integrated frontend gaps; do not invent backend capabilities or production records.
+
+
+## Authoritative continuation — Phase III, Chunk 4: Teacher Dashboard overview (2026-11-16)
+
+- Branch: `feat/teacher-dashboard-overview`, based on latest main after Student Dashboard PR #63 and release handoff updates.
+- Replaces Teacher homepage unavailable placeholder with a read-only overview using existing `GET /api/teacher/subjects` and frontend `fetchTeacherAssignedSubjects` API client.
+- Shows active assigned-subject count, distinct active-class count, verified subject/class identifiers, academic year and assignment date. Includes loading, error/retry, no-assignment states and links to existing Teacher pages.
+- Uses helper `src/features/teacher/utils/teacherDashboardSummary.js`; tests in `tests/teacher-dashboard-summary.test.js`.
+- No new backend endpoint, database/schema change, student headcount inference, timetable, assignment, grading or attendance aggregate is included.
+- PR/CI validation and production release state must be checked directly in GitHub/Cloudflare before continuation. Real Teacher-account browser validation remains outstanding.
+- Timetable work remains deferred by the user.
+
+
+### Chunk 4 PR and CI verification — 2026-11-16
+
+- PR #64: https://github.com/armanpreet-singh/smart-student-portal/pull/64 remains open and unmerged.
+- Actions run #498 / ID `43846567768` passed all **104 tests** and the Vite production build on validated source head `dfd5e349f1b8c41c9731400b66bd2146f66ff5f4`.
+- No production deployment has occurred for this chunk. Do not claim live Teacher-account browser validation.
