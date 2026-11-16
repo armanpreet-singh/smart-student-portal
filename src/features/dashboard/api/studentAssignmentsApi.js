@@ -38,8 +38,11 @@ function isAssignment(value) {
         isOptionalDate(value.submission.submittedAt) &&
         (value.submission.result === null ||
           (Number.isInteger(value.submission.result.marksAwarded) &&
-            typeof value.submission.result.feedback === "string" ||
-            value.submission.result.feedback === null))))
+            (typeof value.submission.result.feedback === "string" ||
+              value.submission.result.feedback === null) &&
+            isOptionalDate(value.submission.result.gradedAt) &&
+            isOptionalDate(value.submission.result.publishedAt) &&
+            Boolean(value.submission.result.publishedAt)))))
   );
 }
 
