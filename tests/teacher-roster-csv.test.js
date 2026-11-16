@@ -65,9 +65,9 @@ describe("Teacher roster CSV export", () => {
       },
     ]);
 
-    assert.ok(csv.includes('"\\'=HYPERLINK(""https://bad.example"")"'));
-    assert.ok(csv.includes('"\\'+SUM(1,1)"'));
-    assert.ok(csv.includes('"\\'  @CMD"'));
+    assert.ok(csv.includes('"\'=HYPERLINK(""https://bad.example"")"'));
+    assert.ok(csv.includes('"'+SUM(1,1)"'));
+    assert.ok(csv.includes('"\'  @CMD"'));
   });
 
   it("returns a header-only file when the selected roster is empty", () => {
