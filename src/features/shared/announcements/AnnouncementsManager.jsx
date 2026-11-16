@@ -126,7 +126,6 @@ export default function AnnouncementsManager({ role }) {
   };
 
   const closeForm = () => {
-    if (saving) return;
     setFormOpen(false);
     setEditingId("");
     setForm(EMPTY_FORM);
