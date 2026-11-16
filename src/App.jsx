@@ -140,7 +140,7 @@ export default function App() {
           className: "ltsu-sonner-toast",
           duration: 4200,
           style: {
-            width: "min(380px, calc(100vw - 32px))",
+            width: "min(340px, calc(100vw - 32px))",
             padding: 0,
             border: 0,
             background: "transparent",

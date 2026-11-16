@@ -34,7 +34,7 @@ test("toast timeout and progress bar share the same configured duration", async 
   assert.match(helpers, /const DEFAULT_DURATION = 4200/);
   assert.match(app, /duration=\{4200\}/);
   assert.match(component, /--toast-duration/);
-  assert.match(css, /animation: toastProgress var\(--toast-duration, 4000ms\) linear forwards/);
+  assert.match(css, /animation: toastProgress var\(--toast-duration, 4200ms\) linear forwards/);
   assert.match(css, /animation-play-state: paused/);
 });
 
@@ -75,12 +75,19 @@ test("the package manifest and lockfile both pin Sonner and remove React Hot Toa
 });
 
 
-test("toast uses a larger transparent seal without image enlargement filters", async () => {
+test("toast uses compact type-specific status icons instead of the university logo", async () => {
+  const component = await source("components/ui/Toast.jsx");
   const css = await source("components/ui/Toast.css");
+  const app = await source("App.jsx");
 
-  assert.match(css, /\.toast-logo\s*\{[^}]*width: 60px;[^}]*height: 60px;[^}]*flex: 0 0 60px;[^}]*background: transparent;/s);
-  assert.match(css, /@media \(max-width: 480px\)[\s\S]*?\.toast-logo\s*\{[^}]*width: 48px;[^}]*height: 48px;/);
-  assert.match(css, /\.toast-logo img\s*\{[^}]*object-fit: contain;[^}]*transform: none;/s);
-  assert.doesNotMatch(css, /\.toast-logo\s*\{[^}]*background:\s*color-mix/s);
-  assert.doesNotMatch(css, /\.toast-logo img\s*\{[^}]*transform:\s*scale/s);
+  assert.match(component, /CheckCircle2/);
+  assert.match(component, /XCircle/);
+  assert.match(component, /AlertTriangle/);
+  assert.match(component, /className="toast-status-icon"/);
+  assert.doesNotMatch(component, /ltsuLogo|toast-logo|<img/);
+  assert.match(css, /width: min\(340px, calc\(100vw - 32px\)\)/);
+  assert.match(css, /\.toast-status-icon\s*\{[^}]*width: 34px;[^}]*height: 34px;/s);
+  assert.match(css, /\.toast-progress\s*\{[^}]*height: 2px;/s);
+  assert.match(app, /width: "min\(340px, calc\(100vw - 32px\)\)"/);
+  assert.doesNotMatch(css, /border-left:\s*4px/);
 });

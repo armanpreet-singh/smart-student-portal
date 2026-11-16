@@ -1,15 +1,14 @@
 .ltsu-toast {
   position: relative;
   display: flex;
-  width: min(380px, calc(100vw - 32px));
+  width: min(340px, calc(100vw - 32px));
   overflow: hidden;
   flex-direction: column;
-  border: 1px solid var(--toast-border, rgba(148, 163, 184, .22));
-  border-left: 4px solid var(--accent);
+  border: 1px solid var(--toast-border, rgba(148, 163, 184, .2));
   border-radius: 14px;
   background: var(--toast-surface, #fff);
   color: var(--toast-text, #172033);
-  box-shadow: 0 14px 36px rgba(15, 23, 42, .16), 0 4px 12px rgba(15, 23, 42, .08);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, .12), 0 3px 8px rgba(15, 23, 42, .06);
   pointer-events: auto;
   transform-origin: top right;
   will-change: transform, opacity;
@@ -17,10 +16,10 @@
 
 [data-theme="dark"] .ltsu-toast,
 .d-layout.dark-mode .ltsu-toast {
-  --toast-surface: #1e293b;
+  --toast-surface: #172235;
   --toast-border: rgba(148, 163, 184, .2);
   --toast-text: #f1f5f9;
-  box-shadow: 0 16px 42px rgba(0, 0, 0, .42);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .34);
 }
 
 .toast-body {
@@ -28,28 +27,19 @@
   display: flex;
   min-width: 0;
   align-items: center;
-  gap: 15px;
-  padding: 16px 48px 16px 16px;
+  gap: 12px;
+  padding: 13px 44px 13px 14px;
 }
 
-.toast-logo {
+.toast-status-icon {
   display: grid;
-  width: 60px;
-  height: 60px;
-  flex: 0 0 60px;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
   place-items: center;
-  overflow: visible;
-  border-radius: 0;
-  background: transparent;
-}
-
-.toast-logo img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  image-rendering: auto;
-  transform: none;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
 }
 
 .toast-content {
@@ -58,28 +48,33 @@
 }
 
 .toast-content h4 {
-  margin: 0 0 4px;
-  color: var(--accent);
-  font-size: 14px;
+  margin: 0 0 3px;
+  color: var(--toast-text, #172033);
+  font-size: 13.5px;
   font-weight: 750;
   line-height: 1.35;
 }
 
 .toast-content p {
   margin: 0;
-  color: var(--toast-text, #475569);
+  color: var(--toast-muted, #64748b);
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.45;
   overflow-wrap: anywhere;
+}
+
+[data-theme="dark"] .ltsu-toast .toast-content p,
+.d-layout.dark-mode .ltsu-toast .toast-content p {
+  --toast-muted: #bdc8d8;
 }
 
 .toast-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px;
+  right: 8px;
   display: grid;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   place-items: center;
   border: 0;
   border-radius: 7px;
@@ -101,7 +96,7 @@
 
 .toast-progress {
   width: 100%;
-  height: 3px;
+  height: 2px;
   overflow: hidden;
   background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
@@ -112,7 +107,7 @@
   background: var(--accent);
   transform: scaleX(1);
   transform-origin: left center;
-  animation: toastProgress var(--toast-duration, 4000ms) linear forwards;
+  animation: toastProgress var(--toast-duration, 4200ms) linear forwards;
 }
 
 .ltsu-toast:hover .toast-progress-fill,
@@ -132,21 +127,22 @@
 
   .toast-body {
     gap: 10px;
-    padding: 13px 42px 13px 12px;
+    padding: 12px 38px 12px 12px;
   }
 
-  .toast-logo {
-    width: 48px;
-    height: 48px;
-    flex-basis: 48px;
+  .toast-status-icon {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+    border-radius: 10px;
   }
 
   .toast-content h4 { font-size: 13px; }
-  .toast-content p { font-size: 11px; }
+  .toast-content p { font-size: 11.5px; }
 
   .toast-close {
-    top: 8px;
-    right: 8px;
+    top: 7px;
+    right: 7px;
   }
 }
 
@@ -155,11 +151,9 @@
   .toast-close { transition: none; }
 }
 
-
-/* Sonner owns the stack layout and enter/exit animation. Keep the
-   application card as the only visible surface inside its toast item. */
+/* Sonner owns the stack and enter/exit animation; this inner card owns styling. */
 [data-sonner-toast].ltsu-sonner-toast {
-  width: min(380px, calc(100vw - 32px)) !important;
+  width: min(340px, calc(100vw - 32px)) !important;
   max-width: calc(100vw - 24px) !important;
   padding: 0 !important;
   border: 0 !important;
