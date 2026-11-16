@@ -12,6 +12,7 @@ import {
   fetchActiveStudentClassOptions,
   getRollNumberInputError,
 } from "../api/adminStudentProvisioningApi";
+import { createEmptyAdminStudentForm } from "../utils/adminStudentForm";
 
 import "./StudentsPage.css";
 
@@ -105,15 +106,7 @@ const StudentsPage = () => {
   const [createError, setCreateError] = useState("");
   const [createFieldErrors, setCreateFieldErrors] = useState({});
   const [createSuccessMessage, setCreateSuccessMessage] = useState("");
-  const [createForm, setCreateForm] = useState({
-    fullName: "",
-    username: "",
-    email: "",
-    classId: "",
-    rollNumber: "",
-    temporaryPassword: "",
-    confirmPassword: "",
-  });
+  const [createForm, setCreateForm] = useState(createEmptyAdminStudentForm);
   const [classOptions, setClassOptions] = useState([]);
   const [classStatus, setClassStatus] = useState("idle");
   const [classRetry, setClassRetry] = useState(0);
@@ -205,14 +198,7 @@ const StudentsPage = () => {
     const handleEscape = (event) => {
       if (event.key === "Escape" && createStatus !== "submitting") {
         setCreateOpen(false);
-        setCreateForm({
-          fullName: "",
-          username: "",
-          email: "",
-          classId: "",
-          temporaryPassword: "",
-          confirmPassword: "",
-        });
+        setCreateForm(createEmptyAdminStudentForm());
         setCreateError("");
         setCreateFieldErrors({});
       }
@@ -231,14 +217,7 @@ const StudentsPage = () => {
   const closeCreateDialog = () => {
     if (createStatus === "submitting") return;
     setCreateOpen(false);
-    setCreateForm({
-      fullName: "",
-      username: "",
-      email: "",
-      classId: "",
-      temporaryPassword: "",
-      confirmPassword: "",
-    });
+    setCreateForm(createEmptyAdminStudentForm());
     setCreateError("");
     setCreateFieldErrors({});
   };
@@ -301,14 +280,7 @@ const StudentsPage = () => {
         `Student account created for ${created.fullName} (${created.username}). It is active and must change its temporary password at first sign-in.`,
       );
       setCreateOpen(false);
-      setCreateForm({
-        fullName: "",
-        username: "",
-        email: "",
-        classId: "",
-        temporaryPassword: "",
-        confirmPassword: "",
-      });
+      setCreateForm(createEmptyAdminStudentForm());
       setRetryCount((value) => value + 1);
     } catch (error) {
       if (error?.status === 401) {
