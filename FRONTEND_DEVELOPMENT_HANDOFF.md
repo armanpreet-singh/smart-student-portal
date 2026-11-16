@@ -1416,3 +1416,15 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 ### Next-work audit
 - Revisited the Admin Class/Subject editor state review. Both editor dialogs are conditionally mounted and unmounted on close; reopening initializes fresh state. No reproducible reset defect was found, so no speculative change was made.
 - No additional feature is selected by this release. Next bounded work should be based on the next verified workflow gap or real-role acceptance findings; do not invent timetable/configuration/announcement capabilities without an authoritative backend contract.
+
+
+## Authoritative release — Phase III, Chunk 8: Teacher Student roster CSV export (2026-11-16)
+
+- Frontend PR #68: https://github.com/armanpreet-singh/smart-student-portal/pull/68 — merged into `main` at `c0931fa83f6fa3931717fe0356cffe376f2e0477`.
+- PR workflow run #518 / ID `43857731054` passed **122/122 tests**, zero failures, and the Vite production build. Frontend main push run #519 / ID `43857912281` completed successfully.
+- Cloudflare Pages production deployment `e8855b70-1809-4b82-a4df-dabe94d7dbfa` completed every stage successfully for the merge commit. Canonical application: https://smart-student-portal.pages.dev.
+- Teacher Students now offers Export CSV for the currently displayed student rows in the selected active assigned subject. The active search filter is respected; export does not fetch or include additional records.
+- The file includes verified class and subject context, student name, username, and official roll number. Leading-zero roll numbers remain strings; CSV values are quoted and embedded quotes/commas/newlines are escaped; formula-leading text is neutralized; a UTF-8 BOM is included; the filename is sanitized and bounded.
+- Added `src/features/teacher/utils/teacherRosterCsv.js` and `tests/teacher-roster-csv.test.js`; updated `TeacherStudents.jsx` and `TeacherStudents.css`.
+- Frontend-only. No backend/API, database, Prisma schema, migration, or production data change. The new export has not yet had live Teacher-account browser/download acceptance or spreadsheet inspection; those checks remain with the user's planned testing.
+- Timetable remains explicitly deferred. Do not add unsupported calendar/announcement features without authoritative backend contracts.
