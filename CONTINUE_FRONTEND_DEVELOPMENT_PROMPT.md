@@ -727,3 +727,12 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - PR #64: https://github.com/armanpreet-singh/smart-student-portal/pull/64 remains open and unmerged.
 - Actions run #498 / ID `43846567768` passed all **104 tests** and the Vite production build on validated source head `dfd5e349f1b8c41c9731400b66bd2146f66ff5f4`.
 - No production deployment has occurred for this chunk. Do not claim live Teacher-account browser validation.
+
+
+## Authoritative continuation — PR #64 merged; Phase III, Chunk 5 selected (2026-11-16)
+
+- PR #64 (Teacher Dashboard assigned-subject overview) merged into frontend main at `75ce9e0db750db1f3451c61e1f49de18a1aebaa4`.
+- Main Actions run #501 / ID `43847143703` passed. Cloudflare Pages production deployment `d389fd20-4363-4395-a758-6a04382ba360` completed successfully.
+- Teacher Dashboard uses the existing authenticated assigned-subject API and does not claim student headcounts, timetable, attendance percentage, grading or results.
+- Next chunk: Admin existing Teacher-to-Subject assignment directory. Backend currently supports create-only `POST /api/admin/teacher-subject-assignments`; add a role-protected paginated GET read endpoint over existing `TeacherSubject` records, then render it in the Admin page. Include current related teacher/subject/class active states, exact IDs filters and bounded search. Preserve historical/inactive links in results.
+- No database schema or migration is expected. Timetable work is explicitly deferred. Live Teacher/Admin account acceptance remains outstanding.
