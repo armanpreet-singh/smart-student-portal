@@ -1614,3 +1614,12 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Settings are loaded from and saved to Admin-only backend endpoints. The academic year field is informational; it does not alter existing classes. Contact details are stored but not yet automatically displayed on other portals.
 - No passwords, tokens, Cloudinary keys, database connection strings, security configuration or maintenance-mode toggles are shown.
 - Verify with a real Admin account that save, refresh/reload and invalid input handling work. Backend threshold integration is tested separately; a Student below the configured value should receive the corresponding attendance notification.
+
+
+## Device-aware theme preference — November 16, 2026
+
+- The public landing page, login screen and Student, Teacher and Admin dashboards now initialize from `prefers-color-scheme`. A first-time user on a dark-mode device receives dark theme by default.
+- Theme preference helpers are centralized in `src/features/shared/theme/themePreference.js`. With no manual selection stored, changes to the operating-system/browser color scheme update the portal while it is open.
+- A user's explicit Sun/Moon topbar selection is persisted as `ltsu-theme-preference` and takes priority over later device changes. The same-tab custom event synchronizes the App shell and role-specific dashboard provider.
+- The previous `ltsu-theme` value is ignored because the prior App stored its initial resolved appearance automatically; it could not distinguish a user's explicit choice from a device-derived default.
+- No backend or database changes. Automated tests cover initial dark/light system preference, live OS theme changes, manual override persistence, synchronization between app/theme providers and legacy preference handling.
