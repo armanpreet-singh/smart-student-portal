@@ -4,6 +4,7 @@ import {
   LoaderCircle, RefreshCw, Trash2, UploadCloud
 } from "lucide-react";
 import { showSuccessMessage, showErrorMessage } from "../../../components/ui/toastUtils";
+import ConfirmDialog from "../../../components/ui/ConfirmDialog";
 
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
@@ -59,6 +60,7 @@ const TeacherResources = memo(() => {
   const [saving, setSaving] = useState(false);
   const [busyResourceId, setBusyResourceId] = useState("");
   const [search, setSearch] = useState("");
+  const [pendingDelete, setPendingDelete] = useState(null);
 
   const loadData = useCallback(async () => {
     const requestId = ++requestSequence.current;
@@ -185,8 +187,9 @@ const TeacherResources = memo(() => {
     }
   };
 
-  const remove = async (resource) => {
-    if (!window.confirm(`Delete "${resource.title}"? Students will no longer be able to download this file.`)) return;
+  const confirmRemove = async () => {
+    const resource = pendingDelete;
+    if (!resource) return;
     setBusyResourceId(resource.id);
     setActionError("");
     try {
@@ -197,6 +200,7 @@ const TeacherResources = memo(() => {
       setActionError(error?.message || "The learning resource could not be deleted.");
     } finally {
       setBusyResourceId("");
+      setPendingDelete(null);
     }
   };
 
@@ -284,7 +288,7 @@ const TeacherResources = memo(() => {
                     <button type="button" className="t-resources-secondary" onClick={() => download(resource)} disabled={Boolean(busyResourceId)}>
                       {busyResourceId === resource.id ? <LoaderCircle className="t-resources-spin" size={15}/> : <Download size={15}/>} Download
                     </button>
-                    {resource.teacherId === user?.id && <button type="button" className="t-resources-danger" onClick={() => remove(resource)} disabled={Boolean(busyResourceId)}>
+                    {resource.teacherId === user?.id && <button type="button" className="t-resources-danger" onClick={() => setPendingDelete(resource)} disabled={Boolean(busyResourceId)}>
                       <Trash2 size={15}/> Delete
                     </button>}
                   </div>
@@ -295,6 +299,19 @@ const TeacherResources = memo(() => {
         </section>
       )}
     </div>
+
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        title="Delete learning resource?"
+        description={pendingDelete
+          ? `Delete "${pendingDelete.title}"? Students will no longer be able to download this file.`
+          : ""}
+        confirmLabel="Delete resource"
+        tone="danger"
+        busy={Boolean(pendingDelete && busyResourceId === pendingDelete.id)}
+        onCancel={() => { if (!busyResourceId) setPendingDelete(null); }}
+        onConfirm={() => void confirmRemove()}
+      />
   );
 });
 
