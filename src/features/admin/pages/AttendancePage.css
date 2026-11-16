@@ -465,3 +465,39 @@
 .a-attendance-dot.on-duty-review {
   background: #D4AF37;
 }
+
+
+.a-attendance-export-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: -2px 0 2px;
+}
+
+.a-attendance-export-bar p {
+  margin: 0;
+  color: var(--d-text-secondary);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.a-attendance-export-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 520px) {
+  .a-attendance-export-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .a-attendance-export-button {
+    width: 100%;
+  }
+}
