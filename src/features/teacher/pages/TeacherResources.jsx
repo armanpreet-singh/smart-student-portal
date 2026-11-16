@@ -298,7 +298,6 @@ const TeacherResources = memo(() => {
           )}
         </section>
       )}
-    </div>
 
       <ConfirmDialog
         open={Boolean(pendingDelete)}
@@ -312,6 +311,7 @@ const TeacherResources = memo(() => {
         onCancel={() => { if (!busyResourceId) setPendingDelete(null); }}
         onConfirm={() => void confirmRemove()}
       />
+    </div>
   );
 });
 
