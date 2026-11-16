@@ -10,7 +10,6 @@ import { useLocation, Link } from "react-router-dom";
 import {
   Menu,
   Search,
-  Bell,
   Sun,
   Moon,
   User,
@@ -23,6 +22,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySubmenu';
 import { useDashboardTheme } from "../../hooks/useDashboardTheme";
 import { useAuth } from "../../../auth/context/AuthContext";
+import NotificationBell from "../../../shared/notifications/NotificationBell";
 
 const Topbar = memo(({ onMenuClick }) => {
   const location = useLocation();
@@ -128,10 +128,7 @@ const Topbar = memo(({ onMenuClick }) => {
           {isDark ? <Sun size={20} /> : <Moon size={20} />}
         </button>
 
-        <button className="d-icon-btn bell" aria-label="Notifications">
-          <Bell size={20} />
-          <span className="d-notification-dot"></span>
-        </button>
+        <NotificationBell />
 
         <div className="d-avatar-wrapper" ref={dropdownRef}>
           <button
