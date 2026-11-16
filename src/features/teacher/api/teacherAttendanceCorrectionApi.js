@@ -14,10 +14,23 @@ function isNonEmptyString(value) {
 }
 
 function isValidDateKey(value) {
-  if (typeof value !== "string" || !/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) {
+  if (
+    typeof value !== "string" ||
+    value.length !== 10 ||
+    value[4] !== "-" ||
+    value[7] !== "-"
+  ) {
     return false;
   }
-  const parsed = new Date(value + "T00:00:00.000Z");
+  const [year, month, day] = value.split("-").map(Number);
+  if (
+    !Number.isInteger(year) ||
+    !Number.isInteger(month) ||
+    !Number.isInteger(day)
+  ) {
+    return false;
+  }
+  const parsed = new Date(Date.UTC(year, month - 1, day));
   return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
 }
 
@@ -100,7 +113,7 @@ export async function fetchTeacherAttendanceForDate(
   if (!isNonEmptyString(subjectId) || subjectId.length > 64) {
     throw createApiError("Select a valid assigned subject.", 400);
   }
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(attendanceDate || "")) {
+  if (!isValidDateKey(attendanceDate)) {
     throw createApiError("Select a valid attendance date.", 400);
   }
 
