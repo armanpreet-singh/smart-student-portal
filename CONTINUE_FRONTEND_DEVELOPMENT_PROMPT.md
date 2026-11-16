@@ -981,3 +981,11 @@ Use the compact status-card layout with a translucent layered surface, backdrop 
 
 ## Toast transparency correction (2026-11-16)
 Do not apply a dark navy toast background from app or OS dark-theme selectors. Use the same neutral translucent white-glass surface in light and dark page themes (currently 46% / 24% white gradient with 24px backdrop blur), dark readable text, and the restrained semantic accent. This preserves visible content through the toast and prevents a blue opaque panel over the light login page. Source: `src/components/ui/Toast.css`; regression test enforces absence of the prior navy color values.
+
+
+## Latest notification UX — layered system (2026-11-16)
+- Use the role-aware shared NotificationBell as the persistent All / Unread inbox. Keep the unread count, mark-one/read-all, deep links, and 45-second polling.
+- Show unread `ATTENDANCE_LOW` and `ASSIGNMENT_DEADLINE` feed items in a dismissible page-level priority banner. Dismissal hides only the banner; the notification remains unread in the inbox. Opening it marks it read and navigates to its safe in-app href.
+- Use existing inline form/page errors for contextual validation, Sonner toasts for immediate action feedback, the inbox for persistent events, and shared `components/ui/ConfirmDialog.jsx` for destructive/publishing confirmations. Do not reintroduce browser `window.confirm`.
+- `ConfirmDialog` is accessible (`alertdialog`, labelled/described, Escape/backdrop cancel, focus restoration, busy handling). Tests: `tests/notification-experience.test.js`.
+- No browser push, email or SMS transport is present; do not claim notifications arrive when the portal is closed.

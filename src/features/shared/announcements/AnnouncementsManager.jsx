@@ -14,6 +14,7 @@ import {
   Users
 } from "lucide-react";
 import { showSuccessMessage, showErrorMessage } from "../../../components/ui/toastUtils";
+import ConfirmDialog from "../../../components/ui/ConfirmDialog";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import { fetchTeacherAssignedSubjects } from "../../teacher/api/teacherSubjectsApi";
@@ -57,6 +58,7 @@ export default function AnnouncementsManager({ role }) {
   const [formOpen, setFormOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [busyId, setBusyId] = useState("");
+  const [pendingAction, setPendingAction] = useState(null);
 
   const loadData = useCallback(async () => {
     const requestId = ++requestSequence.current;
@@ -168,32 +170,32 @@ export default function AnnouncementsManager({ role }) {
     }
   };
 
-  const publish = async (item) => {
-    setBusyId(item.id);
-    setActionError("");
-    try {
-      await publishAnnouncement(accessToken, role, item.id);
-      showSuccessMessage("Announcement published.");
-      await loadData();
-    } catch (error) {
-      setActionError(error?.message || "The announcement could not be published.");
-    } finally {
-      setBusyId("");
-    }
-  };
+  const publish = (item) => setPendingAction({ type: "publish", item });
+  const removeDraft = (item) => setPendingAction({ type: "delete", item });
 
-  const removeDraft = async (item) => {
-    if (!window.confirm("Delete this announcement draft?")) return;
-    setBusyId(item.id);
+  const confirmPendingAction = async () => {
+    const action = pendingAction;
+    if (!action) return;
+    setBusyId(action.item.id);
     setActionError("");
     try {
-      await deleteAnnouncement(accessToken, role, item.id);
-      showSuccessMessage("Announcement draft deleted.");
+      if (action.type === "publish") {
+        await publishAnnouncement(accessToken, role, action.item.id);
+        showSuccessMessage("Announcement published.");
+      } else {
+        await deleteAnnouncement(accessToken, role, action.item.id);
+        showSuccessMessage("Announcement draft deleted.");
+      }
       await loadData();
     } catch (error) {
-      setActionError(error?.message || "The announcement draft could not be deleted.");
+      setActionError(error?.message || (
+        action.type === "publish"
+          ? "The announcement could not be published."
+          : "The announcement draft could not be deleted."
+      ));
     } finally {
       setBusyId("");
+      setPendingAction(null);
     }
   };
 
@@ -308,6 +310,18 @@ export default function AnnouncementsManager({ role }) {
           </article>;
         })}
       </div>}
+      <ConfirmDialog
+        open={Boolean(pendingAction)}
+        title={pendingAction?.type === "publish" ? "Publish this announcement?" : "Delete announcement draft?"}
+        description={pendingAction?.type === "publish"
+          ? "Publishing makes this announcement visible to its selected audience and creates portal notifications for recipients."
+          : "This permanently deletes the draft. It will not be available to edit or publish afterward."}
+        confirmLabel={pendingAction?.type === "publish" ? "Publish announcement" : "Delete draft"}
+        tone={pendingAction?.type === "publish" ? "primary" : "danger"}
+        busy={Boolean(pendingAction && busyId === pendingAction.item.id)}
+        onCancel={() => { if (!busyId) setPendingAction(null); }}
+        onConfirm={() => void confirmPendingAction()}
+      />
     </div>
   );
 }
