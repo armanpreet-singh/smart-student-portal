@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { X } from "lucide-react";
 import { ltsuLogo } from "../../assets/images/logo";
 import "./Toast.css";
