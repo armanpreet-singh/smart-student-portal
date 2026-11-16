@@ -1168,3 +1168,29 @@ This section supersedes earlier status notes in this document where they conflic
 - Student attendance UI and API helpers support `PRESENT`, `ABSENT`, `ON_DUTY_REVIEW`, duty-proof submission/download requests, file type/size checks and explicit HTTP 503 messaging while Cloudinary storage is unconfigured. Teacher and Admin attendance surfaces use the three released statuses. Official roll-number clipboard behavior remains roll-number-only.
 - Backend duty-review migration is applied and Render reports the backend deployment live. Cloudinary runtime credentials remain unconfigured; proof upload/download will remain unavailable (HTTP 503) until private Render configuration is completed and verified with an end-to-end upload/download test.
 - CI uses mocked API responses. No live Student/Teacher/Admin account workflow, browser clipboard permission, or production proof upload/download was tested. No frontend deployment was performed by this PR.
+
+
+## Phase III, Chunk 1 — Student course catalogue UI (2026-11-16)
+
+This is the latest authoritative frontend delivery state.
+
+- Frontend PR #61: https://github.com/armanpreet-singh/smart-student-portal/pull/61 — **open, not merged**.
+- Branch: `feat/student-course-catalogue`.
+- Latest implementation head before this handoff update: `72a923abb653b810c40f228aa9891d2499a4dede`.
+- Replaced the Student Courses capability-unavailable placeholder with an API-backed catalogue.
+- Added `src/features/dashboard/api/studentCoursesApi.js` for authenticated `GET /api/student/courses`, with strict class/subject identity validation, Bearer token, timeout, retryable errors, role/session status handling and empty catalogue support.
+- Student Courses now displays the verified assigned class and active subject cards, descriptions when supplied, search by subject name/code/description, loading/error/retry states, no-class/no-active-subject states, and a clear scope note.
+- No fabricated semester, credits, enrollment, instructor, registration or timetable fields are shown. The page explicitly explains that the catalogue is a list of active subjects attached to the Student's class, not a registration ledger.
+- Added 9 API contract tests for request/auth, assigned and unassigned Student responses, optional descriptions, malformed/mismatched relationships, 401/403/404/503 responses, network/timeout errors and invalid success envelopes.
+- GitHub Actions run #480 (ID `43828943677`) passed dependency install, all **88 frontend tests**, and Vite production build.
+- Backend dependency: `armanpreet-singh/ltsu-backend` PR #4 exposes the endpoint. Merge and deploy backend PR #4 before merging/deploying frontend PR #61.
+- No production records, secrets, deployment settings, or database schema were changed by this frontend PR.
+
+### Release and test notes
+
+- Frontend API tests use mocked fetch; they prove the client contract, not a production Student login. Browser E2E against the merged backend endpoint remains a post-deployment acceptance test.
+- The backend API PR is currently open and not deployed. Do not merge frontend PR #61 first.
+
+### Next candidate
+
+Phase III, Chunk 2: expose the existing 30-minute Teacher attendance correction capability in the Teacher UI. Preserve server-side authorization and correction-window enforcement; add refresh-safe attendance record ID state and explicit correction feedback.
