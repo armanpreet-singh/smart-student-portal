@@ -1,6 +1,6 @@
 # LTSU Smart Portal — Frontend Development Handoff
 
-Last updated: 2026-11-15
+Last updated: 2026-11-16
 Repository: https://github.com/armanpreet-singh/smart-student-portal
 Base branch: `main`
 Development branch: `main` (Phase II, Chunk 45 Admin Student & Teacher Directory API Contract Tests; PR #56 merged into `main` at `9924fb07820d89119fafb4b8e45c430568ff8621`; no open frontend PRs at last verification).
@@ -1649,3 +1649,10 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Increased the displayed seal from 43px to 60px on desktop and from 38px to 48px on small screens.
 - Removed the previous `scale(1.25)` image transform so the source asset is rendered at the intended wrapper size without extra raster enlargement. The existing 600×600 WebP brand asset remains unchanged and is shared by other portal surfaces.
 - Added regression coverage for transparent wrapper styling, responsive logo dimensions and removal of the enlargement transform. No backend, API, database or shared brand asset changes.
+
+
+## Current implementation — compact toast visual refresh (November 16, 2026)
+- Replaced the large logo-led toast card with a compact 340px status card; no university logo is repeated inside transient notifications.
+- Success, error, warning and info notifications use dedicated Lucide status icons in subtle semantic-color containers. Title/message hierarchy, close target and 2px lifetime bar were refined.
+- Preserved Sonner's stack/enter-exit behavior, 4.2-second default, hover/focus progress pause, dark theme, mobile sizing and reduced-motion behavior.
+- Updated `tests/toast-animation.test.js` to prevent regression to the oversized logo presentation. Frontend-only; no API or database changes. Validate actual login toast visual placement in desktop/mobile browsers.
