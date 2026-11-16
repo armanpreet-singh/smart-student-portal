@@ -1343,3 +1343,33 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Existing create form, active-only creation choices and confirmation step are preserved. Inactive historical links remain visible in the list and are not modified.
 - Frontend PR/CI state will be appended after validation. No schema migration, database write or timetable work is included.
 - Real Admin-account browser acceptance remains outstanding.
+
+
+## Authoritative release — Phase III, Chunk 5: Admin Teacher-to-Subject assignment directory (2026-11-16)
+
+### Released backend
+- Backend PR #7: https://github.com/armanpreet-singh/ltsu-backend/pull/7 — merged at `e1a89236ca38f9b8eacea2e71de16d787d834562`.
+- Backend PR Actions run #115 / ID `43848306932` passed syntax checks, Prisma Client generation, schema validation, **63/63 tests**, and production API / pooled Neon readiness.
+- Backend main run #116 / ID `43848485853` completed successfully.
+- Render deployment `dep-dbtdjgu7bikc7382dt6g` reports `live` on the merge commit.
+- Admin-only `GET /api/admin/teacher-subject-assignments` lists current mappings with search, exact Teacher/Subject/Class filters and pagination. It returns related entity active flags and preserves inactive mappings. Existing POST create behavior is unchanged.
+
+### Released frontend
+- Frontend PR #65: https://github.com/armanpreet-singh/smart-student-portal/pull/65 — merged at `16ab0f5076048b7bc7e8da2aa9baefa50c59a3ba`.
+- Frontend PR CI run #506 / ID `43849444531` passed **110/110 tests**, 0 failed, and Vite production build (`✓ built in 3.63s`). An earlier run #505 caught a missing `.js` extension in the native Node ESM API test import; the import was fixed before merge.
+- Frontend main run #507 / ID `43849591061` completed successfully for the merge commit.
+- Cloudflare Pages production deployment `203ecbcb-eba9-4503-9006-2d62a382d89c` completed successfully for merge commit `16ab0f5076048b7bc7e8da2aa9baefa50c59a3ba`. Canonical app: https://smart-student-portal.pages.dev.
+- Admin Teaching Assignments now has a searchable, paginated directory of existing rows with Teacher, Subject, Class and assigned timestamp. Active/inactive state is displayed separately for each related entity. Inactive records remain visible. Existing create form and confirmation flow remain; successful create refreshes the directory.
+
+### Scope and validation boundary
+- No Prisma schema change, migration, production data write or change to existing assignment records. Backend list API is read-only; existing assignment creation policy remains as before.
+- Automated tests use mocked Prisma/fetch. Real Admin-account browser acceptance has not been performed and remains outstanding.
+- Timetable remains explicitly deferred by the user.
+
+## Phase III, Chunk 6 — Admin Student provisioning form reset regression (next)
+
+- Audit found that the Admin Student creation form's initial state includes `rollNumber`, but the Escape-close, Cancel-close and post-success reset objects must all restore that field to an empty string.
+- Verify each close/reset path in `src/features/admin/pages/StudentsPage.jsx`; after a form has been closed or a Student created, reopening must not leave `rollNumber` undefined or cause the next submit path to throw while trimming it.
+- Implement a single canonical empty-form factory/constant and reuse it for initial state and every reset. Preserve roll-number validation, optional semantics and leading-zero strings.
+- Add a focused pure unit test for the canonical form shape/reset invariant. Run complete frontend tests and Vite build, update handoffs, open a frontend PR.
+- Frontend-only; no backend API, account data, DB or schema changes. Timetable remains deferred.
