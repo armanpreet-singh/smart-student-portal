@@ -1544,3 +1544,24 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 ### Remaining live acceptance
 - Real Faculty/Student browser testing is outstanding. Upload an actual PDF and image with a Faculty account, publish each, open as a Student in the assigned Class, and confirm a Student from another Class cannot retrieve the file. Verify the displayed assignment and last-submission dates and confirm submissions after the deadline are rejected.
 - CI and deployment success do not verify the live Cloudinary credentials or a real browser upload/download. Timetable remains deferred.
+
+
+## Announcements workflow — November 16, 2026
+
+### Admin portal
+- Replaced the Announcements placeholder with a live announcement manager backed by authenticated `/api/admin/announcements` endpoints.
+- Admin can create drafts, choose Everyone / Students / Teachers audience, edit an unpublished draft, publish it, and delete an unpublished draft. Published notices are immutable in this first release.
+- The list shows verified persisted content, audience, author, status, and created/published timestamp.
+
+### Teacher portal
+- Replaced the placeholder with a live manager using authenticated `/api/teacher/announcements` and assigned-subject API data.
+- Teacher can create a notice only for an active assigned subject (which targets that subject's class), save/edit draft, publish, and delete their own draft. Teachers cannot edit/delete published notices or another Teacher's draft. Admin notices intended for Teachers/everyone are visible in the Teacher list.
+
+### Student portal
+- Replaced the placeholder with a live read-only feed using authenticated `/api/student/announcements`.
+- Students see published university-wide, Student-audience and matching current-class notices. Class posts are scoped server-side; the frontend does not decide access from locally stored class data.
+- The list displays author, audience/class label, message and publication time. Refresh/page load retrieves new notices.
+
+### Limitations and acceptance
+- First release is text-only. No PDF/image attachment, push notification, email or SMS delivery was added. Student notifications are feed-based, not real-time.
+- Verify live with Admin, Teacher, Student in the assigned class and Student outside that class. Confirm draft visibility only to managers, published notice visibility, and role separation. Automated tests/CI/deployment do not replace account-level acceptance. Timetable remains deferred.
