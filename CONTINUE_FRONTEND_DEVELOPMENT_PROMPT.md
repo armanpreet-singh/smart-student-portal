@@ -963,3 +963,9 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Global Sonner configuration follows the resolved light/dark theme, shows up to four stacked toasts, supports swipe dismissal, and uses a 4.2-second duration shared with the progress indicator.
 - React Hot Toast was removed from the frontend dependencies and lockfile. No backend or database changes.
 - Tests: `tests/toast-animation.test.js`. Confirm real role-based browser behavior, stack layout, swipe/close handling, theme switching and reduced-motion behavior before acceptance.
+
+
+## Current implementation — Toast logo clarity (November 16, 2026)
+- Toast logo wrapper is transparent (no tinted rounded-square background).
+- Official 600×600 LTSU seal displays at 60px desktop / 48px mobile. Removed the old 1.25x CSS image transform to avoid avoidable raster softening; the shared logo asset itself is unchanged.
+- Regression coverage lives in `tests/toast-animation.test.js`. No backend or database changes.
