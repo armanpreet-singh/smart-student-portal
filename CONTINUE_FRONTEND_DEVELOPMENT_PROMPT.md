@@ -642,3 +642,12 @@ Read `FRONTEND_DEVELOPMENT_HANDOFF.md` first.
 - Eight new mocked API tests. GitHub Actions run #487 / ID `43833181082` passed all 96 frontend tests and Vite build.
 - Backend PR #5 in `armanpreet-singh/ltsu-backend` is a required release dependency. Merge/deploy backend first, then merge/deploy this frontend PR.
 - No live attendance data or production records were changed. Browser acceptance tests after deployment remain required.
+
+
+## Final verification — Phase III, Chunk 2 frontend (2026-11-16)
+
+- Latest source head before this handoff append: `aaa88bc35ffcffdf6ca6630e158e1ec3463f282d` on `feat/teacher-attendance-corrections`.
+- PR #62 remains open. Backend PR #5 is a prerequisite and must be deployed before frontend PR #62 is merged/deployed.
+- Final hardening clears stale IDs on subject/date switches, disables register selectors during loads/saves, serializes row updates, and prevents clipboard actions from copying staged/unsaved corrections.
+- GitHub Actions run #489 / ID `43833795105` passed all 96 tests and the Vite production build against that source head.
+- No merge or production deployment has occurred for this chunk.
