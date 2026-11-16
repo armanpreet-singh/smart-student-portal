@@ -225,9 +225,11 @@ const AssignmentsPage = () => {
                           {isSubmitting ? "Submitting…" : submission ? "Resubmit answer" : "Submit answer"}
                         </button>
                       </div>
-                      {submission && !pastDue && !submission.result && (
+                      {submission && !pastDue && (
                         <p className="s-assignment-resubmit-note">
-                          You can update your answer before the deadline. Resubmitting replaces the previous answer and clears any unpublished grade.
+                          {submission.result
+                            ? "You can resubmit before the deadline. This replaces your previous answer and withdraws its published grade until your Teacher grades and publishes the new submission."
+                            : "You can update your answer before the deadline. Resubmitting replaces the previous answer and clears any unpublished grade."}
                         </p>
                       )}
                     </div>
