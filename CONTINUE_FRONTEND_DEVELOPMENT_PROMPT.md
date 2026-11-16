@@ -918,3 +918,11 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Student: read-only published feed for Everyone, Students and the Student's active current Class. Backend performs audience/class filtering.
 - Draft editing and deletion controls are hidden for published notices and for Teacher drafts not authored by the current Teacher. No push/email/SMS delivery, only feed refresh. No file attachments in announcements.
 - Verify live across Admin, Teacher, Student same class and Student different class before treating this feature as accepted. Keep timetable deferred.
+
+
+## Current implementation — Teacher Learning Resources (November 16, 2026)
+- Shared authenticated resource API lives at `src/features/shared/resources/learningResourcesApi.js`.
+- Teacher Learning Resources now offers assigned Subject/Class selection, title/description, file upload, list/search/download of resources in assigned active Subjects, and delete for own uploads.
+- Student Learning Resources is a read-only class-scoped list with search and protected download actions.
+- Supports PDF, DOC, DOCX, PPT, PPTX, TXT, JPEG and PNG up to 20 MB. Uploaded notes are immediately visible to the selected Class. No push/email notifications or in-app preview.
+- Backend performs subject assignment, Student class, upload ownership and download authorization. Use actual account testing to verify Cloudinary operations and cross-Class denial before release acceptance. Timetable remains deferred.
