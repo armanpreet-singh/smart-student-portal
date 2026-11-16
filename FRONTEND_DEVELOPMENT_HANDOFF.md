@@ -1428,3 +1428,16 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Added `src/features/teacher/utils/teacherRosterCsv.js` and `tests/teacher-roster-csv.test.js`; updated `TeacherStudents.jsx` and `TeacherStudents.css`.
 - Frontend-only. No backend/API, database, Prisma schema, migration, or production data change. The new export has not yet had live Teacher-account browser/download acceptance or spreadsheet inspection; those checks remain with the user's planned testing.
 - Timetable remains explicitly deferred. Do not add unsupported calendar/announcement features without authoritative backend contracts.
+
+
+## Authoritative release — Phase III, Chunk 9: Teacher saved attendance register CSV export (2026-11-16)
+
+- Frontend PR #69: https://github.com/armanpreet-singh/smart-student-portal/pull/69 — merged into `main` at `16a20f6c2cc63f3dc312e501e5652372cf1a7199`.
+- PR workflow run #525 / ID `43860668066` passed **129/129 tests**, zero failures, and the Vite production build (`✓ built in 4.51s`). Main push run #526 / ID `43860829228` completed successfully.
+- Cloudflare Pages production deployment `5a81eb3d-178f-4b7d-b5a2-6a284296d0a8` completed every stage successfully on merge commit `16a20f6`. Canonical app: https://smart-student-portal.pages.dev.
+- Teacher Attendance now offers Export saved CSV when a persisted live register is loaded. It exports only server-returned saved attendance rows for the selected assigned subject and date, and applies the current student search filter.
+- Export uses persisted statuses (not unsaved row selections), last-saved remarks, official roll number, register submission timestamp, and duty-proof submitted flag. Incomplete/partial registers do not acquire inferred rows/statuses. Export is disabled while a correction is pending and is not exposed in browser-only demo mode.
+- CSV quoting escapes commas, double quotes and line breaks; formula-leading student/remarks text is neutralized; UTF-8 BOM is included; filename parts are sanitized. Roll-number strings preserve leading zeroes. The timestamp header explicitly says register marked/submission time and does not describe it as scheduled class time.
+- Added `src/features/teacher/utils/teacherAttendanceCsv.js` and `tests/teacher-attendance-csv.test.js`; updated `TeacherAttendance.jsx` and `teacherAttendance.css`.
+- Frontend-only. Reuses existing authenticated Teacher roster/attendance reads; no backend/API, database, Prisma schema, migration or production data change. No backend deployment required.
+- Live Teacher browser acceptance and opening/inspection of the downloaded file in a spreadsheet remain outstanding for the user's planned testing. Timetable remains explicitly deferred.
