@@ -4,6 +4,7 @@ import { describe, it } from "node:test";
 import {
   buildTeacherAttendanceRegisterCsv,
   createTeacherAttendanceCsvFilename,
+  selectSavedAttendanceRows,
 } from "../src/features/teacher/utils/teacherAttendanceCsv.js";
 
 const subject = {
@@ -109,6 +110,76 @@ describe("Teacher saved attendance register CSV", () => {
 
     assert.equal(csv.split("\r\n").length, 1);
     assert.ok(csv.startsWith('"Attendance date","Class code"'));
+  });
+
+  it("selects only persisted rows and uses saved status rather than an editable screen draft", () => {
+    const roster = [
+      { id: "student-1", fullName: "Student One" },
+      { id: "student-2", fullName: "Student Two" },
+      { id: "student-3", fullName: "Student Three" },
+    ];
+    const savedRecords = {
+      "student-1": "ABSENT",
+      "student-3": "PRESENT",
+    };
+    const recordMeta = {
+      "student-1": {
+        remarks: "Last saved remark",
+        markedAt: "2026-11-16T08:30:00.000Z",
+        proofSubmitted: false,
+      },
+      "student-3": {
+        remarks: null,
+        markedAt: "2026-11-16T08:30:00.000Z",
+        proofSubmitted: true,
+      },
+    };
+
+    const result = selectSavedAttendanceRows(roster, savedRecords, recordMeta);
+
+    assert.deepEqual(result, [
+      {
+        student: roster[0],
+        attendance: {
+          status: "ABSENT",
+          remarks: "Last saved remark",
+          markedAt: "2026-11-16T08:30:00.000Z",
+          proofSubmitted: false,
+        },
+      },
+      {
+        student: roster[2],
+        attendance: {
+          status: "PRESENT",
+          remarks: null,
+          markedAt: "2026-11-16T08:30:00.000Z",
+          proofSubmitted: true,
+        },
+      },
+    ]);
+  });
+
+  it("does not select rows with missing metadata or invalid persisted statuses", () => {
+    const rows = selectSavedAttendanceRows(
+      [
+        { id: "student-1", fullName: "Student One" },
+        { id: "student-2", fullName: "Student Two" },
+      ],
+      { "student-1": "LATE", "student-2": "ABSENT" },
+      { "student-2": { remarks: null, markedAt: null, proofSubmitted: false } },
+    );
+
+    assert.deepEqual(rows, [
+      {
+        student: { id: "student-2", fullName: "Student Two" },
+        attendance: {
+          status: "ABSENT",
+          remarks: null,
+          markedAt: null,
+          proofSubmitted: false,
+        },
+      },
+    ]);
   });
 
   it("creates a safe filename from class, subject, and date", () => {
