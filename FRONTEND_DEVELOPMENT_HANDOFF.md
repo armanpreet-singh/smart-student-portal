@@ -1248,3 +1248,27 @@ This section supersedes earlier status entries that describe frontend PR #62 as 
 - Do not use attendance `markedAt` as a scheduled start time; it records register submission.
 - Agree on the authoritative schedule model before implementation: recurring weekly slots with validity dates, or individually dated sessions. The decision must cover holidays/one-off changes, timezone, room/location, teacher assignment, effective dates and overlap rules. Do not invent sample timetable rows or display unverified data.
 - No Chunk 3 schema migration or UI implementation has begun.
+
+
+## Phase III, Chunk 3 — Student dashboard attendance status alignment (2026-11-16)
+
+- Feature branch: `fix/student-dashboard-duty-review-summary`.
+- Aligns the Student dashboard homepage with the currently deployed attendance contract: `PRESENT`, `ABSENT`, and `ON_DUTY_REVIEW`. Removes the stale `LATE`/`EXCUSED` assumptions from its summary/status display.
+- Extracts the dashboard roll-up to `src/features/dashboard/utils/dashboardAttendanceSummary.js` so the aggregate calculation can be tested independently. It sums per-subject backend counts and recomputes the overall percentage from aggregate attended/eligible totals rather than averaging subject percentages.
+- A duty-review record is not treated as present. The homepage now labels the combined ABSENT + ON_DUTY_REVIEW count as **Not yet confirmed present**, shows all three current status counts, and states that duty-review only counts as present after proof submission succeeds.
+- Recent attendance uses the released status labels, including the ON_DUTY_REVIEW badge. No API, database, schema, backend attendance policy or user data changes.
+- Added four unit tests for multi-subject roll-up, duty-review semantics, empty eligibility and recent-record ordering. CI must verify the complete frontend test suite and production build before merge.
+- No timetable work is included; Student/Teacher timetable placeholders remain unchanged.
+
+### Validation boundary
+
+- These tests cover the pure summary logic; they do not verify a real Student browser session or populated production attendance. Such live-account validation remains a separate acceptance test.
+- PR/CI/merge/deployment state is recorded below after validation.
+
+
+### Chunk 3 PR and CI verification — 2026-11-16
+
+- PR #63: https://github.com/armanpreet-singh/smart-student-portal/pull/63 — open and not merged; branch `fix/student-dashboard-duty-review-summary`.
+- Source head checked by PR CI: `cfb1098b37c97b329698d18bb901049dc105bd82`.
+- GitHub Actions run #493 (ID `43836808520`) completed successfully: all **101 tests passed**, 0 failed, and `npm run build` completed successfully.
+- The PR is frontend-only and has no backend release dependency. It has not been merged or deployed; this update records validation only.
