@@ -74,7 +74,7 @@ test("Teacher assignment list uses the authenticated endpoint and validates serv
 test("Teacher creates draft with explicit due date and maximum marks", async () => {
   let body;
   await withMockedFetch(async (_url, options) => {
-    body = JSON.parse(options.body);
+    body = options.body;
     return jsonResponse({ assignment });
   }, () => createTeacherAssignment("teacher-token", {
     subjectId: "subject-1",
