@@ -76,12 +76,20 @@ const LoginForm = () => {
     clearErrors("root.server");
 
     try {
+      const expectedRole = EXPECTED_ROLES[role];
       const result = await loginWithUsername({
         username: data.username,
         password: data.password,
+        requestedRole: expectedRole,
       });
 
-      const destination = getPortalPath(result.user.role);
+      if (result.user.role !== expectedRole) {
+        throw new Error(
+          "These credentials do not belong to the selected portal. Choose the correct portal and try again.",
+        );
+      }
+
+      const destination = getPortalPath(expectedRole);
       if (!destination) {
         throw new Error(
           "This account does not have a supported LTSU portal role.",
@@ -107,11 +115,6 @@ const LoginForm = () => {
         showWarningToast(
           "Password update required",
           "Your account needs a password change before protected portal services can be used.",
-        );
-      } else if (EXPECTED_ROLES[role] !== result.user.role) {
-        showInfoToast(
-          "Opening your assigned portal",
-          `This account is registered as ${ROLE_LABELS[result.user.role]}. Opening that portal.`,
         );
       } else {
         showSuccessToast(
