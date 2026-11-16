@@ -977,3 +977,7 @@ The toast presentation was revised to a compact status-card style. Do not reintr
 
 ## Latest toast style — frosted glass (2026-11-16)
 Use the compact status-card layout with a translucent layered surface, backdrop blur, subtle glass highlight/border, soft depth, semantic accent rail/icon tile, and matching light/dark treatment. Preserve Sonner as the one animation/stack owner; do not add a competing inner entrance/exit animation. Keep screen-reader roles, dismiss and swipe, mobile sizing, 4.2-second timer, progress pause on hover/focus, and reduced-motion support. Source: `src/components/ui/Toast.css`, `src/components/ui/Toast.jsx`.
+
+
+## Toast transparency correction (2026-11-16)
+Do not apply a dark navy toast background from app or OS dark-theme selectors. Use the same neutral translucent white-glass surface in light and dark page themes (currently 46% / 24% white gradient with 24px backdrop blur), dark readable text, and the restrained semantic accent. This preserves visible content through the toast and prevents a blue opaque panel over the light login page. Source: `src/components/ui/Toast.css`; regression test enforces absence of the prior navy color values.
