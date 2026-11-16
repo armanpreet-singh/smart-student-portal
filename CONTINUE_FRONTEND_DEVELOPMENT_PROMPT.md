@@ -745,3 +745,11 @@ This section supersedes the earlier prompt entries that describe frontend PR #63
 - Frontend branch `feat/admin-teacher-subject-assignment-directory` adds an authenticated API client, strict response validation, six API tests and a responsive Admin list with search, pagination and per-related-record active status.
 - Existing assignment creation UI is preserved and refreshes the directory after a successful create. No inactive assignment rows are hidden or modified.
 - Frontend CI and PR state must be checked on the current branch head. Live Admin-account/browser acceptance remains outstanding. No schema migration, DB write or timetable work.
+
+
+## Authoritative continuation — Phase III, Chunk 5 released; Chunk 6 selected (2026-11-16)
+
+- Backend PR #7 merged at `e1a89236ca38f9b8eacea2e71de16d787d834562`; Render deployment `dep-dbtdjgu7bikc7382dt6g` is live. Admin-only GET assignment directory supports bounded search, exact Teacher/Subject/Class filters and pagination, preserving inactive relations with flags.
+- Frontend PR #65 merged at `16ab0f5076048b7bc7e8da2aa9baefa50c59a3ba`; Actions PR run #506 passed **110 tests** and Vite build; main run #507 passed. Pages deployment `203ecbcb-eba9-4503-9006-2d62a382d89c` succeeded.
+- Chunk 5 Admin assignment list is live alongside the existing create workflow. Real Admin account browser acceptance remains outstanding. No schema or migration. Timetable remains deferred.
+- Next Chunk 6: fix Admin Student provisioning form reset regression. Initial form state includes optional `rollNumber`, but Escape close, Cancel close and post-success reset omit it. Replace all duplicated reset objects with one canonical empty-form factory/constant and test its full shape/reset invariant. Preserve leading zeroes and optional roll number behavior. Frontend-only; no backend/API/DB changes.
