@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -21,6 +21,8 @@ import {
   getStudentDutyProofDownloadUrl,
   submitStudentDutyProof,
 } from "../api/studentAttendanceApi";
+
+import { clearDutyProofRecordBusy, markDutyProofRecordBusy } from "../utils/studentDutyProofState.js";
 
 import "./AttendancePage.css";
 
@@ -184,7 +186,8 @@ const AttendancePage = () => {
   const [filters, setFilters] = useState({ fromDate: "", toDate: "" });
   const [filterError, setFilterError] = useState("");
   const [proofFiles, setProofFiles] = useState({});
-  const [proofBusyId, setProofBusyId] = useState("");
+  const [proofBusy, setProofBusy] = useState({});
+  const proofBusyRef = useRef(new Set());
   const [proofErrors, setProofErrors] = useState({});
 
   useEffect(() => {
@@ -333,7 +336,9 @@ const AttendancePage = () => {
       return;
     }
 
-    setProofBusyId(record.id);
+    if (proofBusyRef.current.has(record.id)) return;
+    proofBusyRef.current.add(record.id);
+    setProofBusy((current) => markDutyProofRecordBusy(current, record.id, "upload"));
     setProofErrors((current) => ({ ...current, [record.id]: "" }));
     try {
       await submitStudentDutyProof(accessToken, record.id, file);
@@ -350,12 +355,15 @@ const AttendancePage = () => {
         [record.id]: error?.message || "Unable to submit duty proof.",
       }));
     } finally {
-      setProofBusyId("");
+      proofBusyRef.current.delete(record.id);
+      setProofBusy((current) => clearDutyProofRecordBusy(current, record.id));
     }
   };
 
   const downloadDutyProof = async (record) => {
-    setProofBusyId(record.id);
+    if (proofBusyRef.current.has(record.id)) return;
+    proofBusyRef.current.add(record.id);
+    setProofBusy((current) => markDutyProofRecordBusy(current, record.id, "download"));
     setProofErrors((current) => ({ ...current, [record.id]: "" }));
     try {
       const proof = await getStudentDutyProofDownloadUrl(accessToken, record.id);
@@ -367,7 +375,8 @@ const AttendancePage = () => {
         [record.id]: error?.message || "Unable to open the duty proof.",
       }));
     } finally {
-      setProofBusyId("");
+      proofBusyRef.current.delete(record.id);
+      setProofBusy((current) => clearDutyProofRecordBusy(current, record.id));
     }
   };
 
@@ -649,17 +658,17 @@ const AttendancePage = () => {
                                   type="file"
                                   accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
                                   onChange={(event) => handleProofFileChange(record.id, event.target.files?.[0] || null)}
-                                  disabled={proofBusyId === record.id}
+                                  disabled={Boolean(proofBusy[record.id])}
                                 />
                               </label>
                               <button
                                 type="button"
                                 className="d-btn-primary"
                                 onClick={() => submitDutyProof(record)}
-                                disabled={proofBusyId === record.id || requestStatus === "loading" || !proofFiles[record.id]}
+                                disabled={Boolean(proofBusy[record.id]) || requestStatus === "loading" || !proofFiles[record.id]}
                               >
                                 <FileUp size={14} />
-                                {proofBusyId === record.id ? "Submitting…" : "Submit proof"}
+                                {proofBusy[record.id] === "upload" ? "Submitting…" : "Submit proof"}
                               </button>
                             </div>
                           )}
@@ -670,10 +679,10 @@ const AttendancePage = () => {
                                 type="button"
                                 className="d-attendance-proof-download"
                                 onClick={() => downloadDutyProof(record)}
-                                disabled={proofBusyId === record.id}
+                                disabled={Boolean(proofBusy[record.id])}
                               >
                                 <FileDown size={14} />
-                                {proofBusyId === record.id ? "Preparing…" : "Download proof"}
+                                {proofBusy[record.id] === "download" ? "Preparing…" : "Download proof"}
                               </button>
                             </div>
                           )}
