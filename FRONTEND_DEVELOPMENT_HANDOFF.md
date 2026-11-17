@@ -1760,3 +1760,9 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Shared helper: `src/features/shared/profile/nameInitials.js`. Multi-part names use first + last initials (Shahid Mushtaq → SM; Armanpreet Singh Kumar → AK); single-word names use one initial. Unicode-safe extraction and whitespace normalization; existing person icon remains the fallback when the name is unavailable.
 - Initials are derived only from the verified session name and are not stored. No backend/API changes.
 - Regression tests: `tests/name-based-profile-initials.test.js`.
+
+
+## Admin direct password reset and visibility toggles — November 17, 2026
+- Admin reset on Students and Teachers now accepts a new password + confirmation, with independent Eye/EyeOff visibility toggles. No old password is requested. A successful reset hashes the new password and sets `mustChangePassword=false`, so the user can sign in immediately with the password Admin set.
+- Add Student retains its temporary-password-at-first-login workflow, but both creation password fields now have independent show/hide controls. Visibility resets when the form closes.
+- Password policy unchanged: minimum 12 characters, maximum 72 UTF-8 bytes, confirmation must match. No password is displayed after submit or persisted in frontend state beyond the open form.
