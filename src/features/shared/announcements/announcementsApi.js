@@ -12,14 +12,36 @@ function isText(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+const ANNOUNCEMENT_ATTACHMENT_FORMATS = new Set([
+  "pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx",
+  "txt", "csv", "jpg", "jpeg", "png", "gif", "webp"
+]);
+const ANNOUNCEMENT_ATTACHMENT_MIME_TYPES = new Set([
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "text/plain",
+  "text/csv",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp"
+]);
+
 function isAnnouncementAttachment(value) {
   return value === null || Boolean(
     value &&
     isText(value.fileName) &&
     isText(value.mimeType) &&
+    ANNOUNCEMENT_ATTACHMENT_MIME_TYPES.has(value.mimeType) &&
     Number.isInteger(value.bytes) &&
-    value.bytes >= 0 &&
-    isText(value.format)
+    value.bytes > 0 &&
+    isText(value.format) &&
+    ANNOUNCEMENT_ATTACHMENT_FORMATS.has(value.format.toLowerCase())
   );
 }
 
