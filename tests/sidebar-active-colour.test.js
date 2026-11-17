@@ -8,7 +8,7 @@ test("selected sidebar item retains the original active colour when hovered or f
   const globalStyles = await read("styles/GlobalStyles.js");
   const sidebar = await read("features/dashboard/styles/sidebar.css");
 
-  assert.match(sidebar, /\.d-nav-link\.active\s*\{[^}]*background: rgba\(30, 58, 138, 0\.1\);[^}]*color: var\(--d-primary\);/s);
+  assert.match(sidebar, /\.d-nav-link\.active\s*\{[^}]*background: rgba\(30, 58, 138, 0\.1\);[^}]*color: var\(--d-text-secondary\);/s);
   assert.match(globalStyles, /\.d-nav-link\.active,\s*\.d-nav-link\.active:hover,\s*\.d-nav-link\.active:focus-visible\s*\{\s*background: rgba\(30, 58, 138, 0\.1\);\s*color: var\(--d-primary\);/);
   assert.doesNotMatch(globalStyles, /\.d-nav-link\.active:hover\s*\{\s*background-color: color-mix/);
 });
