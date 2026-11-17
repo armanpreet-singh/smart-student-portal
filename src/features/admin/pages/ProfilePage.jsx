@@ -10,6 +10,7 @@ import {
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
 import { useAuth } from "../../auth/context/AuthContext";
+import { getNameInitials } from "../../shared/profile/nameInitials";
 
 import "./ProfilePage.css";
 
@@ -66,7 +67,7 @@ const ProfilePage = memo(() => {
           <DashboardCard className="a-profile-header-card" padding={false}>
             <section className="a-profile-header-content">
               <div className="a-profile-avatar" aria-hidden="true">
-                <UserRound size={27} />
+                {getNameInitials(user?.fullName) || <UserRound size={27} />}
               </div>
               <div className="a-profile-intro">
                 <h2>{accountName}</h2>
