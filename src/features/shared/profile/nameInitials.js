@@ -1,4 +1,4 @@
-const WORD_CHARACTER = /[\\p{L}\\p{N}]/u;
+const WORD_CHARACTER = /[\p{L}\p{N}]/u;
 
 function firstCharacter(value) {
   return Array.from(value).find((character) => WORD_CHARACTER.test(character)) || "";
@@ -11,7 +11,7 @@ function firstCharacter(value) {
 export function getNameInitials(fullName) {
   if (typeof fullName !== "string") return "";
 
-  const parts = fullName.normalize("NFC").trim().split(/\\s+/u).filter(Boolean);
+  const parts = fullName.normalize("NFC").trim().split(/\s+/u).filter(Boolean);
   const words = parts.filter((part) => WORD_CHARACTER.test(part));
   if (words.length === 0) return "";
 
