@@ -1704,3 +1704,9 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Disabled/aria-disabled controls do not animate on hover or press. Keyboard focus-visible and reduced-motion preferences are preserved. Hover-only transforms are restricted to hover-capable fine pointers.
 - DashboardCard no longer uses a separate Framer Motion hover transform; the shared CSS owns its 3px card interaction.
 - Regression tests: `tests/platform-interactions.test.js`. Frontend-only; no API/backend/database changes.
+
+
+## Sidebar active-colour preservation — November 17, 2026
+- Preserved the original selected sidebar item styling on hover and keyboard focus: `background: rgba(30, 58, 138, 0.1)` and `color: var(--d-primary)`.
+- Non-selected links retain the new subtle background hover treatment. Active navigation is not recoloured or brightened by the shared interaction layer.
+- Regression tests: `tests/sidebar-active-colour.test.js`.
