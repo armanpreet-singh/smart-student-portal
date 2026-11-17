@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { KeyRound } from "lucide-react";
+import { Eye, EyeOff, KeyRound } from "lucide-react";
 import { resetManagedAccountPassword } from "../api/adminAccountPasswordResetApi";
 
 import "./AccountPasswordResetControl.css";
 
-const EMPTY_FORM = { temporaryPassword: "", confirmPassword: "" };
+const EMPTY_FORM = { newPassword: "", confirmPassword: "" };
 
 const AccountPasswordResetControl = ({
   accessToken,
@@ -19,6 +19,8 @@ const AccountPasswordResetControl = ({
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [notice, setNotice] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const isSelf = Boolean(actorId && actorId === account.id);
 
@@ -26,6 +28,8 @@ const AccountPasswordResetControl = ({
     setForm(EMPTY_FORM);
     setFieldErrors({});
     setError("");
+    setShowNewPassword(false);
+    setShowConfirmPassword(false);
   };
 
   const closeDialog = () => {
@@ -54,14 +58,14 @@ const AccountPasswordResetControl = ({
     setError("");
     setFieldErrors({});
 
-    const byteLength = new TextEncoder().encode(form.temporaryPassword).length;
+    const byteLength = new TextEncoder().encode(form.newPassword).length;
     const nextErrors = {};
-    if (form.temporaryPassword.length < 12) {
-      nextErrors.temporaryPassword = "Use at least 12 characters.";
+    if (form.newPassword.length < 12) {
+      nextErrors.newPassword = "Use at least 12 characters.";
     } else if (byteLength > 72) {
-      nextErrors.temporaryPassword = "Use no more than 72 UTF-8 bytes.";
+      nextErrors.newPassword = "Use no more than 72 UTF-8 bytes.";
     }
-    if (form.temporaryPassword !== form.confirmPassword) {
+    if (form.newPassword !== form.confirmPassword) {
       nextErrors.confirmPassword = "The passwords do not match.";
     }
     if (Object.keys(nextErrors).length) {
@@ -75,12 +79,12 @@ const AccountPasswordResetControl = ({
         accessToken,
         account.id,
         account.role,
-        form.temporaryPassword,
+        form.newPassword,
         form.confirmPassword,
       );
       setOpen(false);
       clearForm();
-      setNotice("Password reset; change required at next sign-in");
+      setNotice("Password updated; the new password is ready to use");
       await onUpdated?.(updated);
     } catch (requestError) {
       if (requestError?.status === 401) await onUnauthorized?.();
@@ -138,44 +142,66 @@ const AccountPasswordResetControl = ({
             aria-describedby="a-account-password-reset-description"
           >
             <div className="a-account-password-reset-heading">
-              <h2 id="a-account-password-reset-title">Reset managed account password?</h2>
+              <h2 id="a-account-password-reset-title">Set a new account password</h2>
               <p id="a-account-password-reset-description">
-                Set a temporary password for {account.fullName} ({account.username}).
-                They must choose a new password at their next sign-in.
+                Set a new password for {account.fullName} ({account.username}).
+                They can sign in using this password as soon as the reset completes.
               </p>
             </div>
 
             <form onSubmit={handleSubmit} noValidate>
               <label className="a-account-password-reset-field">
-                <span>Temporary password</span>
-                <input
-                  type="password"
-                  autoComplete="new-password"
-                  value={form.temporaryPassword}
-                  onChange={(event) => updateField("temporaryPassword", event.target.value)}
-                  minLength={12}
-                  aria-invalid={Boolean(fieldErrors.temporaryPassword)}
-                  aria-describedby="a-account-password-reset-password-help"
-                  required
-                />
+                <span>New password</span>
+                <div className="a-account-password-reset-input-wrap">
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    value={form.newPassword}
+                    onChange={(event) => updateField("newPassword", event.target.value)}
+                    minLength={12}
+                    aria-invalid={Boolean(fieldErrors.newPassword)}
+                    aria-describedby="a-account-password-reset-password-help"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="a-account-password-reset-visibility"
+                    aria-label={showNewPassword ? "Hide new password" : "Show new password"}
+                    aria-pressed={showNewPassword}
+                    onClick={() => setShowNewPassword((visible) => !visible)}
+                  >
+                    {showNewPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                  </button>
+                </div>
                 <small id="a-account-password-reset-password-help">
                   At least 12 characters and no more than 72 UTF-8 bytes.
                 </small>
-                {fieldErrors.temporaryPassword && (
-                  <small role="alert">{fieldErrors.temporaryPassword}</small>
+                {fieldErrors.newPassword && (
+                  <small role="alert">{fieldErrors.newPassword}</small>
                 )}
               </label>
 
               <label className="a-account-password-reset-field">
                 <span>Confirm temporary password</span>
-                <input
-                  type="password"
-                  autoComplete="new-password"
-                  value={form.confirmPassword}
-                  onChange={(event) => updateField("confirmPassword", event.target.value)}
-                  aria-invalid={Boolean(fieldErrors.confirmPassword)}
-                  required
-                />
+                <div className="a-account-password-reset-input-wrap">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    value={form.confirmPassword}
+                    onChange={(event) => updateField("confirmPassword", event.target.value)}
+                    aria-invalid={Boolean(fieldErrors.confirmPassword)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="a-account-password-reset-visibility"
+                    aria-label={showConfirmPassword ? "Hide confirmation password" : "Show confirmation password"}
+                    aria-pressed={showConfirmPassword}
+                    onClick={() => setShowConfirmPassword((visible) => !visible)}
+                  >
+                    {showConfirmPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                  </button>
+                </div>
                 {fieldErrors.confirmPassword && (
                   <small role="alert">{fieldErrors.confirmPassword}</small>
                 )}
@@ -198,7 +224,7 @@ const AccountPasswordResetControl = ({
                   Cancel
                 </button>
                 <button type="submit" className="d-btn-primary" disabled={submitting}>
-                  {submitting ? "Resetting password…" : "Confirm password reset"}
+                  {submitting ? "Saving new password…" : "Set new password"}
                 </button>
               </div>
             </form>
