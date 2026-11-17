@@ -1723,3 +1723,10 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Theme detection uses the existing `.d-layout.dark-mode` class. The active accent is preserved across hover and keyboard focus.
 - Applies to the shared `.d-sidebar` navigation used by Student, Teacher and Admin. Non-selected hover styles and disabled behavior are unchanged.
 - Regression coverage: `tests/sidebar-active-colour.test.js` and `tests/sidebar-selected-neutral-text.test.js` now test the theme-aware blue/gold requirement.
+
+
+## Dashboard topbar/sidebar header alignment — November 17, 2026
+- Fixed the horizontal divider mismatch visible in the supplied dashboard screenshot. The shared dashboard layout header height is now `96px`; both `.d-topbar` and `.d-sidebar-header` use the same CSS variable.
+- The topbar's bottom border now aligns with the sidebar brand/header divider. Logo, breadcrumb, search, theme, notification and profile controls remain vertically centered.
+- Because Student, Teacher and Admin reuse the shared dashboard shell/styles, the alignment change applies consistently across all three roles and responsive layouts.
+- Regression test: `tests/dashboard-header-alignment.test.js`. Frontend-only; no API/backend/database changes.

@@ -1025,3 +1025,7 @@ The selected sidebar row keeps its existing active background highlight, but its
 - Dark theme: selected module label and icon are LTSU gold (`#C9A84C`) on a subtle gold-tinted row with a fine inset outline.
 - Theme scope is `.d-layout:not(.dark-mode)` vs `.d-layout.dark-mode`. Preserve colour on hover and keyboard focus. Shared sidebar means apply to Student, Teacher and Admin.
 - Do not use neutral-grey active text or a blue active label in dark theme. Do not alter unselected hover or disabled items.
+
+
+## Dashboard header alignment — 2026-11-17
+Use the shared `--d-layout-header-height: 96px` token for both `.d-topbar` and `.d-sidebar-header`. Their horizontal bottom borders must align exactly. Student, Teacher and Admin share these layout styles. Preserve centred topbar contents and responsive behavior. Test in `tests/dashboard-header-alignment.test.js`.
