@@ -363,5 +363,228 @@ export const injectGlobalStyles = () => {
       .show-mobile { display: none !important; }
     }
   `;
+
+  /*
+   * LTSU interaction system
+   * Shared across public pages, login, Student, Teacher and Admin portals.
+   */
+  style.textContent += `
+    :root {
+      --ltsu-interaction-fast: 180ms cubic-bezier(.2, .75, .25, 1);
+      --ltsu-interaction-smooth: 220ms cubic-bezier(.2, .75, .25, 1);
+      --ltsu-focus-ring: 0 0 0 3px rgba(201, 168, 76, .24);
+      --ltsu-primary-hover-shadow: 0 9px 22px rgba(27, 58, 107, .22);
+      --ltsu-secondary-glow: 0 0 0 3px rgba(27, 58, 107, .11);
+    }
+
+    /* Primary actions: gentle lift, elevation and tactile press. */
+    :is(.btn-primary, .btn-accent, .d-btn-primary, .login-btn-primary, .ui-confirm-submit, .d-notification-priority-action) {
+      transition:
+        transform var(--ltsu-interaction-fast),
+        box-shadow var(--ltsu-interaction-smooth),
+        background-color var(--ltsu-interaction-smooth),
+        filter var(--ltsu-interaction-smooth);
+      transform: translateY(0);
+    }
+
+    /* Secondary actions: border emphasis and a restrained brand-colour halo. */
+    :is(.btn-secondary, .btn-outline-white, .login-btn-secondary, .d-btn-secondary, .a-managed-edit-cancel) {
+      transition:
+        color var(--ltsu-interaction-smooth),
+        background-color var(--ltsu-interaction-smooth),
+        border-color var(--ltsu-interaction-smooth),
+        box-shadow var(--ltsu-interaction-smooth),
+        transform var(--ltsu-interaction-fast);
+    }
+
+    /* Sidebar: smooth surface highlight, with no bouncing or vertical movement. */
+    .d-nav-link:not(.disabled) {
+      transition:
+        background-color var(--ltsu-interaction-smooth),
+        color var(--ltsu-interaction-smooth),
+        box-shadow var(--ltsu-interaction-smooth);
+    }
+
+    /* Profile menu rows: quiet surface and icon-colour transition. */
+    .d-dropdown-item {
+      transition:
+        background-color var(--ltsu-interaction-smooth),
+        color var(--ltsu-interaction-smooth),
+        border-color var(--ltsu-interaction-smooth);
+    }
+    .d-dropdown-item > svg,
+    .d-dropdown-item .d-dropdown-arrow {
+      transition: color var(--ltsu-interaction-smooth), transform var(--ltsu-interaction-smooth);
+    }
+    .d-dropdown-item:not(.logout):hover > svg {
+      transform: translateX(1px);
+    }
+
+    /* Icon controls: circular hover surface and a very small scale response. */
+    :is(.d-icon-btn, .d-menu-btn, .d-close-btn, .pw-toggle, .show-mobile, button[aria-label*="theme" i]) {
+      transition:
+        background-color var(--ltsu-interaction-smooth),
+        color var(--ltsu-interaction-smooth),
+        border-color var(--ltsu-interaction-smooth),
+        box-shadow var(--ltsu-interaction-smooth),
+        transform var(--ltsu-interaction-fast);
+    }
+
+    /* Cards: 3px lift and softer elevation, not the old oversized 4px jump. */
+    :is(.card, .d-card, .d-stat-card) {
+      transition:
+        transform var(--ltsu-interaction-smooth),
+        box-shadow var(--ltsu-interaction-smooth),
+        border-color var(--ltsu-interaction-smooth),
+        background-color var(--ltsu-interaction-smooth);
+    }
+    :is(.card, .d-card, .d-stat-card):hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(27, 58, 107, .11);
+    }
+    [data-theme="dark"] :is(.card, .d-card, .d-stat-card):hover {
+      box-shadow: 0 12px 26px rgba(0, 0, 0, .28);
+    }
+
+    /* Table actions: keep their position stable; refine border and icon colour. */
+    .d-layout table button:not(:disabled),
+    .d-layout table a {
+      transition:
+        color var(--ltsu-interaction-smooth),
+        background-color var(--ltsu-interaction-smooth),
+        border-color var(--ltsu-interaction-smooth),
+        box-shadow var(--ltsu-interaction-smooth);
+    }
+    .d-layout table button:not(:disabled):hover {
+      border-color: color-mix(in srgb, var(--d-primary) 42%, var(--d-border));
+    }
+    .d-layout table button:not(:disabled):hover svg {
+      color: var(--d-primary);
+    }
+    .d-layout .a-managed-edit-trigger {
+      transition:
+        color var(--ltsu-interaction-smooth),
+        background-color var(--ltsu-interaction-smooth),
+        border-color var(--ltsu-interaction-smooth),
+        box-shadow var(--ltsu-interaction-smooth);
+    }
+
+    /* Text links: underline grows in smoothly instead of jumping on hover. */
+    :is(.nav-link, .footer-link, .d-link-btn, .d-breadcrumb a:not(.active)) {
+      position: relative;
+      text-decoration: none;
+      text-underline-offset: 4px;
+    }
+    :is(.nav-link, .footer-link, .d-link-btn, .d-breadcrumb a:not(.active))::after {
+      position: absolute;
+      right: 0;
+      bottom: 1px;
+      left: 0;
+      height: 1px;
+      background: currentColor;
+      content: "";
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform var(--ltsu-interaction-smooth);
+      pointer-events: none;
+    }
+    :is(.nav-link, .footer-link, .d-link-btn, .d-breadcrumb a:not(.active)):hover::after {
+      transform: scaleX(1);
+    }
+
+    /* Keyboard users receive an equally clear focus treatment. */
+    :is(button, a, [role="button"], [tabindex]):focus-visible {
+      outline: 3px solid rgba(201, 168, 76, .72);
+      outline-offset: 3px;
+    }
+
+    /* Disabled controls never lift, glow, scale or animate on hover. */
+    :is(button, a, [role="button"]):is(:disabled, [aria-disabled="true"]),
+    :is(button, a, [role="button"]):is(:disabled, [aria-disabled="true"]):hover,
+    :is(button, a, [role="button"]):is(:disabled, [aria-disabled="true"]):active {
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+      filter: none !important;
+      transition: none !important;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      :is(.btn-primary, .btn-accent, .d-btn-primary, .login-btn-primary, .ui-confirm-submit, .d-notification-priority-action):not(:disabled):not([aria-disabled="true"]):hover {
+        transform: translateY(-2px);
+        box-shadow: var(--ltsu-primary-hover-shadow);
+        filter: brightness(1.045);
+      }
+      :is(.btn-primary, .btn-accent, .d-btn-primary, .login-btn-primary, .ui-confirm-submit, .d-notification-priority-action):not(:disabled):not([aria-disabled="true"]):active {
+        transform: translateY(0) scale(.98);
+        box-shadow: 0 2px 7px rgba(27, 58, 107, .16);
+        filter: brightness(.99);
+      }
+
+      :is(.btn-secondary, .btn-outline-white, .login-btn-secondary, .d-btn-secondary, .a-managed-edit-cancel):not(:disabled):not([aria-disabled="true"]):hover {
+        border-color: var(--primary-light, #2A52A0);
+        box-shadow: var(--ltsu-secondary-glow);
+      }
+      :is(.btn-secondary, .btn-outline-white, .login-btn-secondary, .d-btn-secondary, .a-managed-edit-cancel):not(:disabled):not([aria-disabled="true"]):active {
+        transform: scale(.985);
+      }
+
+      .d-nav-link:not(.disabled):not(.active):hover {
+        background-color: color-mix(in srgb, var(--d-primary) 8%, var(--d-surface));
+        color: var(--d-primary);
+      }
+      .d-nav-link.active:hover {
+        background-color: color-mix(in srgb, var(--d-primary) 13%, var(--d-surface));
+      }
+
+      .d-dropdown-item:not(:disabled):not([aria-disabled="true"]):hover {
+        background-color: color-mix(in srgb, var(--d-primary) 7%, var(--d-surface));
+      }
+      .d-dropdown-item.logout:not(:disabled):hover {
+        background-color: rgba(220, 38, 38, .07);
+      }
+
+      :is(.d-icon-btn, .d-menu-btn, .d-close-btn, .pw-toggle, .show-mobile, button[aria-label*="theme" i]):not(:disabled):not([aria-disabled="true"]):hover {
+        border-radius: 50%;
+        background-color: color-mix(in srgb, var(--d-primary, #1B3A6B) 9%, var(--d-surface, #fff));
+        color: var(--d-primary, #1B3A6B);
+        transform: scale(1.045);
+      }
+      :is(.d-icon-btn, .d-menu-btn, .d-close-btn, .pw-toggle, .show-mobile, button[aria-label*="theme" i]):not(:disabled):active {
+        transform: scale(.96);
+      }
+
+      :is(.card, .d-card, .d-stat-card):hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px rgba(27, 58, 107, .11);
+      }
+      .d-layout table button:not(:disabled):hover svg {
+        color: var(--d-primary);
+        transform: scale(1.045);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      :root { --ltsu-interaction-fast: 0ms; --ltsu-interaction-smooth: 0ms; }
+      :is(.btn-primary, .btn-accent, .d-btn-primary, .login-btn-primary, .ui-confirm-submit, .d-notification-priority-action,
+          .btn-secondary, .btn-outline-white, .login-btn-secondary, .d-btn-secondary, .a-managed-edit-cancel,
+          .d-nav-link, .d-dropdown-item, .d-icon-btn, .d-menu-btn, .d-close-btn, .pw-toggle, .show-mobile,
+          .card, .d-card, .d-stat-card, .nav-link, .footer-link, .d-link-btn, .d-breadcrumb a)::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      :is(.btn-primary, .btn-accent, .d-btn-primary, .login-btn-primary, .ui-confirm-submit, .d-notification-priority-action,
+          .btn-secondary, .btn-outline-white, .login-btn-secondary, .d-btn-secondary, .a-managed-edit-cancel,
+          .d-icon-btn, .d-menu-btn, .d-close-btn, .pw-toggle, .show-mobile,
+          .card, .d-card, .d-stat-card):hover,
+      :is(.btn-primary, .btn-accent, .d-btn-primary, .login-btn-primary, .ui-confirm-submit, .d-notification-priority-action,
+          .btn-secondary, .btn-outline-white, .login-btn-secondary, .d-btn-secondary, .a-managed-edit-cancel,
+          .d-icon-btn, .d-menu-btn, .d-close-btn, .pw-toggle, .show-mobile,
+          .card, .d-card, .d-stat-card):active {
+        transform: none !important;
+      }
+    }
+  `;
+
   document.head.appendChild(style);
 };

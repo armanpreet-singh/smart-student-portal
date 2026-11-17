@@ -1694,3 +1694,13 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Shared page: `src/features/shared/help/HelpSupportPage.jsx`, with common account/security/troubleshooting FAQs plus Student-specific and Teacher-specific guidance, category filters, live article search, expandable answers, and shortcuts to profile/settings.
 - Support request actions prepare a local, prefilled email draft or copyable template with the signed-in account's available name/role/username/email and issue prompts. The email composer intentionally leaves recipient blank because the app has no verified institutional helpdesk address. The portal does not submit or persist support tickets; this limitation is stated in the UI.
 - No backend/API/database changes. Regression tests: `tests/help-support-navigation.test.js`.
+
+
+## LTSU shared interaction system — November 17, 2026
+- Added one injected interaction layer in `src/styles/GlobalStyles.js`, shared by the public site, login, Student, Teacher and Admin portals.
+- Primary actions: 2px hover lift, softer elevation and 0.98 press scale. Secondary actions: brand-colour border emphasis and restrained focus-like halo.
+- Sidebar links: smooth surface highlight without vertical movement. Profile dropdown rows: subtle surface and icon transition. Icon buttons: circular hover surface and subtle scale response.
+- Cards: 3px lift and softer shadow. Table actions: border and icon-colour transitions without positional movement. Named text links use a growing underline.
+- Disabled/aria-disabled controls do not animate on hover or press. Keyboard focus-visible and reduced-motion preferences are preserved. Hover-only transforms are restricted to hover-capable fine pointers.
+- DashboardCard no longer uses a separate Framer Motion hover transform; the shared CSS owns its 3px card interaction.
+- Regression tests: `tests/platform-interactions.test.js`. Frontend-only; no API/backend/database changes.

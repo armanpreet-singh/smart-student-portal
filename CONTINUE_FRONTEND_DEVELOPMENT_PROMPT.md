@@ -1006,3 +1006,7 @@ Do not apply a dark navy toast background from app or OS dark-theme selectors. U
 - FAQs are searchable/filterable and role-specific. Includes profile/settings shortcuts and a support-request draft that can be copied or opened in the user's email app.
 - No support ticket API, persistence or verified helpdesk email currently exists. Do not claim that a support request is sent or tracked. The email draft has a blank recipient for the user to supply the official university address.
 - Verify `tests/help-support-navigation.test.js`, both route entries, dark/light themes, responsive layout, clipboard fallback, and mailto behavior.
+
+
+## LTSU interaction system — 2026-11-17
+Apply the shared interaction treatments from `src/styles/GlobalStyles.js` to every role and public page: primary lift/shadow/press; secondary border halo/colour; smooth sidebar highlight; subtle profile dropdown surface; circular icon button hover; 3px card lift; non-shifting table action border/icon transition; animated underline for named text links. Disabled controls must not animate. Preserve keyboard focus-visible and `prefers-reduced-motion`. Keep hover transforms within `@media (hover: hover) and (pointer: fine)`. Do not re-add a competing Framer Motion hover to DashboardCard.
