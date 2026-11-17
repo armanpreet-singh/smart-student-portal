@@ -51,6 +51,7 @@ function openDownload(download, previewWindow) {
 const TeacherResources = memo(() => {
   const { accessToken, user, sessionStatus, sessionError } = useAuth();
   const requestSequence = useRef(0);
+  const fileInputRef = useRef(null);
   const [subjects, setSubjects] = useState([]);
   const [resources, setResources] = useState([]);
   const [form, setForm] = useState(EMPTY_FORM);
@@ -61,6 +62,7 @@ const TeacherResources = memo(() => {
   const [busyResourceId, setBusyResourceId] = useState("");
   const [search, setSearch] = useState("");
   const [pendingDelete, setPendingDelete] = useState(null);
+  const [isFileDragActive, setIsFileDragActive] = useState(false);
 
   const loadData = useCallback(async () => {
     const requestId = ++requestSequence.current;
@@ -113,22 +115,20 @@ const TeacherResources = memo(() => {
     ].some((value) => value.toLowerCase().includes(query)));
   }, [resources, search]);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files?.[0] || null;
+  const applySelectedFile = (file) => {
+    if (!file) return;
     setActionError("");
-    if (!file) {
-      setForm((current) => ({ ...current, file: null }));
-      return;
-    }
     const extension = getExtension(file.name);
     if (!ALLOWED_EXTENSIONS.has(extension)) {
-      setActionError("Choose a PDF, Word, PowerPoint, TXT, JPEG or PNG file.");
-      event.target.value = "";
+      setActionError("Unsupported file type. Choose PDF, Word, PowerPoint, TXT, JPEG or PNG.");
       return;
     }
     if (file.size > MAX_FILE_BYTES) {
-      setActionError("The selected notes file must be 20 MB or smaller.");
-      event.target.value = "";
+      setActionError("This file is larger than 20 MB. Choose a smaller notes file.");
+      return;
+    }
+    if (file.size === 0) {
+      setActionError("This file is empty. Choose a file containing your notes.");
       return;
     }
     setForm((current) => ({
@@ -136,6 +136,32 @@ const TeacherResources = memo(() => {
       file,
       title: current.title.trim() ? current.title : file.name.replace(/\.[^.]+$/, "")
     }));
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0] || null;
+    if (file) applySelectedFile(file);
+    event.target.value = "";
+  };
+
+  const openFilePicker = () => fileInputRef.current?.click();
+
+  const handleDropZoneKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openFilePicker();
+    }
+  };
+
+  const handleFileDrop = (event) => {
+    event.preventDefault();
+    setIsFileDragActive(false);
+    const files = Array.from(event.dataTransfer?.files || []);
+    if (files.length > 1) {
+      setActionError("Upload one notes file at a time.");
+      return;
+    }
+    if (files[0]) applySelectedFile(files[0]);
   };
 
   const uploadNotes = async (event) => {
@@ -160,8 +186,7 @@ const TeacherResources = memo(() => {
       });
       showSuccessMessage("Notes uploaded and shared with the selected class.");
       setForm({ ...EMPTY_FORM, subjectId: form.subjectId });
-      const input = document.getElementById("teacher-resource-file");
-      if (input) input.value = "";
+      if (fileInputRef.current) fileInputRef.current.value = "";
       await loadData();
     } catch (error) {
       setActionError(error?.message || "The notes file could not be uploaded.");
@@ -238,12 +263,65 @@ const TeacherResources = memo(() => {
               Description <span>(optional)</span>
               <textarea value={form.description} maxLength={4000} rows={3} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} placeholder="Add a short description for students"/>
             </label>
-            <label className="t-resources-file-label">
-              Notes file
-              <input id="teacher-resource-file" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.jpg,.jpeg,.png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,image/jpeg,image/png" onChange={handleFileChange} required/>
-              <span>PDF, Word, PowerPoint, TXT, JPEG or PNG · Maximum 20 MB</span>
-            </label>
-            {form.file && <div className="t-resources-selected-file"><FileText size={17}/><span>{form.file.name}</span><small>{formatResourceBytes(form.file.size)}</small></div>}
+            <div className="t-resources-file-field">
+              <span className="t-resources-file-heading">Notes file <span className="t-resources-required">Required</span></span>
+              <input
+                ref={fileInputRef}
+                id="teacher-resource-file"
+                className="t-resources-native-file-input"
+                type="file"
+                accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.jpg,.jpeg,.png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,image/jpeg,image/png"
+                onChange={handleFileChange}
+                aria-label="Choose notes file"
+              />
+              <div
+                className={`t-resources-dropzone ${isFileDragActive ? "is-drag-active" : ""} ${form.file ? "has-file" : ""}`}
+                role="button"
+                tabIndex={0}
+                aria-label="Choose a notes file or drag and drop one here"
+                aria-describedby="t-resources-file-help"
+                onClick={openFilePicker}
+                onKeyDown={handleDropZoneKeyDown}
+                onDragEnter={(event) => { event.preventDefault(); setIsFileDragActive(true); }}
+                onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "copy"; setIsFileDragActive(true); }}
+                onDragLeave={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget)) setIsFileDragActive(false);
+                }}
+                onDrop={handleFileDrop}
+              >
+                <span className="t-resources-dropzone-icon"><UploadCloud size={25}/></span>
+                <span className="t-resources-dropzone-copy">
+                  <strong>{isFileDragActive ? "Drop your notes file here" : form.file ? "Drop a new file to replace this one" : "Drag & drop your notes here"}</strong>
+                  <small>or <span className="t-resources-browse-link">browse files</span> from your device</small>
+                </span>
+                <span className="t-resources-dropzone-limit">MAX 20 MB</span>
+              </div>
+              <span id="t-resources-file-help" className="t-resources-file-help">
+                PDF, Word, PowerPoint, TXT, JPEG or PNG · Maximum 20 MB · One file per upload
+              </span>
+              {form.file && (
+                <div className="t-resources-selected-file">
+                  <span className="t-resources-selected-file-icon"><FileText size={19}/></span>
+                  <span className="t-resources-selected-file-copy">
+                    <strong>{form.file.name}</strong>
+                    <small>{getExtension(form.file.name).toUpperCase()} · {formatResourceBytes(form.file.size)} · Ready to upload</small>
+                  </span>
+                  <button
+                    type="button"
+                    className="t-resources-remove-file"
+                    onClick={() => {
+                      setForm((current) => ({ ...current, file: null }));
+                      setActionError("");
+                      if (fileInputRef.current) fileInputRef.current.value = "";
+                    }}
+                    aria-label={`Remove ${form.file.name}`}
+                    disabled={saving}
+                  >
+                    <Trash2 size={15}/> Remove
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="t-resources-form-footer">
               <span>Uploaded notes are immediately available in the selected class's Student portal.</span>
               <button type="submit" className="d-btn-primary" disabled={saving || loadState !== "success" || !subjects.length}>

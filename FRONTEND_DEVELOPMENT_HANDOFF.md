@@ -1746,3 +1746,10 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Student name, username and roll number remain on readable single lines with ellipsis only for genuinely long values; roll numbers no longer break into individual digits.
 - Attendance status marking, 30-minute correction rules, duty-proof lock behavior, copy/export actions and saved records are unchanged.
 - Regression test: `tests/teacher-attendance-register-layout.test.js`. Frontend-only; no API/backend/database changes.
+
+
+## Teacher notes uploader refresh — November 17, 2026
+- Replaced the basic native file input presentation on Teacher → Learning Resources with a branded drag-and-drop dropzone. Teachers can click or keyboard-activate the dropzone to browse, or drag one file onto it.
+- Added drag-over highlight, selected-file card with file name/type/size, remove/replace action and accessible input/dropzone labels.
+- Existing allow-list and 20MB maximum are retained (PDF, DOC, DOCX, PPT, PPTX, TXT, JPG/JPEG, PNG). Empty files and multiple-file drops are rejected with inline errors. Existing upload service/API and student availability behavior are unchanged.
+- Regression tests: `tests/teacher-notes-dropzone.test.js`. Frontend-only; no backend/API/storage changes.
