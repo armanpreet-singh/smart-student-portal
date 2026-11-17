@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CheckCircle, ChevronLeft, ChevronRight, Mail, Pencil, RotateCw, Search, UserRound, UserPlus, X } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, Eye, EyeOff, Mail, Pencil, RotateCw, Search, UserRound, UserPlus, X } from "lucide-react";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
@@ -103,6 +103,8 @@ const StudentsPage = () => {
   const [retryCount, setRetryCount] = useState(0);
   const [filterError, setFilterError] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
+  const [showCreatePassword, setShowCreatePassword] = useState(false);
+  const [showCreateConfirmPassword, setShowCreateConfirmPassword] = useState(false);
   const [createStatus, setCreateStatus] = useState("idle");
   const [createError, setCreateError] = useState("");
   const [createFieldErrors, setCreateFieldErrors] = useState({});
@@ -201,6 +203,8 @@ const StudentsPage = () => {
     const handleEscape = (event) => {
       if (event.key === "Escape" && createStatus !== "submitting") {
         setCreateOpen(false);
+        setShowCreatePassword(false);
+        setShowCreateConfirmPassword(false);
         setCreateForm(createEmptyAdminStudentForm());
         setCreateError("");
         setCreateFieldErrors({});
@@ -220,6 +224,8 @@ const StudentsPage = () => {
   const closeCreateDialog = () => {
     if (createStatus === "submitting") return;
     setCreateOpen(false);
+    setShowCreatePassword(false);
+    setShowCreateConfirmPassword(false);
     setCreateForm(createEmptyAdminStudentForm());
     setCreateError("");
     setCreateFieldErrors({});
@@ -751,16 +757,27 @@ const StudentsPage = () => {
 
                 <label className="a-student-create-field">
                   <span>Temporary password</span>
-                  <input
-                    type="password"
-                    autoComplete="new-password"
-                    value={createForm.temporaryPassword}
-                    onChange={(event) =>
-                      updateCreateField("temporaryPassword", event.target.value)
-                    }
-                    aria-invalid={Boolean(createFieldErrors.temporaryPassword)}
-                    required
-                  />
+                  <div className="a-student-create-password-wrap">
+                    <input
+                      type={showCreatePassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      value={createForm.temporaryPassword}
+                      onChange={(event) =>
+                        updateCreateField("temporaryPassword", event.target.value)
+                      }
+                      aria-invalid={Boolean(createFieldErrors.temporaryPassword)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="a-student-create-password-visibility"
+                      aria-label={showCreatePassword ? "Hide temporary password" : "Show temporary password"}
+                      aria-pressed={showCreatePassword}
+                      onClick={() => setShowCreatePassword((visible) => !visible)}
+                    >
+                      {showCreatePassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                    </button>
+                  </div>
                   <small>At least 12 characters and no more than 72 UTF-8 bytes.</small>
                   {createFieldErrors.temporaryPassword && (
                     <small role="alert">
@@ -771,16 +788,27 @@ const StudentsPage = () => {
 
                 <label className="a-student-create-field">
                   <span>Confirm temporary password</span>
-                  <input
-                    type="password"
-                    autoComplete="new-password"
-                    value={createForm.confirmPassword}
-                    onChange={(event) =>
-                      updateCreateField("confirmPassword", event.target.value)
-                    }
-                    aria-invalid={Boolean(createFieldErrors.confirmPassword)}
-                    required
-                  />
+                  <div className="a-student-create-password-wrap">
+                    <input
+                      type={showCreateConfirmPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      value={createForm.confirmPassword}
+                      onChange={(event) =>
+                        updateCreateField("confirmPassword", event.target.value)
+                      }
+                      aria-invalid={Boolean(createFieldErrors.confirmPassword)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="a-student-create-password-visibility"
+                      aria-label={showCreateConfirmPassword ? "Hide confirmation password" : "Show confirmation password"}
+                      aria-pressed={showCreateConfirmPassword}
+                      onClick={() => setShowCreateConfirmPassword((visible) => !visible)}
+                    >
+                      {showCreateConfirmPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                    </button>
+                  </div>
                   {createFieldErrors.confirmPassword && (
                     <small role="alert">{createFieldErrors.confirmPassword}</small>
                   )}
