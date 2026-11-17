@@ -1081,3 +1081,11 @@ Use the shared `--d-layout-header-height: 96px` token for both `.d-topbar` and `
 - Includes search across subjects/units/topics, progress status filters, empty/error/retry states, accessible progress indicators, dark/light theme tokens, responsive small-screen layout and reduced-motion handling.
 - Source: uploaded LTSU B.Tech CSE Syllabus and Study Scheme 2024–2028, Semester V outline only. The frontend does not introduce content for other semesters or unmatched subjects.
 - No frontend API contract changes. Production rollout is gated on the backend migration and deployment. Browser acceptance using real Teacher and Student accounts remains outstanding.
+
+
+## Production rollout completed — November 17, 2026
+- Frontend PR #100 merged to main at `b707fef3a2c61c043267c2b3b23ac78b8819b7e3`.
+- Cloudflare Pages production deployment `8438a9d7-e1e5-4b51-9f34-5b2d0f9e9693` completed successfully from main. Canonical portal: https://smart-student-portal.pages.dev.
+- Main CI: 254/254 frontend tests passed; Vite production build succeeded. Cloudflare production deployment check succeeded.
+- Production UI exposes Student `/dashboard/syllabus` (read-only own-class progress) and Teacher `/teacher/syllabus` (assigned-subject completion controls), navigation and global search.
+- Backend migration is finished in production and DB query verified 353 uncompleted topics across 8 Semester V subject records. Browser acceptance using real Student and Teacher accounts remains recommended to verify the exact account/class assignments and a live topic completion round trip.
