@@ -206,16 +206,16 @@ const Topbar = memo(({ onMenuClick }) => {
 
              <AccessibilitySubmenu />
 
-                <button
+                <Link
+                  to="/dashboard/help"
                   className="d-dropdown-item"
                   role="menuitem"
-                  tabIndex={0}
                   onClick={() => setIsDropdownOpen(false)}
                 >
                   <HelpCircle size={16} />
                   <span>Help & Support</span>
                   <ChevronRight size={14} className="d-dropdown-arrow" />
-                </button>
+                </Link>
 
                 <div className="d-dropdown-divider"></div>
 

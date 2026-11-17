@@ -1,0 +1,44 @@
+.d-help-page { display: flex; flex-direction: column; gap: 22px; }
+.d-help-hero { position: relative; display: flex; align-items: center; gap: 20px; overflow: hidden; padding: 28px; border: 1px solid var(--d-border); border-radius: var(--d-radius); background: linear-gradient(115deg, rgba(30,58,138,.09), rgba(201,168,76,.08)); }
+.d-help-hero-icon,.d-help-contact-icon { width: 52px; height: 52px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 15px; color: var(--d-primary); background: var(--d-surface); border: 1px solid var(--d-border); }
+.d-help-hero-copy { max-width: 680px; position: relative; z-index: 1; }
+.d-help-eyebrow { color: var(--d-primary); font-size: 10px; font-weight: 800; letter-spacing: 1.1px; }
+.d-help-hero h2 { margin: 6px 0; color: var(--d-text); font-size: clamp(21px,3vw,28px); }
+.d-help-hero p,.d-help-section-heading p,.d-help-contact-card>p { margin: 0; color: var(--d-text-secondary); font-size: 13px; line-height: 1.65; }
+.d-help-hero-mark { margin-left: auto; color: var(--d-primary); opacity: .13; flex: 0 0 auto; }
+.d-help-shortcuts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; }
+.d-help-shortcut { min-width: 0; display: flex; align-items: center; gap: 12px; padding: 16px; border: 1px solid var(--d-border); border-radius: var(--d-radius-sm); background: var(--d-surface); color: var(--d-primary); text-decoration: none; transition: transform .18s ease,border-color .18s ease; }
+.d-help-shortcut:hover { transform: translateY(-2px); border-color: var(--d-primary); }
+.d-help-shortcut span { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 3px; }
+.d-help-shortcut strong { color: var(--d-text); font-size: 13px; }
+.d-help-shortcut small { color: var(--d-text-secondary); font-size: 11px; line-height: 1.4; }
+.d-help-section-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; color: var(--d-primary); }
+.d-help-section-heading h3,.d-help-contact-card h3,.d-help-safety-card h3 { margin: 0 0 5px; color: var(--d-text); font-size: 17px; }
+.d-help-search { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 13px; border: 1px solid var(--d-border); border-radius: 10px; color: var(--d-text-secondary); }
+.d-help-search:focus-within { border-color: var(--d-primary); box-shadow: 0 0 0 3px rgba(30,58,138,.09); }
+.d-help-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--d-text); font: inherit; font-size: 13px; }
+.d-help-search button { display: grid; place-items: center; padding: 5px; border: 0; background: transparent; color: var(--d-text-secondary); cursor: pointer; }
+.d-help-categories { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+.d-help-categories button { padding: 7px 11px; border: 1px solid var(--d-border); border-radius: 20px; background: var(--d-bg); color: var(--d-text-secondary); font-size: 11px; cursor: pointer; }
+.d-help-categories button.active { border-color: var(--d-primary); background: rgba(30,58,138,.09); color: var(--d-primary); font-weight: 700; }
+.d-help-faq-list { border-top: 1px solid var(--d-border); }
+.d-help-faq-item { border-bottom: 1px solid var(--d-border); }
+.d-help-faq-item>button { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 15px 4px; border: 0; background: transparent; color: var(--d-text); text-align: left; cursor: pointer; }
+.d-help-faq-item>button span { display: flex; flex-direction: column; gap: 5px; }
+.d-help-faq-item>button small { color: var(--d-primary); font-size: 10px; font-weight: 700; }
+.d-help-faq-item>button strong { font-size: 13px; font-weight: 600; }
+.d-help-faq-item>button svg { flex: 0 0 auto; color: var(--d-text-secondary); transition: transform .18s ease; }
+.d-help-faq-item.expanded>button svg { transform: rotate(180deg); }
+.d-help-faq-item>p { max-width: 900px; margin: -2px 34px 16px 4px; color: var(--d-text-secondary); font-size: 13px; line-height: 1.7; }
+.d-help-empty { padding: 20px 4px; color: var(--d-text-secondary); font-size: 13px; }
+.d-help-bottom-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; scroll-margin-top: 90px; }
+.d-help-contact-card,.d-help-safety-card { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.d-help-contact-card>p { min-height: 64px; }
+.d-help-contact-actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: auto; }
+.d-help-contact-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 38px; padding: 8px 12px; border: 1px solid var(--d-primary); border-radius: 9px; background: var(--d-primary); color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; }
+.d-help-contact-actions button.secondary { background: transparent; color: var(--d-primary); }
+.d-help-safety-card ul { margin: 0; padding-left: 19px; color: var(--d-text-secondary); font-size: 12px; line-height: 1.75; }
+.d-help-note { display: flex; align-items: flex-start; gap: 7px; margin: auto 0 0; padding-top: 8px; color: var(--d-text-secondary); font-size: 11px; line-height: 1.5; }
+.d-help-note svg { flex: 0 0 auto; color: var(--d-success); }
+@media(max-width:900px) { .d-help-shortcuts { grid-template-columns: 1fr; } .d-help-bottom-grid { grid-template-columns: 1fr; } .d-help-contact-card>p { min-height: 0; } }
+@media(max-width:600px) { .d-help-hero { align-items: flex-start; padding: 20px; gap: 13px; } .d-help-hero-icon { width: 42px; height: 42px; } .d-help-hero-mark { display: none; } .d-help-faq-card { padding: 16px; } .d-help-contact-actions { width: 100%; } .d-help-contact-actions button { flex: 1 1 100%; } }
