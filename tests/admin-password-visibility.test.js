@@ -35,3 +35,12 @@ test("Student creation password visibility controls have styling and accessible 
   assert.match(css, /\.a-student-create-password-visibility/);
   assert.match(css, /:focus-visible/);
 });
+
+
+test("Admin reset API sends newPassword and expects the new password to be immediately usable", async () => {
+  const api = await read("features/admin/api/adminAccountPasswordResetApi.js");
+  assert.match(api, /resetManagedAccountPassword\([^)]*newPassword, confirmPassword\)/);
+  assert.match(api, /body: JSON\.stringify\(\{ newPassword \}\)/);
+  assert.match(api, /user\.mustChangePassword === false/);
+  assert.doesNotMatch(api, /temporaryPassword/);
+});
