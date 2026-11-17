@@ -74,6 +74,7 @@ function audienceLabel(item) {
 export default function AnnouncementsManager({ role }) {
   const { accessToken, user, sessionStatus, sessionError } = useAuth();
   const requestSequence = useRef(0);
+  const attachmentInputRef = useRef(null);
   const [announcements, setAnnouncements] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [loadState, setLoadState] = useState("loading");
@@ -135,6 +136,7 @@ export default function AnnouncementsManager({ role }) {
   const openCreate = () => {
     setEditingId("");
     setSelectedFile(null);
+    if (attachmentInputRef.current) attachmentInputRef.current.value = "";
     setForm({
       ...EMPTY_FORM,
       subjectId: subjects[0]?.id || ""
@@ -147,6 +149,7 @@ export default function AnnouncementsManager({ role }) {
     if (!canManage(item) || item.publishedAt) return;
     setEditingId(item.id);
     setSelectedFile(null);
+    if (attachmentInputRef.current) attachmentInputRef.current.value = "";
     setForm({
       title: item.title,
       message: item.message,
@@ -162,6 +165,7 @@ export default function AnnouncementsManager({ role }) {
     setEditingId("");
     setForm(EMPTY_FORM);
     setSelectedFile(null);
+    if (attachmentInputRef.current) attachmentInputRef.current.value = "";
     setActionError("");
   };
 
@@ -218,6 +222,11 @@ export default function AnnouncementsManager({ role }) {
   const handleAttachmentChange = (event) => {
     const file = event.target.files?.[0] || null;
     if (!file) return;
+    if (file.size <= 0) {
+      setActionError("Choose a non-empty attachment file.");
+      event.target.value = "";
+      return;
+    }
     if (file.size > MAX_ANNOUNCEMENT_ATTACHMENT_BYTES) {
       setActionError("Announcement attachments must be 20 MB or smaller.");
       event.target.value = "";
@@ -320,6 +329,7 @@ export default function AnnouncementsManager({ role }) {
         <label className="announcements-attachment-field">
           <span><UploadCloud size={16}/> Attachment <small>Optional · one file · maximum 20 MB</small></span>
           <input
+            ref={attachmentInputRef}
             type="file"
             accept={ANNOUNCEMENT_ATTACHMENT_ACCEPT}
             onChange={handleAttachmentChange}
@@ -332,7 +342,10 @@ export default function AnnouncementsManager({ role }) {
             <FileText size={17}/>
             <span><strong>{selectedFile.name}</strong><small>{formatBytes(selectedFile.size)} · Will be uploaded when you save the draft</small></span>
             <button type="button" aria-label="Remove selected attachment"
-              onClick={() => setSelectedFile(null)} disabled={saving}><X size={15}/></button>
+              onClick={() => {
+                setSelectedFile(null);
+                if (attachmentInputRef.current) attachmentInputRef.current.value = "";
+              }} disabled={saving}><X size={15}/></button>
           </div>
         )}
         {!selectedFile && editingId && announcements.find((item) => item.id === editingId)?.attachment && (
