@@ -1,4 +1,5 @@
 .d-layout {
+  --d-layout-header-height: 96px;
   --d-primary: #1e3a8a;
   --d-secondary: #294d9b;
   --d-gold: #d4af37;
