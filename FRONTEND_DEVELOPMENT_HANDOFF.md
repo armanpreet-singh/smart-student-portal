@@ -1687,3 +1687,10 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Username edits change the sign-in username. Password resets remain in the existing dedicated password-reset control. Account activation remains in its dedicated status control. Teacher subject assignments remain managed in the separate Teacher-to-Subject assignment directory.
 - Edit requests use the Admin-managed-user PATCH endpoint and validate uniqueness conflicts. The directory refreshes after a successful save.
 - No frontend schema or database migration. Frontend tests: `tests/admin-managed-users-api.test.js`, `tests/admin-managed-user-edit-ui.test.js`, and existing directory tests. Backend endpoint ships separately in `ltsu-backend` PR #18.
+
+
+## Student and Teacher Help & Support centre — November 17, 2026
+- Replaced the inert Help & Support profile-menu buttons with links to role-scoped Help Centre routes: `/dashboard/help` and `/teacher/help`.
+- Shared page: `src/features/shared/help/HelpSupportPage.jsx`, with common account/security/troubleshooting FAQs plus Student-specific and Teacher-specific guidance, category filters, live article search, expandable answers, and shortcuts to profile/settings.
+- Support request actions prepare a local, prefilled email draft or copyable template with the signed-in account's available name/role/username/email and issue prompts. The email composer intentionally leaves recipient blank because the app has no verified institutional helpdesk address. The portal does not submit or persist support tickets; this limitation is stated in the UI.
+- No backend/API/database changes. Regression tests: `tests/help-support-navigation.test.js`.
