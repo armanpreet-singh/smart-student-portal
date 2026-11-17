@@ -717,3 +717,34 @@
   outline: 3px solid var(--d-gold);
   outline-offset: 2px;
 }
+/* Password visibility toggles for student account creation */
+.a-student-create-password-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.a-student-create-password-wrap input {
+  padding-right: 44px;
+}
+.a-student-create-password-visibility {
+  position: absolute;
+  right: 8px;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--d-text-secondary);
+  cursor: pointer;
+}
+.a-student-create-password-visibility:hover {
+  background: var(--d-bg);
+  color: var(--d-primary);
+}
+.a-student-create-password-visibility:focus-visible {
+  outline: 2px solid var(--d-gold);
+  outline-offset: 1px;
+}

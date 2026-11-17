@@ -1057,3 +1057,9 @@ Use the shared `--d-layout-header-height: 96px` token for both `.d-topbar` and `
 - All Student, Teacher and Admin topbar avatar buttons, profile dropdown identity avatars and profile-page header avatars use `features/shared/profile/nameInitials.js`.
 - Multi-part names use first + last name initials (Shahid Mushtaq → SM; Armanpreet Singh Kumar → AK); single-word names use one initial. Normalize whitespace and use Unicode-safe character extraction. Fall back to the existing User/UserRound icon if full name is absent.
 - Derived from the verified session `user.fullName` only; no backend/database fields. Test: `tests/name-based-profile-initials.test.js`.
+
+
+## Admin password controls
+- Admin reset flow asks for a new password and confirmation (no old password) for managed Student/Teacher accounts. The admin-set password is immediately usable after successful reset; API response should have `mustChangePassword=false`.
+- Password fields in the reset dialog have separate Eye/EyeOff visibility toggles. Add Student temporary-password and confirmation fields also have separate toggles; preserve first-login change requirement for newly created Students.
+- Keep min 12 chars, max 72 UTF-8 bytes, exact confirm match, bcrypt hash server-side. Never log or persist plaintext passwords. Toggling visibility must not submit the form.
