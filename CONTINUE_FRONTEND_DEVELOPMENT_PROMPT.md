@@ -1071,3 +1071,13 @@ Use the shared `--d-layout-header-height: 96px` token for both `.d-topbar` and `
 - Replaced the undefined card token with the shared `var(--d-surface, #fff)` token for cards, stats, forms, empty/loading/error surfaces and related controls. Existing foreground styles continue to use `--d-text` and `--d-text-secondary`.
 - Frontend-only: no API, backend, database, schema or data changes. Regression coverage: `tests/announcements-theme.test.js`.
 - Verify the Student announcements feed and Teacher/Admin announcement management in both light and dark themes, including card title/body, audience/meta text, form fields and empty/loading/error states.
+
+
+## Semester V syllabus coverage tracker — November 17, 2026
+- Added shared `features/shared/syllabus/SyllabusPage.jsx` and API client `features/shared/syllabus/syllabusApi.js`, used read-only by Students and with completion controls by Teachers.
+- Student route: `/dashboard/syllabus`; Teacher route: `/teacher/syllabus`. Both role sidebars and role-aware global search include Syllabus Tracker.
+- Displays Semester V overall, per-subject and per-unit progress, the portal subject code plus syllabus course code, unit/planned hours where supplied, individual topic/experiment coverage, source PDF page, and completion Teacher/date where available.
+- Teacher can mark/unmark topics only for currently assigned active subjects. Students see only read-only progress in their own active class. API responses are validated before rendering.
+- Includes search across subjects/units/topics, progress status filters, empty/error/retry states, accessible progress indicators, dark/light theme tokens, responsive small-screen layout and reduced-motion handling.
+- Source: uploaded LTSU B.Tech CSE Syllabus and Study Scheme 2024–2028, Semester V outline only. The frontend does not introduce content for other semesters or unmatched subjects.
+- No frontend API contract changes. Production rollout is gated on the backend migration and deployment. Browser acceptance using real Teacher and Student accounts remains outstanding.

@@ -22,6 +22,7 @@ const PAGE_INDEX = {
   STUDENT: [
     { title: "Dashboard", subtitle: "Your student overview", href: "/dashboard", keywords: "home overview", Icon: LayoutDashboard },
     { title: "My Courses", subtitle: "Subjects and course catalogue", href: "/dashboard/courses", keywords: "subjects classes course", Icon: BookOpen },
+    { title: "Syllabus Tracker", subtitle: "Semester V topics and subject-wise progress", href: "/dashboard/syllabus", keywords: "curriculum topics syllabus coverage completed progress", Icon: GraduationCap },
     { title: "Attendance", subtitle: "Subject-wise attendance and records", href: "/dashboard/attendance", keywords: "present absent percentage register", Icon: CalendarDays },
     { title: "Timetable", subtitle: "Your class schedule", href: "/dashboard/timetable", keywords: "schedule periods time", Icon: Clock3 },
     { title: "Assignments", subtitle: "Coursework and submissions", href: "/dashboard/assignments", keywords: "homework due date task", Icon: ClipboardList },
@@ -35,6 +36,7 @@ const PAGE_INDEX = {
   TEACHER: [
     { title: "Dashboard", subtitle: "Your faculty overview", href: "/teacher", keywords: "home overview", Icon: LayoutDashboard },
     { title: "My Classes", subtitle: "Subjects assigned to you", href: "/teacher/classes", keywords: "subjects classes roster", Icon: BookOpen },
+    { title: "Syllabus Tracker", subtitle: "Mark Semester V topics covered", href: "/teacher/syllabus", keywords: "curriculum topics syllabus coverage completed progress", Icon: GraduationCap },
     { title: "Attendance", subtitle: "Mark and review class attendance", href: "/teacher/attendance", keywords: "present absent register", Icon: CalendarDays },
     { title: "Assignments", subtitle: "Create and manage coursework", href: "/teacher/assignments", keywords: "homework task submissions", Icon: ClipboardList },
     { title: "Students", subtitle: "Students in your assigned classes", href: "/teacher/students", keywords: "student roster roll number", Icon: Users },

@@ -5,6 +5,7 @@ import TeacherLayout from "../layouts/TeacherLayout";
 const TeacherHome = lazy(() => import("../pages/TeacherHome"));
 // Lazy load other pages as you build them
 const TeacherClasses = lazy(() => import("../pages/TeacherClasses"));
+const SyllabusPage = lazy(() => import("../../shared/syllabus/SyllabusPage"));
 const TeacherAttendance = lazy(() => import("../pages/TeacherAttendance"));
 const TeacherAssignments = lazy(() => import("../pages/TeacherAssignments"));
 const TeacherStudents = lazy(() => import("../pages/TeacherStudents"));
@@ -48,6 +49,14 @@ const TeacherRoutes = () => (
         element={
           <Suspense fallback={<Fallback />}>
             <TeacherClasses />
+          </Suspense>
+        }
+      />
+      <Route
+        path="syllabus"
+        element={
+          <Suspense fallback={<Fallback />}>
+            <SyllabusPage role="teacher" />
           </Suspense>
         }
       />

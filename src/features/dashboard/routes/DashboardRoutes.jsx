@@ -5,6 +5,7 @@ import DashboardLayout from '../layouts/DashboardLayout';
 
 const DashboardHome = lazy(() => import('../pages/DashboardHome'));
 const CoursesPage = lazy(() => import('../pages/CoursesPage'));
+const SyllabusPage = lazy(() => import('../../shared/syllabus/SyllabusPage'));
 const AttendancePage = lazy(() => import('../pages/AttendancePage'));
 const TimetablePage = lazy(() => import('../pages/TimetablePage'));
 const AssignmentsPage = lazy(() => import('../pages/AssignmentsPage'));
@@ -27,6 +28,7 @@ const DashboardRoutes = () => (
     <Route path="/" element={<DashboardLayout />}>
       <Route index element={<Suspense fallback={<Fallback/>}><DashboardHome /></Suspense>} />
       <Route path="courses" element={<Suspense fallback={<Fallback/>}><CoursesPage /></Suspense>} />
+      <Route path="syllabus" element={<Suspense fallback={<Fallback/>}><SyllabusPage role="student" /></Suspense>} />
       <Route path="attendance" element={<Suspense fallback={<Fallback/>}><AttendancePage /></Suspense>} />
       <Route path="timetable" element={<Suspense fallback={<Fallback/>}><TimetablePage /></Suspense>} />
       <Route path="assignments" element={<Suspense fallback={<Fallback/>}><AssignmentsPage /></Suspense>} />
