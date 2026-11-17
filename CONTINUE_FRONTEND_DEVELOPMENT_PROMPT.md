@@ -1037,3 +1037,10 @@ Use the shared `--d-layout-header-height: 96px` token for both `.d-topbar` and `
 - Record search starts at 2 characters and debounces 250ms. Student/Teacher index permitted lists once per mount; Admin uses query-based protected endpoints. Keyboard: Ctrl/Cmd+K, arrows, Enter, Escape.
 - Result selection opens the associated module route. Never expose cross-role records, passwords, tokens, or unnecessary profile details.
 - Tests: `tests/global-search.test.js`. No new backend endpoint required.
+
+
+## Teacher attendance register layout
+- Register rows in `features/teacher/styles/teacherAttendance.css` use a responsive CSS grid with a minimum readable student identity column, intrinsic status controls and a separate correction metadata column.
+- Avoid `width: 100%`/large margin on row metadata inside a horizontal flex row; that previously collapsed student names and roll numbers into vertical fragments.
+- Names/usernames/official roll numbers use nowrap + ellipsis rather than character wrapping. At <=1120px metadata spans its own row; at <=640px the full row stacks and status buttons share a three-column grid.
+- Preserve all existing attendance, correction and export behavior. Test: `tests/teacher-attendance-register-layout.test.js`.
