@@ -12,6 +12,26 @@ function isText(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+function isAnnouncementAttachment(value) {
+  return value === null || Boolean(
+    value &&
+    isText(value.fileName) &&
+    isText(value.mimeType) &&
+    Number.isInteger(value.bytes) &&
+    value.bytes >= 0 &&
+    isText(value.format)
+  );
+}
+
+function toAnnouncementFormData(input, file) {
+  const data = new FormData();
+  for (const [key, value] of Object.entries(input)) {
+    if (value !== undefined && value !== null) data.append(key, String(value));
+  }
+  if (file) data.append("attachment", file, file.name);
+  return data;
+}
+
 export function isAnnouncementRecord(value) {
   return Boolean(
     value &&
@@ -27,6 +47,7 @@ export function isAnnouncementRecord(value) {
     Number.isFinite(Date.parse(value.createdAt)) &&
     isText(value.updatedAt) &&
     Number.isFinite(Date.parse(value.updatedAt)) &&
+    isAnnouncementAttachment(value.attachment) &&
     value.author &&
     isText(value.author.id) &&
     isText(value.author.fullName) &&
@@ -73,7 +94,9 @@ async function requestAnnouncements(accessToken, role, suffix = "", options = {}
       signal: controller.signal,
       headers: {
         Accept: "application/json",
-        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...(options.body && !(typeof FormData !== "undefined" && options.body instanceof FormData)
+          ? { "Content-Type": "application/json" }
+          : {}),
         Authorization: `Bearer ${accessToken}`,
         ...options.headers
       }
@@ -123,20 +146,23 @@ export async function fetchAnnouncements(accessToken, role) {
   return data.announcements;
 }
 
-export async function createAnnouncement(accessToken, role, input) {
+export async function createAnnouncement(accessToken, role, input, file = null) {
   const data = await requestAnnouncements(accessToken, role, "", {
     method: "POST",
-    body: JSON.stringify(input)
+    body: file ? toAnnouncementFormData(input, file) : JSON.stringify(input)
   });
   return validateAnnouncement(data);
 }
 
-export async function updateAnnouncement(accessToken, role, announcementId, input) {
+export async function updateAnnouncement(accessToken, role, announcementId, input, file = null) {
   const data = await requestAnnouncements(
     accessToken,
     role,
     `/${encodeURIComponent(announcementId)}`,
-    { method: "PATCH", body: JSON.stringify(input) }
+    {
+      method: "PATCH",
+      body: file ? toAnnouncementFormData(input, file) : JSON.stringify(input)
+    }
   );
   return validateAnnouncement(data);
 }
@@ -149,6 +175,34 @@ export async function publishAnnouncement(accessToken, role, announcementId) {
     { method: "POST" }
   );
   return validateAnnouncement(data);
+}
+
+
+export async function downloadAnnouncementAttachment(accessToken, role, announcementId) {
+  const data = await requestAnnouncements(
+    accessToken,
+    role,
+    `/${encodeURIComponent(announcementId)}/attachment`
+  );
+  const file = data?.download;
+  let parsedUrl;
+  try {
+    parsedUrl = new URL(file?.url);
+  } catch {
+    throw createApiError("The announcement service returned an invalid attachment link.", 502);
+  }
+  if (
+    parsedUrl.protocol !== "https:" ||
+    !isText(file.fileName) ||
+    !isText(file.mimeType) ||
+    !Number.isInteger(file.bytes) ||
+    file.bytes < 0 ||
+    !isText(file.expiresAt) ||
+    !Number.isFinite(Date.parse(file.expiresAt))
+  ) {
+    throw createApiError("The announcement service returned an invalid attachment link.", 502);
+  }
+  return file;
 }
 
 export async function deleteAnnouncement(accessToken, role, announcementId) {
