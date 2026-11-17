@@ -1051,3 +1051,9 @@ Use the shared `--d-layout-header-height: 96px` token for both `.d-topbar` and `
 - Keep the current allowed extensions (pdf, doc, docx, ppt, pptx, txt, jpg, jpeg, png) and 20 MB max. Reject empty files and multiple-file drops. Use `fileInputRef` to reset the hidden input after remove and successful upload.
 - Upload service remains `uploadTeacherLearningResource`; don't change API/storage behavior unless requested.
 - Test: `tests/teacher-notes-dropzone.test.js`.
+
+
+## Name-based profile initials
+- All Student, Teacher and Admin topbar avatar buttons, profile dropdown identity avatars and profile-page header avatars use `features/shared/profile/nameInitials.js`.
+- Multi-part names use first + last name initials (Shahid Mushtaq → SM; Armanpreet Singh Kumar → AK); single-word names use one initial. Normalize whitespace and use Unicode-safe character extraction. Fall back to the existing User/UserRound icon if full name is absent.
+- Derived from the verified session `user.fullName` only; no backend/database fields. Test: `tests/name-based-profile-initials.test.js`.
