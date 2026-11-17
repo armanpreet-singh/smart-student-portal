@@ -289,6 +289,8 @@ const StudentsPage = () => {
         `Student account created for ${created.fullName} (${created.username}). It is active and must change its temporary password at first sign-in.`,
       );
       setCreateOpen(false);
+      setShowCreatePassword(false);
+      setShowCreateConfirmPassword(false);
       setCreateForm(createEmptyAdminStudentForm());
       setRetryCount((value) => value + 1);
     } catch (error) {
@@ -352,6 +354,8 @@ const StudentsPage = () => {
             className="d-btn-primary a-students-add-button"
             onClick={() => {
               setCreateSuccessMessage("");
+              setShowCreatePassword(false);
+              setShowCreateConfirmPassword(false);
               setCreateError("");
               setCreateFieldErrors({});
               setCreateOpen(true);
