@@ -1014,3 +1014,7 @@ Apply the shared interaction treatments from `src/styles/GlobalStyles.js` to eve
 
 ## Sidebar active-colour rule — 2026-11-17
 Never recolour the selected sidebar item on hover or focus. Preserve the original active state values from `features/dashboard/styles/sidebar.css` (`rgba(30, 58, 138, 0.1)` background and `var(--d-primary)` text). The shared interaction hover highlight applies only to non-selected, non-disabled links.
+
+
+## Selected sidebar label colour
+The selected sidebar row keeps its existing active background highlight, but its label and icon must remain neutral using `var(--d-text-secondary)`, not `var(--d-primary)`. Apply that to the active, active:hover and active:focus-visible states across roles. Do not change the non-selected hover treatment.
