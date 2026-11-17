@@ -15,6 +15,9 @@
 }
 
 .d-sidebar-header {
+  height: var(--d-layout-header-height, 96px);
+  min-height: var(--d-layout-header-height, 96px);
+  box-sizing: border-box;
   padding: 24px;
   display: flex;
   justify-content: space-between;
