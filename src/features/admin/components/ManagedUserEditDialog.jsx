@@ -215,7 +215,7 @@ export default function ManagedUserEditDialog({
                     <option value="">No class assigned</option>
                     {availableClasses.map((item) => (
                       <option value={item.id} key={item.id}>
-                        {item.code} — {item.name}{!item.isActive && item.id === account.classId ? " (current class; inactive)" : ""}
+                        {item.code} — {item.name}{!item.isActive && item.id === account.classId ? " (current assignment)" : ""}
                       </option>
                     ))}
                   </select>
