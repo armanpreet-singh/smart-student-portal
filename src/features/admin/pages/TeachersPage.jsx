@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CheckCircle, ChevronLeft, ChevronRight, Mail, RotateCw, Search, UserRound, UserPlus, X } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, Mail, Pencil, RotateCw, Search, UserRound, UserPlus, X } from "lucide-react";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
@@ -8,6 +8,7 @@ import { fetchAdminTeachers } from "../api/adminTeachersApi";
 import AccountStatusControl from "../components/AccountStatusControl";
 import AccountPasswordResetControl from "../components/AccountPasswordResetControl";
 import { createAdminTeacher } from "../api/adminTeacherProvisioningApi";
+import ManagedUserEditDialog from "../components/ManagedUserEditDialog";
 
 import "./TeachersPage.css";
 
@@ -101,6 +102,8 @@ const TeachersPage = () => {
   const [createError, setCreateError] = useState("");
   const [createFieldErrors, setCreateFieldErrors] = useState({});
   const [createSuccessMessage, setCreateSuccessMessage] = useState("");
+  const [editingTeacher, setEditingTeacher] = useState(null);
+  const [updateSuccessMessage, setUpdateSuccessMessage] = useState("");
   const [createForm, setCreateForm] = useState({
     fullName: "",
     username: "",
@@ -327,6 +330,13 @@ const TeachersPage = () => {
         }
       />
 
+      {updateSuccessMessage && (
+        <div className="a-teachers-create-success" role="status">
+          <CheckCircle size={18} aria-hidden="true" />
+          <p>{updateSuccessMessage}</p>
+        </div>
+      )}
+
       {createSuccessMessage && (
         <div className="a-teachers-create-success" role="status">
           <CheckCircle size={18} aria-hidden="true" />
@@ -440,6 +450,7 @@ const TeachersPage = () => {
                   <th>Account</th>
                   <th>Password setup</th>
                   <th>Created</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -494,6 +505,16 @@ const TeachersPage = () => {
                     </td>
                     <td className="a-teachers-created">
                       {formatCreatedAt(teacher.createdAt)}
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        className="a-managed-edit-trigger"
+                        onClick={() => { setUpdateSuccessMessage(""); setEditingTeacher(teacher); }}
+                        aria-label={"Edit " + teacher.fullName}
+                      >
+                        <Pencil size={14} /> Edit
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -708,6 +729,19 @@ const TeachersPage = () => {
           </section>
         </div>
       )}
+
+      <ManagedUserEditDialog
+        account={editingTeacher}
+        role="TEACHER"
+        accessToken={accessToken}
+        onClose={() => setEditingTeacher(null)}
+        onUnauthorized={refreshCurrentUser}
+        onSaved={(updated) => {
+          setEditingTeacher(null);
+          setUpdateSuccessMessage("Teacher account " + updated.fullName + " was updated successfully.");
+          setRetryCount((value) => value + 1);
+        }}
+      />
     </div>
   );
 };

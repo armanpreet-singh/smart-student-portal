@@ -989,3 +989,11 @@ Do not apply a dark navy toast background from app or OS dark-theme selectors. U
 - Use existing inline form/page errors for contextual validation, Sonner toasts for immediate action feedback, the inbox for persistent events, and shared `components/ui/ConfirmDialog.jsx` for destructive/publishing confirmations. Do not reintroduce browser `window.confirm`.
 - `ConfirmDialog` is accessible (`alertdialog`, labelled/described, Escape/backdrop cancel, focus restoration, busy handling). Tests: `tests/notification-experience.test.js`.
 - No browser push, email or SMS transport is present; do not claim notifications arrive when the portal is closed.
+
+
+## Admin edit Student / Teacher accounts — 2026-11-17
+- Both Admin directories include an Edit action using the shared `features/admin/components/ManagedUserEditDialog.jsx`.
+- Editable Teacher fields: full name, username, email. Editable Student fields: full name, username, email, roll number and class. Active class options are loaded from the existing Admin class catalogue.
+- Username changes affect the user's login name. Password changes continue through the dedicated reset control; account active/inactive continues through the status control. Teacher subject assignment remains in its dedicated screen.
+- Shared API: `features/admin/api/adminManagedUsersApi.js`. Verify duplicate conflicts, nullable optional fields, class handling, and both directory entry points.
+- Backend route is `PATCH /api/admin/users/:userId`; it is Admin-protected and limits the update to STUDENT/TEACHER profiles. Backend implementation tracked in `ltsu-backend` PR #18.
