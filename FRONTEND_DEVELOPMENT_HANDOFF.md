@@ -1716,3 +1716,10 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Selected sidebar rows retain the existing subtle selected background but no longer use the blue primary text/icon colour.
 - Active label and icon now use `var(--d-text-secondary)`, matching the neutral light-grey tone of the other sidebar labels in the dark Teacher sidebar screenshot. This applies consistently to Student, Teacher and Admin shared sidebar navigation, including hover and keyboard focus.
 - Non-selected hover behavior is unchanged. Regression test: `tests/sidebar-selected-neutral-text.test.js`.
+
+
+## Theme-aware selected sidebar colours — November 17, 2026
+- Corrected selected module navigation to match the two supplied references: light theme uses LTSU blue label/icons (`var(--d-primary)`) with a pale-blue row; dark theme uses LTSU gold label/icons (`#C9A84C`) with a subtle gold-tinted row and inset gold outline.
+- Theme detection uses the existing `.d-layout.dark-mode` class. The active accent is preserved across hover and keyboard focus.
+- Applies to the shared `.d-sidebar` navigation used by Student, Teacher and Admin. Non-selected hover styles and disabled behavior are unchanged.
+- Regression coverage: `tests/sidebar-active-colour.test.js` and `tests/sidebar-selected-neutral-text.test.js` now test the theme-aware blue/gold requirement.
