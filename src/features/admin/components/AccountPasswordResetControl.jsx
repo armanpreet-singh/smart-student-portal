@@ -182,7 +182,7 @@ const AccountPasswordResetControl = ({
               </label>
 
               <label className="a-account-password-reset-field">
-                <span>Confirm temporary password</span>
+                <span>Confirm new password</span>
                 <div className="a-account-password-reset-input-wrap">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
@@ -208,7 +208,7 @@ const AccountPasswordResetControl = ({
               </label>
 
               <p className="a-account-password-reset-warning">
-                Verify the account identity before continuing. The temporary password is sent only in the reset request and is not stored in the portal.
+                Verify the account identity before continuing. The new password is sent only in the reset request and is not stored in the portal.
               </p>
               {error && (
                 <p className="a-account-password-reset-error" role="alert">{error}</p>
