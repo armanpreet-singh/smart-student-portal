@@ -11,7 +11,7 @@ test("Student and Teacher receive distinct read and completion API operations fo
   assert.match(api, /fetchTeacherSyllabus[\s\S]*?\/api\/teacher\/syllabus/);
   assert.match(api, /updateTeacherSyllabusTopic[\s\S]*?\/api\/teacher\/syllabus\/topics/);
   assert.match(api, /method:\s*"PATCH"/);
-  assert.match(api, /completed:\s*completed/);
+  assert.match(api, /JSON\.stringify\(\{\s*completed\s*\}\)/);
   assert.match(api, /data\?\.semester !== 5/);
   assert.match(api, /Authorization:\s*\x60Bearer \$\{accessToken\}\x60/);
 });
