@@ -1044,3 +1044,10 @@ Use the shared `--d-layout-header-height: 96px` token for both `.d-topbar` and `
 - Avoid `width: 100%`/large margin on row metadata inside a horizontal flex row; that previously collapsed student names and roll numbers into vertical fragments.
 - Names/usernames/official roll numbers use nowrap + ellipsis rather than character wrapping. At <=1120px metadata spans its own row; at <=640px the full row stacks and status buttons share a three-column grid.
 - Preserve all existing attendance, correction and export behavior. Test: `tests/teacher-attendance-register-layout.test.js`.
+
+
+## Teacher Notes uploader
+- Teacher → Learning Resources uses a click/keyboard-accessible drag-and-drop dropzone with drag-over styling, file metadata, remove/replace affordance and inline validation.
+- Keep the current allowed extensions (pdf, doc, docx, ppt, pptx, txt, jpg, jpeg, png) and 20 MB max. Reject empty files and multiple-file drops. Use `fileInputRef` to reset the hidden input after remove and successful upload.
+- Upload service remains `uploadTeacherLearningResource`; don't change API/storage behavior unless requested.
+- Test: `tests/teacher-notes-dropzone.test.js`.
