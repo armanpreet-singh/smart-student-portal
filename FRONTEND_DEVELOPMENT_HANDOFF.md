@@ -1730,3 +1730,11 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - The topbar's bottom border now aligns with the sidebar brand/header divider. Logo, breadcrumb, search, theme, notification and profile controls remain vertically centered.
 - Because Student, Teacher and Admin reuse the shared dashboard shell/styles, the alignment change applies consistently across all three roles and responsive layouts.
 - Regression test: `tests/dashboard-header-alignment.test.js`. Frontend-only; no API/backend/database changes.
+
+
+## Role-aware global search — November 17, 2026
+- Replaced decorative search inputs in Student, Teacher and Admin topbars with the shared `features/shared/search/GlobalSearch.jsx`.
+- Searchable page navigation is role-scoped. Student search covers own courses, assignments, subject-wise attendance, announcements and learning resources; Teacher search covers assigned subjects, assignments, announcements and learning resources; Admin search queries Students, Teachers, Classes and Subjects through existing Admin search endpoints.
+- Search opens on focus, requires at least two characters for record search, debounces 250ms, shows grouped results and navigates to the target module. Student/Teacher records are indexed after the first search per page session; Admin directories use server-side search on the active query.
+- Keyboard support: Ctrl/Cmd+K to focus, arrow keys to move, Enter to open, Escape to close. Outside click and route changes close/clear the panel. Results use existing role-protected APIs; no cross-role data or new backend endpoint.
+- Regression tests: `tests/global-search.test.js`. Selecting a result opens its associated module page; it does not mutate a record.

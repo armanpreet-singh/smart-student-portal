@@ -9,7 +9,6 @@ import React, {
 import { useLocation, Link } from "react-router-dom";
 import {
   Menu,
-  Search,
   Sun,
   Moon,
   User,
@@ -23,6 +22,7 @@ import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySub
 import { useDashboardTheme } from "../../hooks/useDashboardTheme";
 import { useAuth } from "../../../auth/context/AuthContext";
 import NotificationBell from "../../../shared/notifications/NotificationBell";
+import GlobalSearch from "../../../shared/search/GlobalSearch";
 
 const Topbar = memo(({ onMenuClick }) => {
   const location = useLocation();
@@ -111,14 +111,7 @@ const Topbar = memo(({ onMenuClick }) => {
       </div>
 
       <div className="d-topbar-right">
-        <div className="d-search-box">
-          <Search size={16} />
-          <input
-            type="text"
-            placeholder="Search anything..."
-            aria-label="Search"
-          />
-        </div>
+        <GlobalSearch role="STUDENT" />
 
         <button
           className="d-icon-btn"

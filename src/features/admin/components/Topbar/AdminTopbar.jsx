@@ -9,7 +9,6 @@ import React, {
 import { useLocation, Link } from "react-router-dom";
 import {
   Menu,
-  Search,
   Sun,
   Moon,
   User,
@@ -23,6 +22,7 @@ import { useDashboardTheme } from "../../../../features/dashboard/hooks/useDashb
 import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySubmenu';
 import { useAuth } from "../../../auth/context/AuthContext";
 import NotificationBell from "../../../shared/notifications/NotificationBell";
+import GlobalSearch from "../../../shared/search/GlobalSearch";
 
 const AdminTopbar = memo(({ onMenuClick }) => {
   const location = useLocation();
@@ -89,10 +89,7 @@ const AdminTopbar = memo(({ onMenuClick }) => {
         </nav>
       </div>
       <div className="d-topbar-right">
-        <div className="d-search-box">
-          <Search size={16} />
-          <input type="text" placeholder="Search..." />
-        </div>
+        <GlobalSearch role="ADMIN" />
         <button
           className="d-icon-btn"
           onClick={toggleTheme}
