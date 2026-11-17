@@ -533,8 +533,12 @@ export const injectGlobalStyles = () => {
         background-color: color-mix(in srgb, var(--d-primary) 8%, var(--d-surface));
         color: var(--d-primary);
       }
-      .d-nav-link.active:hover {
-        background-color: color-mix(in srgb, var(--d-primary) 13%, var(--d-surface));
+      /* Keep the selected item's established active colour unchanged on hover. */
+      .d-nav-link.active,
+      .d-nav-link.active:hover,
+      .d-nav-link.active:focus-visible {
+        background: rgba(30, 58, 138, 0.1);
+        color: var(--d-primary);
       }
 
       .d-dropdown-item:not(:disabled):not([aria-disabled="true"]):hover {
