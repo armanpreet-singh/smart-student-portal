@@ -997,3 +997,12 @@ Do not apply a dark navy toast background from app or OS dark-theme selectors. U
 - Username changes affect the user's login name. Password changes continue through the dedicated reset control; account active/inactive continues through the status control. Teacher subject assignment remains in its dedicated screen.
 - Shared API: `features/admin/api/adminManagedUsersApi.js`. Verify duplicate conflicts, nullable optional fields, class handling, and both directory entry points.
 - Backend route is `PATCH /api/admin/users/:userId`; it is Admin-protected and limits the update to STUDENT/TEACHER profiles. Backend implementation tracked in `ltsu-backend` PR #18.
+
+
+## Student and Teacher Help & Support centre — 2026-11-17
+- Help & Support is a working profile-menu navigation item for both roles.
+- Student route: `/dashboard/help`; Teacher route: `/teacher/help`.
+- Shared implementation: `features/shared/help/HelpSupportPage.jsx`; styles in `HelpSupportPage.css`.
+- FAQs are searchable/filterable and role-specific. Includes profile/settings shortcuts and a support-request draft that can be copied or opened in the user's email app.
+- No support ticket API, persistence or verified helpdesk email currently exists. Do not claim that a support request is sent or tracked. The email draft has a blank recipient for the user to supply the official university address.
+- Verify `tests/help-support-navigation.test.js`, both route entries, dark/light themes, responsive layout, clipboard fallback, and mailto behavior.
