@@ -181,7 +181,8 @@ const TeacherTopbar = memo(({ onMenuClick }) => {
                   <ChevronRight size={14} className="d-dropdown-arrow" />
                 </Link>
                 <AccessibilitySubmenu />
-                <button
+                <Link
+                  to="/teacher/help"
                   className="d-dropdown-item"
                   role="menuitem"
                   onClick={() => setIsDropdownOpen(false)}
@@ -189,7 +190,7 @@ const TeacherTopbar = memo(({ onMenuClick }) => {
                   <HelpCircle size={16} />
                   <span>Help & Support</span>
                   <ChevronRight size={14} className="d-dropdown-arrow" />
-                </button>
+                </Link>
                 <div className="d-dropdown-divider"></div>
                 <button
                   className="d-dropdown-item logout"
