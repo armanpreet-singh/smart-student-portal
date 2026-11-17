@@ -26,7 +26,8 @@ const record = {
     code: "CSE-101",
     name: "Programming",
     class: { id: "class-1", code: "CSE-1", name: "Computer Science" }
-  }
+  },
+  attachment: null
 };
 
 test("announcement API accepts a persisted Teacher class announcement", () => {
@@ -52,4 +53,32 @@ test("announcement API rejects invalid audience, author and publication timestam
   assert.equal(isAnnouncementRecord({ ...record, author: { ...record.author, role: "STUDENT" } }), false);
   assert.equal(isAnnouncementRecord({ ...record, publishedAt: "not-a-date" }), false);
   assert.equal(isAnnouncementRecord({ ...record, subject: { ...record.subject, class: null } }), false);
+});
+
+
+test("announcement API accepts validated attachment metadata for a published Student notice", () => {
+  assert.equal(isAnnouncementRecord({
+    ...record,
+    attachment: {
+      fileName: "semester-circular.pdf",
+      mimeType: "application/pdf",
+      bytes: 4096,
+      format: "pdf"
+    }
+  }), true);
+});
+
+test("announcement API rejects incomplete or malformed attachment metadata", () => {
+  assert.equal(isAnnouncementRecord({
+    ...record,
+    attachment: { fileName: "notice.pdf", mimeType: "application/pdf", bytes: -1, format: "pdf" }
+  }), false);
+  assert.equal(isAnnouncementRecord({
+    ...record,
+    attachment: { fileName: "", mimeType: "application/pdf", bytes: 10, format: "pdf" }
+  }), false);
+  assert.equal(isAnnouncementRecord({
+    ...record,
+    attachment: { fileName: "payload.exe", mimeType: "application/x-msdownload", bytes: 10, format: "exe" }
+  }), false);
 });

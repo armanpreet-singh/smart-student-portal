@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { AlertCircle, Bell, CalendarClock, LoaderCircle, Megaphone, RefreshCw, Users } from "lucide-react";
+import { AlertCircle, Bell, CalendarClock, Download, FileText, LoaderCircle, Megaphone, RefreshCw, Users } from "lucide-react";
 
 import { useAuth } from "../../auth/context/AuthContext";
-import { fetchAnnouncements } from "./announcementsApi";
+import { showErrorMessage } from "../../../components/ui/toastUtils";
+import { downloadAnnouncementAttachment, fetchAnnouncements } from "./announcementsApi";
 import "./announcements.css";
 
 function formatDate(value) {
@@ -12,6 +13,24 @@ function formatDate(value) {
     day: "2-digit", month: "short", year: "numeric",
     hour: "2-digit", minute: "2-digit"
   }).format(date);
+}
+
+function formatBytes(value) {
+  if (!Number.isInteger(value) || value < 0) return "";
+  if (value < 1024) return value + " B";
+  if (value < 1024 * 1024) return (value / 1024).toFixed(1) + " KB";
+  return (value / (1024 * 1024)).toFixed(1) + " MB";
+}
+
+function triggerAttachmentDownload(url, fileName) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 }
 
 function audienceLabel(item) {
@@ -27,6 +46,7 @@ export default function AnnouncementsFeed() {
   const [announcements, setAnnouncements] = useState([]);
   const [loadState, setLoadState] = useState("loading");
   const [error, setError] = useState("");
+  const [downloadBusyId, setDownloadBusyId] = useState("");
 
   const loadData = useCallback(async () => {
     const requestId = ++requestSequence.current;
@@ -59,6 +79,20 @@ export default function AnnouncementsFeed() {
     return () => { requestSequence.current += 1; };
   }, [loadData, sessionError, sessionStatus]);
 
+
+  const downloadAttachment = async (item) => {
+    if (!item.attachment || downloadBusyId) return;
+    setDownloadBusyId(item.id);
+    try {
+      const download = await downloadAnnouncementAttachment(accessToken, "student", item.id);
+      triggerAttachmentDownload(download.url, download.fileName);
+    } catch (cause) {
+      showErrorMessage(cause?.message || "The announcement attachment could not be opened.");
+    } finally {
+      setDownloadBusyId("");
+    }
+  };
+
   return (
     <div className="d-page-container announcements-page">
       <header className="announcements-heading">
@@ -90,6 +124,17 @@ export default function AnnouncementsFeed() {
               <span><Bell size={14}/>{item.author.fullName}</span>
               <span><CalendarClock size={14}/>{formatDate(item.publishedAt)}</span>
             </div>
+            {item.attachment && <div className="announcements-attachment">
+              <span><FileText size={17}/><span><strong>{item.attachment.fileName}</strong><small>{formatBytes(item.attachment.bytes)}</small></span></span>
+              <button type="button" className="announcements-secondary"
+                onClick={() => void downloadAttachment(item)}
+                disabled={Boolean(downloadBusyId)}>
+                {downloadBusyId === item.id
+                  ? <LoaderCircle className="announcements-spin" size={15}/>
+                  : <Download size={15}/>}
+                Open / download
+              </button>
+            </div>}
           </article>)}
         </div>
       )}

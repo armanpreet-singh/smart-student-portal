@@ -1089,3 +1089,12 @@ Use the shared `--d-layout-header-height: 96px` token for both `.d-topbar` and `
 - Main CI: 254/254 frontend tests passed; Vite production build succeeded. Cloudflare production deployment check succeeded.
 - Production UI exposes Student `/dashboard/syllabus` (read-only own-class progress) and Teacher `/teacher/syllabus` (assigned-subject completion controls), navigation and global search.
 - Backend migration is finished in production and DB query verified 353 uncompleted topics across 8 Semester V subject records. Browser acceptance using real Student and Teacher accounts remains recommended to verify the exact account/class assignments and a live topic completion round trip.
+
+
+## Announcement file attachments — November 18, 2026
+- Shared Admin/Teacher announcement draft form now accepts one optional attachment up to 20 MB: PDF, DOC/DOCX, PPT/PPTX, XLS/XLSX, TXT, CSV, JPG/JPEG, PNG, GIF and WEBP.
+- Selected file is uploaded with the multipart draft create/edit request. Replacing a current file happens only when saving a replacement; leaving the file picker empty preserves the existing file.
+- Admin and Teacher announcement cards and the Student announcements feed show attachment name and size with an Open / download action.
+- Signed links are obtained from role-specific backend endpoints after server-side announcement-audience authorization. The frontend rejects non-HTTPS download URLs and validates attachment metadata.
+- File upload and attachment cards are responsive and use the existing announcement theme tokens. No public file URL or Cloudinary asset identifier is placed in client-side announcement records.
+- Production browser acceptance must verify an Admin notice, a Teacher class notice and a Student of that class can open a sample PDF and image; a Student from another class must not receive the link.
