@@ -24,11 +24,11 @@ test("Student edit includes roll number and class while Teacher edit keeps subje
   const dialog = await source("features/admin/components/ManagedUserEditDialog.jsx");
   const teachers = await source("features/admin/pages/TeachersPage.jsx");
 
-  assert.match(dialog, /name=""/);
+  assert.match(dialog, /value=\{form\.rollNumber\}/);
   assert.match(dialog, /Official roll number/);
   assert.match(dialog, /fetchActiveStudentClassOptions/);
   assert.match(dialog, /isStudent && \(/);
-  assert.match(teachers, /Teacher account .* was updated successfully/);
+  assert.match(teachers, /setUpdateSuccessMessage\("Teacher account " \+ updated\.fullName/);
   assert.match(dialog, /Account role, password and activation status are managed separately/);
 });
 
