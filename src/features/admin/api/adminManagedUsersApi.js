@@ -60,7 +60,7 @@ function validateProfileInput(role, input) {
     ) {
       errors.rollNumber = "Use 1–40 characters beginning with a letter or number; dots, slashes, underscores and hyphens are also allowed.";
     }
-    if (input.classId !== null && typeof input.classId !== "string") {
+    if (input.classId !== undefined && input.classId !== null && typeof input.classId !== "string") {
       errors.classId = "Select a valid class.";
     }
   }
