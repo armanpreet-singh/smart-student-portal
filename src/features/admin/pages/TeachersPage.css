@@ -668,3 +668,29 @@
     backdrop-filter: none;
   }
 }
+
+.a-managed-edit-trigger {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius-sm);
+  background: var(--d-surface);
+  color: var(--d-primary);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 750;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.a-managed-edit-trigger:hover {
+  border-color: var(--d-primary);
+  background: color-mix(in srgb, var(--d-primary) 6%, var(--d-surface));
+}
+.a-managed-edit-trigger:focus-visible {
+  outline: 3px solid var(--d-gold);
+  outline-offset: 2px;
+}
