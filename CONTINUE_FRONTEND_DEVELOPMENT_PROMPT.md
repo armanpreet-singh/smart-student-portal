@@ -1029,3 +1029,11 @@ The selected sidebar row keeps its existing active background highlight, but its
 
 ## Dashboard header alignment — 2026-11-17
 Use the shared `--d-layout-header-height: 96px` token for both `.d-topbar` and `.d-sidebar-header`. Their horizontal bottom borders must align exactly. Student, Teacher and Admin share these layout styles. Preserve centred topbar contents and responsive behavior. Test in `tests/dashboard-header-alignment.test.js`.
+
+
+## Global search — 2026-11-17
+- All three role topbars use `features/shared/search/GlobalSearch.jsx`. Do not add independent topbar search implementations.
+- Search page routes + role-scoped records. Student: courses, assignments, subject attendance, announcements, learning resources. Teacher: assigned subjects, assignments, announcements, resources. Admin: students/teachers via directory search; classes/subjects via catalogue search.
+- Record search starts at 2 characters and debounces 250ms. Student/Teacher index permitted lists once per mount; Admin uses query-based protected endpoints. Keyboard: Ctrl/Cmd+K, arrows, Enter, Escape.
+- Result selection opens the associated module route. Never expose cross-role records, passwords, tokens, or unnecessary profile details.
+- Tests: `tests/global-search.test.js`. No new backend endpoint required.
