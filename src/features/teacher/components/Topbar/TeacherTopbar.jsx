@@ -23,6 +23,7 @@ import AccessibilitySubmenu from '../../../../components/shared/AccessibilitySub
 import { useAuth } from "../../../auth/context/AuthContext";
 import NotificationBell from "../../../shared/notifications/NotificationBell";
 import GlobalSearch from "../../../shared/search/GlobalSearch";
+import { getNameInitials } from "../../../shared/profile/nameInitials";
 
 const TeacherTopbar = memo(({ onMenuClick }) => {
   const location = useLocation();
@@ -118,7 +119,7 @@ const TeacherTopbar = memo(({ onMenuClick }) => {
             aria-expanded={isDropdownOpen}
             aria-label="User Menu"
           >
-            <User size={19} aria-hidden="true" />
+            {getNameInitials(user?.fullName) || <User size={19} aria-hidden="true" />}
           </button>
 
           <AnimatePresence>
@@ -142,7 +143,7 @@ const TeacherTopbar = memo(({ onMenuClick }) => {
                       background: "var(--d-surface)",
                     }}
                   >
-                    <User size={22} />
+                    {getNameInitials(user?.fullName) || <User size={22} />}
                   </div>
                   <div className="d-dropdown-user-info">
                     <p className="d-dropdown-name">
