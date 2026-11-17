@@ -1738,3 +1738,11 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Search opens on focus, requires at least two characters for record search, debounces 250ms, shows grouped results and navigates to the target module. Student/Teacher records are indexed after the first search per page session; Admin directories use server-side search on the active query.
 - Keyboard support: Ctrl/Cmd+K to focus, arrow keys to move, Enter to open, Escape to close. Outside click and route changes close/clear the panel. Results use existing role-protected APIs; no cross-role data or new backend endpoint.
 - Regression tests: `tests/global-search.test.js`. Selecting a result opens its associated module page; it does not mutate a record.
+
+
+## Teacher attendance register layout correction — November 17, 2026
+- Fixed the Teacher Attendance register row layout shown in the 17 Nov screenshot. The previous flex row combined student identity, status controls and a correction metadata element with `width: 100%`, causing the identity column to collapse and names/roll numbers to wrap vertically.
+- Register rows now use a responsive grid: student identity receives a minimum 230px desktop column, status controls occupy an intrinsic-width column, and correction metadata occupies its own flexible column. At 1120px and below metadata moves to a full-width second row; at 640px and below all row content stacks cleanly.
+- Student name, username and roll number remain on readable single lines with ellipsis only for genuinely long values; roll numbers no longer break into individual digits.
+- Attendance status marking, 30-minute correction rules, duty-proof lock behavior, copy/export actions and saved records are unchanged.
+- Regression test: `tests/teacher-attendance-register-layout.test.js`. Frontend-only; no API/backend/database changes.
