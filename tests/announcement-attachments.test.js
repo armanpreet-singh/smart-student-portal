@@ -34,7 +34,7 @@ test("Admin, Teacher and Student announcement cards expose authorized attachment
   assert.match(manager, /item\.attachment\.fileName/);
   assert.match(feed, /downloadAnnouncementAttachment\(accessToken, "student", item\.id\)/);
   assert.match(feed, /item\.attachment\.fileName/);
-  assert.match(api, /\/\\$\{encodeURIComponent\(announcementId\)\}\/attachment/);
+  assert.ok(api.includes('`/${encodeURIComponent(announcementId)}/attachment`'));
   assert.match(api, /parsedUrl\.protocol !== "https:"/);
 });
 
