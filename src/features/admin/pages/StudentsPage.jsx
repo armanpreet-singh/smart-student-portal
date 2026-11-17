@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CheckCircle, ChevronLeft, ChevronRight, Mail, RotateCw, Search, UserRound, UserPlus, X } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, Mail, Pencil, RotateCw, Search, UserRound, UserPlus, X } from "lucide-react";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
@@ -13,6 +13,7 @@ import {
   getRollNumberInputError,
 } from "../api/adminStudentProvisioningApi";
 import { createEmptyAdminStudentForm } from "../utils/adminStudentForm";
+import ManagedUserEditDialog from "../components/ManagedUserEditDialog";
 
 import "./StudentsPage.css";
 
@@ -110,6 +111,8 @@ const StudentsPage = () => {
   const [classOptions, setClassOptions] = useState([]);
   const [classStatus, setClassStatus] = useState("idle");
   const [classRetry, setClassRetry] = useState(0);
+  const [editingStudent, setEditingStudent] = useState(null);
+  const [updateSuccessMessage, setUpdateSuccessMessage] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -354,6 +357,13 @@ const StudentsPage = () => {
         }
       />
 
+      {updateSuccessMessage && (
+        <div className="a-students-create-success" role="status">
+          <CheckCircle size={18} aria-hidden="true" />
+          <p>{updateSuccessMessage}</p>
+        </div>
+      )}
+
       {createSuccessMessage && (
         <div className="a-students-create-success" role="status">
           <CheckCircle size={18} aria-hidden="true" />
@@ -468,6 +478,7 @@ const StudentsPage = () => {
                   <th>Account</th>
                   <th>Password setup</th>
                   <th>Created</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -529,6 +540,16 @@ const StudentsPage = () => {
                     </td>
                     <td className="a-students-created">
                       {formatCreatedAt(student.createdAt)}
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        className="a-managed-edit-trigger"
+                        onClick={() => { setUpdateSuccessMessage(""); setEditingStudent(student); }}
+                        aria-label={"Edit " + student.fullName}
+                      >
+                        <Pencil size={14} /> Edit
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -793,6 +814,19 @@ const StudentsPage = () => {
           </section>
         </div>
       )}
+
+      <ManagedUserEditDialog
+        account={editingStudent}
+        role="STUDENT"
+        accessToken={accessToken}
+        onClose={() => setEditingStudent(null)}
+        onUnauthorized={refreshCurrentUser}
+        onSaved={(updated) => {
+          setEditingStudent(null);
+          setUpdateSuccessMessage("Student account " + updated.fullName + " was updated successfully.");
+          setRetryCount((value) => value + 1);
+        }}
+      />
     </div>
   );
 };
