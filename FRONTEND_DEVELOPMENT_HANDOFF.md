@@ -1710,3 +1710,9 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Preserved the original selected sidebar item styling on hover and keyboard focus: `background: rgba(30, 58, 138, 0.1)` and `color: var(--d-primary)`.
 - Non-selected links retain the new subtle background hover treatment. Active navigation is not recoloured or brightened by the shared interaction layer.
 - Regression tests: `tests/sidebar-active-colour.test.js`.
+
+
+## Selected sidebar text colour correction — November 17, 2026
+- Selected sidebar rows retain the existing subtle selected background but no longer use the blue primary text/icon colour.
+- Active label and icon now use `var(--d-text-secondary)`, matching the neutral light-grey tone of the other sidebar labels in the dark Teacher sidebar screenshot. This applies consistently to Student, Teacher and Admin shared sidebar navigation, including hover and keyboard focus.
+- Non-selected hover behavior is unchanged. Regression test: `tests/sidebar-selected-neutral-text.test.js`.
