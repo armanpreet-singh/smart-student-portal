@@ -538,12 +538,12 @@ export const injectGlobalStyles = () => {
       .d-nav-link.active:hover,
       .d-nav-link.active:focus-visible {
         background: rgba(30, 58, 138, 0.1);
-        color: var(--d-text-secondary);
+        color: var(--d-primary);
       }
       .d-nav-link.active > svg,
       .d-nav-link.active:hover > svg,
       .d-nav-link.active:focus-visible > svg {
-        color: var(--d-text-secondary);
+        color: var(--d-primary);
       }
 
       .d-dropdown-item:not(:disabled):not([aria-disabled="true"]):hover {

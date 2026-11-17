@@ -4,17 +4,23 @@ import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(`../src/${path}`, import.meta.url), "utf8");
 
-test("selected sidebar label and icon stay neutral instead of turning blue", async () => {
-  const globalStyles = await read("styles/GlobalStyles.js");
+test("selected sidebar uses blue text and icons with a pale blue row in light mode", async () => {
   const sidebar = await read("features/dashboard/styles/sidebar.css");
-
-  assert.match(globalStyles, /\.d-nav-link\.active,\s*\.d-nav-link\.active:hover,\s*\.d-nav-link\.active:focus-visible\s*\{\s*background: rgba\(30, 58, 138, 0\.1\);\s*color: var\(--d-text-secondary\);/);
-  assert.match(globalStyles, /\.d-nav-link\.active > svg,[\s\S]*?color: var\(--d-text-secondary\);/);
-  assert.match(sidebar, /\.d-nav-link\.active\s*\{[^}]*background: rgba\(30, 58, 138, 0\.1\);[^}]*color: var\(--d-text-secondary\);/s);
-  assert.doesNotMatch(globalStyles, /\.d-nav-link\.active:hover\s*\{[^}]*color: var\(--d-primary\)/s);
+  assert.match(sidebar, /\.d-layout:not\(\.dark-mode\) \.d-sidebar \.d-nav-link\.active,[\s\S]*?background: rgba\(30, 58, 138, 0\.1\);\s*color: var\(--d-primary\);/);
+  assert.match(sidebar, /\.d-layout:not\(\.dark-mode\) \.d-sidebar \.d-nav-link\.active svg,[\s\S]*?color: var\(--d-primary\);/);
 });
 
-test("non-selected links retain their subtle blue-tinted hover highlight", async () => {
-  const globalStyles = await read("styles/GlobalStyles.js");
-  assert.match(globalStyles, /\.d-nav-link:not\(\.disabled\):not\(\.active\):hover\s*\{[^}]*color: var\(--d-primary\);/s);
+test("selected sidebar uses LTSU gold text and icons with a subtle gold row in dark mode", async () => {
+  const sidebar = await read("features/dashboard/styles/sidebar.css");
+  assert.match(sidebar, /\.d-layout\.dark-mode \.d-sidebar \.d-nav-link\.active,[\s\S]*?background: rgba\(201, 168, 76, 0\.1\);\s*color: #C9A84C;/);
+  assert.match(sidebar, /\.d-layout\.dark-mode \.d-sidebar \.d-nav-link\.active svg,[\s\S]*?color: #C9A84C;/);
+  assert.match(sidebar, /box-shadow: inset 0 0 0 1px rgba\(201, 168, 76, 0\.2\)/);
+});
+
+test("active theme colours remain on hover and keyboard focus, while unselected hover stays subtle", async () => {
+  const sidebar = await read("features/dashboard/styles/sidebar.css");
+  const global = await read("styles/GlobalStyles.js");
+  assert.match(sidebar, /\.d-nav-link\.active:hover/);
+  assert.match(sidebar, /\.d-nav-link\.active:focus-visible/);
+  assert.match(global, /\.d-nav-link:not\(\.disabled\):not\(\.active\):hover/);
 });

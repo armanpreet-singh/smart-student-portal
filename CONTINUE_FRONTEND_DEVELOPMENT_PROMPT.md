@@ -1018,3 +1018,10 @@ Never recolour the selected sidebar item on hover or focus. Preserve the origina
 
 ## Selected sidebar label colour
 The selected sidebar row keeps its existing active background highlight, but its label and icon must remain neutral using `var(--d-text-secondary)`, not `var(--d-primary)`. Apply that to the active, active:hover and active:focus-visible states across roles. Do not change the non-selected hover treatment.
+
+
+## Selected sidebar colour requirement — 2026-11-17
+- Light theme: selected module label and icon are LTSU blue (`var(--d-primary)`) on the existing pale-blue row.
+- Dark theme: selected module label and icon are LTSU gold (`#C9A84C`) on a subtle gold-tinted row with a fine inset outline.
+- Theme scope is `.d-layout:not(.dark-mode)` vs `.d-layout.dark-mode`. Preserve colour on hover and keyboard focus. Shared sidebar means apply to Student, Teacher and Admin.
+- Do not use neutral-grey active text or a blue active label in dark theme. Do not alter unselected hover or disabled items.
