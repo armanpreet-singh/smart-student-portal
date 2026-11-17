@@ -1766,3 +1766,11 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Admin reset on Students and Teachers now accepts a new password + confirmation, with independent Eye/EyeOff visibility toggles. No old password is requested. A successful reset hashes the new password and sets `mustChangePassword=false`, so the user can sign in immediately with the password Admin set.
 - Add Student retains its temporary-password-at-first-login workflow, but both creation password fields now have independent show/hide controls. Visibility resets when the form closes.
 - Password policy unchanged: minimum 12 characters, maximum 72 UTF-8 bytes, confirmation must match. No password is displayed after submit or persisted in frontend state beyond the open form.
+
+
+## Announcement dark-theme contrast correction — November 17, 2026
+- Fixed the shared Student/Teacher/Admin announcement surfaces after the Student dark-theme feed rendered white cards with near-white titles.
+- Root cause: announcement styles used `var(--d-card, #fff)`, but the dashboard theme defines `--d-surface` (white in light mode and slate `#1e293b` in dark mode), not `--d-card`. The fallback therefore forced white surfaces against dark-theme text.
+- Replaced the undefined card token with the shared `var(--d-surface, #fff)` token for cards, stats, forms, empty/loading/error surfaces and related controls. Existing foreground styles continue to use `--d-text` and `--d-text-secondary`.
+- Frontend-only: no API, backend, database, schema or data changes. Regression coverage: `tests/announcements-theme.test.js`.
+- Verify the Student announcements feed and Teacher/Admin announcement management in both light and dark themes, including card title/body, audience/meta text, form fields and empty/loading/error states.

@@ -8,10 +8,10 @@
 .announcements-secondary { border-color: var(--d-border, #d7dce5); background: var(--d-surface, #fff); color: var(--d-text); }
 .announcements-danger { border-color: #efcaca; background: #fff7f7; color: #a32828; }
 .announcements-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.announcements-stats > div { display: flex; flex-direction: column; gap: 5px; padding: 15px 17px; border: 1px solid var(--d-border, #e2e5eb); border-radius: 12px; background: var(--d-card, #fff); }
+.announcements-stats > div { display: flex; flex-direction: column; gap: 5px; padding: 15px 17px; border: 1px solid var(--d-border, #e2e5eb); border-radius: 12px; background: var(--d-surface, #fff); }
 .announcements-stats span { color: var(--d-text-secondary); font-size: 11px; }
 .announcements-stats strong { color: var(--d-text); font-size: 22px; }
-.announcements-form { display: flex; flex-direction: column; gap: 14px; padding: 20px; border: 1px solid var(--d-border, #d7dce5); border-radius: 14px; background: var(--d-card, #fff); }
+.announcements-form { display: flex; flex-direction: column; gap: 14px; padding: 20px; border: 1px solid var(--d-border, #d7dce5); border-radius: 14px; background: var(--d-surface, #fff); }
 .announcements-form-heading { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .announcements-form-heading h2 { margin: 0; color: var(--d-text); font-size: 16px; }
 .announcements-form-heading span, .announcements-muted, .announcements-form-footer > span { color: var(--d-text-secondary); font-size: 11px; }
@@ -21,7 +21,7 @@
 .announcements-form-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .announcements-form-footer > div, .announcements-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
 .announcements-list { display: flex; flex-direction: column; gap: 12px; }
-.announcements-card { padding: 19px; border: 1px solid var(--d-border, #e2e5eb); border-radius: 13px; background: var(--d-card, #fff); }
+.announcements-card { padding: 19px; border: 1px solid var(--d-border, #e2e5eb); border-radius: 13px; background: var(--d-surface, #fff); }
 .announcements-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .announcements-status { display: inline-flex; align-items: center; border-radius: 20px; padding: 4px 9px; font-size: 10px; font-weight: 800; }
 .announcements-status.is-published { background: #e8f6ed; color: #17653b; }
@@ -32,10 +32,10 @@
 .announcements-message { margin: 0; color: var(--d-text-secondary); font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
 .announcements-meta { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 14px; color: var(--d-text-secondary); font-size: 11px; }
 .announcements-actions { justify-content: flex-start; margin-top: 15px; padding-top: 13px; border-top: 1px solid var(--d-border, #e2e5eb); }
-.announcements-state, .announcements-alert, .announcements-empty { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 24px; border: 1px solid var(--d-border, #e2e5eb); border-radius: 12px; background: var(--d-card, #fff); color: var(--d-text-secondary); font-size: 13px; }
+.announcements-state, .announcements-alert, .announcements-empty { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 24px; border: 1px solid var(--d-border, #e2e5eb); border-radius: 12px; background: var(--d-surface, #fff); color: var(--d-text-secondary); font-size: 13px; }
 .announcements-alert { justify-content: flex-start; color: #a32828; }
 .announcements-alert span { flex: 1; }
-.announcements-alert button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border: 1px solid var(--d-border, #d7dce5); border-radius: 8px; background: var(--d-card, #fff); color: var(--d-text); cursor: pointer; }
+.announcements-alert button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border: 1px solid var(--d-border, #d7dce5); border-radius: 8px; background: var(--d-surface, #fff); color: var(--d-text); cursor: pointer; }
 .announcements-empty { flex-direction: column; min-height: 130px; text-align: center; }
 .announcements-empty strong { color: var(--d-text); }
 .announcements-empty span { max-width: 520px; }
