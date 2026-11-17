@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AlertCircle, Bell, CalendarClock, Download, FileText, LoaderCircle, Megaphone, RefreshCw, Users } from "lucide-react";
 
 import { useAuth } from "../../auth/context/AuthContext";
+import { showErrorMessage } from "../../../components/ui/toastUtils";
 import { downloadAnnouncementAttachment, fetchAnnouncements } from "./announcementsApi";
 import "./announcements.css";
 
@@ -86,7 +87,7 @@ export default function AnnouncementsFeed() {
       const download = await downloadAnnouncementAttachment(accessToken, "student", item.id);
       triggerAttachmentDownload(download.url, download.fileName);
     } catch (cause) {
-      setError(cause?.message || "The announcement attachment could not be opened.");
+      showErrorMessage(cause?.message || "The announcement attachment could not be opened.");
     } finally {
       setDownloadBusyId("");
     }
