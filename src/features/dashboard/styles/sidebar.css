@@ -93,7 +93,7 @@
 }
 .d-nav-link.active {
   background: rgba(30, 58, 138, 0.1);
-  color: var(--d-primary);
+  color: var(--d-text-secondary);
   font-weight: 600;
 }
 
