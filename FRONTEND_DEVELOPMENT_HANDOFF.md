@@ -1753,3 +1753,10 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Added drag-over highlight, selected-file card with file name/type/size, remove/replace action and accessible input/dropzone labels.
 - Existing allow-list and 20MB maximum are retained (PDF, DOC, DOCX, PPT, PPTX, TXT, JPG/JPEG, PNG). Empty files and multiple-file drops are rejected with inline errors. Existing upload service/API and student availability behavior are unchanged.
 - Regression tests: `tests/teacher-notes-dropzone.test.js`. Frontend-only; no backend/API/storage changes.
+
+
+## Name-based profile initials — November 17, 2026
+- Replaced the generic person glyph in Student, Teacher and Admin topbar avatar buttons, profile dropdown identity avatars and profile-page header avatars with initials derived from the authenticated user's `fullName`.
+- Shared helper: `src/features/shared/profile/nameInitials.js`. Multi-part names use first + last initials (Shahid Mushtaq → SM; Armanpreet Singh Kumar → AK); single-word names use one initial. Unicode-safe extraction and whitespace normalization; existing person icon remains the fallback when the name is unavailable.
+- Initials are derived only from the verified session name and are not stored. No backend/API changes.
+- Regression tests: `tests/name-based-profile-initials.test.js`.
