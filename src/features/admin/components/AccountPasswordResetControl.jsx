@@ -208,7 +208,7 @@ const AccountPasswordResetControl = ({
               </label>
 
               <p className="a-account-password-reset-warning">
-                Verify the account identity before continuing. The new password is sent only in the reset request and is not stored in the portal.
+                Verify the account identity before continuing. The server stores only a secure password hash; share the new password with the account holder through a secure channel.
               </p>
               {error && (
                 <p className="a-account-password-reset-error" role="alert">{error}</p>
