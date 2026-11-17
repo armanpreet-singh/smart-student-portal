@@ -158,3 +158,10 @@
     gap: 14px;
   }
 }
+
+.s-profile-avatar {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: .025em;
+  line-height: 1;
+}

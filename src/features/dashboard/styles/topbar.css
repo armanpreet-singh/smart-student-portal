@@ -378,3 +378,23 @@
   .d-global-search-result { transition: none; }
   .d-global-search-spin { animation-duration: 2s; }
 }
+
+
+/* User avatars show verified account-name initials instead of a generic glyph. */
+.d-topbar-avatar {
+  color: var(--d-primary);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+.d-dropdown-avatar {
+  display: grid;
+  place-items: center;
+  color: var(--d-primary);
+  background: var(--d-surface);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .025em;
+  line-height: 1;
+}

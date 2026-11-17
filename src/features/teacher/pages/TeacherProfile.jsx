@@ -4,6 +4,7 @@ import { CalendarDays, Info, Mail, ShieldCheck, UserRound } from "lucide-react";
 import SectionHeader from "../../../features/dashboard/components/SectionHeader/SectionHeader";
 import DashboardCard from "../../../features/dashboard/components/DashboardCard/DashboardCard";
 import { useAuth } from "../../auth/context/AuthContext";
+import { getNameInitials } from "../../shared/profile/nameInitials";
 
 import "./TeacherProfile.css";
 
@@ -60,7 +61,7 @@ const TeacherProfile = memo(() => {
           <DashboardCard className="t-profile-header-card" padding={false}>
             <section className="t-profile-header-content">
               <div className="t-profile-avatar" aria-hidden="true">
-                <UserRound size={27} />
+                {getNameInitials(user?.fullName) || <UserRound size={27} />}
               </div>
               <div className="t-profile-intro">
                 <h2>{accountName}</h2>
