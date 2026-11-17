@@ -1679,3 +1679,11 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Existing form-level inline validation/error regions and Sonner glass toasts remain separate layers: inline for field/page context, toast for immediate action feedback, notification centre for persistent updates, banner for unread high-priority items, confirmation dialog for consequential actions.
 - No API, backend, database or migration changes. Existing role-scoped notification endpoints and 45-second polling remain unchanged. Browser push/email/SMS delivery is not added in this change.
 - Regression coverage: `tests/notification-experience.test.js`, plus existing notification API and toast tests. CI/build and deployment do not replace Student/Teacher/Admin browser acceptance testing.
+
+
+## Admin managed-account profile editing — November 17, 2026
+- Added Edit actions to both Admin Student and Teacher directories and a shared edit dialog.
+- Teacher profile fields: full name, username and optional email. Student profile fields: full name, username, optional email, official roll number and class assignment. Student class picker uses active classes; an existing assignment not returned in the active-class list is retained unless the Admin changes or clears it.
+- Username edits change the sign-in username. Password resets remain in the existing dedicated password-reset control. Account activation remains in its dedicated status control. Teacher subject assignments remain managed in the separate Teacher-to-Subject assignment directory.
+- Edit requests use the Admin-managed-user PATCH endpoint and validate uniqueness conflicts. The directory refreshes after a successful save.
+- No frontend schema or database migration. Frontend tests: `tests/admin-managed-users-api.test.js`, `tests/admin-managed-user-edit-ui.test.js`, and existing directory tests. Backend endpoint ships separately in `ltsu-backend` PR #18.
