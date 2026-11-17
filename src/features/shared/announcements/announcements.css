@@ -42,3 +42,30 @@
 .announcements-spin { animation: announcements-rotation 1s linear infinite; }
 @keyframes announcements-rotation { to { transform: rotate(360deg); } }
 @media (max-width: 640px) { .announcements-stats { grid-template-columns: 1fr; } .announcements-form, .announcements-card { padding: 15px; } .announcements-actions { justify-content: stretch; } .announcements-actions button { flex: 1 1 auto; } }
+
+
+.announcements-attachment-field > span { display:flex; align-items:center; gap:8px; }
+.announcements-attachment-field > span small,
+.announcements-attachment-field > small { color:var(--d-text-secondary); font-size:10px; font-weight:500; }
+.announcements-form .announcements-attachment-field input[type="file"] { padding:8px; cursor:pointer; font-size:11px; }
+.announcements-selected-file,
+.announcements-current-file { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--d-border); border-radius:9px; background:var(--d-bg); color:var(--d-text-secondary); }
+.announcements-selected-file > span,
+.announcements-current-file > span { display:flex; flex:1; min-width:0; flex-direction:column; gap:3px; }
+.announcements-selected-file strong,
+.announcements-current-file strong { overflow-wrap:anywhere; color:var(--d-text); font-size:11px; }
+.announcements-selected-file small,
+.announcements-current-file small { color:var(--d-text-secondary); font-size:10px; }
+.announcements-selected-file > button { display:grid; width:28px; height:28px; flex:0 0 auto; place-items:center; border:1px solid var(--d-border); border-radius:7px; background:var(--d-surface); color:var(--d-text-secondary); cursor:pointer; }
+.announcements-selected-file > button:disabled { opacity:.55; cursor:not-allowed; }
+.announcements-attachment { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:14px; padding:10px 12px; border:1px solid var(--d-border); border-radius:9px; background:var(--d-bg); }
+.announcements-attachment > span { display:flex; align-items:center; min-width:0; gap:9px; color:var(--d-text-secondary); }
+.announcements-attachment > span > span { display:flex; flex-direction:column; min-width:0; gap:3px; }
+.announcements-attachment strong { overflow-wrap:anywhere; color:var(--d-text); font-size:11px; }
+.announcements-attachment small { color:var(--d-text-secondary); font-size:10px; }
+.announcements-attachment button { min-height:32px; padding:6px 10px; }
+@media (max-width:640px) {
+  .announcements-attachment { align-items:flex-start; }
+  .announcements-attachment > span { flex:1 1 100%; }
+  .announcements-attachment button { width:100%; }
+}
