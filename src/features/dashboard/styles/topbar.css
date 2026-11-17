@@ -3,7 +3,9 @@
   position: sticky;
   top: 0;
   z-index: 900;
-  height: 72px;
+  height: var(--d-layout-header-height, 96px);
+  min-height: var(--d-layout-header-height, 96px);
+  box-sizing: border-box;
   background: rgba(245, 247, 251, 0.8);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--d-border);
