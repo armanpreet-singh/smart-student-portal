@@ -5,6 +5,10 @@ import {
   CalendarClock,
   CheckCircle2,
   Edit3,
+  FileText,
+  Download,
+  UploadCloud,
+  X,
   LoaderCircle,
   Megaphone,
   Plus,
@@ -21,6 +25,7 @@ import { fetchTeacherAssignedSubjects } from "../../teacher/api/teacherSubjectsA
 import {
   createAnnouncement,
   deleteAnnouncement,
+  downloadAnnouncementAttachment,
   fetchAnnouncements,
   publishAnnouncement,
   updateAnnouncement
@@ -28,6 +33,27 @@ import {
 import "./announcements.css";
 
 const EMPTY_FORM = { title: "", message: "", audience: "ALL_USERS", subjectId: "" };
+const MAX_ANNOUNCEMENT_ATTACHMENT_BYTES = 20 * 1024 * 1024;
+const ANNOUNCEMENT_ATTACHMENT_ACCEPT =
+  ".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.csv,.jpg,.jpeg,.png,.gif,.webp";
+
+function formatBytes(value) {
+  if (!Number.isInteger(value) || value < 0) return "";
+  if (value < 1024) return value + " B";
+  if (value < 1024 * 1024) return (value / 1024).toFixed(1) + " KB";
+  return (value / (1024 * 1024)).toFixed(1) + " MB";
+}
+
+function triggerAttachmentDownload(url, fileName) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
 
 function formatDate(value) {
   const date = new Date(value);
@@ -54,6 +80,8 @@ export default function AnnouncementsManager({ role }) {
   const [loadError, setLoadError] = useState("");
   const [actionError, setActionError] = useState("");
   const [form, setForm] = useState(EMPTY_FORM);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [downloadBusyId, setDownloadBusyId] = useState("");
   const [editingId, setEditingId] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -106,6 +134,7 @@ export default function AnnouncementsManager({ role }) {
 
   const openCreate = () => {
     setEditingId("");
+    setSelectedFile(null);
     setForm({
       ...EMPTY_FORM,
       subjectId: subjects[0]?.id || ""
@@ -117,6 +146,7 @@ export default function AnnouncementsManager({ role }) {
   const openEdit = (item) => {
     if (!canManage(item) || item.publishedAt) return;
     setEditingId(item.id);
+    setSelectedFile(null);
     setForm({
       title: item.title,
       message: item.message,
@@ -131,6 +161,7 @@ export default function AnnouncementsManager({ role }) {
     setFormOpen(false);
     setEditingId("");
     setForm(EMPTY_FORM);
+    setSelectedFile(null);
     setActionError("");
   };
 
@@ -151,13 +182,13 @@ export default function AnnouncementsManager({ role }) {
         await updateAnnouncement(accessToken, role, editingId, {
           title: form.title.trim(),
           message: form.message.trim()
-        });
+        }, selectedFile);
         showSuccessMessage("Announcement draft updated.");
       } else {
         const input = role === "admin"
           ? { title: form.title.trim(), message: form.message.trim(), audience: form.audience }
           : { subjectId: form.subjectId, title: form.title.trim(), message: form.message.trim() };
-        await createAnnouncement(accessToken, role, input);
+        await createAnnouncement(accessToken, role, input, selectedFile);
         showSuccessMessage("Announcement draft saved.");
       }
       closeForm();
@@ -168,6 +199,32 @@ export default function AnnouncementsManager({ role }) {
     } finally {
       setSaving(false);
     }
+  };
+
+
+  const downloadAttachment = async (item) => {
+    if (!item.attachment || downloadBusyId) return;
+    setDownloadBusyId(item.id);
+    try {
+      const download = await downloadAnnouncementAttachment(accessToken, role, item.id);
+      triggerAttachmentDownload(download.url, download.fileName);
+    } catch (error) {
+      showErrorMessage(error?.message || "The announcement attachment could not be opened.");
+    } finally {
+      setDownloadBusyId("");
+    }
+  };
+
+  const handleAttachmentChange = (event) => {
+    const file = event.target.files?.[0] || null;
+    if (!file) return;
+    if (file.size > MAX_ANNOUNCEMENT_ATTACHMENT_BYTES) {
+      setActionError("Announcement attachments must be 20 MB or smaller.");
+      event.target.value = "";
+      return;
+    }
+    setActionError("");
+    setSelectedFile(file);
   };
 
   const publish = (item) => setPendingAction({ type: "publish", item });
@@ -260,6 +317,31 @@ export default function AnnouncementsManager({ role }) {
         )}
         <label>Message<textarea rows={6} maxLength={10000} required value={form.message}
           onChange={(event) => setForm((current) => ({ ...current, message: event.target.value }))} /></label>
+        <label className="announcements-attachment-field">
+          <span><UploadCloud size={16}/> Attachment <small>Optional · one file · maximum 20 MB</small></span>
+          <input
+            type="file"
+            accept={ANNOUNCEMENT_ATTACHMENT_ACCEPT}
+            onChange={handleAttachmentChange}
+            disabled={saving}
+          />
+          <small>PDF, Word, PowerPoint, Excel, TXT, CSV, JPG, PNG, GIF or WEBP</small>
+        </label>
+        {selectedFile && (
+          <div className="announcements-selected-file">
+            <FileText size={17}/>
+            <span><strong>{selectedFile.name}</strong><small>{formatBytes(selectedFile.size)} · Will be uploaded when you save the draft</small></span>
+            <button type="button" aria-label="Remove selected attachment"
+              onClick={() => setSelectedFile(null)} disabled={saving}><X size={15}/></button>
+          </div>
+        )}
+        {!selectedFile && editingId && announcements.find((item) => item.id === editingId)?.attachment && (
+          <div className="announcements-current-file">
+            <FileText size={17}/>
+            <span><strong>Current file: {announcements.find((item) => item.id === editingId).attachment.fileName}</strong>
+              <small>Choose another file above to replace this attachment.</small></span>
+          </div>
+        )}
         <div className="announcements-form-footer">
           <span>{form.message.length}/10,000 characters</span>
           <div>
@@ -296,6 +378,17 @@ export default function AnnouncementsManager({ role }) {
               <span><Bell size={14}/> {item.author.fullName}</span>
               <span><CalendarClock size={14}/> {item.publishedAt ? `Published ${formatDate(item.publishedAt)}` : `Created ${formatDate(item.createdAt)}`}</span>
             </div>
+            {item.attachment && <div className="announcements-attachment">
+              <span><FileText size={17}/><span><strong>{item.attachment.fileName}</strong><small>{formatBytes(item.attachment.bytes)}</small></span></span>
+              <button type="button" className="announcements-secondary"
+                onClick={() => void downloadAttachment(item)}
+                disabled={Boolean(downloadBusyId)}>
+                {downloadBusyId === item.id
+                  ? <LoaderCircle className="announcements-spin" size={15}/>
+                  : <Download size={15}/>}
+                Open / download
+              </button>
+            </div>}
             {ownDraft && <div className="announcements-actions">
               <button type="button" className="announcements-secondary" onClick={() => openEdit(item)} disabled={Boolean(busyId)}>
                 <Edit3 size={15}/> Edit
