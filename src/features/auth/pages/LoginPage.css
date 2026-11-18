@@ -566,7 +566,6 @@ label.field-label {
   bottom: 0;
   right: 8px;
   z-index: 2;
-  margin: auto 0;
   transform: none;
 
   display: inline-flex;
