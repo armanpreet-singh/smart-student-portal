@@ -9,6 +9,7 @@ import AccountStatusControl from "../components/AccountStatusControl";
 import AccountPasswordResetControl from "../components/AccountPasswordResetControl";
 import { createAdminTeacher } from "../api/adminTeacherProvisioningApi";
 import ManagedUserEditDialog from "../components/ManagedUserEditDialog";
+import ManagedUserDeleteControl from "../components/ManagedUserDeleteControl";
 
 import "./TeachersPage.css";
 
@@ -507,14 +508,28 @@ const TeachersPage = () => {
                       {formatCreatedAt(teacher.createdAt)}
                     </td>
                     <td>
-                      <button
-                        type="button"
-                        className="a-managed-edit-trigger"
-                        onClick={() => { setUpdateSuccessMessage(""); setEditingTeacher(teacher); }}
-                        aria-label={"Edit " + teacher.fullName}
-                      >
-                        <Pencil size={14} /> Edit
-                      </button>
+                      <div className="a-managed-user-actions">
+                        <button
+                          type="button"
+                          className="a-managed-edit-trigger"
+                          onClick={() => { setUpdateSuccessMessage(""); setEditingTeacher(teacher); }}
+                          aria-label={"Edit " + teacher.fullName}
+                        >
+                          <Pencil size={14} /> Edit
+                        </button>
+                        <ManagedUserDeleteControl
+                          accessToken={accessToken}
+                          account={teacher}
+                          onUnauthorized={refreshCurrentUser}
+                          onDeleted={(deleted) => {
+                            setUpdateSuccessMessage(`Teacher account ${deleted.fullName} was deleted from the live portal. Historical records were preserved.`);
+                            if (teachers.length === 1 && page > 1) {
+                              setPage((value) => Math.max(1, value - 1));
+                            }
+                            setRetryCount((value) => value + 1);
+                          }}
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))}

@@ -39,3 +39,21 @@ test("Admin edit dialog does not expose password, role or activation controls", 
   assert.doesNotMatch(dialog, /name="role"|name="isActive"/);
   assert.match(dialog, /Changing the username changes the account's sign-in name/);
 });
+
+
+test("Admin Student and Teacher directories both expose the guarded delete control", async () => {
+  const students = await source("features/admin/pages/StudentsPage.jsx");
+  const teachers = await source("features/admin/pages/TeachersPage.jsx");
+  const control = await source("features/admin/components/ManagedUserDeleteControl.jsx");
+
+  assert.match(students, /<ManagedUserDeleteControl/);
+  assert.match(teachers, /<ManagedUserDeleteControl/);
+  assert.match(students, /deleted\.fullName/);
+  assert.match(teachers, /deleted\.fullName/);
+  assert.match(control, /method|deleteAdminManagedUser/);
+  assert.match(control, /Type <strong>\{account\.username\}<\/strong> to confirm/);
+  assert.match(control, /disabled=\{!confirmationMatches \|\| submitting\}/);
+  assert.match(control, /Attendance, assignments, submissions, syllabus progress/);
+  assert.match(control, /role="dialog"/);
+  assert.match(control, /aria-modal="true"/);
+});

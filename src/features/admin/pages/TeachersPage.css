@@ -694,3 +694,11 @@
   outline: 3px solid var(--d-gold);
   outline-offset: 2px;
 }
+
+.a-managed-user-actions {
+  display: flex;
+  min-width: 150px;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}

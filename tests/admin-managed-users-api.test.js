@@ -1,6 +1,9 @@
 import test, { afterEach, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { updateAdminManagedUser } from "../src/features/admin/api/adminManagedUsersApi.js";
+import {
+  deleteAdminManagedUser,
+  updateAdminManagedUser
+} from "../src/features/admin/api/adminManagedUsersApi.js";
 
 const API_BASE = "https://ltsu-smart-portal-api-0i8h.onrender.com";
 
@@ -153,5 +156,77 @@ test("maps duplicate, expired-session and server errors", async () => {
       fullName: "Teacher One", username: "teacher.one", email: ""
     }),
     (error) => error.status === 401 && /session is no longer valid/i.test(error.message)
+  );
+});
+
+
+test("deletes a Student account using the authenticated Admin DELETE endpoint", async () => {
+  const deletedAt = "2026-11-18T13:00:00.000Z";
+  globalThis.fetch = async (url, options = {}) => {
+    calls.push({ url: String(url), options });
+    return response(200, {
+      status: "ok",
+      data: {
+        user: {
+          id: "student/1",
+          fullName: "Updated Student",
+          username: "updated.student",
+          role: "STUDENT",
+          isActive: false,
+          deletedAt
+        }
+      }
+    });
+  };
+
+  const result = await deleteAdminManagedUser("admin-token", "STUDENT", "student/1");
+  assert.equal(calls[0].url, `${API_BASE}/api/admin/users/student%2F1`);
+  assert.equal(calls[0].options.method, "DELETE");
+  assert.equal(calls[0].options.headers.Authorization, "Bearer admin-token");
+  assert.equal(result.deletedAt, deletedAt);
+  assert.equal(result.isActive, false);
+});
+
+test("deletes a Teacher account and rejects unsupported role/user inputs", async () => {
+  globalThis.fetch = async (url, options = {}) => {
+    calls.push({ url: String(url), options });
+    return response(200, {
+      status: "ok",
+      data: {
+        user: {
+          id: "teacher-1",
+          fullName: "Updated Teacher",
+          username: "updated.teacher",
+          role: "TEACHER",
+          isActive: false,
+          deletedAt: "2026-11-18T13:00:00.000Z"
+        }
+      }
+    });
+  };
+  const result = await deleteAdminManagedUser("admin-token", "TEACHER", "teacher-1");
+  assert.equal(result.role, "TEACHER");
+
+  await assert.rejects(
+    deleteAdminManagedUser("admin-token", "ADMIN", "admin-1"),
+    (error) => error.status === 400
+  );
+  await assert.rejects(
+    deleteAdminManagedUser("admin-token", "STUDENT", ""),
+    (error) => error.status === 400
+  );
+});
+
+test("maps expired-session and unavailable-account delete errors", async () => {
+  globalThis.fetch = async () => response(401, { status: "error" });
+  await assert.rejects(
+    deleteAdminManagedUser("expired-token", "STUDENT", "student-1"),
+    (error) => error.status === 401 && /session is no longer valid/i.test(error.message)
+  );
+
+  globalThis.fetch = async () => response(404, { status: "error" });
+  await assert.rejects(
+    deleteAdminManagedUser("admin-token", "TEACHER", "teacher-1"),
+    (error) => error.status === 404 && /no longer available/i.test(error.message)
   );
 });

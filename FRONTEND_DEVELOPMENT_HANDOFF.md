@@ -1818,3 +1818,12 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Student topbar breadcrumb now reads Dashboard / Syllabus / [decoded subject name] on the subject detail route. The Syllabus crumb links back to the Student subject picker. Existing Dashboard / Syllabus landing breadcrumb remains unchanged.
 - Teacher syllabus route retains its existing assigned-subject expandable topic view and Mark complete/undo workflow unchanged.
 - Styling follows existing theme tokens and includes keyboard focus, dark/light themes and responsive tablet/mobile layouts. No backend, API, database, curriculum or Teacher changes.
+
+
+## Admin Student and Teacher account deletion — November 18, 2026
+- Student Directory and Teacher Directory now include a Delete action beside Edit.
+- The destructive confirmation dialog requires the administrator to type the exact account username before enabling deletion. It supports Escape/cancel, a clear error state and expired-session refresh.
+- Successful deletion refreshes the directory and displays a notice explaining that the account is retired from the live portal while historical academic records are preserved.
+- New `deleteAdminManagedUser` API helper sends authenticated `DELETE /api/admin/users/:userId` and validates the safe deletion response. The reusable control is `ManagedUserDeleteControl.jsx`.
+- No student or teacher data is deleted by this UI change; the backend retires the account and preserves linked academic history.
+- Added API and directory UI tests for Student/Teacher deletion, confirmation safeguards, authorization errors and refresh behavior.
