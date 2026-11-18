@@ -114,8 +114,8 @@ test("Student syllabus detail route and topbar breadcrumb show Dashboard, Syllab
   ]);
 
   assert.match(routes, /path="syllabus\/\:subjectId\/\:subjectName"/);
-  assert.match(topbar, /pathnames\[0\] === "dashboard" && pathnames\[1\] === "syllabus"/);
-  assert.match(topbar, /\{ name: "Syllabus", path: "\/dashboard\/syllabus" \}/);
+  assert.match(topbar, /pathnames\[0\] === "dashboard" &&\s*\["syllabus", "attendance"\]\.includes\(pathnames\[1\]\)/);
+  assert.match(topbar, /const section = pathnames\[1\] === "syllabus" \? "Syllabus" : "Attendance"/);
   assert.match(topbar, /decodeURIComponent\(subjectName\)/);
 });
 

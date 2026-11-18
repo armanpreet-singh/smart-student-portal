@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
   Bar,
   BarChart,
@@ -10,7 +11,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { CalendarDays, CheckCircle, Clock3, FileDown, FileUp, RotateCw, UserCheck, XCircle } from "lucide-react";
+import { CalendarDays, CheckCircle, ChevronRight, Clock3, FileDown, FileUp, RotateCw, UserCheck, XCircle } from "lucide-react";
 
 import { useAuth } from "../../auth/context/AuthContext";
 import DashboardCard from "../components/DashboardCard/DashboardCard";
@@ -177,6 +178,7 @@ function EmptyState({ title, message }) {
 }
 
 const AttendancePage = () => {
+  const { subjectId } = useParams();
   const { accessToken, refreshCurrentUser } = useAuth();
   const [data, setData] = useState(null);
   const [requestStatus, setRequestStatus] = useState("loading");
@@ -226,15 +228,17 @@ const AttendancePage = () => {
   }, [accessToken, filters.fromDate, filters.toDate, retryCount, refreshCurrentUser]);
 
   const subjects = data?.subjects || [];
+  const selectedSubject = subjectId ? subjects.find((item) => item.subject.id === subjectId) || null : null;
+  const visibleSubjects = subjectId ? (selectedSubject ? [selectedSubject] : []) : subjects;
   const records = useMemo(
     () =>
-      subjects.flatMap((item) =>
+      visibleSubjects.flatMap((item) =>
         item.records.map((record) => ({
           ...record,
           subject: item.subject,
         })),
       ),
-    [subjects],
+    [visibleSubjects],
   );
 
   const totals = useMemo(() => {
@@ -244,7 +248,7 @@ const AttendancePage = () => {
       ON_DUTY_REVIEW: 0,
     };
 
-    subjects.forEach((item) => {
+    visibleSubjects.forEach((item) => {
       Object.keys(counts).forEach((status) => {
         counts[status] += item.summary[status];
       });
@@ -264,7 +268,7 @@ const AttendancePage = () => {
       totalRecords:
         counts.PRESENT + counts.ABSENT + counts.ON_DUTY_REVIEW,
     };
-  }, [subjects]);
+  }, [visibleSubjects]);
 
   const weeklyData = useMemo(() => buildWeeklyChart(records), [records]);
   const monthlyData = useMemo(() => buildMonthlyChart(records), [records]);
@@ -278,7 +282,7 @@ const AttendancePage = () => {
             String(a.recordedAt || ""),
           );
         })
-        .slice(0, 8),
+        .slice(0, records.length),
     [records],
   );
 
@@ -410,8 +414,12 @@ const AttendancePage = () => {
   return (
     <div className="d-page-container">
       <SectionHeader
-        title="Attendance Overview"
-        subtitle="Track your recorded attendance across assigned subjects"
+        title={subjectId ? (selectedSubject?.subject.name || "Subject attendance") : "Attendance"}
+        subtitle={
+          subjectId
+            ? "Your attendance summary and complete session history for this subject"
+            : "Select a subject to view its attendance summary and complete session history"
+        }
       />
 
       <DashboardCard className="d-attendance-filters">
@@ -487,15 +495,66 @@ const AttendancePage = () => {
         </DashboardCard>
       )}
 
-      {requestStatus === "success" && subjects.length === 0 && (
+      {requestStatus === "success" && subjects.length === 0 && !subjectId && (
         <EmptyState
           title="No subjects are assigned"
           message="The university service did not return any subjects for your account."
         />
       )}
 
-      {requestStatus === "success" && subjects.length > 0 && (
+      {requestStatus === "success" && !subjectId && subjects.length > 0 && (
+        <div className="d-attendance-subject-grid" aria-label="Subjects">
+          {subjects.map((item) => {
+            const percentage = item.summary.attendancePercentage;
+            const subjectPath = `/dashboard/attendance/${encodeURIComponent(item.subject.id)}/${encodeURIComponent(item.subject.name)}`;
+            return (
+              <Link to={subjectPath} className="d-attendance-subject-card" key={item.subject.id}>
+                <div className="d-attendance-subject-card-top">
+                  <span className="d-attendance-subject-code">{item.subject.code}</span>
+                  <ChevronRight size={19} aria-hidden="true" />
+                </div>
+                <h3>{item.subject.name}</h3>
+                <p className="d-attendance-subject-class">
+                  {item.subject.class?.code || item.subject.class?.name || "Class not available"}
+                </p>
+                <div className="d-attendance-subject-stats">
+                  <span>{item.summary.attendedSessions} / {item.summary.eligibleSessions} sessions attended</span>
+                  <strong>{formatPercentage(percentage)}</strong>
+                </div>
+                {percentage === null ? (
+                  <p className="d-attendance-no-data">No eligible attendance records yet</p>
+                ) : (
+                  <ProgressCard value={percentage} showLabel={false} />
+                )}
+                <span className="d-attendance-subject-open">View subject attendance</span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
+      {requestStatus === "success" && subjectId && !selectedSubject && (
+        <DashboardCard className="d-attendance-state" padding={false}>
+          <CalendarDays size={26} aria-hidden="true" />
+          <div>
+            <h3>Subject not found</h3>
+            <p>This subject is not available in your assigned attendance records.</p>
+            <Link className="d-attendance-back-link" to="/dashboard/attendance">
+              Back to all subjects
+            </Link>
+          </div>
+        </DashboardCard>
+      )}
+
+      {requestStatus === "success" && selectedSubject && (
         <>
+          <div className="d-attendance-detail-back">
+            <Link to="/dashboard/attendance">
+              <ChevronRight size={16} aria-hidden="true" />
+              All subjects
+            </Link>
+            <span>{selectedSubject.subject.code}</span>
+          </div>
           <div className="d-attend-summary-grid">
             {summaryCards.map((card) => {
               const Icon = card.icon;
@@ -574,48 +633,6 @@ const AttendancePage = () => {
                 </div>
               </DashboardCard>
 
-              <DashboardCard padding={false}>
-                <div className="p-4 d-attendance-card-heading">
-                  <SectionHeader title="Subject details" subtitle="Attendance summaries returned by the university service" />
-                </div>
-                <div className="d-attend-table-container">
-                  <div className="d-attend-table-header d-attendance-table-header">
-                    <span>Subject</span>
-                    <span>Class</span>
-                    <span>Attended</span>
-                    <span>Eligible</span>
-                    <span>Attendance</span>
-                    <span>Progress</span>
-                  </div>
-                  {subjects.map((item) => {
-                    const subjectSummary = item.summary;
-                    const percentage = subjectSummary.attendancePercentage;
-                    return (
-                      <div className="d-attend-table-row d-attendance-table-row" key={item.subject.id}>
-                        <span className="d-subject-name-cell">
-                          <span className="d-sub-code">{item.subject.code}</span>
-                          {item.subject.name}
-                        </span>
-                        <span className="d-faculty-cell">
-                          {item.subject.class?.code || item.subject.class?.name || "—"}
-                        </span>
-                        <span>{subjectSummary.attendedSessions}</span>
-                        <span>{subjectSummary.eligibleSessions}</span>
-                        <span className="d-attendance-percentage">
-                          {formatPercentage(percentage)}
-                        </span>
-                        <span className="d-progress-cell">
-                          {percentage === null ? (
-                            <span className="d-attendance-no-data">No eligible records</span>
-                          ) : (
-                            <ProgressCard value={percentage} showLabel={false} />
-                          )}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </DashboardCard>
             </div>
 
             <div className="d-col-4">
@@ -636,7 +653,7 @@ const AttendancePage = () => {
               </DashboardCard>
 
               <DashboardCard>
-                <SectionHeader title="Recent attendance" subtitle="Latest records returned by the university service" />
+                <SectionHeader title="Attendance history" subtitle="All attendance records for this subject, newest first" />
                 {recentRecords.length ? (
                   <div className="d-attendance-recent-list">
                     {recentRecords.map((record) => (
@@ -702,8 +719,8 @@ const AttendancePage = () => {
 
           {totals.totalRecords === 0 && (
             <EmptyState
-              title="No attendance has been recorded yet"
-              message="Your assigned subjects are available, but the university service has not returned any attendance records for the selected dates."
+              title="No attendance records for the selected dates"
+              message="This subject is assigned to you, but the university service has not returned any attendance records for the selected date range."
             />
           )}
         </>

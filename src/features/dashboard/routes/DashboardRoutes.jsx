@@ -31,6 +31,7 @@ const DashboardRoutes = () => (
       <Route path="syllabus" element={<Suspense fallback={<Fallback/>}><SyllabusPage role="student" /></Suspense>} />
       <Route path="syllabus/:subjectId/:subjectName" element={<Suspense fallback={<Fallback/>}><SyllabusPage role="student" /></Suspense>} />
       <Route path="attendance" element={<Suspense fallback={<Fallback/>}><AttendancePage /></Suspense>} />
+      <Route path="attendance/:subjectId/:subjectName" element={<Suspense fallback={<Fallback/>}><AttendancePage /></Suspense>} />
       <Route path="timetable" element={<Suspense fallback={<Fallback/>}><TimetablePage /></Suspense>} />
       <Route path="assignments" element={<Suspense fallback={<Fallback/>}><AssignmentsPage /></Suspense>} />
       <Route path="results" element={<Suspense fallback={<Fallback/>}><ResultsPage /></Suspense>} />
