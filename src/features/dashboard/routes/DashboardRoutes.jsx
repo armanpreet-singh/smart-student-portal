@@ -29,6 +29,7 @@ const DashboardRoutes = () => (
       <Route index element={<Suspense fallback={<Fallback/>}><DashboardHome /></Suspense>} />
       <Route path="courses" element={<Suspense fallback={<Fallback/>}><CoursesPage /></Suspense>} />
       <Route path="syllabus" element={<Suspense fallback={<Fallback/>}><SyllabusPage role="student" /></Suspense>} />
+      <Route path="syllabus/:subjectId/:subjectName" element={<Suspense fallback={<Fallback/>}><SyllabusPage role="student" /></Suspense>} />
       <Route path="attendance" element={<Suspense fallback={<Fallback/>}><AttendancePage /></Suspense>} />
       <Route path="timetable" element={<Suspense fallback={<Fallback/>}><TimetablePage /></Suspense>} />
       <Route path="assignments" element={<Suspense fallback={<Fallback/>}><AssignmentsPage /></Suspense>} />
