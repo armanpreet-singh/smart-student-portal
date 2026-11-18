@@ -122,3 +122,206 @@
 @media (prefers-reduced-motion: reduce) {
   .syllabus-progress-track > span, .syllabus-expand-icon, .syllabus-spin { animation:none; transition:none; }
 }
+
+
+/* Student subject picker: each subject opens a dedicated syllabus page. */
+.syllabus-subject-select-card {
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) minmax(170px,230px) 20px;
+  align-items:center;
+  gap:14px;
+  padding:16px 18px;
+  border:1px solid var(--d-border);
+  border-radius:13px;
+  background:var(--d-surface);
+  box-shadow:var(--d-shadow);
+  color:inherit;
+  text-decoration:none;
+  transition:border-color .18s ease, background-color .18s ease, transform .18s ease;
+}
+.syllabus-subject-select-card:hover {
+  border-color:var(--d-primary);
+  background:var(--d-bg);
+  transform:translateY(-1px);
+}
+.dark-mode .syllabus-subject-select-card:hover { border-color:#C9A84C; }
+.syllabus-subject-select-card:focus-visible {
+  outline:3px solid color-mix(in srgb, var(--d-primary) 35%, transparent);
+  outline-offset:2px;
+}
+.dark-mode .syllabus-subject-select-card:focus-visible {
+  outline-color:rgba(201,168,76,.45);
+}
+.syllabus-subject-select-icon {
+  display:grid;
+  width:42px;
+  height:42px;
+  place-items:center;
+  border-radius:11px;
+  background:var(--d-bg);
+  color:var(--d-primary);
+}
+.dark-mode .syllabus-subject-select-icon { color:#C9A84C; }
+.syllabus-subject-select-main {
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  gap:5px;
+}
+.syllabus-subject-select-main strong {
+  overflow-wrap:anywhere;
+  color:var(--d-text);
+  font-size:13px;
+  line-height:1.4;
+}
+.syllabus-subject-select-main small {
+  color:var(--d-text-secondary);
+  font-size:10px;
+}
+.syllabus-subject-select-progress {
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  gap:7px;
+}
+.syllabus-subject-select-progress .syllabus-subject-progress-copy {
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:8px;
+}
+.syllabus-subject-select-progress .syllabus-subject-progress-copy strong {
+  color:var(--d-text);
+  font-size:16px;
+  font-variant-numeric:tabular-nums;
+}
+.syllabus-subject-select-progress .syllabus-subject-progress-copy small {
+  color:var(--d-text-secondary);
+  font-size:10px;
+}
+.syllabus-subject-select-arrow { color:var(--d-text-secondary); }
+.syllabus-subject-detail-page { display:flex; flex-direction:column; gap:18px; }
+.syllabus-back-link {
+  display:inline-flex;
+  align-items:center;
+  align-self:flex-start;
+  gap:7px;
+  color:var(--d-primary);
+  font-size:12px;
+  font-weight:700;
+  text-decoration:none;
+}
+.dark-mode .syllabus-back-link { color:#C9A84C; }
+.syllabus-back-link:hover { text-decoration:underline; }
+.syllabus-subject-detail-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+.syllabus-subject-detail-title-row {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.syllabus-subject-detail-title-row h1 {
+  margin:7px 0 5px;
+  color:var(--d-text);
+  font-size:25px;
+  line-height:1.25;
+}
+.syllabus-subject-detail-heading p {
+  margin:0;
+  color:var(--d-text-secondary);
+  font-size:11px;
+}
+.syllabus-detail-progress-card {
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+  padding:20px;
+  border:1px solid var(--d-border);
+  border-radius:13px;
+  background:var(--d-surface);
+  box-shadow:var(--d-shadow);
+}
+.syllabus-detail-progress-top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.syllabus-detail-progress-top > div:first-child {
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.syllabus-detail-progress-top > div:first-child strong {
+  color:var(--d-text);
+  font-size:32px;
+  line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.syllabus-detail-progress-count {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  color:var(--d-primary);
+}
+.dark-mode .syllabus-detail-progress-count { color:#C9A84C; }
+.syllabus-detail-progress-count > span {
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.syllabus-detail-progress-count strong { color:var(--d-text); font-size:12px; }
+.syllabus-detail-progress-count small { color:var(--d-text-secondary); font-size:10px; }
+.syllabus-detail-progress-track { height:10px; }
+.syllabus-detail-progress-footer {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  color:var(--d-text-secondary);
+  font-size:10px;
+}
+.syllabus-detail-units-heading {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.syllabus-detail-units-heading h2 { margin:0; color:var(--d-text); font-size:17px; }
+.syllabus-detail-units-heading p { margin:5px 0 0; color:var(--d-text-secondary); font-size:11px; }
+.syllabus-detail-units-heading > span { color:var(--d-text-secondary); font-size:10px; font-weight:700; }
+.syllabus-detail-unit-list { display:flex; flex-direction:column; gap:12px; }
+.syllabus-detail-unit-card {
+  padding:16px 18px 14px;
+  border:1px solid var(--d-border);
+  border-radius:12px;
+  background:var(--d-surface);
+  box-shadow:var(--d-shadow);
+}
+.syllabus-detail-unit-card .syllabus-unit-heading { align-items:center; }
+.syllabus-detail-unit-card .syllabus-topic-list { margin-top:7px; }
+@media (max-width:760px) {
+  .syllabus-subject-select-card {
+    grid-template-columns:38px minmax(0,1fr) 18px;
+    gap:10px;
+    padding:14px;
+  }
+  .syllabus-subject-select-icon { width:38px; height:38px; }
+  .syllabus-subject-select-progress {
+    grid-column:2;
+    width:100%;
+  }
+  .syllabus-subject-select-arrow {
+    grid-column:3;
+    grid-row:1;
+  }
+  .syllabus-detail-progress-card { padding:16px; }
+  .syllabus-detail-unit-card { padding:14px; }
+}
+@media (max-width:440px) {
+  .syllabus-subject-detail-title-row h1 { font-size:21px; }
+  .syllabus-detail-progress-top { align-items:flex-start; }
+  .syllabus-detail-progress-count { align-items:flex-start; }
+  .syllabus-detail-progress-count svg { margin-top:2px; }
+  .syllabus-detail-progress-footer { flex-wrap:wrap; }
+}
