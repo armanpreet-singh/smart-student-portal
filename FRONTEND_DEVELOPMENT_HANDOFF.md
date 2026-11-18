@@ -1808,3 +1808,13 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - Each layout passes a close callback into its own sidebar. The sidebar uses delegated click handling for `a.d-nav-link`, so every current and future module NavLink receives the behavior without duplicating handlers across each menu item.
 - No breakpoint, sidebar positioning, width, desktop margin, overlay or desktop layout CSS was changed. Desktop navigation remains persistent; calling the existing close-state setter has no visual effect at desktop widths.
 - Added `tests/sidebar-auto-close-on-module-select.test.js` to cover all three role sidebars/layouts and guard the existing desktop and mobile drawer CSS.
+
+
+## Student subject-wise syllabus detail pages — November 18, 2026
+- Student Semester V syllabus landing page now presents subject-selection cards instead of inline expandable subject/topic dropdowns. Each card shows portal subject code, syllabus code, course type, section count and the current subject progress.
+- Selecting a subject navigates to `/dashboard/syllabus/:subjectId/:subjectName`, rendering a dedicated subject syllabus page rather than expanding the list in place.
+- The dedicated page shows subject-specific progress percentage, covered/total/remaining topic counts, unit-wise progress bars, all topics, source PDF pages, and completion Teacher/date attribution. Student progress remains read-only.
+- Subject page includes an All subjects return link. Invalid or out-of-class subject IDs do not expose a subject and show a not-found state with a safe return link; the underlying Student API remains restricted to the authenticated Student's active class.
+- Student topbar breadcrumb now reads Dashboard / Syllabus / [decoded subject name] on the subject detail route. The Syllabus crumb links back to the Student subject picker. Existing Dashboard / Syllabus landing breadcrumb remains unchanged.
+- Teacher syllabus route retains its existing assigned-subject expandable topic view and Mark complete/undo workflow unchanged.
+- Styling follows existing theme tokens and includes keyboard focus, dark/light themes and responsive tablet/mobile layouts. No backend, API, database, curriculum or Teacher changes.
