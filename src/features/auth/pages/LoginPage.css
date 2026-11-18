@@ -502,6 +502,12 @@ label.field-label {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
+  box-sizing: border-box;
+  flex: 0 0 56px;
 }
 
 .login-field-input {
@@ -556,10 +562,11 @@ label.field-label {
 
 .pw-toggle {
   position: absolute;
-  top: 50%;
+  top: 0;
+  bottom: 0;
   right: 8px;
   z-index: 2;
-  transform: translateY(-50%);
+  transform: none;
 
   display: inline-flex;
   align-items: center;
@@ -569,8 +576,8 @@ label.field-label {
   width: 40px;
   min-width: 40px;
   height: 40px;
-  margin: 0;
   padding: 0;
+  margin: auto 0;
 
   appearance: none;
   -webkit-appearance: none;
@@ -595,13 +602,13 @@ label.field-label {
 }
 
 .pw-toggle:hover {
-  transform: translateY(-50%);
+  transform: none;
   color: var(--navy);
   background: rgba(27, 58, 107, 0.07);
 }
 
 .pw-toggle:active {
-  transform: translateY(-50%);
+  transform: none;
   background: rgba(27, 58, 107, 0.12);
 }
 
@@ -943,6 +950,13 @@ margin-bottom: 10px;
   }
 
   /* Inputs */
+
+  .login-field-wrap {
+    height: 52px;
+    min-height: 52px;
+    max-height: 52px;
+    flex-basis: 52px;
+  }
 
   .login-field-input {
     height: 52px;
