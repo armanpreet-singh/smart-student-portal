@@ -147,3 +147,77 @@ export async function updateAdminManagedUser(accessToken, role, userId, input) {
 
   return user;
 }
+
+
+function isManagedUserDeletionResult(user, role) {
+  return Boolean(
+    user &&
+    typeof user.id === "string" &&
+    typeof user.fullName === "string" &&
+    typeof user.username === "string" &&
+    user.role === role &&
+    user.isActive === false &&
+    typeof user.deletedAt === "string" &&
+    Number.isFinite(Date.parse(user.deletedAt))
+  );
+}
+
+export async function deleteAdminManagedUser(accessToken, role, userId) {
+  if (!accessToken) {
+    throw createApiError("Your administrator session is unavailable. Please sign in again.", 401);
+  }
+  if (!["STUDENT", "TEACHER"].includes(role) || typeof userId !== "string" || !userId.trim()) {
+    throw createApiError("The managed account selection is invalid.", 400);
+  }
+
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  let response;
+
+  try {
+    response = await fetch(
+      `${getApiBaseUrl()}/api/admin/users/${encodeURIComponent(userId)}`,
+      {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        signal: controller.signal
+      }
+    );
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw createApiError("The account deletion request timed out. Refresh the directory before retrying.");
+    }
+    if (error instanceof TypeError) {
+      throw createApiError("Unable to reach the administration service. Check your connection.");
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+
+  const payload = await response.json().catch(() => null);
+  if (!response.ok) {
+    const message = response.status === 401
+      ? "Your administrator session is no longer valid. Please sign in again."
+      : response.status === 403
+        ? "Your account is not permitted to delete managed accounts."
+        : response.status === 404
+          ? "This account is no longer available. Refresh the directory."
+          : response.status === 409
+            ? payload?.message || "This account cannot be deleted in its current state."
+            : response.status >= 500
+              ? "The administration service is temporarily unavailable. Please try again."
+              : payload?.message || "Unable to delete the account.";
+    throw createApiError(message, response.status, payload?.details);
+  }
+
+  const user = payload?.data?.user;
+  if (payload?.status !== "ok" || !isManagedUserDeletionResult(user, role)) {
+    throw createApiError("The administration service returned an unexpected account deletion response.", 502);
+  }
+
+  return user;
+}
