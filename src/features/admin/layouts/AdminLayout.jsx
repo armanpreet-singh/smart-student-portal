@@ -19,7 +19,7 @@ const AdminContent = () => {
   return (
     <div className={`d-layout ${isDark ? 'dark-mode' : ''}`}>
       <div className={`d-sidebar-overlay ${sidebarOpen ? 'active' : ''}`} onClick={() => setSidebarOpen(false)} />
-      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} onNavigate={() => setSidebarOpen(false)} />
       <div className="d-main-wrapper">
         <AdminTopbar onMenuClick={() => setSidebarOpen(true)} />
         <main className="d-content"><Outlet /></main>
