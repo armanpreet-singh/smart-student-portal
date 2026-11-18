@@ -53,7 +53,7 @@ test("Admin Student and Teacher directories both expose the guarded delete contr
   assert.match(control, /method|deleteAdminManagedUser/);
   assert.match(control, /Type <strong>\{account\.username\}<\/strong> to confirm/);
   assert.match(control, /disabled=\{!confirmationMatches \|\| submitting\}/);
-  assert.match(control, /Historical records will be preserved/);
+  assert.match(control, /Attendance, assignments, submissions, syllabus progress/);
   assert.match(control, /role="dialog"/);
   assert.match(control, /aria-modal="true"/);
 });
