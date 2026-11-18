@@ -37,7 +37,7 @@ for (const portal of portals) {
     assert.match(sidebar, /onNavigate\?\.\(\)/);
     assert.match(
       layout,
-      new RegExp(`<${portal.component}[^>]*onNavigate=\\{\\(\\) => setSidebarOpen\\(false\\)\\}`)
+      new RegExp(`<${portal.component}[^\\n]*onNavigate=\\{\\(\\) => setSidebarOpen\\(false\\)\\}`)
     );
   });
 }
