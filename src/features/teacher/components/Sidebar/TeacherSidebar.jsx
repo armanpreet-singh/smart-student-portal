@@ -20,7 +20,7 @@ const NavItem = memo(({ to, icon: Icon, children, disabled }) => (
   </li>
 ));
 
-const TeacherSidebar = memo(({ isOpen, onClose }) => {
+const TeacherSidebar = memo(({ isOpen, onClose, onNavigate }) => {
   return (
     <aside className={`d-sidebar ${isOpen ? 'open' : ''}`}>
       <div className="d-sidebar-header">
@@ -40,7 +40,9 @@ const TeacherSidebar = memo(({ isOpen, onClose }) => {
         <button className="d-close-btn" onClick={onClose}><X size={20} /></button>
       </div>
 
-      <nav className="d-sidebar-nav">
+      <nav className="d-sidebar-nav" onClick={(event) => {
+        if (event.target.closest?.("a.d-nav-link")) onNavigate?.();
+      }}>
         <ul>
           <NavItem to="/teacher" icon={LayoutDashboard}>Dashboard</NavItem>
           <NavItem to="/teacher/classes" icon={BookOpen}>My Classes</NavItem>

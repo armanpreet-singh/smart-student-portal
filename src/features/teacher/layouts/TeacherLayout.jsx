@@ -21,7 +21,7 @@ const TeacherContent = () => {
     // Using .d-layout class to inherit exact same styling
     <div className={`d-layout ${isDark ? 'dark-mode' : ''}`}>
       <div className={`d-sidebar-overlay ${sidebarOpen ? 'active' : ''}`} onClick={() => setSidebarOpen(false)} />
-      <TeacherSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <TeacherSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} onNavigate={() => setSidebarOpen(false)} />
       <div className="d-main-wrapper">
         <TeacherTopbar onMenuClick={() => setSidebarOpen(true)} />
         <main className="d-content">
