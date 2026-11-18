@@ -23,11 +23,11 @@
 
 <br>
 
-Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer Motion**, **Recharts**, and **CSS3**
+Full-stack platform powered by a **React + Vite** frontend and a **Node.js + Express + PostgreSQL** backend.
 
 <br>
 
-![Status](https://img.shields.io/badge/Status-Frontend%20Completed-success)
+![Status](https://img.shields.io/badge/Status-Full--Stack%20Application-success)
 ![React](https://img.shields.io/badge/React-19-61DAFB)
 ![Vite](https://img.shields.io/badge/Vite-Frontend-646CFF)
 ![License](https://img.shields.io/badge/License-MIT-blue)
@@ -49,13 +49,13 @@ Built with **React**, **Vite**, **React Router**, **React Hook Form**, **Framer 
 <a id="about"></a>
 # 📖 About
 
-**LTSU Smart Portal** is a modern role-based university management system developed as an educational and portfolio project to demonstrate practical frontend engineering skills.
+**LTSU Smart Portal** is a full-stack, role-based university management system developed as an educational and portfolio project. It brings together student, teacher, and administrator workflows through a web application backed by a REST API and PostgreSQL database.
 
 > **Disclaimer**
 >
 > This project is **not an official university portal** and is **not affiliated with or endorsed by any educational institution**. It exists solely for learning, portfolio presentation, and implementing real-world software engineering concepts.
 
-The application simulates a modern academic platform with dedicated dashboards for Students, Teachers, and Administrators while following scalable frontend architecture and backend-ready design.
+The platform provides dedicated dashboards for Students, Teachers, and Administrators, with persistent backend services, role-based access, and data-driven academic workflows.
 
 ---
 <a id="preview"></a>
@@ -122,7 +122,7 @@ The application simulates a modern academic platform with dedicated dashboards f
 - Student Dashboard
 - Teacher Dashboard
 - Admin Dashboard
-- Mock Authentication
+- Role-based authentication
 - Attendance Analytics
 - Timetable
 - Assignments
@@ -149,9 +149,9 @@ The application simulates a modern academic platform with dedicated dashboards f
 | **Icons** | Lucide React | Provides modern, customizable SVG icons. |
 | **Notifications** | React Hot Toast | Displays user-friendly toast notifications and alerts. |
 | **Styling** | CSS3 | Implements a custom responsive design system using CSS variables and Flexbox/Grid. |
-| **Image Management** | Cloudinary *(Planned)* | Cloud-based image storage, optimization, and delivery for user uploads. |
+| **Backend Runtime** | Node.js + Express | Provides REST API endpoints and server-side business logic. |\n| **Database** | PostgreSQL | Persists users, academic records, and application data. |\n| **ORM** | Prisma | Provides schema management, migrations, and database access. |\n| **File Storage** | Cloudinary | Stores and delivers application attachments. |
 | **Version Control** | Git | Tracks source code changes and enables collaborative development. |
-| **Code Hosting** | Cloudflare | Hosts the source code, version history, and project documentation. |
+| **API Hosting** | Render | Hosts the backend API. |\n| **Web Hosting** | Cloudflare Pages | Builds and hosts the web application. |
 | **Package Manager** | npm | Manages project dependencies and development scripts. |
 
 ---
