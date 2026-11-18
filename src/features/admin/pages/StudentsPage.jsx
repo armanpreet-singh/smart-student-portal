@@ -14,6 +14,7 @@ import {
 } from "../api/adminStudentProvisioningApi";
 import { createEmptyAdminStudentForm } from "../utils/adminStudentForm";
 import ManagedUserEditDialog from "../components/ManagedUserEditDialog";
+import ManagedUserDeleteControl from "../components/ManagedUserDeleteControl";
 
 import "./StudentsPage.css";
 
@@ -552,14 +553,28 @@ const StudentsPage = () => {
                       {formatCreatedAt(student.createdAt)}
                     </td>
                     <td>
-                      <button
-                        type="button"
-                        className="a-managed-edit-trigger"
-                        onClick={() => { setUpdateSuccessMessage(""); setEditingStudent(student); }}
-                        aria-label={"Edit " + student.fullName}
-                      >
-                        <Pencil size={14} /> Edit
-                      </button>
+                      <div className="a-managed-user-actions">
+                        <button
+                          type="button"
+                          className="a-managed-edit-trigger"
+                          onClick={() => { setUpdateSuccessMessage(""); setEditingStudent(student); }}
+                          aria-label={"Edit " + student.fullName}
+                        >
+                          <Pencil size={14} /> Edit
+                        </button>
+                        <ManagedUserDeleteControl
+                          accessToken={accessToken}
+                          account={student}
+                          onUnauthorized={refreshCurrentUser}
+                          onDeleted={(deleted) => {
+                            setUpdateSuccessMessage(`Student account ${deleted.fullName} was deleted from the live portal. Historical records were preserved.`);
+                            if (students.length === 1 && page > 1) {
+                              setPage((value) => Math.max(1, value - 1));
+                            }
+                            setRetryCount((value) => value + 1);
+                          }}
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))}
