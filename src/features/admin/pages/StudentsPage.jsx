@@ -287,7 +287,9 @@ const StudentsPage = () => {
     try {
       const created = await createAdminStudent(accessToken, createForm);
       setCreateSuccessMessage(
-        `Student account created for ${created.fullName} (${created.username}). It is active and must change its temporary password at first sign-in.`,
+        created.restored
+          ? `Student account restored for ${created.fullName} (${created.username}). Existing attendance and academic history are preserved. The student must change the new temporary password at first sign-in.`
+          : `Student account created for ${created.fullName} (${created.username}). It is active and must change its temporary password at first sign-in.`,
       );
       setCreateOpen(false);
       setShowCreatePassword(false);
