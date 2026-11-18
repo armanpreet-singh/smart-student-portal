@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
   AlertCircle,
+  ArrowLeft,
   BookOpen,
   CalendarCheck,
   Check,
   CheckCircle2,
   ChevronDown,
+  ChevronRight,
   Clock3,
   GraduationCap,
   LoaderCircle,
@@ -170,7 +173,153 @@ function SubjectCard({ subject, role, onToggleTopic, busyTopicId }) {
   );
 }
 
+
+function subjectKindLabel(subject) {
+  return subject.curriculumType === "LAB"
+    ? "Practical"
+    : subject.curriculumType === "WORKSHOP" ? "Workshop" : "Theory";
+}
+
+function StudentSubjectLinkCard({ subject }) {
+  const status = subjectStatus(subject);
+  return (
+    <Link
+      to={`/dashboard/syllabus/${encodeURIComponent(subject.id)}/${encodeURIComponent(subject.name)}`}
+      className="syllabus-subject-select-card"
+      aria-label={`Open ${subject.name} syllabus, ${subject.progressPercent}% completed`}
+    >
+      <span className="syllabus-subject-select-icon"><BookOpen size={19}/></span>
+      <span className="syllabus-subject-select-main">
+        <span className="syllabus-subject-title-row">
+          <span className="syllabus-subject-code">{subject.code}</span>
+          <span className="syllabus-kind">{subjectKindLabel(subject)}</span>
+        </span>
+        <strong>{subject.name}</strong>
+        <small>{subject.syllabusCourseCode} · {subject.units.length} {subject.units.length === 1 ? "section" : "sections"}</small>
+      </span>
+      <span className="syllabus-subject-select-progress">
+        <span className="syllabus-subject-progress-copy">
+          <strong>{subject.progressPercent}%</strong>
+          <small>{subject.completedTopics}/{subject.totalTopics} topics covered</small>
+        </span>
+        <span className="syllabus-progress-track" role="progressbar"
+          aria-label={subject.name + " syllabus covered"}
+          aria-valuemin={0} aria-valuemax={100} aria-valuenow={subject.progressPercent}>
+          <span style={{ width: subject.progressPercent + "%" }}/>
+        </span>
+        <span className={"syllabus-status syllabus-status-" + status}>{statusLabel(status)}</span>
+      </span>
+      <ChevronRight className="syllabus-subject-select-arrow" size={20}/>
+    </Link>
+  );
+}
+
+function StudentSubjectDetail({ subject }) {
+  const status = subjectStatus(subject);
+  return (
+    <section className="syllabus-subject-detail-page">
+      <Link to="/dashboard/syllabus" className="syllabus-back-link">
+        <ArrowLeft size={16}/> All subjects
+      </Link>
+
+      <header className="syllabus-subject-detail-heading">
+        <div>
+          <span className="syllabus-eyebrow"><GraduationCap size={15}/> Semester V · {subjectKindLabel(subject)}</span>
+          <div className="syllabus-subject-detail-title-row">
+            <h1>{subject.name}</h1>
+            <span className={"syllabus-status syllabus-status-" + status}>{statusLabel(status)}</span>
+          </div>
+          <p>{subject.code} <span aria-hidden="true">·</span> Syllabus code {subject.syllabusCourseCode} <span aria-hidden="true">·</span> {subject.class.name}</p>
+        </div>
+      </header>
+
+      <section className="syllabus-detail-progress-card" aria-label={subject.name + " syllabus progress"}>
+        <div className="syllabus-detail-progress-top">
+          <div>
+            <span className="syllabus-summary-label">Subject syllabus covered</span>
+            <strong>{subject.progressPercent}%</strong>
+          </div>
+          <div className="syllabus-detail-progress-count">
+            <CheckCircle2 size={19}/>
+            <span><strong>{subject.completedTopics} of {subject.totalTopics}</strong><small>topics covered</small></span>
+          </div>
+        </div>
+        <div className="syllabus-progress-track syllabus-detail-progress-track"
+          role="progressbar" aria-label={subject.name + " overall progress"}
+          aria-valuemin={0} aria-valuemax={100} aria-valuenow={subject.progressPercent}>
+          <span style={{ width: subject.progressPercent + "%" }}/>
+        </div>
+        <div className="syllabus-detail-progress-footer">
+          <span>{subject.units.length} {subject.units.length === 1 ? "unit/section" : "units/sections"}</span>
+          <span>{subject.totalTopics - subject.completedTopics} topics remaining</span>
+        </div>
+      </section>
+
+      <div className="syllabus-detail-units-heading">
+        <div>
+          <h2>Unit-wise syllabus coverage</h2>
+          <p>Topics are marked covered when your teacher completes them.</p>
+        </div>
+        <span>{subject.completedTopics}/{subject.totalTopics} covered</span>
+      </div>
+
+      <div className="syllabus-detail-unit-list">
+        {subject.units.map((unit) => (
+          <section className="syllabus-detail-unit-card" key={unit.code}>
+            <div className="syllabus-unit-heading">
+              <div>
+                <span className="syllabus-unit-label">{unit.code.replaceAll("_", " ")}</span>
+                <h3>{unit.title}</h3>
+                <p>{unit.totalTopics} topics{unit.plannedHours ? " · " + unit.plannedHours + " planned hours" : ""}</p>
+              </div>
+              <div className="syllabus-unit-progress">
+                <strong>{unit.progressPercent}%</strong>
+                <span>{unit.completedTopics}/{unit.totalTopics}</span>
+              </div>
+            </div>
+            <div className="syllabus-progress-track syllabus-unit-track" role="progressbar"
+              aria-label={unit.title + " progress"} aria-valuemin={0}
+              aria-valuemax={100} aria-valuenow={unit.progressPercent}>
+              <span style={{ width: unit.progressPercent + "%" }}/>
+            </div>
+            <ol className="syllabus-topic-list">
+              {unit.topics.map((topic) => (
+                <li className={"syllabus-topic-row " + (topic.completed ? "is-completed" : "")}
+                  key={topic.id}>
+                  <div className="syllabus-topic-marker" aria-hidden="true">
+                    {topic.completed ? <Check size={14}/> : <span/>}
+                  </div>
+                  <div className="syllabus-topic-copy">
+                    <span className="syllabus-topic-title">{topic.title}</span>
+                    <span className="syllabus-topic-source">Syllabus p. {topic.sourcePage}</span>
+                    {topic.completed && topic.completedBy && (
+                      <span className="syllabus-topic-attribution">
+                        Completed by {topic.completedBy.fullName}
+                        {topic.completedAt ? " · " + formatDate(topic.completedAt) : ""}
+                      </span>
+                    )}
+                  </div>
+                  <span className={"syllabus-topic-state " + (topic.completed ? "is-complete" : "")}>
+                    {topic.completed ? "Covered" : "Not covered"}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+      </div>
+
+      <footer className="syllabus-page-footnote">
+        <Clock3 size={14}/>
+        <span>Topic titles and unit structure are mapped from the LTSU B.Tech CSE Semester V syllabus. Progress reflects the latest topic completion updates from your teachers.</span>
+      </footer>
+    </section>
+  );
+}
+
 export default function SyllabusPage({ role = "student" }) {
+  const { subjectId } = useParams();
+  const isStudentSubjectDetail = role === "student" && Boolean(subjectId);
   const isTeacher = role === "teacher";
   const { accessToken, sessionStatus, sessionError } = useAuth();
   const requestSequence = useRef(0);
@@ -240,6 +389,40 @@ export default function SyllabusPage({ role = "student" }) {
   const summary = syllabus?.summary || {
     subjectCount: 0, totalTopics: 0, completedTopics: 0, progressPercent: 0
   };
+  const selectedSubject = isStudentSubjectDetail
+    ? syllabus?.subjects.find((subject) => subject.id === subjectId) || null
+    : null;
+
+  if (isStudentSubjectDetail) {
+    return (
+      <main className="d-page-container syllabus-page">
+        {loadState === "loading" && (
+          <div className="syllabus-state" role="status">
+            <LoaderCircle className="syllabus-spin" size={21}/> Loading subject syllabus…
+          </div>
+        )}
+        {loadState === "error" && (
+          <div className="syllabus-state syllabus-state-error" role="alert">
+            <AlertCircle size={19}/><span>{error}</span>
+            <button type="button" onClick={loadData}><RefreshCw size={15}/> Retry</button>
+          </div>
+        )}
+        {loadState === "success" && selectedSubject && (
+          <StudentSubjectDetail subject={selectedSubject}/>
+        )}
+        {loadState === "success" && !selectedSubject && (
+          <div className="syllabus-state syllabus-state-empty">
+            <BookOpen size={26}/>
+            <strong>Subject syllabus not found</strong>
+            <span>This subject is not part of your active Semester V class.</span>
+            <Link to="/dashboard/syllabus" className="syllabus-back-link">
+              <ArrowLeft size={16}/> Back to all subjects
+            </Link>
+          </div>
+        )}
+      </main>
+    );
+  }
 
   return (
     <main className="d-page-container syllabus-page">
@@ -335,9 +518,11 @@ export default function SyllabusPage({ role = "student" }) {
         )}
         {loadState === "success" && visibleSubjects.length > 0 && (
           <div className="syllabus-subject-list">
-            {visibleSubjects.map((subject, index) => (
-              <SubjectCard key={subject.id} subject={subject} role={role}
-                onToggleTopic={handleToggleTopic} busyTopicId={busyTopicId}/>
+            {visibleSubjects.map((subject) => (
+              role === "student"
+                ? <StudentSubjectLinkCard key={subject.id} subject={subject}/>
+                : <SubjectCard key={subject.id} subject={subject} role={role}
+                    onToggleTopic={handleToggleTopic} busyTopicId={busyTopicId}/>
             ))}
           </div>
         )}
