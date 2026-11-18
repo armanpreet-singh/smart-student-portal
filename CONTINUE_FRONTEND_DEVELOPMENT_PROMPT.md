@@ -1098,3 +1098,10 @@ Use the shared `--d-layout-header-height: 96px` token for both `.d-topbar` and `
 - Signed links are obtained from role-specific backend endpoints after server-side announcement-audience authorization. The frontend rejects non-HTTPS download URLs and validates attachment metadata.
 - File upload and attachment cards are responsive and use the existing announcement theme tokens. No public file URL or Cloudinary asset identifier is placed in client-side announcement records.
 - Production browser acceptance must verify an Admin notice, a Teacher class notice and a Student of that class can open a sample PDF and image; a Student from another class must not receive the link.
+
+
+## Responsive sidebar auto-close — November 18, 2026
+- Student, Teacher and Admin sidebar navigation now closes its open drawer after a user selects a real module link. Existing close-button and backdrop behavior is retained.
+- Each layout passes a close callback into its own sidebar. The sidebar uses delegated click handling for `a.d-nav-link`, so every current and future module NavLink receives the behavior without duplicating handlers across each menu item.
+- No breakpoint, sidebar positioning, width, desktop margin, overlay or desktop layout CSS was changed. Desktop navigation remains persistent; calling the existing close-state setter has no visual effect at desktop widths.
+- Added `tests/sidebar-auto-close-on-module-select.test.js` to cover all three role sidebars/layouts and guard the existing desktop and mobile drawer CSS.
