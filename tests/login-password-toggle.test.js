@@ -7,7 +7,7 @@ const read = (path) => readFile(new URL(`../src/${path}`, import.meta.url), "utf
 test("login password visibility control has a fixed centered hit area and native button reset", async () => {
   const css = await read("features/auth/pages/LoginPage.css");
 
-  assert.match(css, /\.pw-toggle\s*\{[\s\S]*?top:\s*50%/);
+  assert.match(css, /\.pw-toggle\s*\{[\s\S]*?top:\s*0/);
   assert.match(css, /\.pw-toggle\s*\{[\s\S]*?right:\s*8px/);
   assert.match(css, /\.pw-toggle\s*\{[\s\S]*?width:\s*40px/);
   assert.match(css, /\.pw-toggle\s*\{[\s\S]*?height:\s*40px/);
