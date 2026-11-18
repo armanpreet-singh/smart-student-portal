@@ -456,3 +456,46 @@
   line-height: 1.5;
   text-align: right;
 }
+
+
+/* Student subject attendance picker and dedicated detail route */
+.d-attendance-subject-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr));
+  gap: 16px;
+}
+.d-attendance-subject-card {
+  display: flex; min-width: 0; flex-direction: column; gap: 12px; padding: 20px;
+  border: 1px solid var(--d-border); border-radius: var(--d-radius-md, 14px);
+  background: var(--d-surface); color: var(--d-text); text-decoration: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.d-attendance-subject-card:hover {
+  border-color: var(--d-primary); box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08); transform: translateY(-2px);
+}
+.d-attendance-subject-card:focus-visible, .d-attendance-back-link:focus-visible, .d-attendance-detail-back a:focus-visible {
+  outline: 3px solid var(--d-gold); outline-offset: 3px;
+}
+.d-attendance-subject-card-top, .d-attendance-subject-stats {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.d-attendance-subject-card-top { color: var(--d-primary); }
+.d-attendance-subject-code {
+  color: var(--d-text-secondary); font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+}
+.d-attendance-subject-card h3 { margin: 0; color: var(--d-text); font-size: 16px; line-height: 1.4; }
+.d-attendance-subject-class { margin: -6px 0 0; color: var(--d-text-secondary); font-size: 12px; }
+.d-attendance-subject-stats { margin-top: 4px; color: var(--d-text-secondary); font-size: 11px; }
+.d-attendance-subject-stats strong { color: var(--d-text); font-size: 14px; font-variant-numeric: tabular-nums; }
+.d-attendance-subject-open { margin-top: 2px; color: var(--d-primary); font-size: 11px; font-weight: 700; }
+.d-attendance-detail-back {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: -4px 0 2px; color: var(--d-text-secondary); font-size: 11px;
+}
+.d-attendance-detail-back a, .d-attendance-back-link {
+  display: inline-flex; align-items: center; gap: 6px; color: var(--d-primary);
+  font-size: 12px; font-weight: 700; text-decoration: none;
+}
+.d-attendance-detail-back a svg { transform: rotate(180deg); }
+.d-attendance-back-link { margin-top: 10px; }
+@media (prefers-reduced-motion: reduce) { .d-attendance-subject-card { transition: none; } }
