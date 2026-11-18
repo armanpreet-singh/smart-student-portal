@@ -38,16 +38,21 @@ const Topbar = memo(({ onMenuClick }) => {
     if (pathnames.length <= 1)
       return [{ name: "Dashboard", path: "/dashboard" }];
 
-    if (pathnames[0] === "dashboard" && pathnames[1] === "syllabus" && pathnames.length >= 4) {
+    if (
+      pathnames[0] === "dashboard" &&
+      ["syllabus", "attendance"].includes(pathnames[1]) &&
+      pathnames.length >= 4
+    ) {
       let subjectName = pathnames[3];
       try {
         subjectName = decodeURIComponent(subjectName);
       } catch {
         subjectName = "Subject";
       }
+      const section = pathnames[1] === "syllabus" ? "Syllabus" : "Attendance";
       return [
         { name: "Dashboard", path: "/dashboard" },
-        { name: "Syllabus", path: "/dashboard/syllabus" },
+        { name: section, path: `/dashboard/${pathnames[1]}` },
         { name: subjectName, path: location.pathname },
       ];
     }
