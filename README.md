@@ -100,7 +100,7 @@ The application simulates a modern academic platform with dedicated dashboards f
 | Repository | Description |
 |------------|-------------|
 | 🎨 Frontend | React + Vite application |
-| ⚙️ Backend | Node.js + Express + MongoDB (In Development) |
+| ⚙️ Backend | Node.js + Express + PostgreSQL (Working) |
 
 ---
 
