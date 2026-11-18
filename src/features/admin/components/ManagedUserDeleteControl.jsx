@@ -131,7 +131,7 @@ const ManagedUserDeleteControl = ({
                 disabled={!confirmationMatches || submitting}
               >
                 <Trash2 size={14} aria-hidden="true" />
-                {submitting ? "Deleting…" : "Delete permanently"}
+                {submitting ? "Deleting…" : "Confirm deletion"}
               </button>
             </div>
           </section>
