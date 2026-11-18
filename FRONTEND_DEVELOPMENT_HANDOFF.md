@@ -1827,3 +1827,11 @@ This section supersedes the earlier Chunk 3 entries that describe PR #63 as open
 - New `deleteAdminManagedUser` API helper sends authenticated `DELETE /api/admin/users/:userId` and validates the safe deletion response. The reusable control is `ManagedUserDeleteControl.jsx`.
 - No student or teacher data is deleted by this UI change; the backend retires the account and preserves linked academic history.
 - Added API and directory UI tests for Student/Teacher deletion, confirmation safeguards, authorization errors and refresh behavior.
+
+
+## Restore retired Student accounts during Admin recreation — November 18, 2026
+- Admin Student provisioning can now restore an intentionally retired Student when the supplied username or official roll number uniquely identifies that same retired Student.
+- The backend reuses the original Student User record, retaining the existing user ID and its attendance, assignments, submissions, syllabus and other historical links. The new temporary password is applied and must be changed on first sign-in.
+- The creation form reports clearly when an account was restored instead of newly created. Normal new Student creation behavior is unchanged.
+- Email-only matches, active account conflicts and ambiguous matches remain blocked with a clear 409 error; no unrelated account records are merged.
+- Added frontend API coverage for restored versus newly created response handling and ambiguous identity conflicts.

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
 
 import { fetchAdminStudents } from "../src/features/admin/api/adminStudentsApi.js";
+import { createAdminStudent } from "../src/features/admin/api/adminStudentProvisioningApi.js";
 import { fetchAdminTeachers } from "../src/features/admin/api/adminTeachersApi.js";
 
 const API_BASE = "https://ltsu-smart-portal-api-0i8h.onrender.com";
@@ -330,6 +331,99 @@ describe("Admin Student and Teacher directory API contracts", () => {
     await assert.rejects(
       fetchAdminStudents("admin-token"),
       (error) => error.status === 0 && error.message === "The student directory request timed out. Please try again.",
+    );
+  });
+});
+
+
+describe("Admin Student create and restore API contract", () => {
+  it("returns a restored Student marker when backend restores a retired account", async () => {
+    const restoredUser = {
+      id: "student-old",
+      fullName: "Restored Student",
+      username: "student.one",
+      email: "student.one@example.edu",
+      rollNumber: "CSE-001",
+      role: "STUDENT",
+      classId: "class-1",
+      mustChangePassword: true,
+      isActive: true,
+      createdAt: "2026-01-01T00:00:00.000Z",
+      updatedAt: "2026-11-18T14:00:00.000Z",
+      class: { id: "class-1", code: "CSE-2026", name: "Computer Science" }
+    };
+    setResponder(() => jsonResponse(200, {
+      status: "ok",
+      message: "Retired account restored.",
+      data: { user: restoredUser, restored: true }
+    }));
+
+    const result = await createAdminStudent("admin-token", {
+      fullName: restoredUser.fullName,
+      username: restoredUser.username,
+      email: restoredUser.email,
+      rollNumber: restoredUser.rollNumber,
+      classId: restoredUser.classId,
+      temporaryPassword: "new-temporary-password-123",
+      confirmPassword: "new-temporary-password-123"
+    });
+
+    assert.equal(calls[0].options.method, "POST");
+    assert.equal(calls[0].options.headers.Authorization, "Bearer admin-token");
+    assert.equal(result.id, "student-old");
+    assert.equal(result.restored, true);
+  });
+
+  it("keeps newly created Students marked as not restored for older response payloads", async () => {
+    setResponder(() => jsonResponse(201, {
+      status: "ok",
+      data: {
+        user: {
+          id: "student-new",
+          fullName: "New Student",
+          username: "new.student",
+          email: null,
+          rollNumber: null,
+          role: "STUDENT",
+          classId: null,
+          mustChangePassword: true,
+          isActive: true,
+          createdAt: "2026-11-18T14:00:00.000Z",
+          updatedAt: "2026-11-18T14:00:00.000Z",
+          class: null
+        }
+      }
+    }));
+
+    const result = await createAdminStudent("admin-token", {
+      fullName: "New Student",
+      username: "new.student",
+      email: "",
+      rollNumber: "",
+      classId: "",
+      temporaryPassword: "new-temporary-password-123",
+      confirmPassword: "new-temporary-password-123"
+    });
+
+    assert.equal(result.restored, false);
+  });
+
+  it("surfaces identity conflicts that cannot be safely restored", async () => {
+    setResponder(() => jsonResponse(409, {
+      status: "error",
+      message: "Use the same username or official roll number to restore a retired Student."
+    }));
+
+    await assert.rejects(
+      createAdminStudent("admin-token", {
+        fullName: "Another Student",
+        username: "different.student",
+        email: "reused@example.edu",
+        rollNumber: "CSE-999",
+        temporaryPassword: "new-temporary-password-123",
+        confirmPassword: "new-temporary-password-123"
+      }),
+      (error) => error.status === 409 && /same username or official roll number/i.test(error.message)
     );
   });
 });

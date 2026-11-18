@@ -225,5 +225,8 @@ export async function createAdminStudent(accessToken, input) {
     );
   }
 
-  return user;
+  return {
+    ...user,
+    restored: payload?.data?.restored === true
+  };
 }
