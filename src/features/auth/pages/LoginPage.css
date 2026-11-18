@@ -556,30 +556,59 @@ label.field-label {
 
 .pw-toggle {
   position: absolute;
-  right: 18px;
   top: 50%;
+  right: 8px;
+  z-index: 2;
   transform: translateY(-50%);
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 40px;
 
-  width: 22px;
-  height: 22px;
-
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  margin: 0;
   padding: 0;
 
-  border: none;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  border-radius: 50%;
+  outline: none;
+  box-shadow: none;
   background: transparent;
 
-  cursor: pointer;
   color: var(--gray-400);
+  line-height: 0;
+  cursor: pointer;
 
-  transition: color .2s ease;
+  transition: color .18s ease, background-color .18s ease;
+}
+
+.pw-toggle svg {
+  display: block;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
 }
 
 .pw-toggle:hover {
+  transform: translateY(-50%);
   color: var(--navy);
+  background: rgba(27, 58, 107, 0.07);
+}
+
+.pw-toggle:active {
+  transform: translateY(-50%);
+  background: rgba(27, 58, 107, 0.12);
+}
+
+.pw-toggle:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 1px;
+  box-shadow: none;
 }
 
 /* ───────── FORM ROW ───────── */
