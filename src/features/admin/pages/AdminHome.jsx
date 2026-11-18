@@ -7,6 +7,7 @@ import {
   Building2,
   ClipboardList,
   GraduationCap,
+  History,
   RefreshCw,
   Users,
 } from "lucide-react";
@@ -87,6 +88,12 @@ const quickLinks = [
     label: "Attendance reports",
     description: "Review backend-reported attendance summaries",
     icon: BarChart3,
+  },
+  {
+    to: "/admin/audit-logs",
+    label: "Admin audit logs",
+    description: "Review a searchable record of administrative activity",
+    icon: History,
   },
 ];
 

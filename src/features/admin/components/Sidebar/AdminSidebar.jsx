@@ -17,6 +17,7 @@ import {
   Brain,
   QrCode,
   Sparkles,
+  History,
 } from "lucide-react";
 
 const NavItem = memo(({ to, icon: Icon, children, disabled }) => (
@@ -96,6 +97,9 @@ const AdminSidebar = memo(({ isOpen, onClose, onNavigate }) => (
         </NavItem>
         <NavItem to="/admin/settings" icon={Settings}>
           System Settings
+        </NavItem>
+        <NavItem to="/admin/audit-logs" icon={History}>
+          Audit Logs
         </NavItem>
       </ul>
       <div className="d-nav-divider"></div>

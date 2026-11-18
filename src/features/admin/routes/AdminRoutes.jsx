@@ -14,6 +14,7 @@ const CalendarPage = lazy(() => import("../pages/CalendarPage"));
 const ReportsPage = lazy(() => import("../pages/ReportsPage"));
 const ProfilePage = lazy(() => import("../pages/ProfilePage"));
 const SettingsPage = lazy(() => import("../pages/SettingsPage"));
+const AuditLogsPage = lazy(() => import("../pages/AuditLogsPage"));
 
 const Fallback = () => (
   <div
@@ -117,6 +118,14 @@ const AdminRoutes = () => (
         element={
           <Suspense fallback={<Fallback />}>
             <ProfilePage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="audit-logs"
+        element={
+          <Suspense fallback={<Fallback />}>
+            <AuditLogsPage />
           </Suspense>
         }
       />
