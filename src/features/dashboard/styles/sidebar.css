@@ -165,7 +165,20 @@
 }
 
 .d-layout.dark-mode .d-sidebar .d-nav-link.active svg,
-.d-layout.dark-mode .d-sidebar .d-nav-link.active:hover svg,
+.d-layout.dark-mode .d-sidebar .d-nav-link.active:hover,
 .d-layout.dark-mode .d-sidebar .d-nav-link.active:focus-visible svg {
+  color: #C9A84C;
+}
+
+/* Keep the dark-mode hover treatment consistent with the selected item. */
+.d-layout.dark-mode .d-sidebar .d-nav-link:not(.disabled):hover,
+.d-layout.dark-mode .d-sidebar .d-nav-link:not(.disabled):focus-visible {
+  background: rgba(201, 168, 76, 0.1);
+  color: #C9A84C;
+  box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.2);
+}
+
+.d-layout.dark-mode .d-sidebar .d-nav-link:not(.disabled):hover svg,
+.d-layout.dark-mode .d-sidebar .d-nav-link:not(.disabled):focus-visible svg {
   color: #C9A84C;
 }
