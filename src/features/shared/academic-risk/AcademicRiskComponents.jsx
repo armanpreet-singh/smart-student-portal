@@ -110,7 +110,7 @@ export function RiskMethodologyNote({ attendanceThresholdPercent }) {
         <strong>How these alerts are calculated</strong>
         <p>
           Alerts use recorded attendance (threshold {attendanceThresholdPercent}%), published assignment deadlines and published graded assignment results.
-          Attendance needs at least 3 recorded sessions; grade trends need at least 2 published results. Three or more overdue assignments or a published grade average below 40% are high-priority indicators.
+          Attendance needs at least 3 recorded sessions; 10 or more percentage points below the attendance threshold is high priority. Grade trends need at least 2 published results; an average below 40% or 3 or more overdue assignments is high priority.
           These are early-support indicators, not a final academic decision. Pending duty-review attendance is shown separately and is not counted as present.
         </p>
       </div>
