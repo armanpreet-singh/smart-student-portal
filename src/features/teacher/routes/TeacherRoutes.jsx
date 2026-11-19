@@ -20,6 +20,7 @@ const TeacherSettings = lazy(() => import("../pages/TeacherSettings"));
 const HelpSupportPage = lazy(() => import("../../shared/help/HelpSupportPage"));
 const NotificationCenterPage = lazy(() => import("../../shared/notifications/NotificationCenterPage"));
 const TeacherFacultyFeedbackPage = lazy(() => import("../../shared/faculty-feedback/TeacherFacultyFeedbackPage"));
+const TeacherAcademicRiskPage = lazy(() => import("../../shared/academic-risk/TeacherAcademicRiskPage"));
 
 const Fallback = () => (
   <div
@@ -155,6 +156,14 @@ const TeacherRoutes = () => (
         element={
           <Suspense fallback={<Fallback />}>
             <TeacherFacultyFeedbackPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="academic-risk"
+        element={
+          <Suspense fallback={<Fallback />}>
+            <TeacherAcademicRiskPage />
           </Suspense>
         }
       />

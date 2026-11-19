@@ -19,6 +19,7 @@ import {
   Sparkles,
   History,
   MessageSquareText,
+  ShieldAlert,
 } from "lucide-react";
 
 const NavItem = memo(({ to, icon: Icon, children, disabled }) => (
@@ -98,6 +99,9 @@ const AdminSidebar = memo(({ isOpen, onClose, onNavigate }) => (
         </NavItem>
         <NavItem to="/admin/settings" icon={Settings}>
           System Settings
+        </NavItem>
+        <NavItem to="/admin/academic-risk" icon={ShieldAlert}>
+          Academic Risk Alerts
         </NavItem>
         <NavItem to="/admin/faculty-feedback" icon={MessageSquareText}>
           Faculty Feedback
