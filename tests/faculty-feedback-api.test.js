@@ -121,7 +121,7 @@ test("Teacher feedback endpoint validates threshold-gated anonymized reports", a
 
 test("Admin report filters and moderation actions use role-protected endpoints", async () => {
   await withFetch(async (url, options) => {
-    assert.equal(url, `${API_BASE}/api/admin/faculty-feedback?search=Faculty&academicYear=2026-27&page=2&pageSize=25`);
+    assert.equal(url, `${API_BASE}/api/admin/faculty-feedback?page=2&pageSize=25&search=Faculty&academicYear=2026-27`);
     assert.equal(options.method || "GET", "GET");
     return response({ feedback: [feedbackGroup], pagination: { page: 2, pageSize: 25, total: 26, totalPages: 2 } });
   }, async () => {
