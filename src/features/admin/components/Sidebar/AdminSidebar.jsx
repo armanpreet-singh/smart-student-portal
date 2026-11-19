@@ -18,6 +18,7 @@ import {
   QrCode,
   Sparkles,
   History,
+  MessageSquareText,
 } from "lucide-react";
 
 const NavItem = memo(({ to, icon: Icon, children, disabled }) => (
@@ -97,6 +98,9 @@ const AdminSidebar = memo(({ isOpen, onClose, onNavigate }) => (
         </NavItem>
         <NavItem to="/admin/settings" icon={Settings}>
           System Settings
+        </NavItem>
+        <NavItem to="/admin/faculty-feedback" icon={MessageSquareText}>
+          Faculty Feedback
         </NavItem>
         <NavItem to="/admin/audit-logs" icon={History}>
           Audit Logs

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import ltsuLogo from "../../../../assets/images/logo/ltsu-logo.webp";
 import { NavLink } from 'react-router-dom';
-import { X, LayoutDashboard, BookOpen, UserCheck, Clock, FileText, FolderOpen, Megaphone, CalendarDays, GraduationCap, QrCode, Bot, Sparkles, BellRing } from 'lucide-react';
+import { X, LayoutDashboard, BookOpen, UserCheck, Clock, FileText, FolderOpen, Megaphone, CalendarDays, GraduationCap, QrCode, Bot, Sparkles, BellRing, MessageSquareText } from 'lucide-react';
 
 const NavItem = memo(({ to, icon: Icon, children, disabled }) => (
   <li>
@@ -53,6 +53,7 @@ const Sidebar = memo(({ isOpen, onClose, onNavigate }) => {
           <NavItem to="/dashboard/resources" icon={FolderOpen}>Learning Resources</NavItem>
           <NavItem to="/dashboard/announcements" icon={Megaphone}>Announcements</NavItem>
           <NavItem to="/dashboard/notifications" icon={BellRing}>Notification Centre</NavItem>
+          <NavItem to="/dashboard/faculty-feedback" icon={MessageSquareText}>Faculty Feedback</NavItem>
           <NavItem to="/dashboard/calendar" icon={CalendarDays}>Academic Calendar</NavItem>
         </ul>
         

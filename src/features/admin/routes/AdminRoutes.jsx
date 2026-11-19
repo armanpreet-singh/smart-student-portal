@@ -15,6 +15,7 @@ const ReportsPage = lazy(() => import("../pages/ReportsPage"));
 const ProfilePage = lazy(() => import("../pages/ProfilePage"));
 const SettingsPage = lazy(() => import("../pages/SettingsPage"));
 const AuditLogsPage = lazy(() => import("../pages/AuditLogsPage"));
+const FacultyFeedbackAdminPage = lazy(() => import("../pages/FacultyFeedbackAdminPage"));
 
 const Fallback = () => (
   <div
@@ -118,6 +119,14 @@ const AdminRoutes = () => (
         element={
           <Suspense fallback={<Fallback />}>
             <ProfilePage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="faculty-feedback"
+        element={
+          <Suspense fallback={<Fallback />}>
+            <FacultyFeedbackAdminPage />
           </Suspense>
         }
       />

@@ -19,6 +19,7 @@ const TeacherProfile = lazy(() => import("../pages/TeacherProfile"));
 const TeacherSettings = lazy(() => import("../pages/TeacherSettings"));
 const HelpSupportPage = lazy(() => import("../../shared/help/HelpSupportPage"));
 const NotificationCenterPage = lazy(() => import("../../shared/notifications/NotificationCenterPage"));
+const TeacherFacultyFeedbackPage = lazy(() => import("../../shared/faculty-feedback/TeacherFacultyFeedbackPage"));
 
 const Fallback = () => (
   <div
@@ -146,6 +147,14 @@ const TeacherRoutes = () => (
         element={
           <Suspense fallback={<Fallback />}>
             <NotificationCenterPage role="TEACHER" />
+          </Suspense>
+        }
+      />
+      <Route
+        path="faculty-feedback"
+        element={
+          <Suspense fallback={<Fallback />}>
+            <TeacherFacultyFeedbackPage />
           </Suspense>
         }
       />
