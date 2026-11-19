@@ -165,7 +165,7 @@
 }
 
 .d-layout.dark-mode .d-sidebar .d-nav-link.active svg,
-.d-layout.dark-mode .d-sidebar .d-nav-link.active:hover,
+.d-layout.dark-mode .d-sidebar .d-nav-link.active:hover svg,
 .d-layout.dark-mode .d-sidebar .d-nav-link.active:focus-visible svg {
   color: #C9A84C;
 }
