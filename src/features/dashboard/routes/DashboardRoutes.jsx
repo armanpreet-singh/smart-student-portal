@@ -16,6 +16,7 @@ const CalendarPage = lazy(() => import('../pages/CalendarPage'));
 const ProfilePage = lazy(() => import('../pages/ProfilePage'));
 const SettingsPage = lazy(() => import('../pages/SettingsPage'));
 const HelpSupportPage = lazy(() => import('../../shared/help/HelpSupportPage'));
+const NotificationCenterPage = lazy(() => import('../../shared/notifications/NotificationCenterPage'));
 
 const Fallback = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: 'var(--d-text-secondary)' }}>
@@ -40,6 +41,7 @@ const DashboardRoutes = () => (
       <Route path="calendar" element={<Suspense fallback={<Fallback/>}><CalendarPage /></Suspense>} />
       <Route path="profile" element={<Suspense fallback={<Fallback/>}><ProfilePage /></Suspense>} />
       <Route path="settings" element={<Suspense fallback={<Fallback/>}><SettingsPage /></Suspense>} />
+      <Route path="notifications" element={<Suspense fallback={<Fallback/>}><NotificationCenterPage role="STUDENT" /></Suspense>} />
       <Route path="help" element={<Suspense fallback={<Fallback/>}><HelpSupportPage role="STUDENT" /></Suspense>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Route>
