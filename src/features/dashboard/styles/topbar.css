@@ -24,6 +24,12 @@
 .d-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; }
 .d-breadcrumb a { color: var(--d-text-secondary); text-decoration: none; transition: var(--d-transition); }
 .d-breadcrumb a:hover { color: var(--d-primary); }
+
+/* Match the sidebar's gold hover accent for clickable breadcrumbs in dark mode. */
+.d-layout.dark-mode .d-topbar .d-breadcrumb a:not(.active):hover,
+.d-layout.dark-mode .d-topbar .d-breadcrumb a:not(.active):focus-visible {
+  color: #C9A84C;
+}
 .d-breadcrumb a.active { color: var(--d-text); font-weight: 600; pointer-events: none; }
 .d-breadcrumb-sep { color: var(--d-border); }
 
