@@ -18,6 +18,7 @@ const SettingsPage = lazy(() => import('../pages/SettingsPage'));
 const HelpSupportPage = lazy(() => import('../../shared/help/HelpSupportPage'));
 const NotificationCenterPage = lazy(() => import('../../shared/notifications/NotificationCenterPage'));
 const StudentFacultyFeedbackPage = lazy(() => import('../../shared/faculty-feedback/StudentFacultyFeedbackPage'));
+const StudentAcademicRiskPage = lazy(() => import('../../shared/academic-risk/StudentAcademicRiskPage'));
 
 const Fallback = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: 'var(--d-text-secondary)' }}>
@@ -44,6 +45,7 @@ const DashboardRoutes = () => (
       <Route path="settings" element={<Suspense fallback={<Fallback/>}><SettingsPage /></Suspense>} />
       <Route path="notifications" element={<Suspense fallback={<Fallback/>}><NotificationCenterPage role="STUDENT" /></Suspense>} />
       <Route path="faculty-feedback" element={<Suspense fallback={<Fallback/>}><StudentFacultyFeedbackPage /></Suspense>} />
+      <Route path="academic-risk" element={<Suspense fallback={<Fallback/>}><StudentAcademicRiskPage /></Suspense>} />
       <Route path="help" element={<Suspense fallback={<Fallback/>}><HelpSupportPage role="STUDENT" /></Suspense>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Route>
