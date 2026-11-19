@@ -161,7 +161,7 @@ export async function fetchTeacherFacultyFeedback(accessToken) {
 
 export async function fetchAdminFacultyFeedback(accessToken, filters = {}) {
   const query = new URLSearchParams();
-  for (const key of ["page", "pageSize", "teacherId", "subjectId", "academicYear"]) {
+  for (const key of ["page", "pageSize", "search", "teacherId", "subjectId", "academicYear"]) {
     const value = filters[key];
     if (value !== undefined && value !== null && String(value).trim()) query.set(key, String(value).trim());
   }
