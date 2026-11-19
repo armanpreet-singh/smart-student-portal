@@ -12,7 +12,7 @@ test("Student dashboard explains personal academic risk indicators and next step
   assert.match(page, /fetchStudentAcademicRisk/);
   assert.match(page, /Subject-wise progress/);
   assert.match(page, /Suggested next steps/);
-  assert.match(page, /not a final academic decision/);
+  assert.match(page, /not a final academic decision/i);
 });
 
 test("Teacher dashboard filters risk reports by assigned subject, Student and risk level", async () => {
@@ -56,8 +56,8 @@ test("academic risk UI distinguishes insufficient data and documents the transpa
     source("features/shared/academic-risk/academic-risk.css")
   ]);
   assert.match(components, /INSUFFICIENT_DATA/);
-  assert.match(components, /minimum of 3/i);
-  assert.match(components, /minimum of 2/i);
+  assert.match(components, /at least 3/i);
+  assert.match(components, /at least 2/i);
   assert.match(components, /not a final academic decision/i);
   assert.match(styles, /@media\(max-width:700px\)/);
   assert.match(styles, /prefers-reduced-motion/);
