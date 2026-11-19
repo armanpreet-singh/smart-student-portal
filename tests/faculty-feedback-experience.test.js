@@ -35,7 +35,7 @@ test("Admin feedback page reports aggregates and moderates comments without acce
   assert.match(page, /setAdminFacultyFeedbackCommentVisibility/);
   assert.match(page, /Hide/);
   assert.match(page, /Restore/);
-  assert.match(page, /ratings were retained/);
+  assert.match(page, /ratings were retained/i);
   assert.doesNotMatch(page, /studentId|rollNumber/);
 });
 
