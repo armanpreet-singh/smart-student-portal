@@ -361,7 +361,19 @@ const NotificationBell = () => {
               </div>
             )}
             <footer className="d-notification-panel-footer">
-              Updates refresh automatically every 45 seconds while the portal is open.
+              <span>Updates refresh automatically every 45 seconds while the portal is open.</span>
+              {(role === "STUDENT" || role === "TEACHER") && (
+                <button
+                  type="button"
+                  className="d-notification-centre-open-link"
+                  onClick={() => {
+                    setIsOpen(false);
+                    navigate(role === "TEACHER" ? "/teacher/notifications" : "/dashboard/notifications");
+                  }}
+                >
+                  Open Notification Centre <ArrowUpRight size={13}/>
+                </button>
+              )}
             </footer>
           </section>
         )}
